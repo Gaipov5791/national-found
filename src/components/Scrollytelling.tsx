@@ -87,10 +87,10 @@ export function Scrollytelling() {
         },
       });
 
-      // Scene 1 → Scene 2 (0 → 0.5): mountains scale + split, hero fades, stats appear
+      // Hero logo: scale down + fade out as scroll begins
       tl.to(
-        heroTitleRef.current,
-        { opacity: 0, y: -60, duration: 0.4 },
+        heroLogoRef.current,
+        { opacity: 0, scale: 0.5, y: -40, duration: 0.4 },
         0
       );
       tl.to(
