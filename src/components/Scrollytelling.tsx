@@ -60,10 +60,11 @@ export function Scrollytelling() {
         const slotRect = slot.getBoundingClientRect();
         const elRect = el.getBoundingClientRect();
         const targetScale = elRect.width > 0 ? (slotRect.width / elRect.width) * 0.95 : 0.22;
-        // current center
+        const scaledW = elRect.width * targetScale;
         const cx = elRect.left + elRect.width / 2;
         const cy = elRect.top + elRect.height / 2;
-        const tx = slotRect.left + slotRect.width / 2;
+        // align scaled left edge with slot left edge (small padding)
+        const tx = slotRect.left + scaledW / 2;
         const ty = slotRect.top + slotRect.height / 2;
         return { x: tx - cx, y: ty - cy, scale: targetScale };
       };
