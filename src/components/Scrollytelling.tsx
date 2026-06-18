@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import mountains from "@/assets/mountains.jpg";
 import clouds from "@/assets/clouds.png";
+import fundLogo from "@/assets/fund-logo.png.asset.json";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -173,15 +174,17 @@ export function Scrollytelling() {
           style={{ transformOrigin: "50% 70%" }}
         />
 
-        {/* BRAND TITLE — starts huge center, scrubs into Navbar slot */}
+        {/* BRAND LOGO — starts large center, scrubs into Navbar slot on desktop */}
         <div
           ref={brandRef}
-          className="pointer-events-none absolute left-1/2 top-[34%] z-40 -translate-x-1/2 -translate-y-1/2 will-change-transform"
+          className="pointer-events-none absolute left-1/2 top-[22%] z-40 -translate-x-1/2 -translate-y-1/2 will-change-transform hidden md:block"
           style={{ transformOrigin: "50% 50%" }}
         >
-          <div className="text-center font-display font-semibold leading-[1.05] tracking-[0.02em] text-[color:var(--ink)] text-[clamp(2.4rem,6.2vw,5.2rem)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.55)]">
-            НАЦИОНАЛЬНЫЙ<br />ИНВЕСТИЦИОННЫЙ ФОНД КР
-          </div>
+          <img
+            src={fundLogo.url}
+            alt="Национальный инвестиционный фонд Кыргызской Республики"
+            className="block w-[min(78vw,900px)] h-auto drop-shadow-[0_10px_40px_rgba(20,40,90,0.25)]"
+          />
         </div>
 
         {/* Stats — lower, in the valley between peaks, with soft dark backdrop */}
