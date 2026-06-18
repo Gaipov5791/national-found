@@ -18,9 +18,8 @@ export function Navbar() {
   return (
     <header className="fixed left-0 right-0 top-0 z-50 px-6 pt-5">
       <nav className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 rounded-full border border-white/40 bg-white/40 px-5 py-2.5 backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)]">
-        <div className="pr-3 text-[11px] font-bold leading-tight tracking-wide text-[color:var(--ink)] whitespace-nowrap">
-          НАЦИОНАЛЬНЫЙ<br />ИНВЕСТИЦИОННЫЙ ФОНД КР
-        </div>
+        {/* Placeholder kept so brand title (animated from Scrollytelling) can dock here */}
+        <div id="navbar-brand-slot" className="pr-3 w-[170px]" aria-hidden />
         <ul className="flex flex-1 items-center justify-end gap-0 divide-x divide-[color:var(--ink)]/15 text-[10.5px] font-semibold tracking-[0.12em] text-[color:var(--ink)]">
           {ITEMS.map((label) => (
             <li key={label}>
