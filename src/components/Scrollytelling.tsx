@@ -4,7 +4,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import mountains from "@/assets/mountains.jpg";
 import clouds from "@/assets/clouds.png";
-import fundLogo from "@/assets/fund-logo.png.asset.json";
 
 gsap.registerPlugin(ScrollTrigger);
 
