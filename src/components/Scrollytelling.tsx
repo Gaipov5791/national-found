@@ -60,7 +60,7 @@ export function Scrollytelling() {
         if (!slot || !el) return { x: 0, y: 0, scale: 1 };
         const slotRect = slot.getBoundingClientRect();
         const elRect = el.getBoundingClientRect();
-        const targetScale = 0.18;
+        const targetScale = elRect.width > 0 ? (slotRect.width / elRect.width) * 0.95 : 0.22;
         // current center
         const cx = elRect.left + elRect.width / 2;
         const cy = elRect.top + elRect.height / 2;
