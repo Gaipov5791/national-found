@@ -179,7 +179,7 @@ export function Scrollytelling() {
           className="pointer-events-none absolute left-1/2 top-[30%] z-40 -translate-x-1/2 -translate-y-1/2 will-change-transform hidden md:block"
           style={{ transformOrigin: "50% 50%" }}
         >
-          <h1 className="text-center font-display text-[clamp(2.4rem,6.2vw,5.2rem)] font-bold leading-[1.05] tracking-[0.06em] text-white drop-shadow-[0_8px_32px_rgba(20,40,90,0.55)]">
+          <h1 className="text-center font-display text-[clamp(1.4rem,3.4vw,2.8rem)] font-bold leading-[1.15] tracking-[0.08em] text-white drop-shadow-[0_8px_32px_rgba(20,40,90,0.55)]">
             НАЦИОНАЛЬНЫЙ<br />
             ИНВЕСТИЦИОННЫЙ ФОНД<br />
             КЫРГЫЗСКОЙ РЕСПУБЛИКИ
