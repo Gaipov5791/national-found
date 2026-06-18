@@ -36,16 +36,20 @@ function CountUp({ to, active, suffix = "" }: { to: number; active: boolean; suf
   );
 }
 
+import logo from "@/assets/logo.png";
+
 export function Scrollytelling() {
   const rootRef = useRef<HTMLDivElement>(null);
   const leftRef = useRef<HTMLImageElement>(null);
   const rightRef = useRef<HTMLImageElement>(null);
-  const heroTitleRef = useRef<HTMLDivElement>(null);
+  const heroLogoRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const decreeRef = useRef<HTMLDivElement>(null);
   const cloudFrontRef = useRef<HTMLImageElement>(null);
   const cloudFogRef = useRef<HTMLImageElement>(null);
   const cloudDriftRef = useRef<HTMLDivElement>(null);
+  const cloudSlowRef = useRef<HTMLDivElement>(null);
+  const cloudFastRef = useRef<HTMLDivElement>(null);
 
   const [statsActive, setStatsActive] = useState(false);
 
@@ -64,10 +68,22 @@ export function Scrollytelling() {
     lenis.on("scroll", ScrollTrigger.update);
 
     const ctx = gsap.context(() => {
-      // Cloud drift infinite
+      // Cloud drift infinite — 3 layers, different speeds
       gsap.to(cloudDriftRef.current, {
         backgroundPositionX: "-2000px",
-        duration: 120,
+        duration: 180,
+        repeat: -1,
+        ease: "none",
+      });
+      gsap.to(cloudSlowRef.current, {
+        backgroundPositionX: "-2000px",
+        duration: 110,
+        repeat: -1,
+        ease: "none",
+      });
+      gsap.to(cloudFastRef.current, {
+        backgroundPositionX: "2000px",
+        duration: 70,
         repeat: -1,
         ease: "none",
       });
@@ -83,10 +99,10 @@ export function Scrollytelling() {
         },
       });
 
-      // Scene 1 → Scene 2 (0 → 0.5): mountains scale + split, hero fades, stats appear
+      // Hero logo: scale down + fade out as scroll begins
       tl.to(
-        heroTitleRef.current,
-        { opacity: 0, y: -60, duration: 0.4 },
+        heroLogoRef.current,
+        { opacity: 0, scale: 0.5, y: -40, duration: 0.4 },
         0
       );
       tl.to(
@@ -172,46 +188,86 @@ export function Scrollytelling() {
         alt=""
         className="absolute inset-0 h-full w-full object-cover"
       />
-      {/* Drifting clouds layer (infinite) */}
+      {/* Drifting clouds layer (infinite) - back, slow & faint */}
       <div
         ref={cloudDriftRef}
-        className="absolute inset-0 opacity-60"
+        className="absolute inset-0 opacity-40"
         style={{
           backgroundImage: `url(${clouds})`,
           backgroundRepeat: "repeat-x",
-          backgroundSize: "auto 60%",
-          backgroundPositionY: "20%",
+          backgroundSize: "auto 45%",
+          backgroundPositionY: "12%",
+        }}
+      />
+      {/* Mid-layer clouds */}
+      <div
+        ref={cloudSlowRef}
+        className="absolute inset-0 opacity-70"
+        style={{
+          backgroundImage: `url(${clouds})`,
+          backgroundRepeat: "repeat-x",
+          backgroundSize: "auto 70%",
+          backgroundPositionY: "30%",
+        }}
+      />
+      {/* Front large clouds */}
+      <div
+        ref={cloudFastRef}
+        className="absolute inset-0 opacity-90"
+        style={{
+          backgroundImage: `url(${clouds})`,
+          backgroundRepeat: "repeat-x",
+          backgroundSize: "auto 95%",
+          backgroundPositionY: "55%",
         }}
       />
 
-      {/* Mountains */}
+      {/* Mountains with soft inner fade */}
       <img
         ref={leftRef}
         src={mountainLeft}
         alt=""
         className="absolute bottom-0 left-0 h-[85%] w-[60%] origin-bottom-left object-contain object-bottom will-change-transform"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to right, black 55%, transparent 100%), linear-gradient(to top, black 70%, transparent 100%)",
+          WebkitMaskComposite: "source-in",
+          maskImage:
+            "linear-gradient(to right, black 55%, transparent 100%), linear-gradient(to top, black 70%, transparent 100%)",
+          maskComposite: "intersect",
+        }}
       />
       <img
         ref={rightRef}
         src={mountainRight}
         alt=""
         className="absolute bottom-0 right-0 h-[85%] w-[60%] origin-bottom-right object-contain object-bottom will-change-transform"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to left, black 55%, transparent 100%), linear-gradient(to top, black 70%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to left, black 55%, transparent 100%), linear-gradient(to top, black 70%, transparent 100%)",
+          maskComposite: "intersect",
+        }}
       />
 
-      {/* Hero title */}
+      {/* Hero center logo */}
       <div
-        ref={heroTitleRef}
-        className="absolute inset-x-0 bottom-[14%] z-10 px-6 text-center"
+        ref={heroLogoRef}
+        className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
       >
-        <h1 className="font-display mx-auto max-w-5xl text-balance text-3xl font-semibold leading-tight tracking-tight text-[color:var(--ink)] md:text-5xl lg:text-6xl">
-          НАЦИОНАЛЬНЫЙ ИНВЕСТИЦИОННЫЙ ФОНД
-          <br />
-          <span className="text-[color:var(--ink)]/80">КЫРГЫЗСКОЙ РЕСПУБЛИКИ</span>
-        </h1>
-        <div className="mx-auto mt-6 h-px w-24 bg-[color:var(--gold)]" />
-        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.4em] text-[color:var(--ink)]/60">
-          Прокрутите вниз
-        </p>
+        <div className="relative flex flex-col items-center">
+          <div className="absolute inset-0 -m-10 rounded-full bg-white/30 blur-3xl" />
+          <img
+            src={logo}
+            alt="Национальный инвестиционный фонд КР"
+            className="relative h-32 w-32 object-contain drop-shadow-[0_8px_30px_rgba(20,40,90,0.25)] md:h-44 md:w-44"
+          />
+          <div className="relative mt-6 h-px w-16 bg-[color:var(--gold)]" />
+          <p className="relative mt-3 text-[10px] font-semibold uppercase tracking-[0.5em] text-[color:var(--ink)]/70">
+            Прокрутите вниз
+          </p>
+        </div>
       </div>
 
       {/* Stats (Scene 2) */}
