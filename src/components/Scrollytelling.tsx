@@ -68,10 +68,22 @@ export function Scrollytelling() {
     lenis.on("scroll", ScrollTrigger.update);
 
     const ctx = gsap.context(() => {
-      // Cloud drift infinite
+      // Cloud drift infinite — 3 layers, different speeds
       gsap.to(cloudDriftRef.current, {
         backgroundPositionX: "-2000px",
-        duration: 120,
+        duration: 180,
+        repeat: -1,
+        ease: "none",
+      });
+      gsap.to(cloudSlowRef.current, {
+        backgroundPositionX: "-2000px",
+        duration: 110,
+        repeat: -1,
+        ease: "none",
+      });
+      gsap.to(cloudFastRef.current, {
+        backgroundPositionX: "2000px",
+        duration: 70,
         repeat: -1,
         ease: "none",
       });
