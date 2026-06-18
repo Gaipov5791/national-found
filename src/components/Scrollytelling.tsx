@@ -36,6 +36,8 @@ function CountUp({ to, active, suffix = "" }: { to: number; active: boolean; suf
   );
 }
 
+import logo from "@/assets/logo.png";
+
 export function Scrollytelling() {
   const rootRef = useRef<HTMLDivElement>(null);
   const leftRef = useRef<HTMLImageElement>(null);
