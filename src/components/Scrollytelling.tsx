@@ -42,12 +42,14 @@ export function Scrollytelling() {
   const rootRef = useRef<HTMLDivElement>(null);
   const leftRef = useRef<HTMLImageElement>(null);
   const rightRef = useRef<HTMLImageElement>(null);
-  const heroTitleRef = useRef<HTMLDivElement>(null);
+  const heroLogoRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const decreeRef = useRef<HTMLDivElement>(null);
   const cloudFrontRef = useRef<HTMLImageElement>(null);
   const cloudFogRef = useRef<HTMLImageElement>(null);
   const cloudDriftRef = useRef<HTMLDivElement>(null);
+  const cloudSlowRef = useRef<HTMLDivElement>(null);
+  const cloudFastRef = useRef<HTMLDivElement>(null);
 
   const [statsActive, setStatsActive] = useState(false);
 
