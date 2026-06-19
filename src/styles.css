@@ -31,8 +31,8 @@
   --color-ink: var(--ink);
   --color-platinum: var(--platinum);
   --color-gold: var(--gold);
-  --font-display: "Montserrat", "Geometria", "Gotham", system-ui, sans-serif;
-  --font-sans: "Montserrat", "Geometria", "Gotham", system-ui, sans-serif;
+  --font-sans: "Gotham", "Montserrat", "Geometria", system-ui, sans-serif;
+  --font-display: "Gotham", "Montserrat", "Geometria", system-ui, sans-serif;
 }
 
 :root {
