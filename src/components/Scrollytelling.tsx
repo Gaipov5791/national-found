@@ -472,11 +472,11 @@ export function Scrollytelling() {
         {(() => {
           // Three tinted translucent cloud layers — never fully opaque so the scene behind shows through
           const cloudWhite =
-            "radial-gradient(ellipse 85% 65% at 50% 55%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.45) 35%, rgba(255,255,255,0.2) 65%, rgba(255,255,255,0) 100%)";
+            "radial-gradient(ellipse 85% 65% at 50% 55%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.38) 35%, rgba(255,255,255,0.12) 65%, rgba(255,255,255,0) 100%)";
           const cloudBlue =
-            "radial-gradient(ellipse 95% 70% at 45% 60%, rgba(224,242,254,0.5) 0%, rgba(214,232,248,0.35) 40%, rgba(200,222,242,0.15) 70%, rgba(200,222,242,0) 100%)";
+            "radial-gradient(ellipse 95% 70% at 45% 60%, rgba(224,242,254,0.4) 0%, rgba(214,232,248,0.28) 40%, rgba(200,222,242,0.08) 70%, rgba(200,222,242,0) 100%)";
           const cloudPlatinum =
-            "radial-gradient(ellipse 100% 75% at 55% 50%, rgba(241,245,249,0.5) 0%, rgba(230,236,244,0.35) 40%, rgba(220,228,238,0.15) 70%, rgba(220,228,238,0) 100%)";
+            "radial-gradient(ellipse 100% 75% at 55% 50%, rgba(241,245,249,0.4) 0%, rgba(230,236,244,0.28) 40%, rgba(220,228,238,0.08) 70%, rgba(220,228,238,0) 100%)";
           const layerBase = "pointer-events-none absolute left-1/2 top-1/2 -ml-[100vw] -mt-[100vh] w-[200vw] h-[200vh] rounded-full opacity-0 blur-[140px]";
           const styleWithWillChange = { willChange: "transform, opacity", maskImage: "radial-gradient(ellipse 90% 90% at center, white 55%, transparent 100%)" };
           return (
