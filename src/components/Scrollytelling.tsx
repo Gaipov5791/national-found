@@ -273,13 +273,13 @@ export function Scrollytelling() {
       );
       tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
 
-      // SWAP at peak (0.83)
-      tl.to(kumtorRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.83);
+      // SWAP at peak — gentle crossfade behind translucent clouds
+      tl.to(kumtorRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.80);
       tl.fromTo(
         crustRef.current,
         { opacity: 0, scale: 1.15 },
-        { opacity: 1, scale: 1.0, duration: 0.14, ease: "power2.out" },
-        0.83
+        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power2.out" },
+        0.81
       );
 
       // Directions title emerges
