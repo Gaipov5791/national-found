@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import mountains from "@/assets/mountains.jpg";
-import clouds from "@/assets/clouds.png";
+
 import kumtor from "@/assets/kumtor.jpg";
 import earthCrust from "@/assets/earth-crust.jpg";
 
