@@ -161,32 +161,27 @@ export function Scrollytelling() {
       // Stats fade as fog rolls in
       tl.to(statsRef.current, { opacity: 0, y: -20, duration: 0.08, ease: "none" }, 0.22);
 
-      // Three cloud layers surge upward & inward — different speeds for parallax depth
+      // Three cloud layers — independent parallax speeds, NEVER fully opaque (max ~0.75)
       tl.fromTo(
         wipe1BackRef.current,
         { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -10, opacity: 1, scale: 1.2, duration: 0.14, ease: "power2.inOut" },
+        { yPercent: -20, opacity: 0.7, scale: 1.3, duration: 0.16, ease: "power2.inOut" },
         0.22
       );
       tl.fromTo(
         wipe1MidRef.current,
-        { yPercent: 120, xPercent: -10, opacity: 0, scale: 1.25 },
-        { yPercent: -15, xPercent: 5, opacity: 1, scale: 1.35, duration: 0.14, ease: "power2.inOut" },
+        { yPercent: 130, xPercent: -10, opacity: 0, scale: 1.25 },
+        { yPercent: -5, xPercent: 8, opacity: 0.55, scale: 1.5, duration: 0.14, ease: "power2.inOut" },
         0.24
       );
       tl.fromTo(
         wipe1FrontRef.current,
-        { yPercent: 130, xPercent: 15, opacity: 0, scale: 1.4 },
-        { yPercent: -20, xPercent: -5, opacity: 1, scale: 1.5, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: 150, xPercent: 15, opacity: 0, scale: 1.4 },
+        { yPercent: -30, xPercent: -8, opacity: 0.65, scale: 1.7, duration: 0.18, ease: "power2.inOut" },
         0.25
       );
-      // Atmospheric haze (white wash) — peaks at 0.31
-      tl.fromTo(
-        wipe1HazeRef.current,
-        { opacity: 0 },
-        { opacity: 0.85, duration: 0.09, ease: "power1.in" },
-        0.22
-      );
+      // haze disabled to avoid solid white wash
+      tl.set(wipe1HazeRef.current, { opacity: 0 }, 0.22);
 
       // At max density (0.31) swap mountains → keep mountains but they'll be hidden
       // About emerges through dissipating clouds (0.31 → 0.40)
@@ -211,36 +206,31 @@ export function Scrollytelling() {
       tl.fromTo(
         wipe2BackRef.current,
         { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -10, opacity: 1, scale: 1.25, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: -25, opacity: 0.7, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
         0.48
       );
       tl.fromTo(
         wipe2MidRef.current,
-        { yPercent: 120, xPercent: 10, opacity: 0, scale: 1.3 },
-        { yPercent: -10, xPercent: -8, opacity: 1, scale: 1.4, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: 135, xPercent: 10, opacity: 0, scale: 1.3 },
+        { yPercent: -5, xPercent: -10, opacity: 0.55, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
         0.50
       );
       tl.fromTo(
         wipe2FrontRef.current,
-        { yPercent: 130, xPercent: -15, opacity: 0, scale: 1.5 },
-        { yPercent: -15, xPercent: 8, opacity: 1, scale: 1.6, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: 155, xPercent: -15, opacity: 0, scale: 1.5 },
+        { yPercent: -35, xPercent: 10, opacity: 0.65, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
         0.51
       );
-      tl.fromTo(
-        wipe2HazeRef.current,
-        { opacity: 0 },
-        { opacity: 0.92, duration: 0.10, ease: "power1.in" },
-        0.48
-      );
+      tl.set(wipe2HazeRef.current, { opacity: 0 }, 0.48);
 
-      // SWAP background at peak density (0.57)
-      tl.to(mountainRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.57);
-      tl.to(ambientFogRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.57);
+      // SWAP background — gentle crossfade BEHIND translucent clouds (peak density 0.55-0.58)
+      tl.to(mountainRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
+      tl.to(ambientFogRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
       tl.fromTo(
         kumtorRef.current,
         { opacity: 0, scale: 1.15 },
-        { opacity: 1, scale: 1.0, duration: 0.14, ease: "power2.out" },
-        0.57
+        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power2.out" },
+        0.55
       );
 
       // Finance title emerges through dispersing clouds
@@ -266,35 +256,30 @@ export function Scrollytelling() {
       tl.fromTo(
         wipe3BackRef.current,
         { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -10, opacity: 1, scale: 1.25, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: -25, opacity: 0.7, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
         0.74
       );
       tl.fromTo(
         wipe3MidRef.current,
-        { yPercent: 120, xPercent: -10, opacity: 0, scale: 1.3 },
-        { yPercent: -10, xPercent: 8, opacity: 1, scale: 1.4, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: 135, xPercent: -10, opacity: 0, scale: 1.3 },
+        { yPercent: -5, xPercent: 10, opacity: 0.55, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
         0.76
       );
       tl.fromTo(
         wipe3FrontRef.current,
-        { yPercent: 130, xPercent: 15, opacity: 0, scale: 1.5 },
-        { yPercent: -15, xPercent: -8, opacity: 1, scale: 1.6, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: 155, xPercent: 15, opacity: 0, scale: 1.5 },
+        { yPercent: -35, xPercent: -10, opacity: 0.65, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
         0.77
       );
-      tl.fromTo(
-        wipe3HazeRef.current,
-        { opacity: 0 },
-        { opacity: 0.95, duration: 0.10, ease: "power1.in" },
-        0.74
-      );
+      tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
 
-      // SWAP at peak (0.83)
-      tl.to(kumtorRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.83);
+      // SWAP at peak — gentle crossfade behind translucent clouds
+      tl.to(kumtorRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.80);
       tl.fromTo(
         crustRef.current,
         { opacity: 0, scale: 1.15 },
-        { opacity: 1, scale: 1.0, duration: 0.14, ease: "power2.out" },
-        0.83
+        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power2.out" },
+        0.81
       );
 
       // Directions title emerges
@@ -479,35 +464,34 @@ export function Scrollytelling() {
 
         {/* ============ CLOUD WIPE LAYERS — pure CSS gradients (no hard edges) ============ */}
         {(() => {
-          const softFog =
-            "radial-gradient(ellipse 90% 70% at 50% 60%, rgba(255,255,255,0.85) 0%, rgba(248,250,253,0.7) 35%, rgba(235,242,250,0.4) 60%, rgba(220,230,245,0.15) 80%, rgba(200,215,235,0) 100%)";
-          const softFogAlt =
-            "radial-gradient(ellipse 100% 80% at 40% 55%, rgba(255,255,255,0.8) 0%, rgba(245,249,253,0.65) 40%, rgba(225,235,248,0.3) 70%, rgba(200,215,235,0) 100%)";
-          const softFogFront =
-            "radial-gradient(ellipse 110% 90% at 60% 65%, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.75) 30%, rgba(230,240,250,0.35) 65%, rgba(210,225,240,0) 100%)";
-          const haze =
-            "linear-gradient(to top, rgba(255,255,255,0.85) 0%, rgba(250,252,255,0.6) 40%, rgba(235,242,250,0.25) 75%, rgba(220,230,245,0) 100%)";
-          const layerBase = "pointer-events-none absolute left-1/2 top-1/2 -ml-[100vw] -mt-[100vh] w-[200vw] h-[200vh] rounded-full opacity-0 blur-[150px]";
-          const styleWithWillChange = { willChange: "transform, opacity", maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" };
+          // Three tinted translucent cloud layers — never fully opaque so the scene behind shows through
+          const cloudWhite =
+            "radial-gradient(ellipse 85% 65% at 50% 55%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.45) 35%, rgba(255,255,255,0.2) 65%, rgba(255,255,255,0) 100%)";
+          const cloudBlue =
+            "radial-gradient(ellipse 95% 70% at 45% 60%, rgba(224,242,254,0.5) 0%, rgba(214,232,248,0.35) 40%, rgba(200,222,242,0.15) 70%, rgba(200,222,242,0) 100%)";
+          const cloudPlatinum =
+            "radial-gradient(ellipse 100% 75% at 55% 50%, rgba(241,245,249,0.5) 0%, rgba(230,236,244,0.35) 40%, rgba(220,228,238,0.15) 70%, rgba(220,228,238,0) 100%)";
+          const layerBase = "pointer-events-none absolute left-1/2 top-1/2 -ml-[100vw] -mt-[100vh] w-[200vw] h-[200vh] rounded-full opacity-0 blur-[140px]";
+          const styleWithWillChange = { willChange: "transform, opacity", maskImage: "radial-gradient(ellipse 90% 90% at center, white 55%, transparent 100%)" };
           return (
             <>
-              {/* WIPE 1 */}
-              <div ref={wipe1HazeRef} className={`${layerBase} z-[35]`} style={{ ...styleWithWillChange, background: haze }} />
-              <div ref={wipe1BackRef} className={`${layerBase} z-[36]`} style={{ ...styleWithWillChange, background: softFog }} />
-              <div ref={wipe1MidRef} className={`${layerBase} z-[37]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
-              <div ref={wipe1FrontRef} className={`${layerBase} z-[38]`} style={{ ...styleWithWillChange, background: softFogFront }} />
+              {/* WIPE 1 — Mountains → About */}
+              <div ref={wipe1HazeRef} className="hidden" />
+              <div ref={wipe1BackRef} className={`${layerBase} z-[36]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
+              <div ref={wipe1MidRef} className={`${layerBase} z-[37]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
+              <div ref={wipe1FrontRef} className={`${layerBase} z-[38]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
 
-              {/* WIPE 2 */}
-              <div ref={wipe2HazeRef} className={`${layerBase} z-[40]`} style={{ ...styleWithWillChange, background: haze }} />
-              <div ref={wipe2BackRef} className={`${layerBase} z-[41]`} style={{ ...styleWithWillChange, background: softFog }} />
-              <div ref={wipe2MidRef} className={`${layerBase} z-[42]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
-              <div ref={wipe2FrontRef} className={`${layerBase} z-[43]`} style={{ ...styleWithWillChange, background: softFogFront }} />
+              {/* WIPE 2 — About → Kumtor */}
+              <div ref={wipe2HazeRef} className="hidden" />
+              <div ref={wipe2BackRef} className={`${layerBase} z-[41]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
+              <div ref={wipe2MidRef} className={`${layerBase} z-[42]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
+              <div ref={wipe2FrontRef} className={`${layerBase} z-[43]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
 
-              {/* WIPE 3 */}
-              <div ref={wipe3HazeRef} className={`${layerBase} z-[45]`} style={{ ...styleWithWillChange, background: haze }} />
-              <div ref={wipe3BackRef} className={`${layerBase} z-[46]`} style={{ ...styleWithWillChange, background: softFog }} />
-              <div ref={wipe3MidRef} className={`${layerBase} z-[47]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
-              <div ref={wipe3FrontRef} className={`${layerBase} z-[48]`} style={{ ...styleWithWillChange, background: softFogFront }} />
+              {/* WIPE 3 — Kumtor → Crust */}
+              <div ref={wipe3HazeRef} className="hidden" />
+              <div ref={wipe3BackRef} className={`${layerBase} z-[46]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
+              <div ref={wipe3MidRef} className={`${layerBase} z-[47]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
+              <div ref={wipe3FrontRef} className={`${layerBase} z-[48]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
             </>
           );
         })()}
