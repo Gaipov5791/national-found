@@ -378,14 +378,17 @@ export function Scrollytelling() {
           style={{ transformOrigin: "50% 50%" }}
         />
 
-        {/* Ambient fog over mountains */}
-        <img
+        {/* Ambient fog over mountains — soft gradient, no hard edges */}
+        <div
           ref={ambientFogRef}
-          src={clouds}
-          alt=""
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full object-cover object-top opacity-0"
-          style={{ filter: "blur(2px)" }}
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full opacity-0"
+          style={{
+            willChange: "transform, opacity",
+            background:
+              "linear-gradient(to top, rgba(255,255,255,0.6) 0%, rgba(245,250,255,0.4) 35%, rgba(230,240,250,0.2) 65%, rgba(220,235,250,0) 100%)",
+          }}
         />
+
 
         {/* BRAND TITLE */}
         <div
