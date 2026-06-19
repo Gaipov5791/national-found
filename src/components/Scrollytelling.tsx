@@ -488,11 +488,48 @@ export function Scrollytelling() {
               <div ref={wipe2MidRef} className={`${layerBase} z-[42]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
               <div ref={wipe2FrontRef} className={`${layerBase} z-[43]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
 
-              {/* WIPE 3 — Kumtor → Crust */}
+              {/* WIPE 3 — Kumtor → Earth Depths: realistic cumulus strips converge then fly up */}
               <div ref={wipe3HazeRef} className="hidden" />
-              <div ref={wipe3BackRef} className={`${layerBase} z-[46]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
-              <div ref={wipe3MidRef} className={`${layerBase} z-[47]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
-              <div ref={wipe3FrontRef} className={`${layerBase} z-[48]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
+              {/* TOP cumulus strip — flipped so puffy edge faces down */}
+              <div
+                ref={wipe3BackRef}
+                className="pointer-events-none absolute left-[-10%] top-0 z-[46] h-[70vh] w-[120vw] opacity-0"
+                style={{
+                  willChange: "transform, opacity",
+                  backgroundImage: `url(${cumulus})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center bottom",
+                  backgroundRepeat: "no-repeat",
+                  transform: "scaleY(-1)",
+                  filter: "drop-shadow(0 20px 40px rgba(40,55,80,0.25))",
+                }}
+              />
+              {/* BOTTOM cumulus strip */}
+              <div
+                ref={wipe3MidRef}
+                className="pointer-events-none absolute left-[-10%] bottom-0 z-[47] h-[75vh] w-[120vw] opacity-0"
+                style={{
+                  willChange: "transform, opacity",
+                  backgroundImage: `url(${cumulus})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center top",
+                  backgroundRepeat: "no-repeat",
+                  filter: "drop-shadow(0 -20px 40px rgba(40,55,80,0.25))",
+                }}
+              />
+              {/* CENTER dense overlay — covers seam at peak */}
+              <div
+                ref={wipe3FrontRef}
+                className="pointer-events-none absolute left-[-15%] top-[15%] z-[48] h-[80vh] w-[130vw] opacity-0"
+                style={{
+                  willChange: "transform, opacity",
+                  backgroundImage: `url(${cumulus})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              />
+
             </>
           );
         })()}
