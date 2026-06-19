@@ -166,19 +166,19 @@ export function Scrollytelling() {
       tl.fromTo(
         wipe1BackRef.current,
         { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -20, opacity: 0.7, scale: 1.3, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: -20, opacity: 0.62, scale: 1.3, duration: 0.16, ease: "power2.inOut" },
         0.22
       );
       tl.fromTo(
         wipe1MidRef.current,
         { yPercent: 130, xPercent: -10, opacity: 0, scale: 1.25 },
-        { yPercent: -5, xPercent: 8, opacity: 0.55, scale: 1.5, duration: 0.14, ease: "power2.inOut" },
+        { yPercent: -5, xPercent: 8, opacity: 0.47, scale: 1.5, duration: 0.14, ease: "power2.inOut" },
         0.24
       );
       tl.fromTo(
         wipe1FrontRef.current,
         { yPercent: 150, xPercent: 15, opacity: 0, scale: 1.4 },
-        { yPercent: -30, xPercent: -8, opacity: 0.65, scale: 1.7, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: -30, xPercent: -8, opacity: 0.57, scale: 1.7, duration: 0.18, ease: "power2.inOut" },
         0.25
       );
       // haze disabled to avoid solid white wash
@@ -207,19 +207,19 @@ export function Scrollytelling() {
       tl.fromTo(
         wipe2BackRef.current,
         { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -25, opacity: 0.7, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: -25, opacity: 0.62, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
         0.48
       );
       tl.fromTo(
         wipe2MidRef.current,
         { yPercent: 135, xPercent: 10, opacity: 0, scale: 1.3 },
-        { yPercent: -5, xPercent: -10, opacity: 0.55, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
+        { yPercent: -5, xPercent: -10, opacity: 0.47, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
         0.50
       );
       tl.fromTo(
         wipe2FrontRef.current,
         { yPercent: 155, xPercent: -15, opacity: 0, scale: 1.5 },
-        { yPercent: -35, xPercent: 10, opacity: 0.65, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
+        { yPercent: -35, xPercent: 10, opacity: 0.57, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
         0.51
       );
       tl.set(wipe2HazeRef.current, { opacity: 0 }, 0.48);
@@ -254,25 +254,25 @@ export function Scrollytelling() {
       // ============ WIPE 3 — Realistic cumulus clouds engulf, swap to earth depths, clouds fly up (0.74 → 0.94) ============
       tl.to(financeRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.74);
 
-      // TOP cumulus strip slides down from above — light & airy (max 0.38)
+      // TOP cumulus strip slides down from above — light & airy (max 0.28)
       tl.fromTo(
         wipe3BackRef.current,
         { yPercent: -120, opacity: 0, scale: 1.15 },
-        { yPercent: -10, opacity: 0.38, scale: 1.05, duration: 0.18, ease: "power2.out" },
+        { yPercent: -10, opacity: 0.28, scale: 1.05, duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // BOTTOM cumulus strip slides up from below — light & airy (max 0.35)
+      // BOTTOM cumulus strip slides up from below — light & airy (max 0.26)
       tl.fromTo(
         wipe3MidRef.current,
         { yPercent: 120, opacity: 0, scale: 1.15 },
-        { yPercent: 10, opacity: 0.35, scale: 1.05, duration: 0.18, ease: "power2.out" },
+        { yPercent: 10, opacity: 0.26, scale: 1.05, duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // CENTER soft veil — translucent only (max 0.28)
+      // CENTER soft veil — translucent only (max 0.18)
       tl.fromTo(
         wipe3FrontRef.current,
         { yPercent: 40, opacity: 0, scale: 1.3 },
-        { yPercent: 0, opacity: 0.28, scale: 1.1, duration: 0.16, ease: "power2.out" },
+        { yPercent: 0, opacity: 0.18, scale: 1.1, duration: 0.16, ease: "power2.out" },
         0.76
       );
       tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
@@ -472,11 +472,11 @@ export function Scrollytelling() {
         {(() => {
           // Three tinted translucent cloud layers — never fully opaque so the scene behind shows through
           const cloudWhite =
-            "radial-gradient(ellipse 85% 65% at 50% 55%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.45) 35%, rgba(255,255,255,0.2) 65%, rgba(255,255,255,0) 100%)";
+            "radial-gradient(ellipse 85% 65% at 50% 55%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.38) 35%, rgba(255,255,255,0.12) 65%, rgba(255,255,255,0) 100%)";
           const cloudBlue =
-            "radial-gradient(ellipse 95% 70% at 45% 60%, rgba(224,242,254,0.5) 0%, rgba(214,232,248,0.35) 40%, rgba(200,222,242,0.15) 70%, rgba(200,222,242,0) 100%)";
+            "radial-gradient(ellipse 95% 70% at 45% 60%, rgba(224,242,254,0.4) 0%, rgba(214,232,248,0.28) 40%, rgba(200,222,242,0.08) 70%, rgba(200,222,242,0) 100%)";
           const cloudPlatinum =
-            "radial-gradient(ellipse 100% 75% at 55% 50%, rgba(241,245,249,0.5) 0%, rgba(230,236,244,0.35) 40%, rgba(220,228,238,0.15) 70%, rgba(220,228,238,0) 100%)";
+            "radial-gradient(ellipse 100% 75% at 55% 50%, rgba(241,245,249,0.4) 0%, rgba(230,236,244,0.28) 40%, rgba(220,228,238,0.08) 70%, rgba(220,228,238,0) 100%)";
           const layerBase = "pointer-events-none absolute left-1/2 top-1/2 -ml-[100vw] -mt-[100vh] w-[200vw] h-[200vh] rounded-full opacity-0 blur-[140px]";
           const styleWithWillChange = { willChange: "transform, opacity", maskImage: "radial-gradient(ellipse 90% 90% at center, white 55%, transparent 100%)" };
           return (
