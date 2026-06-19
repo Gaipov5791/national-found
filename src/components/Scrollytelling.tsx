@@ -335,7 +335,7 @@ export function Scrollytelling() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative" style={{ height: "7700px" }}>
+    <div ref={rootRef} className="relative overflow-x-hidden" style={{ height: "7700px" }}>
       <div
         ref={sceneRef}
         className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
