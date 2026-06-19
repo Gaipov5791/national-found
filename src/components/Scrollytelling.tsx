@@ -343,17 +343,13 @@ export function Scrollytelling() {
         ref={sceneRef}
         className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
       >
-        {/* Drifting clouds back */}
-        <div
-          ref={cloudDriftRef}
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage: `url(${clouds})`,
-            backgroundRepeat: "repeat-x",
-            backgroundSize: "auto 35%",
-            backgroundPositionY: "18%",
-          }}
-        />
+        {/* Ambient drifting CSS clouds — no image, just blurred gradient blobs */}
+        <div ref={cloudDriftRef} className="pointer-events-none absolute inset-0 z-[5] overflow-hidden">
+          <div className="absolute left-[-10%] top-[12%] h-[28vh] w-[55vw] rounded-full bg-gradient-to-t from-white/70 via-white/40 to-transparent blur-3xl" />
+          <div className="absolute right-[-8%] top-[22%] h-[24vh] w-[45vw] rounded-full bg-gradient-to-t from-white/60 via-white/30 to-transparent blur-3xl" />
+          <div className="absolute left-[20%] top-[6%] h-[18vh] w-[35vw] rounded-full bg-gradient-to-t from-white/50 via-white/25 to-transparent blur-2xl" />
+        </div>
+
 
         {/* === BACKGROUND LAYERS === */}
         <img
