@@ -626,6 +626,18 @@ export function Scrollytelling() {
           </p>
         </div>
 
+        <div
+          ref={partnersRef}
+          className="pointer-events-none absolute inset-x-0 top-[40%] z-[30] px-6 text-center opacity-0"
+        >
+          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_8px_40px_rgba(255,90,30,0.6)] md:text-6xl">
+            ПАРТНЁРЫ
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] md:text-base">
+            Глубоко под поверхностью — энергия, что движет будущее. Вместе с партнёрами фонд превращает её в реальные проекты.
+          </p>
+        </div>
+
         {/* hidden decree placeholder */}
         <div ref={decreeRef} className="hidden" />
 
