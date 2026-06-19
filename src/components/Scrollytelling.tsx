@@ -142,19 +142,20 @@ export function Scrollytelling() {
       );
 
       // ============ SCENE 1 — Mountains + stats (0 → 0.22) ============
-      tl.to(mountainRef.current, { scale: 1.25, duration: 0.22, ease: "none" }, 0);
+      // mountains zoom in AND pan left for cinematic camera drift
+      tl.to(mountainRef.current, { scale: 1.25, xPercent: -6, duration: 0.22, ease: "none" }, 0);
       tl.fromTo(
         statsRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.10, ease: "power1.out" },
+        { opacity: 0, y: 30, xPercent: 4 },
+        { opacity: 1, y: 0, xPercent: -3, duration: 0.10, ease: "power1.out" },
         0.10
       );
 
-      // ambient fog drifts over mountain peaks (0.06 → 0.22)
+      // ambient fog drifts over mountain peaks — slow horizontal pan RIGHT (0.06 → 0.22)
       tl.fromTo(
         ambientFogRef.current,
-        { opacity: 0, yPercent: 30 },
-        { opacity: 0.55, yPercent: 0, duration: 0.16, ease: "none" },
+        { opacity: 0, yPercent: 30, xPercent: -8 },
+        { opacity: 0.55, yPercent: 0, xPercent: 6, duration: 0.16, ease: "none" },
         0.06
       );
 
