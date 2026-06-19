@@ -327,111 +327,151 @@ export function Scrollytelling() {
       tl.to(wipe3MidRef.current, { yPercent: -220, xPercent: px(20), opacity: 0, scale: sz(1.5), duration: 0.14, ease: "power2.in" }, 0.80);
 
 
-      // Directions title rises from below — pure vertical entrance
+      // =====================================================================
+      // STRICT LAYERED PARALLAX — each underground slide has 3 layers:
+      //   z-0  BG     image          (slowest:  yPercent ±30)
+      //   z-10 SMOKE  fog veils      (medium:   yPercent ±60)
+      //   z-20 TEXT   Gotham content (fastest:  yPercent ±100)
+      // Next slide mirrors entrance from yPercent +30 / +60 / +100.
+      // No opacity "switches" — everything translates through space.
+      // =====================================================================
+
+      // ----- SLIDE: ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ (0.83 → 0.90) -----
+      // BG (crust) — already visible from wipe3; start its slow upward drift
       tl.fromTo(
-        directionsRef.current,
-        { opacity: 0, yPercent: 100, filter: "blur(20px)" },
-        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.06, ease: "power2.out" },
-        0.86
+        crustRef.current,
+        { yPercent: 30 },
+        { yPercent: 0, duration: 0.05, ease: "none" },
+        0.83
       );
-
-      // ============ UNDERGROUND SCENE — dark smoke drifts in over crust (0.88 → 0.91) ============
-      // Slow vertical breathing of crust (camera continues descending)
-      tl.to(crustRef.current, { yPercent: -3, scale: sz(1.08), duration: 0.10, ease: "sine.inOut" }, 0.88);
-
+      // SMOKE veils — drift in from below, faster than bg
       tl.fromTo(
         undergroundSmokeBackRef.current,
-        { opacity: 0, yPercent: 25 },
-        { opacity: 0.42, yPercent: -5, duration: 0.10, ease: "power1.out" },
-        0.88
+        { opacity: 0, yPercent: 60 },
+        { opacity: 0.45, yPercent: 0, duration: 0.06, ease: "none" },
+        0.83
       );
       tl.fromTo(
         undergroundSmokeMidRef.current,
-        { opacity: 0, yPercent: 35 },
-        { opacity: 0.40, yPercent: 0, duration: 0.10, ease: "power1.out" },
-        0.89
+        { opacity: 0, yPercent: 60 },
+        { opacity: 0.42, yPercent: 0, duration: 0.06, ease: "none" },
+        0.83
       );
       tl.fromTo(
         undergroundSmokeFrontRef.current,
-        { opacity: 0, yPercent: 45 },
-        { opacity: 0.45, yPercent: -8, duration: 0.10, ease: "power1.out" },
-        0.90
+        { opacity: 0, yPercent: 60 },
+        { opacity: 0.5, yPercent: 0, duration: 0.06, ease: "none" },
+        0.83
+      );
+      // TEXT — fastest, comes from below
+      tl.fromTo(
+        directionsRef.current,
+        { opacity: 0, yPercent: 100, filter: "blur(18px)" },
+        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.05, ease: "power2.out" },
+        0.83
       );
 
-      // ============ SCENE: ПРОЕКТЫ МСБ (0.91 → 0.945) ============
-      // Directions slide flies UP off-screen, МСБ rises from BELOW — pure vertical
-      tl.to(directionsRef.current, { yPercent: -100, opacity: 0, filter: "blur(10px)", duration: 0.035, ease: "power2.in" }, 0.91);
+      // ----- TRANSITION: ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ → ПРОЕКТЫ МСБ (0.89 → 0.93) -----
+      // Same crust bg continues — slow upward parallax (bg never "switches", just keeps drifting up)
+      tl.to(crustRef.current, { yPercent: -30, duration: 0.04, ease: "none" }, 0.89);
+      // Smoke flies up at 2x speed
+      tl.to(undergroundSmokeBackRef.current,  { yPercent: -60, duration: 0.04, ease: "none" }, 0.89);
+      tl.to(undergroundSmokeMidRef.current,   { yPercent: -60, duration: 0.04, ease: "none" }, 0.89);
+      tl.to(undergroundSmokeFrontRef.current, { yPercent: -60, duration: 0.04, ease: "none" }, 0.89);
+      // Directions text flies up at full speed
+      tl.to(
+        directionsRef.current,
+        { yPercent: -100, opacity: 0, filter: "blur(10px)", duration: 0.04, ease: "power2.in" },
+        0.89
+      );
 
-      // Camera continues descending — crust drifts further up to suggest depth
-      tl.to(crustRef.current, { yPercent: -10, scale: sz(1.14), duration: 0.05, ease: "sine.inOut" }, 0.91);
-
-      // Smoke keeps drifting vertically around the new text
-      tl.to(undergroundSmokeBackRef.current, { yPercent: -12, opacity: 0.4, duration: 0.05, ease: "sine.inOut" }, 0.91);
-      tl.to(undergroundSmokeMidRef.current, { yPercent: -6, opacity: 0.38, duration: 0.05, ease: "sine.inOut" }, 0.91);
-      tl.to(undergroundSmokeFrontRef.current, { yPercent: -14, opacity: 0.42, duration: 0.05, ease: "sine.inOut" }, 0.91);
-
+      // ----- SLIDE: ПРОЕКТЫ МСБ (0.89 → 0.95) -----
+      // BG continuation — crust scrolls into next viewport from below (same image, continuous descent)
+      // We piggy-back the bg from the previous slide; for the new "viewport" we move the smoke + text fresh.
+      // Fresh smoke layer entrance (mirrors entrance schema)
+      tl.fromTo(
+        undergroundSmokeBackRef.current,
+        { yPercent: 60, opacity: 0.45 },
+        { yPercent: 0, opacity: 0.45, duration: 0.04, ease: "none" },
+        0.93
+      );
+      tl.fromTo(
+        undergroundSmokeMidRef.current,
+        { yPercent: 60, opacity: 0.42 },
+        { yPercent: 0, opacity: 0.42, duration: 0.04, ease: "none" },
+        0.93
+      );
+      tl.fromTo(
+        undergroundSmokeFrontRef.current,
+        { yPercent: 60, opacity: 0.5 },
+        { yPercent: 0, opacity: 0.5, duration: 0.04, ease: "none" },
+        0.93
+      );
+      // Crust bg resets to 0 and starts new slow drift
+      tl.fromTo(
+        crustRef.current,
+        { yPercent: 30 },
+        { yPercent: 0, duration: 0.04, ease: "none" },
+        0.93
+      );
+      // МСБ text rises from below
       tl.fromTo(
         msbRef.current,
-        { opacity: 0, yPercent: 100, filter: "blur(20px)" },
-        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.035, ease: "power2.out" },
-        0.91
+        { opacity: 0, yPercent: 100, filter: "blur(18px)" },
+        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.04, ease: "power2.out" },
+        0.93
       );
 
-      // Hold МСБ briefly with gentle continued vertical drift (cinemagraph feel)
-      tl.to(msbRef.current, { yPercent: -4, duration: 0.025, ease: "sine.inOut" }, 0.945);
-      tl.to(crustRef.current, { yPercent: -14, duration: 0.025, ease: "sine.inOut" }, 0.945);
-
-      // ============ TRANSITION — Crust + МСБ fly UP, magma rises from BELOW (0.96 → 0.98) ============
-      tl.to(msbRef.current, { yPercent: -100, opacity: 0, filter: "blur(10px)", duration: 0.03, ease: "power2.in" }, 0.96);
-      tl.to(crustRef.current, { yPercent: -100, scale: sz(1.35), opacity: 0, filter: "blur(14px)", duration: 0.03, ease: "power2.in" }, 0.96);
-
-      // Smoke warms to golden-orange (heat from rising lava below), keeps drifting vertically
+      // ----- TRANSITION: ПРОЕКТЫ МСБ → ПАРТНЁРЫ (0.95 → 0.99) -----
+      // BG crust flies up SLOW (-30) — deep background
+      tl.to(crustRef.current, { yPercent: -30, opacity: 0, duration: 0.04, ease: "none" }, 0.95);
+      // Smoke flies up FASTER (-60) AND warms to golden-orange (heat from rising lava)
       tl.to(undergroundSmokeBackRef.current,
-        { opacity: 0.55, backgroundColor: "rgba(120, 60, 20, 0.55)", yPercent: 10, duration: 0.025, ease: "none" }, 0.96);
+        { yPercent: -60, opacity: 0.5, backgroundColor: "rgba(120, 60, 20, 0.55)", duration: 0.04, ease: "none" }, 0.95);
       tl.to(undergroundSmokeMidRef.current,
-        { opacity: 0.5, backgroundColor: "rgba(180, 95, 30, 0.5)", yPercent: 15, duration: 0.025, ease: "none" }, 0.96);
+        { yPercent: -60, opacity: 0.5, backgroundColor: "rgba(180, 95, 30, 0.5)", duration: 0.04, ease: "none" }, 0.95);
       tl.to(undergroundSmokeFrontRef.current,
-        { opacity: 0.6, backgroundColor: "rgba(230, 140, 45, 0.55)", yPercent: 20, duration: 0.025, ease: "none" }, 0.96);
+        { yPercent: -60, opacity: 0.55, backgroundColor: "rgba(230, 140, 45, 0.55)", duration: 0.04, ease: "none" }, 0.95);
+      // МСБ text flies up FASTEST (-100)
+      tl.to(msbRef.current,
+        { yPercent: -100, opacity: 0, filter: "blur(10px)", duration: 0.04, ease: "power2.in" }, 0.95);
 
-      tl.to(sceneRef.current, { backgroundColor: "#1a0a05", duration: 0.025, ease: "none" }, 0.96);
+      // Scene tint shifts to magma-warm
+      tl.to(sceneRef.current, { backgroundColor: "#1a0a05", duration: 0.04, ease: "none" }, 0.95);
 
-      // Magma rises from BELOW the screen (the lava is climbing up)
+      // ----- SLIDE: ПАРТНЁРЫ — mirrored entrance (fly-through continues) -----
+      // BG (magma) — slowest, enters from +30
       tl.fromTo(
         magmaRef.current,
-        { opacity: 0, yPercent: 100, scale: sz(1.15), filter: "blur(18px)" },
-        { opacity: 1, yPercent: 0, scale: sz(1.05), filter: "blur(0px)", duration: 0.035, ease: "power2.out" },
-        0.96
+        { opacity: 0, yPercent: 30, scale: sz(1.05) },
+        { opacity: 1, yPercent: 0, scale: sz(1.05), duration: 0.04, ease: "none" },
+        0.95
       );
-
-      // Smoke fades back so magma reads, but stays as glowing veil (continues drifting up)
-      tl.to(undergroundSmokeBackRef.current, { opacity: 0.22, yPercent: -30, duration: 0.025, ease: "power1.out" }, 0.98);
-      tl.to(undergroundSmokeMidRef.current, { opacity: 0.18, yPercent: -40, duration: 0.025, ease: "power1.out" }, 0.98);
-      tl.to(undergroundSmokeFrontRef.current, { opacity: 0.25, yPercent: -25, duration: 0.025, ease: "power1.out" }, 0.98);
-
-      // ============ MAGMA CINEMAGRAPH — slow scale + hot smoke drifts vertically (0.98 → 1.0) ============
+      // SMOKE (hot, golden) — enters from +60
       tl.fromTo(
         magmaSmokeBackRef.current,
-        { opacity: 0, yPercent: 30 },
-        { opacity: 0.4, yPercent: -10, duration: 0.03, ease: "sine.inOut" },
-        0.98
+        { opacity: 0, yPercent: 60 },
+        { opacity: 0.4, yPercent: 0, duration: 0.04, ease: "none" },
+        0.95
       );
       tl.fromTo(
         magmaSmokeFrontRef.current,
-        { opacity: 0, yPercent: 40 },
-        { opacity: 0.35, yPercent: -15, duration: 0.03, ease: "sine.inOut" },
-        0.98
+        { opacity: 0, yPercent: 60 },
+        { opacity: 0.4, yPercent: 0, duration: 0.04, ease: "none" },
+        0.95
       );
-
-      // Magma breathes: very slow scale, no X drift
-      tl.to(magmaRef.current, { scale: sz(1.12), duration: 0.02, ease: "sine.inOut" }, 0.98);
-
-      // Partners title rises from BELOW — pure vertical
+      // TEXT (Партнёры) — enters from +100
       tl.fromTo(
         partnersRef.current,
         { opacity: 0, yPercent: 100, filter: "blur(18px)" },
-        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.035, ease: "power2.out" },
-        0.97
+        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.04, ease: "power2.out" },
+        0.95
       );
+
+      // ----- MAGMA CINEMAGRAPH (0.99 → 1.0) — slow breathing, hot smoke continues drifting up -----
+      tl.to(magmaRef.current, { scale: sz(1.12), duration: 0.01, ease: "sine.inOut" }, 0.99);
+      tl.to(magmaSmokeBackRef.current,  { yPercent: -10, duration: 0.01, ease: "sine.inOut" }, 0.99);
+      tl.to(magmaSmokeFrontRef.current, { yPercent: -14, duration: 0.01, ease: "sine.inOut" }, 0.99);
 
 
       // Decree text — re-purposed: shown over mountains briefly between scene 1 & wipe1
