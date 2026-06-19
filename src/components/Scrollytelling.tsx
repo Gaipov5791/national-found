@@ -503,9 +503,8 @@ export function Scrollytelling() {
                   willChange: "transform, opacity",
                   backgroundImage: `url(${cumulus})`,
                   backgroundSize: "cover",
-                  backgroundPosition: "center bottom",
+                  backgroundPosition: "center top",
                   backgroundRepeat: "no-repeat",
-                  transform: "scaleY(-1)",
                   WebkitMaskImage:
                     "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 22%, rgba(0,0,0,0.85) 70%, transparent 100%)",
                   maskImage:
