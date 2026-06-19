@@ -460,6 +460,72 @@ export function Scrollytelling() {
           className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
           style={{ transformOrigin: "50% 50%" }}
         />
+        <img
+          ref={magmaRef}
+          src={magma}
+          alt="Плавящаяся магма"
+          className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
+          style={{ transformOrigin: "50% 60%" }}
+        />
+
+        {/* Underground dark smoke layers (over crust → warms to gold) */}
+        <div
+          ref={undergroundSmokeBackRef}
+          className="pointer-events-none absolute inset-0 z-[9] opacity-0"
+          style={{
+            willChange: "transform, opacity, background-color",
+            backgroundColor: "rgba(20, 16, 14, 0.5)",
+            filter: "blur(80px)",
+            WebkitMaskImage: "radial-gradient(ellipse 90% 80% at 50% 60%, black 40%, transparent 100%)",
+            maskImage: "radial-gradient(ellipse 90% 80% at 50% 60%, black 40%, transparent 100%)",
+          }}
+        />
+        <div
+          ref={undergroundSmokeMidRef}
+          className="pointer-events-none absolute inset-0 z-[10] opacity-0"
+          style={{
+            willChange: "transform, opacity, background-color",
+            backgroundColor: "rgba(30, 22, 18, 0.45)",
+            filter: "blur(110px)",
+            WebkitMaskImage: "radial-gradient(ellipse 100% 90% at 50% 50%, black 30%, transparent 100%)",
+            maskImage: "radial-gradient(ellipse 100% 90% at 50% 50%, black 30%, transparent 100%)",
+          }}
+        />
+        <div
+          ref={undergroundSmokeFrontRef}
+          className="pointer-events-none absolute inset-0 z-[11] opacity-0"
+          style={{
+            willChange: "transform, opacity, background-color",
+            backgroundColor: "rgba(40, 28, 20, 0.5)",
+            filter: "blur(90px)",
+            WebkitMaskImage: "radial-gradient(ellipse 80% 70% at 50% 40%, black 25%, transparent 100%)",
+            maskImage: "radial-gradient(ellipse 80% 70% at 50% 40%, black 25%, transparent 100%)",
+          }}
+        />
+
+        {/* Hot smoke veils over magma */}
+        <div
+          ref={magmaSmokeBackRef}
+          className="pointer-events-none absolute inset-0 z-[12] opacity-0"
+          style={{
+            willChange: "transform, opacity",
+            background:
+              "radial-gradient(ellipse 90% 70% at 50% 30%, rgba(255, 160, 70, 0.35) 0%, rgba(200, 80, 30, 0.18) 45%, transparent 80%)",
+            filter: "blur(60px)",
+            mixBlendMode: "screen",
+          }}
+        />
+        <div
+          ref={magmaSmokeFrontRef}
+          className="pointer-events-none absolute inset-0 z-[13] opacity-0"
+          style={{
+            willChange: "transform, opacity",
+            background:
+              "radial-gradient(ellipse 70% 50% at 50% 70%, rgba(255, 90, 30, 0.3) 0%, rgba(120, 40, 15, 0.15) 50%, transparent 85%)",
+            filter: "blur(80px)",
+            mixBlendMode: "screen",
+          }}
+        />
 
         {/* Ambient fog over mountains — soft gradient, no hard edges */}
         <div
