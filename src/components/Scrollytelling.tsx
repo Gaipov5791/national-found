@@ -25,26 +25,43 @@ export function Scrollytelling() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const mountainRef = useRef<HTMLImageElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
-  const fogRef = useRef<HTMLImageElement>(null);
-  const fogFrontRef = useRef<HTMLImageElement>(null);
   const decreeRef = useRef<HTMLDivElement>(null);
   const cloudDriftRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
 
-  // new scene refs
-  const aboutRef = useRef<HTMLDivElement>(null);
+  // background scene refs
   const kumtorRef = useRef<HTMLImageElement>(null);
-  const financeRef = useRef<HTMLDivElement>(null);
-  const fogLiftRef = useRef<HTMLImageElement>(null);
   const crustRef = useRef<HTMLImageElement>(null);
-  const fogCoverRef = useRef<HTMLImageElement>(null);
+
+  // text scene refs
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
+
+  // CLOUD WIPE LAYERS — each transition uses dedicated multi-layer fog
+  const wipe1BackRef = useRef<HTMLImageElement>(null);   // stats -> about
+  const wipe1MidRef = useRef<HTMLImageElement>(null);
+  const wipe1FrontRef = useRef<HTMLImageElement>(null);
+  const wipe1HazeRef = useRef<HTMLDivElement>(null);
+
+  const wipe2BackRef = useRef<HTMLImageElement>(null);   // about -> kumtor/finance
+  const wipe2MidRef = useRef<HTMLImageElement>(null);
+  const wipe2FrontRef = useRef<HTMLImageElement>(null);
+  const wipe2HazeRef = useRef<HTMLDivElement>(null);
+
+  const wipe3BackRef = useRef<HTMLImageElement>(null);   // kumtor -> crust/directions
+  const wipe3MidRef = useRef<HTMLImageElement>(null);
+  const wipe3FrontRef = useRef<HTMLImageElement>(null);
+  const wipe3HazeRef = useRef<HTMLDivElement>(null);
+
+  // ambient fog over mountains during decree
+  const ambientFogRef = useRef<HTMLImageElement>(null);
 
   const [countProgress, setCountProgress] = useState(0);
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: 1.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
@@ -61,6 +78,24 @@ export function Scrollytelling() {
         duration: 140,
         repeat: -1,
         ease: "none",
+      });
+
+      // Subtle perpetual drift on ALL fog layers so they never look static
+      [
+        wipe1BackRef, wipe1MidRef, wipe1FrontRef,
+        wipe2BackRef, wipe2MidRef, wipe2FrontRef,
+        wipe3BackRef, wipe3MidRef, wipe3FrontRef,
+        ambientFogRef,
+      ].forEach((r, i) => {
+        if (r.current) {
+          gsap.to(r.current, {
+            xPercent: i % 2 === 0 ? 4 : -4,
+            duration: 14 + i,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+        }
       });
 
       const computeBrandTarget = () => {
@@ -82,8 +117,8 @@ export function Scrollytelling() {
         scrollTrigger: {
           trigger: rootRef.current,
           start: "top top",
-          end: "+=6400",
-          scrub: true,
+          end: "+=7200",
+          scrub: 1.2,
           pin: sceneRef.current,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -104,108 +139,192 @@ export function Scrollytelling() {
         0
       );
 
-      // SCENE 1 — Mountains zoom + stats (0 → 0.30)
-      tl.to(mountainRef.current, { scale: 1.25, duration: 0.30, ease: "none" }, 0);
+      // ============ SCENE 1 — Mountains + stats (0 → 0.22) ============
+      tl.to(mountainRef.current, { scale: 1.25, duration: 0.22, ease: "none" }, 0);
       tl.fromTo(
         statsRef.current,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.15, ease: "none" },
-        0.12
+        { opacity: 1, y: 0, duration: 0.10, ease: "power1.out" },
+        0.10
       );
 
-      // Stats fade out + fog rises (0.30 → 0.42)
-      tl.to(statsRef.current, { opacity: 0, y: -30, duration: 0.10, ease: "none" }, 0.30);
-      tl.to(mountainRef.current, { scale: 1.55, duration: 0.20, ease: "none" }, 0.30);
+      // ambient fog drifts over mountain peaks (0.06 → 0.22)
       tl.fromTo(
-        fogRef.current,
-        { yPercent: 90, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.14, ease: "none" },
-        0.32
+        ambientFogRef.current,
+        { opacity: 0, yPercent: 30 },
+        { opacity: 0.55, yPercent: 0, duration: 0.16, ease: "none" },
+        0.06
+      );
+
+      // ============ WIPE 1 — Clouds engulf stats, reveal "О ФОНДЕ" (0.22 → 0.40) ============
+      // Stats fade as fog rolls in
+      tl.to(statsRef.current, { opacity: 0, y: -20, duration: 0.08, ease: "none" }, 0.22);
+
+      // Three cloud layers surge upward & inward — different speeds for parallax depth
+      tl.fromTo(
+        wipe1BackRef.current,
+        { yPercent: 110, opacity: 0, scale: 1.1 },
+        { yPercent: -10, opacity: 1, scale: 1.2, duration: 0.14, ease: "power2.inOut" },
+        0.22
       );
       tl.fromTo(
-        fogFrontRef.current,
-        { yPercent: 100, opacity: 0 },
-        { yPercent: 20, opacity: 0.95, duration: 0.16, ease: "none" },
-        0.34
+        wipe1MidRef.current,
+        { yPercent: 120, xPercent: -10, opacity: 0, scale: 1.25 },
+        { yPercent: -15, xPercent: 5, opacity: 1, scale: 1.35, duration: 0.14, ease: "power2.inOut" },
+        0.24
       );
-
-      // Decree text — fade in (0.44 → 0.55)
       tl.fromTo(
-        decreeRef.current,
-        { opacity: 0, y: 80 },
-        { opacity: 1, y: 0, duration: 0.11, ease: "power1.out" },
-        0.44
+        wipe1FrontRef.current,
+        { yPercent: 130, xPercent: 15, opacity: 0, scale: 1.4 },
+        { yPercent: -20, xPercent: -5, opacity: 1, scale: 1.5, duration: 0.16, ease: "power2.inOut" },
+        0.25
+      );
+      // Atmospheric haze (white wash) — peaks at 0.31
+      tl.fromTo(
+        wipe1HazeRef.current,
+        { opacity: 0 },
+        { opacity: 0.85, duration: 0.09, ease: "power1.in" },
+        0.22
       );
 
-      // Decree fades out (0.56 → 0.62) — fog densifies further
-      tl.to(decreeRef.current, { opacity: 0, y: -40, duration: 0.06, ease: "none" }, 0.56);
-      tl.to(fogFrontRef.current, { yPercent: 0, opacity: 1, duration: 0.08, ease: "none" }, 0.56);
-
-      // SCENE 2 — "О ФОНДЕ" — emerges from dense fog (0.60 → 0.70)
+      // At max density (0.31) swap mountains → keep mountains but they'll be hidden
+      // About emerges through dissipating clouds (0.31 → 0.40)
       tl.fromTo(
         aboutRef.current,
-        { opacity: 0, y: 60 },
-        { opacity: 1, y: 0, duration: 0.10, ease: "power1.out" },
-        0.60
+        { opacity: 0, y: 40, filter: "blur(20px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        0.31
       );
-      // About fades out (0.70 → 0.76)
-      tl.to(aboutRef.current, { opacity: 0, y: -40, duration: 0.06, ease: "none" }, 0.70);
+      // Clouds dissipate upward
+      tl.to(wipe1HazeRef.current, { opacity: 0, duration: 0.10, ease: "power1.out" }, 0.32);
+      tl.to(wipe1BackRef.current, { yPercent: -110, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.32);
+      tl.to(wipe1MidRef.current, { yPercent: -120, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.33);
+      tl.to(wipe1FrontRef.current, { yPercent: -130, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.34);
 
-      // SCENE 3 — Fog lifts UP, revealing Kumtor (0.70 → 0.82)
-      // Hide mountains (we crossfade to kumtor)
-      tl.to(mountainRef.current, { opacity: 0, duration: 0.08, ease: "none" }, 0.72);
+      // ============ Hold "О ФОНДЕ" briefly (0.40 → 0.48) ============
+      tl.to({}, { duration: 0.08 }, 0.40);
+
+      // ============ WIPE 2 — Clouds engulf About, reveal Kumtor + "ФИНАНСИРОВАНИЕ" (0.48 → 0.66) ============
+      tl.to(aboutRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.48);
+
+      tl.fromTo(
+        wipe2BackRef.current,
+        { yPercent: 110, opacity: 0, scale: 1.1 },
+        { yPercent: -10, opacity: 1, scale: 1.25, duration: 0.16, ease: "power2.inOut" },
+        0.48
+      );
+      tl.fromTo(
+        wipe2MidRef.current,
+        { yPercent: 120, xPercent: 10, opacity: 0, scale: 1.3 },
+        { yPercent: -10, xPercent: -8, opacity: 1, scale: 1.4, duration: 0.16, ease: "power2.inOut" },
+        0.50
+      );
+      tl.fromTo(
+        wipe2FrontRef.current,
+        { yPercent: 130, xPercent: -15, opacity: 0, scale: 1.5 },
+        { yPercent: -15, xPercent: 8, opacity: 1, scale: 1.6, duration: 0.18, ease: "power2.inOut" },
+        0.51
+      );
+      tl.fromTo(
+        wipe2HazeRef.current,
+        { opacity: 0 },
+        { opacity: 0.92, duration: 0.10, ease: "power1.in" },
+        0.48
+      );
+
+      // SWAP background at peak density (0.57)
+      tl.to(mountainRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.57);
+      tl.to(ambientFogRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.57);
       tl.fromTo(
         kumtorRef.current,
         { opacity: 0, scale: 1.15 },
-        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power1.out" },
-        0.72
+        { opacity: 1, scale: 1.0, duration: 0.14, ease: "power2.out" },
+        0.57
       );
-      // Fog lifts up but stays as a hovering veil above
-      tl.to(fogRef.current, { yPercent: -75, opacity: 0.75, duration: 0.14, ease: "power1.inOut" }, 0.70);
-      tl.to(fogFrontRef.current, { yPercent: -90, opacity: 0.55, duration: 0.14, ease: "power1.inOut" }, 0.70);
 
-      // Финансирование проектов title (0.78 → 0.84)
+      // Finance title emerges through dispersing clouds
       tl.fromTo(
         financeRef.current,
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.08, ease: "power1.out" },
-        0.78
+        { opacity: 0, y: 40, filter: "blur(20px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        0.59
       );
-      // fade out finance (0.86 → 0.90)
-      tl.to(financeRef.current, { opacity: 0, y: -30, duration: 0.05, ease: "none" }, 0.86);
 
-      // SCENE 4 — New fog blanket covers Kumtor → earth crust appears (0.86 → 0.96)
+      // Clouds dissipate
+      tl.to(wipe2HazeRef.current, { opacity: 0, duration: 0.12, ease: "power1.out" }, 0.60);
+      tl.to(wipe2BackRef.current, { yPercent: -120, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.60);
+      tl.to(wipe2MidRef.current, { yPercent: -130, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.61);
+      tl.to(wipe2FrontRef.current, { yPercent: -140, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.62);
+
+      // Hold finance (0.66 → 0.74)
+      tl.to({}, { duration: 0.08 }, 0.66);
+
+      // ============ WIPE 3 — Clouds engulf, reveal Earth Crust + "ПЕРСПЕКТИВНЫЕ" (0.74 → 0.94) ============
+      tl.to(financeRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.74);
+
       tl.fromTo(
-        fogCoverRef.current,
-        { yPercent: 100, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.10, ease: "power1.inOut" },
-        0.84
+        wipe3BackRef.current,
+        { yPercent: 110, opacity: 0, scale: 1.1 },
+        { yPercent: -10, opacity: 1, scale: 1.25, duration: 0.16, ease: "power2.inOut" },
+        0.74
       );
-      tl.to(kumtorRef.current, { opacity: 0, duration: 0.08, ease: "none" }, 0.88);
+      tl.fromTo(
+        wipe3MidRef.current,
+        { yPercent: 120, xPercent: -10, opacity: 0, scale: 1.3 },
+        { yPercent: -10, xPercent: 8, opacity: 1, scale: 1.4, duration: 0.16, ease: "power2.inOut" },
+        0.76
+      );
+      tl.fromTo(
+        wipe3FrontRef.current,
+        { yPercent: 130, xPercent: 15, opacity: 0, scale: 1.5 },
+        { yPercent: -15, xPercent: -8, opacity: 1, scale: 1.6, duration: 0.18, ease: "power2.inOut" },
+        0.77
+      );
+      tl.fromTo(
+        wipe3HazeRef.current,
+        { opacity: 0 },
+        { opacity: 0.95, duration: 0.10, ease: "power1.in" },
+        0.74
+      );
+
+      // SWAP at peak (0.83)
+      tl.to(kumtorRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.83);
       tl.fromTo(
         crustRef.current,
-        { opacity: 0, scale: 1.12 },
-        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power1.out" },
-        0.88
+        { opacity: 0, scale: 1.15 },
+        { opacity: 1, scale: 1.0, duration: 0.14, ease: "power2.out" },
+        0.83
       );
-      // fog cover lifts gently to reveal crust
-      tl.to(fogCoverRef.current, { yPercent: -60, opacity: 0.5, duration: 0.10, ease: "power1.inOut" }, 0.92);
 
-      // Перспективные направления (0.94 → 1.00)
+      // Directions title emerges
       tl.fromTo(
         directionsRef.current,
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.06, ease: "power1.out" },
-        0.94
+        { opacity: 0, y: 40, filter: "blur(20px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        0.85
+      );
+
+      // Clouds dissipate
+      tl.to(wipe3HazeRef.current, { opacity: 0, duration: 0.12, ease: "power1.out" }, 0.86);
+      tl.to(wipe3BackRef.current, { yPercent: -120, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.86);
+      tl.to(wipe3MidRef.current, { yPercent: -130, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.87);
+      tl.to(wipe3FrontRef.current, { yPercent: -140, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.88);
+
+      // Decree text — re-purposed: shown over mountains briefly between scene 1 & wipe1
+      tl.fromTo(
+        decreeRef.current,
+        { opacity: 0, y: 40 },
+        { opacity: 0, duration: 0.01 },
+        0
       );
     }, rootRef);
 
     const st = ScrollTrigger.create({
       trigger: rootRef.current,
       start: "top top",
-      end: "+=6400",
+      end: "+=7200",
       onUpdate: (self) => {
-        const p = (self.progress - 0.12) / 0.18;
+        const p = (self.progress - 0.10) / 0.14;
         setCountProgress(Math.max(0, Math.min(1, p)));
       },
     });
@@ -219,7 +338,7 @@ export function Scrollytelling() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative" style={{ height: "6900px" }}>
+    <div ref={rootRef} className="relative" style={{ height: "7700px" }}>
       <div
         ref={sceneRef}
         className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
@@ -236,7 +355,7 @@ export function Scrollytelling() {
           }}
         />
 
-        {/* Mountains */}
+        {/* === BACKGROUND LAYERS === */}
         <img
           ref={mountainRef}
           src={mountains}
@@ -244,8 +363,6 @@ export function Scrollytelling() {
           className="absolute inset-0 h-full w-full object-cover object-bottom will-change-transform"
           style={{ transformOrigin: "50% 70%" }}
         />
-
-        {/* Kumtor — behind fog layers */}
         <img
           ref={kumtorRef}
           src={kumtor}
@@ -253,14 +370,21 @@ export function Scrollytelling() {
           className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
           style={{ transformOrigin: "50% 60%" }}
         />
-
-        {/* Earth crust */}
         <img
           ref={crustRef}
           src={earthCrust}
           alt="Земная кора в разрезе"
           className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
           style={{ transformOrigin: "50% 50%" }}
+        />
+
+        {/* Ambient fog over mountains */}
+        <img
+          ref={ambientFogRef}
+          src={clouds}
+          alt=""
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full object-cover object-top opacity-0"
+          style={{ filter: "blur(2px)" }}
         />
 
         {/* BRAND TITLE */}
@@ -276,10 +400,10 @@ export function Scrollytelling() {
           </h1>
         </div>
 
-        {/* Stats */}
+        {/* Stats (Scene 1) */}
         <div
           ref={statsRef}
-          className="pointer-events-none absolute inset-x-0 top-[46%] z-20 px-6 opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-[52%] z-20 px-6 opacity-0"
         >
           <div className="relative mx-auto max-w-3xl text-center">
             <div
@@ -315,44 +439,12 @@ export function Scrollytelling() {
           </div>
         </div>
 
-        {/* Fog back */}
-        <img
-          ref={fogRef}
-          src={clouds}
-          alt=""
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[60%] w-full object-cover object-top opacity-0"
-        />
-        {/* Fog front */}
-        <img
-          ref={fogFrontRef}
-          src={clouds}
-          alt=""
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[60%] w-full object-cover object-top opacity-0"
-        />
-
-        {/* Decree text */}
-        <div
-          ref={decreeRef}
-          className="pointer-events-none absolute inset-x-0 bottom-[10%] z-30 px-6 text-center opacity-0"
-        >
-          <p className="font-display mx-auto max-w-4xl text-2xl font-medium leading-snug text-[color:var(--ink)] md:text-4xl">
-            Фонд учреждён постановлением{" "}
-            <span className="font-semibold">Кабинета Министров Кыргызской Республики</span>
-          </p>
-          <div className="mx-auto mt-5 h-px w-16 bg-[color:var(--gold)]" />
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-[color:var(--ink)]/80 md:text-base">
-            от 5 ноября 2024 года № 666 во исполнение Закона Кыргызской Республики
-            «О Национальном инвестиционном фонде Кыргызской Республики» и Указа
-            Президента Кыргызской Республики № 155 от 14 июня 2024 года.
-          </p>
-        </div>
-
-        {/* О ФОНДЕ */}
+        {/* === TEXT SCENES (z-[30]) === */}
         <div
           ref={aboutRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-[30] -translate-y-1/2 px-6 text-center opacity-0"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.2em] text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.6)] md:text-6xl">
+          <h2 className="font-display text-4xl font-bold tracking-[0.2em] text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.8)] md:text-6xl">
             О ФОНДЕ
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-[color:var(--ink)]/85 md:text-base">
@@ -361,28 +453,18 @@ export function Scrollytelling() {
           </p>
         </div>
 
-        {/* ФИНАНСИРОВАНИЕ ПРОЕКТОВ */}
         <div
           ref={financeRef}
-          className="pointer-events-none absolute inset-x-0 top-[40%] z-30 px-6 text-center opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-[40%] z-[30] px-6 text-center opacity-0"
         >
           <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.7)] md:text-6xl">
             ФИНАНСИРОВАНИЕ ПРОЕКТОВ
           </h2>
         </div>
 
-        {/* Cover fog for transition to crust */}
-        <img
-          ref={fogCoverRef}
-          src={clouds}
-          alt=""
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[28] h-[110%] w-full object-cover object-top opacity-0"
-        />
-
-        {/* ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ */}
         <div
           ref={directionsRef}
-          className="pointer-events-none absolute inset-x-0 top-[38%] z-30 px-6 text-center opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-[38%] z-[30] px-6 text-center opacity-0"
         >
           <h2 className="font-display text-4xl font-bold tracking-[0.16em] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] md:text-6xl">
             ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ
@@ -392,8 +474,48 @@ export function Scrollytelling() {
           </p>
         </div>
 
-        {/* unused ref placeholder */}
-        <span ref={fogLiftRef} className="hidden" />
+        {/* hidden decree placeholder */}
+        <div ref={decreeRef} className="hidden" />
+
+        {/* ============ CLOUD WIPE LAYERS ============ */}
+        {/* WIPE 1 — z 35-38 */}
+        <div
+          ref={wipe1HazeRef}
+          className="pointer-events-none absolute inset-0 z-[35] opacity-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 70%, rgba(255,255,255,0.95) 0%, rgba(240,245,250,0.85) 40%, rgba(220,230,240,0.6) 75%, rgba(200,215,230,0) 100%)",
+          }}
+        />
+        <img ref={wipe1BackRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[36] h-[130%] w-full object-cover opacity-0" style={{ filter: "blur(3px)" }} />
+        <img ref={wipe1MidRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[37] h-[140%] w-full object-cover opacity-0" style={{ filter: "blur(1.5px)", transform: "scaleX(-1)" }} />
+        <img ref={wipe1FrontRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[38] h-[150%] w-full object-cover opacity-0" />
+
+        {/* WIPE 2 — z 40-43 */}
+        <div
+          ref={wipe2HazeRef}
+          className="pointer-events-none absolute inset-0 z-[40] opacity-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.98) 0%, rgba(235,240,248,0.9) 40%, rgba(210,222,235,0.65) 75%, rgba(190,205,225,0) 100%)",
+          }}
+        />
+        <img ref={wipe2BackRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[41] h-[130%] w-full object-cover opacity-0" style={{ filter: "blur(3px)" }} />
+        <img ref={wipe2MidRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[42] h-[140%] w-full object-cover opacity-0" style={{ filter: "blur(1.5px)" }} />
+        <img ref={wipe2FrontRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[43] h-[150%] w-full object-cover opacity-0" style={{ transform: "scaleX(-1)" }} />
+
+        {/* WIPE 3 — z 45-48 */}
+        <div
+          ref={wipe3HazeRef}
+          className="pointer-events-none absolute inset-0 z-[45] opacity-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.98) 0%, rgba(230,238,248,0.92) 40%, rgba(205,220,235,0.7) 75%, rgba(185,200,222,0) 100%)",
+          }}
+        />
+        <img ref={wipe3BackRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[46] h-[130%] w-full object-cover opacity-0" style={{ filter: "blur(3px)", transform: "scaleX(-1)" }} />
+        <img ref={wipe3MidRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[47] h-[140%] w-full object-cover opacity-0" style={{ filter: "blur(1.5px)" }} />
+        <img ref={wipe3FrontRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[48] h-[150%] w-full object-cover opacity-0" />
       </div>
     </div>
   );
