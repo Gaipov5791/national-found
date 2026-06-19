@@ -207,53 +207,48 @@ export function Scrollytelling() {
 
       tl.fromTo(
         wipe2BackRef.current,
-        { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -25, opacity: 0.62, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: 110, opacity: 0, scale: sz(1.1) },
+        { yPercent: -25, opacity: 0.62, scale: sz(1.35), duration: 0.18, ease: "power2.inOut" },
         0.48
       );
       tl.fromTo(
         wipe2MidRef.current,
-        { yPercent: 135, xPercent: 10, opacity: 0, scale: 1.3 },
-        { yPercent: -5, xPercent: -10, opacity: 0.47, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
+        { yPercent: 135, xPercent: px(10), opacity: 0, scale: sz(1.3) },
+        { yPercent: -5, xPercent: px(-10), opacity: 0.47, scale: sz(1.55), duration: 0.15, ease: "power2.inOut" },
         0.50
       );
       tl.fromTo(
         wipe2FrontRef.current,
-        { yPercent: 155, xPercent: -15, opacity: 0, scale: 1.5 },
-        { yPercent: -35, xPercent: 10, opacity: 0.57, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
+        { yPercent: 155, xPercent: px(-15), opacity: 0, scale: sz(1.5) },
+        { yPercent: -35, xPercent: px(10), opacity: 0.57, scale: sz(1.75), duration: 0.2, ease: "power2.inOut" },
         0.51
       );
       tl.set(wipe2HazeRef.current, { opacity: 0 }, 0.48);
 
-      // SWAP background — gentle crossfade BEHIND translucent clouds (peak density 0.55-0.58)
       tl.to(mountainRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
       tl.to(ambientFogRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
       tl.fromTo(
         kumtorRef.current,
-        { opacity: 0, scale: 1.15, xPercent: 4 },
-        { opacity: 1, scale: 1.05, xPercent: 0, duration: 0.12, ease: "power2.out" },
+        { opacity: 0, scale: sz(1.15), xPercent: px(4) },
+        { opacity: 1, scale: sz(1.05), xPercent: 0, duration: 0.12, ease: "power2.out" },
         0.55
       );
 
-      // Finance title emerges through dispersing clouds — drifts slightly LEFT
       tl.fromTo(
         financeRef.current,
-        { opacity: 0, y: 40, xPercent: 5, filter: "blur(20px)" },
-        { opacity: 1, y: 0, xPercent: -2, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        { opacity: 0, y: 40, xPercent: px(5), filter: "blur(20px)" },
+        { opacity: 1, y: 0, xPercent: px(-2), filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
         0.59
       );
 
-      // Clouds dissipate
       tl.to(wipe2HazeRef.current, { opacity: 0, duration: 0.12, ease: "power1.out" }, 0.60);
-      tl.to(wipe2BackRef.current, { yPercent: -120, xPercent: 14, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.60);
-      tl.to(wipe2MidRef.current, { yPercent: -130, xPercent: -16, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.61);
-      tl.to(wipe2FrontRef.current, { yPercent: -140, xPercent: 18, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.62);
+      tl.to(wipe2BackRef.current, { yPercent: -120, xPercent: px(14), opacity: 0, duration: 0.14, ease: "power2.in" }, 0.60);
+      tl.to(wipe2MidRef.current, { yPercent: -130, xPercent: px(-16), opacity: 0, duration: 0.14, ease: "power2.in" }, 0.61);
+      tl.to(wipe2FrontRef.current, { yPercent: -140, xPercent: px(18), opacity: 0, duration: 0.14, ease: "power2.in" }, 0.62);
 
       // ============ CINEMAGRAPH HOLD — Kumtor breathes alive (0.66 → 0.74) ============
-      // subtle continuous zoom 1.05 → 1.10 + slow left drift
-      tl.to(kumtorRef.current, { scale: 1.10, xPercent: -3, duration: 0.08, ease: "sine.inOut" }, 0.66);
-      // finance card drifts gently LEFT against the camera
-      tl.to(financeRef.current, { xPercent: -5, duration: 0.08, ease: "sine.inOut" }, 0.66);
+      tl.to(kumtorRef.current, { scale: sz(1.10), xPercent: px(-3), duration: 0.08, ease: "sine.inOut" }, 0.66);
+      tl.to(financeRef.current, { xPercent: px(-5), duration: 0.08, ease: "sine.inOut" }, 0.66);
 
       // ============ WIPE 3 — Realistic cumulus clouds engulf, swap to earth depths, clouds fly up (0.74 → 0.94) ============
       tl.to(financeRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.74);
