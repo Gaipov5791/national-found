@@ -38,24 +38,24 @@ export function Scrollytelling() {
   const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
 
-  // CLOUD WIPE LAYERS — each transition uses dedicated multi-layer fog
-  const wipe1BackRef = useRef<HTMLImageElement>(null);   // stats -> about
-  const wipe1MidRef = useRef<HTMLImageElement>(null);
-  const wipe1FrontRef = useRef<HTMLImageElement>(null);
+  // CLOUD WIPE LAYERS — each transition uses dedicated multi-layer fog (divs with CSS gradients)
+  const wipe1BackRef = useRef<HTMLDivElement>(null);
+  const wipe1MidRef = useRef<HTMLDivElement>(null);
+  const wipe1FrontRef = useRef<HTMLDivElement>(null);
   const wipe1HazeRef = useRef<HTMLDivElement>(null);
 
-  const wipe2BackRef = useRef<HTMLImageElement>(null);   // about -> kumtor/finance
-  const wipe2MidRef = useRef<HTMLImageElement>(null);
-  const wipe2FrontRef = useRef<HTMLImageElement>(null);
+  const wipe2BackRef = useRef<HTMLDivElement>(null);
+  const wipe2MidRef = useRef<HTMLDivElement>(null);
+  const wipe2FrontRef = useRef<HTMLDivElement>(null);
   const wipe2HazeRef = useRef<HTMLDivElement>(null);
 
-  const wipe3BackRef = useRef<HTMLImageElement>(null);   // kumtor -> crust/directions
-  const wipe3MidRef = useRef<HTMLImageElement>(null);
-  const wipe3FrontRef = useRef<HTMLImageElement>(null);
+  const wipe3BackRef = useRef<HTMLDivElement>(null);
+  const wipe3MidRef = useRef<HTMLDivElement>(null);
+  const wipe3FrontRef = useRef<HTMLDivElement>(null);
   const wipe3HazeRef = useRef<HTMLDivElement>(null);
 
   // ambient fog over mountains during decree
-  const ambientFogRef = useRef<HTMLImageElement>(null);
+  const ambientFogRef = useRef<HTMLDivElement>(null);
 
   const [countProgress, setCountProgress] = useState(0);
 
@@ -378,14 +378,17 @@ export function Scrollytelling() {
           style={{ transformOrigin: "50% 50%" }}
         />
 
-        {/* Ambient fog over mountains */}
-        <img
+        {/* Ambient fog over mountains — soft gradient, no hard edges */}
+        <div
           ref={ambientFogRef}
-          src={clouds}
-          alt=""
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full object-cover object-top opacity-0"
-          style={{ filter: "blur(2px)" }}
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full opacity-0"
+          style={{
+            willChange: "transform, opacity",
+            background:
+              "linear-gradient(to top, rgba(255,255,255,0.6) 0%, rgba(245,250,255,0.4) 35%, rgba(230,240,250,0.2) 65%, rgba(220,235,250,0) 100%)",
+          }}
         />
+
 
         {/* BRAND TITLE */}
         <div
@@ -477,45 +480,40 @@ export function Scrollytelling() {
         {/* hidden decree placeholder */}
         <div ref={decreeRef} className="hidden" />
 
-        {/* ============ CLOUD WIPE LAYERS ============ */}
-        {/* WIPE 1 — z 35-38 */}
-        <div
-          ref={wipe1HazeRef}
-          className="pointer-events-none absolute inset-0 z-[35] opacity-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 70%, rgba(255,255,255,0.95) 0%, rgba(240,245,250,0.85) 40%, rgba(220,230,240,0.6) 75%, rgba(200,215,230,0) 100%)",
-          }}
-        />
-        <img ref={wipe1BackRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[36] h-[130%] w-full object-cover opacity-0" style={{ filter: "blur(3px)" }} />
-        <img ref={wipe1MidRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[37] h-[140%] w-full object-cover opacity-0" style={{ filter: "blur(1.5px)", transform: "scaleX(-1)" }} />
-        <img ref={wipe1FrontRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[38] h-[150%] w-full object-cover opacity-0" />
+        {/* ============ CLOUD WIPE LAYERS — pure CSS gradients (no hard edges) ============ */}
+        {(() => {
+          const softFog =
+            "radial-gradient(ellipse 90% 70% at 50% 60%, rgba(255,255,255,0.85) 0%, rgba(248,250,253,0.7) 35%, rgba(235,242,250,0.4) 60%, rgba(220,230,245,0.15) 80%, rgba(200,215,235,0) 100%)";
+          const softFogAlt =
+            "radial-gradient(ellipse 100% 80% at 40% 55%, rgba(255,255,255,0.8) 0%, rgba(245,249,253,0.65) 40%, rgba(225,235,248,0.3) 70%, rgba(200,215,235,0) 100%)";
+          const softFogFront =
+            "radial-gradient(ellipse 110% 90% at 60% 65%, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.75) 30%, rgba(230,240,250,0.35) 65%, rgba(210,225,240,0) 100%)";
+          const haze =
+            "linear-gradient(to top, rgba(255,255,255,0.85) 0%, rgba(250,252,255,0.6) 40%, rgba(235,242,250,0.25) 75%, rgba(220,230,245,0) 100%)";
+          const layerBase = "pointer-events-none absolute inset-0 opacity-0";
+          const styleWithWillChange = { willChange: "transform, opacity" as const };
+          return (
+            <>
+              {/* WIPE 1 */}
+              <div ref={wipe1HazeRef} className={`${layerBase} z-[35]`} style={{ ...styleWithWillChange, background: haze }} />
+              <div ref={wipe1BackRef} className={`${layerBase} z-[36]`} style={{ ...styleWithWillChange, background: softFog }} />
+              <div ref={wipe1MidRef} className={`${layerBase} z-[37]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
+              <div ref={wipe1FrontRef} className={`${layerBase} z-[38]`} style={{ ...styleWithWillChange, background: softFogFront }} />
 
-        {/* WIPE 2 — z 40-43 */}
-        <div
-          ref={wipe2HazeRef}
-          className="pointer-events-none absolute inset-0 z-[40] opacity-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.98) 0%, rgba(235,240,248,0.9) 40%, rgba(210,222,235,0.65) 75%, rgba(190,205,225,0) 100%)",
-          }}
-        />
-        <img ref={wipe2BackRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[41] h-[130%] w-full object-cover opacity-0" style={{ filter: "blur(3px)" }} />
-        <img ref={wipe2MidRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[42] h-[140%] w-full object-cover opacity-0" style={{ filter: "blur(1.5px)" }} />
-        <img ref={wipe2FrontRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[43] h-[150%] w-full object-cover opacity-0" style={{ transform: "scaleX(-1)" }} />
+              {/* WIPE 2 */}
+              <div ref={wipe2HazeRef} className={`${layerBase} z-[40]`} style={{ ...styleWithWillChange, background: haze }} />
+              <div ref={wipe2BackRef} className={`${layerBase} z-[41]`} style={{ ...styleWithWillChange, background: softFog }} />
+              <div ref={wipe2MidRef} className={`${layerBase} z-[42]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
+              <div ref={wipe2FrontRef} className={`${layerBase} z-[43]`} style={{ ...styleWithWillChange, background: softFogFront }} />
 
-        {/* WIPE 3 — z 45-48 */}
-        <div
-          ref={wipe3HazeRef}
-          className="pointer-events-none absolute inset-0 z-[45] opacity-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.98) 0%, rgba(230,238,248,0.92) 40%, rgba(205,220,235,0.7) 75%, rgba(185,200,222,0) 100%)",
-          }}
-        />
-        <img ref={wipe3BackRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[46] h-[130%] w-full object-cover opacity-0" style={{ filter: "blur(3px)", transform: "scaleX(-1)" }} />
-        <img ref={wipe3MidRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[47] h-[140%] w-full object-cover opacity-0" style={{ filter: "blur(1.5px)" }} />
-        <img ref={wipe3FrontRef} src={clouds} alt="" className="pointer-events-none absolute inset-x-0 bottom-0 z-[48] h-[150%] w-full object-cover opacity-0" />
+              {/* WIPE 3 */}
+              <div ref={wipe3HazeRef} className={`${layerBase} z-[45]`} style={{ ...styleWithWillChange, background: haze }} />
+              <div ref={wipe3BackRef} className={`${layerBase} z-[46]`} style={{ ...styleWithWillChange, background: softFog }} />
+              <div ref={wipe3MidRef} className={`${layerBase} z-[47]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
+              <div ref={wipe3FrontRef} className={`${layerBase} z-[48]`} style={{ ...styleWithWillChange, background: softFogFront }} />
+            </>
+          );
+        })()}
       </div>
     </div>
   );
