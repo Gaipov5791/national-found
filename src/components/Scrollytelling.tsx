@@ -161,32 +161,27 @@ export function Scrollytelling() {
       // Stats fade as fog rolls in
       tl.to(statsRef.current, { opacity: 0, y: -20, duration: 0.08, ease: "none" }, 0.22);
 
-      // Three cloud layers surge upward & inward — different speeds for parallax depth
+      // Three cloud layers — independent parallax speeds, NEVER fully opaque (max ~0.75)
       tl.fromTo(
         wipe1BackRef.current,
         { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -10, opacity: 1, scale: 1.2, duration: 0.14, ease: "power2.inOut" },
+        { yPercent: -20, opacity: 0.7, scale: 1.3, duration: 0.16, ease: "power2.inOut" },
         0.22
       );
       tl.fromTo(
         wipe1MidRef.current,
-        { yPercent: 120, xPercent: -10, opacity: 0, scale: 1.25 },
-        { yPercent: -15, xPercent: 5, opacity: 1, scale: 1.35, duration: 0.14, ease: "power2.inOut" },
+        { yPercent: 130, xPercent: -10, opacity: 0, scale: 1.25 },
+        { yPercent: -5, xPercent: 8, opacity: 0.55, scale: 1.5, duration: 0.14, ease: "power2.inOut" },
         0.24
       );
       tl.fromTo(
         wipe1FrontRef.current,
-        { yPercent: 130, xPercent: 15, opacity: 0, scale: 1.4 },
-        { yPercent: -20, xPercent: -5, opacity: 1, scale: 1.5, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: 150, xPercent: 15, opacity: 0, scale: 1.4 },
+        { yPercent: -30, xPercent: -8, opacity: 0.65, scale: 1.7, duration: 0.18, ease: "power2.inOut" },
         0.25
       );
-      // Atmospheric haze (white wash) — peaks at 0.31
-      tl.fromTo(
-        wipe1HazeRef.current,
-        { opacity: 0 },
-        { opacity: 0.85, duration: 0.09, ease: "power1.in" },
-        0.22
-      );
+      // haze disabled to avoid solid white wash
+      tl.set(wipe1HazeRef.current, { opacity: 0 }, 0.22);
 
       // At max density (0.31) swap mountains → keep mountains but they'll be hidden
       // About emerges through dissipating clouds (0.31 → 0.40)
