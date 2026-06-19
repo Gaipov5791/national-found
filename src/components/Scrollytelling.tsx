@@ -189,15 +189,15 @@ export function Scrollytelling() {
       // About emerges through dissipating clouds (0.31 → 0.40)
       tl.fromTo(
         aboutRef.current,
-        { opacity: 0, y: 40, filter: "blur(20px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        { opacity: 0, y: 40, xPercent: 5, filter: "blur(20px)" },
+        { opacity: 1, y: 0, xPercent: -2, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
         0.31
       );
-      // Clouds dissipate upward
+      // Clouds dissipate upward & drift apart horizontally
       tl.to(wipe1HazeRef.current, { opacity: 0, duration: 0.10, ease: "power1.out" }, 0.32);
-      tl.to(wipe1BackRef.current, { yPercent: -110, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.32);
-      tl.to(wipe1MidRef.current, { yPercent: -120, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.33);
-      tl.to(wipe1FrontRef.current, { yPercent: -130, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.34);
+      tl.to(wipe1BackRef.current, { yPercent: -110, xPercent: 12, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.32);
+      tl.to(wipe1MidRef.current, { yPercent: -120, xPercent: -14, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.33);
+      tl.to(wipe1FrontRef.current, { yPercent: -130, xPercent: 16, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.34);
 
       // ============ Hold "О ФОНДЕ" briefly (0.40 → 0.48) ============
       tl.to({}, { duration: 0.08 }, 0.40);
