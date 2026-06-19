@@ -495,10 +495,10 @@ export function Scrollytelling() {
 
               {/* WIPE 3 — Kumtor → Earth Depths: realistic cumulus strips converge then fly up */}
               <div ref={wipe3HazeRef} className="hidden" />
-              {/* TOP cumulus strip — flipped so puffy edge faces down */}
+              {/* TOP cumulus strip — flipped so puffy edge faces down, edges fade to transparent */}
               <div
                 ref={wipe3BackRef}
-                className="pointer-events-none absolute left-[-10%] top-0 z-[46] h-[70vh] w-[120vw] opacity-0"
+                className="pointer-events-none absolute left-[-10%] top-[-15%] z-[46] h-[85vh] w-[120vw] opacity-0"
                 style={{
                   willChange: "transform, opacity",
                   backgroundImage: `url(${cumulus})`,
@@ -506,34 +506,48 @@ export function Scrollytelling() {
                   backgroundPosition: "center bottom",
                   backgroundRepeat: "no-repeat",
                   transform: "scaleY(-1)",
-                  filter: "drop-shadow(0 20px 40px rgba(40,55,80,0.25))",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 22%, rgba(0,0,0,0.85) 70%, transparent 100%)",
+                  maskImage:
+                    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 22%, rgba(0,0,0,0.85) 70%, transparent 100%)",
+                  filter: "blur(2px) drop-shadow(0 20px 40px rgba(40,55,80,0.2))",
                 }}
               />
-              {/* BOTTOM cumulus strip */}
+              {/* BOTTOM cumulus strip — edges fade to transparent */}
               <div
                 ref={wipe3MidRef}
-                className="pointer-events-none absolute left-[-10%] bottom-0 z-[47] h-[75vh] w-[120vw] opacity-0"
+                className="pointer-events-none absolute left-[-10%] bottom-[-15%] z-[47] h-[90vh] w-[120vw] opacity-0"
                 style={{
                   willChange: "transform, opacity",
                   backgroundImage: `url(${cumulus})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center top",
                   backgroundRepeat: "no-repeat",
-                  filter: "drop-shadow(0 -20px 40px rgba(40,55,80,0.25))",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 25%, rgba(0,0,0,0.85) 72%, transparent 100%)",
+                  maskImage:
+                    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 25%, rgba(0,0,0,0.85) 72%, transparent 100%)",
+                  filter: "blur(2px) drop-shadow(0 -20px 40px rgba(40,55,80,0.2))",
                 }}
               />
-              {/* CENTER dense overlay — covers seam at peak */}
+              {/* CENTER soft veil — radial mask, fully translucent */}
               <div
                 ref={wipe3FrontRef}
-                className="pointer-events-none absolute left-[-15%] top-[15%] z-[48] h-[80vh] w-[130vw] opacity-0"
+                className="pointer-events-none absolute left-[-15%] top-[5%] z-[48] h-[95vh] w-[130vw] opacity-0"
                 style={{
                   willChange: "transform, opacity",
                   backgroundImage: `url(${cumulus})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center center",
                   backgroundRepeat: "no-repeat",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 55%, transparent 100%)",
+                  maskImage:
+                    "radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 55%, transparent 100%)",
+                  filter: "blur(3px)",
                 }}
               />
+
 
             </>
           );
