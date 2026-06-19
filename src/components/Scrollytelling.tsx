@@ -651,6 +651,18 @@ export function Scrollytelling() {
         </div>
 
         <div
+          ref={msbRef}
+          className="pointer-events-none absolute inset-x-0 top-[38%] z-[30] px-6 text-center opacity-0"
+        >
+          <h2 className="font-display text-4xl font-bold tracking-[0.16em] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.8)] md:text-6xl">
+            ПРОЕКТЫ МСБ
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)] md:text-base">
+            Поддержка малого и среднего бизнеса — золотые пласты экономики страны, где рождаются новые отрасли.
+          </p>
+        </div>
+
+        <div
           ref={partnersRef}
           className="pointer-events-none absolute inset-x-0 top-[40%] z-[30] px-6 text-center opacity-0"
         >
