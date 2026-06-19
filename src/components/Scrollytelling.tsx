@@ -223,14 +223,14 @@ export function Scrollytelling() {
       );
       tl.set(wipe2HazeRef.current, { opacity: 0 }, 0.48);
 
-      // SWAP background at peak density (0.57)
-      tl.to(mountainRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.57);
-      tl.to(ambientFogRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.57);
+      // SWAP background — gentle crossfade BEHIND translucent clouds (peak density 0.55-0.58)
+      tl.to(mountainRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
+      tl.to(ambientFogRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
       tl.fromTo(
         kumtorRef.current,
         { opacity: 0, scale: 1.15 },
-        { opacity: 1, scale: 1.0, duration: 0.14, ease: "power2.out" },
-        0.57
+        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power2.out" },
+        0.55
       );
 
       // Finance title emerges through dispersing clouds
