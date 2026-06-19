@@ -277,28 +277,38 @@ export function Scrollytelling() {
       );
       tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
 
-      // SWAP behind translucent clouds — Kumtor crossfades into earth depths (visible through fog)
-      tl.to(kumtorRef.current, { opacity: 0, duration: 0.10, ease: "power1.inOut" }, 0.80);
+      // SWAP behind translucent clouds — Kumtor scales up & spreads apart (camera punches through),
+      // earth depths emerge, background darkens — ALL finish exactly when title begins (0.88)
+      tl.to(
+        kumtorRef.current,
+        { scale: 1.6, xPercent: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in" },
+        0.74
+      );
+      tl.to(
+        kumtorRef.current,
+        { opacity: 0, scale: 2.1, filter: "blur(20px)", duration: 0.08, ease: "power2.in" },
+        0.80
+      );
       tl.fromTo(
         crustRef.current,
-        { opacity: 0, scale: 1.12 },
-        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power2.out" },
-        0.81
+        { opacity: 0, scale: 1.25, filter: "blur(16px)" },
+        { opacity: 1, scale: 1.0, filter: "blur(0px)", duration: 0.08, ease: "power2.out" },
+        0.80
       );
-      // darken background gradient behind earth depths
-      tl.to(sceneRef.current, { backgroundColor: "#0a0806", duration: 0.10, ease: "none" }, 0.82);
+      // darken background gradient behind earth depths — ends at 0.88 with text
+      tl.to(sceneRef.current, { backgroundColor: "#0a0806", duration: 0.14, ease: "none" }, 0.74);
 
-      // Light clouds fly UP and away, carrying Kumtor's memory with them
-      tl.to(wipe3BackRef.current, { yPercent: -180, opacity: 0, scale: 1.3, duration: 0.18, ease: "power2.in" }, 0.84);
-      tl.to(wipe3FrontRef.current, { yPercent: -200, opacity: 0, scale: 1.4, duration: 0.18, ease: "power2.in" }, 0.84);
-      tl.to(wipe3MidRef.current, { yPercent: -220, opacity: 0, scale: 1.5, duration: 0.20, ease: "power2.in" }, 0.85);
+      // Light clouds fly UP and away, clearing the frame exactly as the title appears
+      tl.to(wipe3BackRef.current, { yPercent: -180, opacity: 0, scale: 1.3, duration: 0.14, ease: "power2.in" }, 0.80);
+      tl.to(wipe3FrontRef.current, { yPercent: -200, opacity: 0, scale: 1.4, duration: 0.14, ease: "power2.in" }, 0.80);
+      tl.to(wipe3MidRef.current, { yPercent: -220, opacity: 0, scale: 1.5, duration: 0.14, ease: "power2.in" }, 0.80);
 
 
-      // Directions title emerges from dark depths
+      // Directions title emerges from dark depths — perfectly synced: swap completes at 0.88
       tl.fromTo(
         directionsRef.current,
         { opacity: 0, y: 60, filter: "blur(24px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.14, ease: "power2.out" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
         0.88
       );
 
