@@ -316,9 +316,86 @@ export function Scrollytelling() {
       tl.fromTo(
         directionsRef.current,
         { opacity: 0, y: 60, filter: "blur(24px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.06, ease: "power2.out" },
+        0.86
+      );
+
+      // ============ UNDERGROUND SCENE — dark smoke rises over crust (0.88 → 0.93) ============
+      // Continuous slight X-pan on crust (camera in confined space)
+      tl.to(crustRef.current, { xPercent: px(5), scale: sz(1.08), duration: 0.10, ease: "sine.inOut" }, 0.88);
+      tl.to(directionsRef.current, { xPercent: px(-4), duration: 0.10, ease: "sine.inOut" }, 0.88);
+
+      tl.fromTo(
+        undergroundSmokeBackRef.current,
+        { opacity: 0, xPercent: px(-10), yPercent: 20 },
+        { opacity: 0.45, xPercent: px(8), yPercent: -4, duration: 0.10, ease: "power1.out" },
         0.88
       );
+      tl.fromTo(
+        undergroundSmokeMidRef.current,
+        { opacity: 0, xPercent: px(12), yPercent: 30 },
+        { opacity: 0.42, xPercent: px(-10), yPercent: 0, duration: 0.10, ease: "power1.out" },
+        0.89
+      );
+      tl.fromTo(
+        undergroundSmokeFrontRef.current,
+        { opacity: 0, xPercent: px(-8), yPercent: 40 },
+        { opacity: 0.5, xPercent: px(10), yPercent: -6, duration: 0.10, ease: "power1.out" },
+        0.90
+      );
+
+      // ============ TRANSITION — Crust flies UP, smoke warms to golden-orange (0.93 → 0.96) ============
+      tl.to(directionsRef.current, { opacity: 0, y: -40, filter: "blur(10px)", duration: 0.03, ease: "none" }, 0.93);
+      tl.to(crustRef.current, { yPercent: -60, scale: sz(1.3), opacity: 0, filter: "blur(14px)", duration: 0.05, ease: "power2.in" }, 0.93);
+
+      // Smoke densifies and shifts to warm golden glow
+      tl.to(undergroundSmokeBackRef.current,
+        { opacity: 0.55, backgroundColor: "rgba(120, 60, 20, 0.55)", duration: 0.05, ease: "none" }, 0.93);
+      tl.to(undergroundSmokeMidRef.current,
+        { opacity: 0.5, backgroundColor: "rgba(180, 95, 30, 0.5)", duration: 0.05, ease: "none" }, 0.93);
+      tl.to(undergroundSmokeFrontRef.current,
+        { opacity: 0.55, backgroundColor: "rgba(220, 130, 40, 0.5)", duration: 0.05, ease: "none" }, 0.93);
+
+      tl.to(sceneRef.current, { backgroundColor: "#1a0a05", duration: 0.05, ease: "none" }, 0.93);
+
+      // Magma proves from blur beneath the warm smoke
+      tl.fromTo(
+        magmaRef.current,
+        { opacity: 0, scale: sz(1.2), filter: "blur(22px)", xPercent: px(4) },
+        { opacity: 1, scale: sz(1.05), filter: "blur(0px)", xPercent: 0, duration: 0.06, ease: "power2.out" },
+        0.94
+      );
+
+      // Smoke fades back so magma reads, but stays as veil
+      tl.to(undergroundSmokeBackRef.current, { opacity: 0.18, yPercent: -40, duration: 0.05, ease: "power1.out" }, 0.95);
+      tl.to(undergroundSmokeMidRef.current, { opacity: 0.15, yPercent: -50, duration: 0.05, ease: "power1.out" }, 0.95);
+      tl.to(undergroundSmokeFrontRef.current, { opacity: 0.2, yPercent: -30, duration: 0.05, ease: "power1.out" }, 0.95);
+
+      // ============ MAGMA CINEMAGRAPH — slow scale + hot smoke drifts (0.96 → 1.0) ============
+      tl.fromTo(
+        magmaSmokeBackRef.current,
+        { opacity: 0, xPercent: px(-12), yPercent: 10 },
+        { opacity: 0.4, xPercent: px(10), yPercent: -8, duration: 0.06, ease: "sine.inOut" },
+        0.96
+      );
+      tl.fromTo(
+        magmaSmokeFrontRef.current,
+        { opacity: 0, xPercent: px(14), yPercent: -10 },
+        { opacity: 0.35, xPercent: px(-12), yPercent: 6, duration: 0.06, ease: "sine.inOut" },
+        0.96
+      );
+
+      // Magma breathes: very slow scale + subtle X-pan (camera operator in confined space)
+      tl.to(magmaRef.current, { scale: sz(1.12), xPercent: px(4), duration: 0.04, ease: "sine.inOut" }, 0.96);
+
+      // Partners title appears with opposing X-pan (text slides LEFT, image went RIGHT)
+      tl.fromTo(
+        partnersRef.current,
+        { opacity: 0, y: 50, xPercent: px(6), filter: "blur(20px)" },
+        { opacity: 1, y: 0, xPercent: px(-3), filter: "blur(0px)", duration: 0.05, ease: "power2.out" },
+        0.96
+      );
+
 
       // Decree text — re-purposed: shown over mountains briefly between scene 1 & wipe1
       tl.fromTo(
