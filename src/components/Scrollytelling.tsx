@@ -313,66 +313,65 @@ export function Scrollytelling() {
       tl.to(wipe3MidRef.current, { yPercent: -220, xPercent: px(20), opacity: 0, scale: sz(1.5), duration: 0.14, ease: "power2.in" }, 0.80);
 
 
-      // Directions title emerges from dark depths — perfectly synced: swap completes at 0.88
+      // Directions title rises from below — pure vertical entrance
       tl.fromTo(
         directionsRef.current,
-        { opacity: 0, y: 60, filter: "blur(24px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.06, ease: "power2.out" },
+        { opacity: 0, yPercent: 100, filter: "blur(20px)" },
+        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.06, ease: "power2.out" },
         0.86
       );
 
-      // ============ UNDERGROUND SCENE — dark smoke rises over crust (0.88 → 0.91) ============
-      // Continuous slight X-pan on crust (camera in confined space)
-      tl.to(crustRef.current, { xPercent: px(5), scale: sz(1.08), duration: 0.10, ease: "sine.inOut" }, 0.88);
-      tl.to(directionsRef.current, { xPercent: px(-4), duration: 0.10, ease: "sine.inOut" }, 0.88);
+      // ============ UNDERGROUND SCENE — dark smoke drifts in over crust (0.88 → 0.91) ============
+      // Slow vertical breathing of crust (camera continues descending)
+      tl.to(crustRef.current, { yPercent: -3, scale: sz(1.08), duration: 0.10, ease: "sine.inOut" }, 0.88);
 
       tl.fromTo(
         undergroundSmokeBackRef.current,
-        { opacity: 0, xPercent: px(-10), yPercent: 20 },
-        { opacity: 0.42, xPercent: px(8), yPercent: -4, duration: 0.10, ease: "power1.out" },
+        { opacity: 0, yPercent: 25 },
+        { opacity: 0.42, yPercent: -5, duration: 0.10, ease: "power1.out" },
         0.88
       );
       tl.fromTo(
         undergroundSmokeMidRef.current,
-        { opacity: 0, xPercent: px(12), yPercent: 30 },
-        { opacity: 0.40, xPercent: px(-10), yPercent: 0, duration: 0.10, ease: "power1.out" },
+        { opacity: 0, yPercent: 35 },
+        { opacity: 0.40, yPercent: 0, duration: 0.10, ease: "power1.out" },
         0.89
       );
       tl.fromTo(
         undergroundSmokeFrontRef.current,
-        { opacity: 0, xPercent: px(-8), yPercent: 40 },
-        { opacity: 0.45, xPercent: px(10), yPercent: -6, duration: 0.10, ease: "power1.out" },
+        { opacity: 0, yPercent: 45 },
+        { opacity: 0.45, yPercent: -8, duration: 0.10, ease: "power1.out" },
         0.90
       );
 
       // ============ SCENE: ПРОЕКТЫ МСБ (0.91 → 0.945) ============
-      // Direction title fades, camera tilts deeper into the crust, MSB title rises
-      tl.to(directionsRef.current, { opacity: 0, y: -30, xPercent: px(-8), filter: "blur(10px)", duration: 0.025, ease: "power2.in" }, 0.91);
+      // Directions slide flies UP off-screen, МСБ rises from BELOW — pure vertical
+      tl.to(directionsRef.current, { yPercent: -100, opacity: 0, filter: "blur(10px)", duration: 0.035, ease: "power2.in" }, 0.91);
 
-      // Camera continues drift sideways + slight zoom — same crust scene, deeper feel
-      tl.to(crustRef.current, { xPercent: px(-4), scale: sz(1.14), yPercent: -4, duration: 0.04, ease: "sine.inOut" }, 0.91);
+      // Camera continues descending — crust drifts further up to suggest depth
+      tl.to(crustRef.current, { yPercent: -10, scale: sz(1.14), duration: 0.05, ease: "sine.inOut" }, 0.91);
 
-      // Smoke keeps panning horizontally around the new text
-      tl.to(undergroundSmokeBackRef.current, { xPercent: px(-8), opacity: 0.4, duration: 0.04, ease: "sine.inOut" }, 0.91);
-      tl.to(undergroundSmokeMidRef.current, { xPercent: px(10), opacity: 0.38, duration: 0.04, ease: "sine.inOut" }, 0.91);
-      tl.to(undergroundSmokeFrontRef.current, { xPercent: px(-12), opacity: 0.42, duration: 0.04, ease: "sine.inOut" }, 0.91);
+      // Smoke keeps drifting vertically around the new text
+      tl.to(undergroundSmokeBackRef.current, { yPercent: -12, opacity: 0.4, duration: 0.05, ease: "sine.inOut" }, 0.91);
+      tl.to(undergroundSmokeMidRef.current, { yPercent: -6, opacity: 0.38, duration: 0.05, ease: "sine.inOut" }, 0.91);
+      tl.to(undergroundSmokeFrontRef.current, { yPercent: -14, opacity: 0.42, duration: 0.05, ease: "sine.inOut" }, 0.91);
 
       tl.fromTo(
         msbRef.current,
-        { opacity: 0, y: 50, xPercent: px(6), filter: "blur(22px)" },
-        { opacity: 1, y: 0, xPercent: px(-3), filter: "blur(0px)", duration: 0.03, ease: "power2.out" },
-        0.915
+        { opacity: 0, yPercent: 100, filter: "blur(20px)" },
+        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.035, ease: "power2.out" },
+        0.91
       );
 
-      // Hold МСБ briefly with gentle continued drift (cinemagraph feel)
-      tl.to(msbRef.current, { xPercent: px(-6), duration: 0.025, ease: "sine.inOut" }, 0.945);
-      tl.to(crustRef.current, { xPercent: px(-2), duration: 0.025, ease: "sine.inOut" }, 0.945);
+      // Hold МСБ briefly with gentle continued vertical drift (cinemagraph feel)
+      tl.to(msbRef.current, { yPercent: -4, duration: 0.025, ease: "sine.inOut" }, 0.945);
+      tl.to(crustRef.current, { yPercent: -14, duration: 0.025, ease: "sine.inOut" }, 0.945);
 
-      // ============ TRANSITION — Crust flies UP, smoke warms to golden-orange (0.96 → 0.98) ============
-      tl.to(msbRef.current, { opacity: 0, y: -40, xPercent: px(-12), filter: "blur(10px)", duration: 0.02, ease: "none" }, 0.96);
-      tl.to(crustRef.current, { yPercent: -80, scale: sz(1.35), opacity: 0, filter: "blur(14px)", duration: 0.025, ease: "power2.in" }, 0.96);
+      // ============ TRANSITION — Crust + МСБ fly UP, magma rises from BELOW (0.96 → 0.98) ============
+      tl.to(msbRef.current, { yPercent: -100, opacity: 0, filter: "blur(10px)", duration: 0.03, ease: "power2.in" }, 0.96);
+      tl.to(crustRef.current, { yPercent: -100, scale: sz(1.35), opacity: 0, filter: "blur(14px)", duration: 0.03, ease: "power2.in" }, 0.96);
 
-      // Smoke densifies and shifts to warm golden glow, lit from below
+      // Smoke warms to golden-orange (heat from rising lava below), keeps drifting vertically
       tl.to(undergroundSmokeBackRef.current,
         { opacity: 0.55, backgroundColor: "rgba(120, 60, 20, 0.55)", yPercent: 10, duration: 0.025, ease: "none" }, 0.96);
       tl.to(undergroundSmokeMidRef.current,
@@ -382,42 +381,42 @@ export function Scrollytelling() {
 
       tl.to(sceneRef.current, { backgroundColor: "#1a0a05", duration: 0.025, ease: "none" }, 0.96);
 
-      // Magma rises from blur beneath the warm smoke
+      // Magma rises from BELOW the screen (the lava is climbing up)
       tl.fromTo(
         magmaRef.current,
-        { opacity: 0, scale: sz(1.2), filter: "blur(22px)", xPercent: px(4) },
-        { opacity: 1, scale: sz(1.05), filter: "blur(0px)", xPercent: 0, duration: 0.03, ease: "power2.out" },
-        0.97
+        { opacity: 0, yPercent: 100, scale: sz(1.15), filter: "blur(18px)" },
+        { opacity: 1, yPercent: 0, scale: sz(1.05), filter: "blur(0px)", duration: 0.035, ease: "power2.out" },
+        0.96
       );
 
-      // Smoke fades back so magma reads, but stays as glowing veil
+      // Smoke fades back so magma reads, but stays as glowing veil (continues drifting up)
       tl.to(undergroundSmokeBackRef.current, { opacity: 0.22, yPercent: -30, duration: 0.025, ease: "power1.out" }, 0.98);
       tl.to(undergroundSmokeMidRef.current, { opacity: 0.18, yPercent: -40, duration: 0.025, ease: "power1.out" }, 0.98);
       tl.to(undergroundSmokeFrontRef.current, { opacity: 0.25, yPercent: -25, duration: 0.025, ease: "power1.out" }, 0.98);
 
-      // ============ MAGMA CINEMAGRAPH — slow scale + hot smoke drifts (0.98 → 1.0) ============
+      // ============ MAGMA CINEMAGRAPH — slow scale + hot smoke drifts vertically (0.98 → 1.0) ============
       tl.fromTo(
         magmaSmokeBackRef.current,
-        { opacity: 0, xPercent: px(-12), yPercent: 10 },
-        { opacity: 0.4, xPercent: px(10), yPercent: -8, duration: 0.03, ease: "sine.inOut" },
+        { opacity: 0, yPercent: 30 },
+        { opacity: 0.4, yPercent: -10, duration: 0.03, ease: "sine.inOut" },
         0.98
       );
       tl.fromTo(
         magmaSmokeFrontRef.current,
-        { opacity: 0, xPercent: px(14), yPercent: -10 },
-        { opacity: 0.35, xPercent: px(-12), yPercent: 6, duration: 0.03, ease: "sine.inOut" },
+        { opacity: 0, yPercent: 40 },
+        { opacity: 0.35, yPercent: -15, duration: 0.03, ease: "sine.inOut" },
         0.98
       );
 
-      // Magma breathes: very slow scale + subtle X-pan
-      tl.to(magmaRef.current, { scale: sz(1.12), xPercent: px(4), duration: 0.02, ease: "sine.inOut" }, 0.98);
+      // Magma breathes: very slow scale, no X drift
+      tl.to(magmaRef.current, { scale: sz(1.12), duration: 0.02, ease: "sine.inOut" }, 0.98);
 
-      // Partners title appears with opposing X-pan (text slides LEFT, image RIGHT)
+      // Partners title rises from BELOW — pure vertical
       tl.fromTo(
         partnersRef.current,
-        { opacity: 0, y: 50, xPercent: px(6), filter: "blur(20px)" },
-        { opacity: 1, y: 0, xPercent: px(-3), filter: "blur(0px)", duration: 0.025, ease: "power2.out" },
-        0.98
+        { opacity: 0, yPercent: 100, filter: "blur(18px)" },
+        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.035, ease: "power2.out" },
+        0.97
       );
 
 
