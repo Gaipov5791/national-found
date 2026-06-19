@@ -256,27 +256,22 @@ export function Scrollytelling() {
       tl.fromTo(
         wipe3BackRef.current,
         { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -10, opacity: 1, scale: 1.25, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: -25, opacity: 0.7, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
         0.74
       );
       tl.fromTo(
         wipe3MidRef.current,
-        { yPercent: 120, xPercent: -10, opacity: 0, scale: 1.3 },
-        { yPercent: -10, xPercent: 8, opacity: 1, scale: 1.4, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: 135, xPercent: -10, opacity: 0, scale: 1.3 },
+        { yPercent: -5, xPercent: 10, opacity: 0.55, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
         0.76
       );
       tl.fromTo(
         wipe3FrontRef.current,
-        { yPercent: 130, xPercent: 15, opacity: 0, scale: 1.5 },
-        { yPercent: -15, xPercent: -8, opacity: 1, scale: 1.6, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: 155, xPercent: 15, opacity: 0, scale: 1.5 },
+        { yPercent: -35, xPercent: -10, opacity: 0.65, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
         0.77
       );
-      tl.fromTo(
-        wipe3HazeRef.current,
-        { opacity: 0 },
-        { opacity: 0.95, duration: 0.10, ease: "power1.in" },
-        0.74
-      );
+      tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
 
       // SWAP at peak (0.83)
       tl.to(kumtorRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.83);
