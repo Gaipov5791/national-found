@@ -34,11 +34,21 @@ export function Scrollytelling() {
   // background scene refs
   const kumtorRef = useRef<HTMLImageElement>(null);
   const crustRef = useRef<HTMLImageElement>(null);
+  const magmaRef = useRef<HTMLImageElement>(null);
 
   // text scene refs
   const aboutRef = useRef<HTMLDivElement>(null);
   const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
+  const partnersRef = useRef<HTMLDivElement>(null);
+
+  // Underground dark smoke layers (crust scene → magma transition)
+  const undergroundSmokeBackRef = useRef<HTMLDivElement>(null);
+  const undergroundSmokeMidRef = useRef<HTMLDivElement>(null);
+  const undergroundSmokeFrontRef = useRef<HTMLDivElement>(null);
+  // Hot smoke over magma (glowing veils)
+  const magmaSmokeBackRef = useRef<HTMLDivElement>(null);
+  const magmaSmokeFrontRef = useRef<HTMLDivElement>(null);
 
   // CLOUD WIPE LAYERS — each transition uses dedicated multi-layer fog (divs with CSS gradients)
   const wipe1BackRef = useRef<HTMLDivElement>(null);
