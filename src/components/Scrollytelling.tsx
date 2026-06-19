@@ -150,62 +150,54 @@ export function Scrollytelling() {
       );
 
       // ============ SCENE 1 — Mountains + stats (0 → 0.22) ============
-      // mountains zoom in AND pan left for cinematic camera drift
-      tl.to(mountainRef.current, { scale: 1.25, xPercent: -6, duration: 0.22, ease: "none" }, 0);
+      tl.to(mountainRef.current, { scale: sz(1.25), xPercent: px(-6), duration: 0.22, ease: "none" }, 0);
       tl.fromTo(
         statsRef.current,
-        { opacity: 0, y: 30, xPercent: 4 },
-        { opacity: 1, y: 0, xPercent: -3, duration: 0.10, ease: "power1.out" },
+        { opacity: 0, y: 30, xPercent: px(4) },
+        { opacity: 1, y: 0, xPercent: px(-3), duration: 0.10, ease: "power1.out" },
         0.10
       );
 
-      // ambient fog drifts over mountain peaks — slow horizontal pan RIGHT (0.06 → 0.22)
       tl.fromTo(
         ambientFogRef.current,
-        { opacity: 0, yPercent: 30, xPercent: -8 },
-        { opacity: 0.55, yPercent: 0, xPercent: 6, duration: 0.16, ease: "none" },
+        { opacity: 0, yPercent: 30, xPercent: px(-8) },
+        { opacity: 0.55, yPercent: 0, xPercent: px(6), duration: 0.16, ease: "none" },
         0.06
       );
 
-      // ============ WIPE 1 — Clouds engulf stats, reveal "О ФОНДЕ" (0.22 → 0.40) ============
-      // Stats fade as fog rolls in
+      // ============ WIPE 1 ============
       tl.to(statsRef.current, { opacity: 0, y: -20, duration: 0.08, ease: "none" }, 0.22);
 
-      // Three cloud layers — independent parallax speeds, NEVER fully opaque (max ~0.75)
       tl.fromTo(
         wipe1BackRef.current,
-        { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -20, opacity: 0.62, scale: 1.3, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: 110, opacity: 0, scale: sz(1.1) },
+        { yPercent: -20, opacity: 0.62, scale: sz(1.3), duration: 0.16, ease: "power2.inOut" },
         0.22
       );
       tl.fromTo(
         wipe1MidRef.current,
-        { yPercent: 130, xPercent: -10, opacity: 0, scale: 1.25 },
-        { yPercent: -5, xPercent: 8, opacity: 0.47, scale: 1.5, duration: 0.14, ease: "power2.inOut" },
+        { yPercent: 130, xPercent: px(-10), opacity: 0, scale: sz(1.25) },
+        { yPercent: -5, xPercent: px(8), opacity: 0.47, scale: sz(1.5), duration: 0.14, ease: "power2.inOut" },
         0.24
       );
       tl.fromTo(
         wipe1FrontRef.current,
-        { yPercent: 150, xPercent: 15, opacity: 0, scale: 1.4 },
-        { yPercent: -30, xPercent: -8, opacity: 0.57, scale: 1.7, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: 150, xPercent: px(15), opacity: 0, scale: sz(1.4) },
+        { yPercent: -30, xPercent: px(-8), opacity: 0.57, scale: sz(1.7), duration: 0.18, ease: "power2.inOut" },
         0.25
       );
-      // haze disabled to avoid solid white wash
       tl.set(wipe1HazeRef.current, { opacity: 0 }, 0.22);
 
-      // At max density (0.31) swap mountains → keep mountains but they'll be hidden
-      // About emerges through dissipating clouds (0.31 → 0.40)
       tl.fromTo(
         aboutRef.current,
-        { opacity: 0, y: 40, xPercent: 5, filter: "blur(20px)" },
-        { opacity: 1, y: 0, xPercent: -2, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        { opacity: 0, y: 40, xPercent: px(5), filter: "blur(20px)" },
+        { opacity: 1, y: 0, xPercent: px(-2), filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
         0.31
       );
-      // Clouds dissipate upward & drift apart horizontally
       tl.to(wipe1HazeRef.current, { opacity: 0, duration: 0.10, ease: "power1.out" }, 0.32);
-      tl.to(wipe1BackRef.current, { yPercent: -110, xPercent: 12, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.32);
-      tl.to(wipe1MidRef.current, { yPercent: -120, xPercent: -14, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.33);
-      tl.to(wipe1FrontRef.current, { yPercent: -130, xPercent: 16, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.34);
+      tl.to(wipe1BackRef.current, { yPercent: -110, xPercent: px(12), opacity: 0, duration: 0.12, ease: "power2.in" }, 0.32);
+      tl.to(wipe1MidRef.current, { yPercent: -120, xPercent: px(-14), opacity: 0, duration: 0.12, ease: "power2.in" }, 0.33);
+      tl.to(wipe1FrontRef.current, { yPercent: -130, xPercent: px(16), opacity: 0, duration: 0.12, ease: "power2.in" }, 0.34);
 
       // ============ Hold "О ФОНДЕ" briefly (0.40 → 0.48) ============
       tl.to({}, { duration: 0.08 }, 0.40);
