@@ -254,40 +254,45 @@ export function Scrollytelling() {
       // ============ WIPE 3 — Realistic cumulus clouds engulf, swap to earth depths, clouds fly up (0.74 → 0.94) ============
       tl.to(financeRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.74);
 
-      // TOP cumulus strip slides down from above
+      // TOP cumulus strip slides down from above — light & airy (max 0.38)
       tl.fromTo(
         wipe3BackRef.current,
-        { yPercent: -110, opacity: 0, scale: 1.15 },
-        { yPercent: 0, opacity: 1, scale: 1.05, duration: 0.16, ease: "power2.out" },
+        { yPercent: -120, opacity: 0, scale: 1.15 },
+        { yPercent: -10, opacity: 0.38, scale: 1.05, duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // BOTTOM cumulus strip slides up from below
+      // BOTTOM cumulus strip slides up from below — light & airy (max 0.35)
       tl.fromTo(
         wipe3MidRef.current,
-        { yPercent: 110, opacity: 0, scale: 1.15 },
-        { yPercent: 0, opacity: 1, scale: 1.05, duration: 0.16, ease: "power2.out" },
+        { yPercent: 120, opacity: 0, scale: 1.15 },
+        { yPercent: 10, opacity: 0.35, scale: 1.05, duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // EXTRA dense overlay (covers center seam at peak)
+      // CENTER soft veil — translucent only (max 0.28)
       tl.fromTo(
         wipe3FrontRef.current,
-        { yPercent: 60, opacity: 0, scale: 1.3 },
-        { yPercent: 0, opacity: 1, scale: 1.1, duration: 0.14, ease: "power2.out" },
+        { yPercent: 40, opacity: 0, scale: 1.3 },
+        { yPercent: 0, opacity: 0.28, scale: 1.1, duration: 0.16, ease: "power2.out" },
         0.76
       );
       tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
 
-      // SWAP at peak density — hidden behind solid cumulus mass
-      tl.to(kumtorRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.82);
-      tl.set(crustRef.current, { opacity: 1, scale: 1.1 }, 0.82);
-      tl.to(crustRef.current, { scale: 1.0, duration: 0.12, ease: "power2.out" }, 0.82);
+      // SWAP behind translucent clouds — Kumtor crossfades into earth depths (visible through fog)
+      tl.to(kumtorRef.current, { opacity: 0, duration: 0.10, ease: "power1.inOut" }, 0.80);
+      tl.fromTo(
+        crustRef.current,
+        { opacity: 0, scale: 1.12 },
+        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power2.out" },
+        0.81
+      );
       // darken background gradient behind earth depths
-      tl.to(sceneRef.current, { backgroundColor: "#0a0806", duration: 0.08, ease: "none" }, 0.82);
+      tl.to(sceneRef.current, { backgroundColor: "#0a0806", duration: 0.10, ease: "none" }, 0.82);
 
-      // Clouds fly UP together — camera falls through them into the depths
-      tl.to(wipe3BackRef.current, { yPercent: -160, opacity: 0, scale: 1.3, duration: 0.16, ease: "power2.in" }, 0.84);
-      tl.to(wipe3FrontRef.current, { yPercent: -180, opacity: 0, scale: 1.4, duration: 0.16, ease: "power2.in" }, 0.84);
-      tl.to(wipe3MidRef.current, { yPercent: -200, opacity: 0, scale: 1.5, duration: 0.18, ease: "power2.in" }, 0.85);
+      // Light clouds fly UP and away, carrying Kumtor's memory with them
+      tl.to(wipe3BackRef.current, { yPercent: -180, opacity: 0, scale: 1.3, duration: 0.18, ease: "power2.in" }, 0.84);
+      tl.to(wipe3FrontRef.current, { yPercent: -200, opacity: 0, scale: 1.4, duration: 0.18, ease: "power2.in" }, 0.84);
+      tl.to(wipe3MidRef.current, { yPercent: -220, opacity: 0, scale: 1.5, duration: 0.20, ease: "power2.in" }, 0.85);
+
 
       // Directions title emerges from dark depths
       tl.fromTo(
