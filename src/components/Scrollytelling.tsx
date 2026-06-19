@@ -230,27 +230,30 @@ export function Scrollytelling() {
       tl.to(ambientFogRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
       tl.fromTo(
         kumtorRef.current,
-        { opacity: 0, scale: 1.15 },
-        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power2.out" },
+        { opacity: 0, scale: 1.15, xPercent: 4 },
+        { opacity: 1, scale: 1.05, xPercent: 0, duration: 0.12, ease: "power2.out" },
         0.55
       );
 
-      // Finance title emerges through dispersing clouds
+      // Finance title emerges through dispersing clouds — drifts slightly LEFT
       tl.fromTo(
         financeRef.current,
-        { opacity: 0, y: 40, filter: "blur(20px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        { opacity: 0, y: 40, xPercent: 5, filter: "blur(20px)" },
+        { opacity: 1, y: 0, xPercent: -2, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
         0.59
       );
 
       // Clouds dissipate
       tl.to(wipe2HazeRef.current, { opacity: 0, duration: 0.12, ease: "power1.out" }, 0.60);
-      tl.to(wipe2BackRef.current, { yPercent: -120, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.60);
-      tl.to(wipe2MidRef.current, { yPercent: -130, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.61);
-      tl.to(wipe2FrontRef.current, { yPercent: -140, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.62);
+      tl.to(wipe2BackRef.current, { yPercent: -120, xPercent: 14, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.60);
+      tl.to(wipe2MidRef.current, { yPercent: -130, xPercent: -16, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.61);
+      tl.to(wipe2FrontRef.current, { yPercent: -140, xPercent: 18, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.62);
 
-      // Hold finance (0.66 → 0.74)
-      tl.to({}, { duration: 0.08 }, 0.66);
+      // ============ CINEMAGRAPH HOLD — Kumtor breathes alive (0.66 → 0.74) ============
+      // subtle continuous zoom 1.05 → 1.10 + slow left drift
+      tl.to(kumtorRef.current, { scale: 1.10, xPercent: -3, duration: 0.08, ease: "sine.inOut" }, 0.66);
+      // finance card drifts gently LEFT against the camera
+      tl.to(financeRef.current, { xPercent: -5, duration: 0.08, ease: "sine.inOut" }, 0.66);
 
       // ============ WIPE 3 — Realistic cumulus clouds engulf, swap to earth depths, clouds fly up (0.74 → 0.94) ============
       tl.to(financeRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.74);
