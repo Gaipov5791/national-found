@@ -5,7 +5,8 @@ import Lenis from "lenis";
 import mountains from "@/assets/mountains.jpg";
 
 import kumtor from "@/assets/kumtor.jpg";
-import earthCrust from "@/assets/earth-crust.jpg";
+import earthCrust from "@/assets/earth-depths.jpg";
+import cumulus from "@/assets/cumulus-clouds.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
