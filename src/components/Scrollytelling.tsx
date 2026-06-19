@@ -496,21 +496,21 @@ export function Scrollytelling() {
             <>
               {/* WIPE 1 */}
               <div ref={wipe1HazeRef} className={`${layerBase} z-[35]`} style={{ ...styleWithWillChange, background: haze }} />
-              <div ref={wipe1BackRef as never} className={`${layerBase} z-[36]`} style={{ ...styleWithWillChange, background: softFog }} />
-              <div ref={wipe1MidRef as never} className={`${layerBase} z-[37]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
-              <div ref={wipe1FrontRef as never} className={`${layerBase} z-[38]`} style={{ ...styleWithWillChange, background: softFogFront }} />
+              <div ref={wipe1BackRef} className={`${layerBase} z-[36]`} style={{ ...styleWithWillChange, background: softFog }} />
+              <div ref={wipe1MidRef} className={`${layerBase} z-[37]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
+              <div ref={wipe1FrontRef} className={`${layerBase} z-[38]`} style={{ ...styleWithWillChange, background: softFogFront }} />
 
               {/* WIPE 2 */}
               <div ref={wipe2HazeRef} className={`${layerBase} z-[40]`} style={{ ...styleWithWillChange, background: haze }} />
-              <div ref={wipe2BackRef as never} className={`${layerBase} z-[41]`} style={{ ...styleWithWillChange, background: softFog }} />
-              <div ref={wipe2MidRef as never} className={`${layerBase} z-[42]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
-              <div ref={wipe2FrontRef as never} className={`${layerBase} z-[43]`} style={{ ...styleWithWillChange, background: softFogFront }} />
+              <div ref={wipe2BackRef} className={`${layerBase} z-[41]`} style={{ ...styleWithWillChange, background: softFog }} />
+              <div ref={wipe2MidRef} className={`${layerBase} z-[42]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
+              <div ref={wipe2FrontRef} className={`${layerBase} z-[43]`} style={{ ...styleWithWillChange, background: softFogFront }} />
 
               {/* WIPE 3 */}
               <div ref={wipe3HazeRef} className={`${layerBase} z-[45]`} style={{ ...styleWithWillChange, background: haze }} />
-              <div ref={wipe3BackRef as never} className={`${layerBase} z-[46]`} style={{ ...styleWithWillChange, background: softFog }} />
-              <div ref={wipe3MidRef as never} className={`${layerBase} z-[47]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
-              <div ref={wipe3FrontRef as never} className={`${layerBase} z-[48]`} style={{ ...styleWithWillChange, background: softFogFront }} />
+              <div ref={wipe3BackRef} className={`${layerBase} z-[46]`} style={{ ...styleWithWillChange, background: softFog }} />
+              <div ref={wipe3MidRef} className={`${layerBase} z-[47]`} style={{ ...styleWithWillChange, background: softFogAlt }} />
+              <div ref={wipe3FrontRef} className={`${layerBase} z-[48]`} style={{ ...styleWithWillChange, background: softFogFront }} />
             </>
           );
         })()}
