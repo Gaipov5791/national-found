@@ -74,10 +74,11 @@ export function Scrollytelling() {
 
     const ctx = gsap.context(() => {
       gsap.to(cloudDriftRef.current, {
-        backgroundPositionX: "-2000px",
-        duration: 140,
+        xPercent: -8,
+        duration: 60,
         repeat: -1,
-        ease: "none",
+        yoyo: true,
+        ease: "sine.inOut",
       });
 
       // Subtle perpetual drift on ALL fog layers so they never look static
