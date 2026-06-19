@@ -7,6 +7,7 @@ import mountains from "@/assets/mountains.jpg";
 import kumtor from "@/assets/kumtor.jpg";
 import earthCrust from "@/assets/earth-depths.jpg";
 import cumulus from "@/assets/cumulus-clouds.png";
+import magma from "@/assets/magma.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
