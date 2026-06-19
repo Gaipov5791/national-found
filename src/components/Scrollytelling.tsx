@@ -74,8 +74,16 @@ export function Scrollytelling() {
     lenis.on("scroll", ScrollTrigger.update);
 
     const ctx = gsap.context(() => {
+      // Viewport-aware parallax amplifier — bigger pans on desktop, gentler on mobile
+      const vw = typeof window !== "undefined" ? window.innerWidth : 1280;
+      const panK = vw < 640 ? 0.55 : vw < 1024 ? 0.8 : vw < 1536 ? 1.15 : 1.35;
+      const px = (v: number) => +(v * panK).toFixed(2);
+      // Z-depth amplifier — extra scale push for foreground layers (camera-truck feel)
+      const zK = vw < 640 ? 0.85 : vw < 1024 ? 1.0 : 1.15;
+      const sz = (base: number) => +(1 + (base - 1) * zK).toFixed(3);
+
       gsap.to(cloudDriftRef.current, {
-        xPercent: -8,
+        xPercent: px(-8),
         duration: 60,
         repeat: -1,
         yoyo: true,
@@ -91,7 +99,7 @@ export function Scrollytelling() {
       ].forEach((r, i) => {
         if (r.current) {
           gsap.to(r.current, {
-            xPercent: i % 2 === 0 ? 4 : -4,
+            xPercent: px(i % 2 === 0 ? 4 : -4),
             duration: 14 + i,
             repeat: -1,
             yoyo: true,
@@ -142,62 +150,54 @@ export function Scrollytelling() {
       );
 
       // ============ SCENE 1 — Mountains + stats (0 → 0.22) ============
-      // mountains zoom in AND pan left for cinematic camera drift
-      tl.to(mountainRef.current, { scale: 1.25, xPercent: -6, duration: 0.22, ease: "none" }, 0);
+      tl.to(mountainRef.current, { scale: sz(1.25), xPercent: px(-6), duration: 0.22, ease: "none" }, 0);
       tl.fromTo(
         statsRef.current,
-        { opacity: 0, y: 30, xPercent: 4 },
-        { opacity: 1, y: 0, xPercent: -3, duration: 0.10, ease: "power1.out" },
+        { opacity: 0, y: 30, xPercent: px(4) },
+        { opacity: 1, y: 0, xPercent: px(-3), duration: 0.10, ease: "power1.out" },
         0.10
       );
 
-      // ambient fog drifts over mountain peaks — slow horizontal pan RIGHT (0.06 → 0.22)
       tl.fromTo(
         ambientFogRef.current,
-        { opacity: 0, yPercent: 30, xPercent: -8 },
-        { opacity: 0.55, yPercent: 0, xPercent: 6, duration: 0.16, ease: "none" },
+        { opacity: 0, yPercent: 30, xPercent: px(-8) },
+        { opacity: 0.55, yPercent: 0, xPercent: px(6), duration: 0.16, ease: "none" },
         0.06
       );
 
-      // ============ WIPE 1 — Clouds engulf stats, reveal "О ФОНДЕ" (0.22 → 0.40) ============
-      // Stats fade as fog rolls in
+      // ============ WIPE 1 ============
       tl.to(statsRef.current, { opacity: 0, y: -20, duration: 0.08, ease: "none" }, 0.22);
 
-      // Three cloud layers — independent parallax speeds, NEVER fully opaque (max ~0.75)
       tl.fromTo(
         wipe1BackRef.current,
-        { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -20, opacity: 0.62, scale: 1.3, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: 110, opacity: 0, scale: sz(1.1) },
+        { yPercent: -20, opacity: 0.62, scale: sz(1.3), duration: 0.16, ease: "power2.inOut" },
         0.22
       );
       tl.fromTo(
         wipe1MidRef.current,
-        { yPercent: 130, xPercent: -10, opacity: 0, scale: 1.25 },
-        { yPercent: -5, xPercent: 8, opacity: 0.47, scale: 1.5, duration: 0.14, ease: "power2.inOut" },
+        { yPercent: 130, xPercent: px(-10), opacity: 0, scale: sz(1.25) },
+        { yPercent: -5, xPercent: px(8), opacity: 0.47, scale: sz(1.5), duration: 0.14, ease: "power2.inOut" },
         0.24
       );
       tl.fromTo(
         wipe1FrontRef.current,
-        { yPercent: 150, xPercent: 15, opacity: 0, scale: 1.4 },
-        { yPercent: -30, xPercent: -8, opacity: 0.57, scale: 1.7, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: 150, xPercent: px(15), opacity: 0, scale: sz(1.4) },
+        { yPercent: -30, xPercent: px(-8), opacity: 0.57, scale: sz(1.7), duration: 0.18, ease: "power2.inOut" },
         0.25
       );
-      // haze disabled to avoid solid white wash
       tl.set(wipe1HazeRef.current, { opacity: 0 }, 0.22);
 
-      // At max density (0.31) swap mountains → keep mountains but they'll be hidden
-      // About emerges through dissipating clouds (0.31 → 0.40)
       tl.fromTo(
         aboutRef.current,
-        { opacity: 0, y: 40, xPercent: 5, filter: "blur(20px)" },
-        { opacity: 1, y: 0, xPercent: -2, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        { opacity: 0, y: 40, xPercent: px(5), filter: "blur(20px)" },
+        { opacity: 1, y: 0, xPercent: px(-2), filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
         0.31
       );
-      // Clouds dissipate upward & drift apart horizontally
       tl.to(wipe1HazeRef.current, { opacity: 0, duration: 0.10, ease: "power1.out" }, 0.32);
-      tl.to(wipe1BackRef.current, { yPercent: -110, xPercent: 12, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.32);
-      tl.to(wipe1MidRef.current, { yPercent: -120, xPercent: -14, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.33);
-      tl.to(wipe1FrontRef.current, { yPercent: -130, xPercent: 16, opacity: 0, duration: 0.12, ease: "power2.in" }, 0.34);
+      tl.to(wipe1BackRef.current, { yPercent: -110, xPercent: px(12), opacity: 0, duration: 0.12, ease: "power2.in" }, 0.32);
+      tl.to(wipe1MidRef.current, { yPercent: -120, xPercent: px(-14), opacity: 0, duration: 0.12, ease: "power2.in" }, 0.33);
+      tl.to(wipe1FrontRef.current, { yPercent: -130, xPercent: px(16), opacity: 0, duration: 0.12, ease: "power2.in" }, 0.34);
 
       // ============ Hold "О ФОНДЕ" briefly (0.40 → 0.48) ============
       tl.to({}, { duration: 0.08 }, 0.40);
@@ -207,53 +207,48 @@ export function Scrollytelling() {
 
       tl.fromTo(
         wipe2BackRef.current,
-        { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -25, opacity: 0.62, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: 110, opacity: 0, scale: sz(1.1) },
+        { yPercent: -25, opacity: 0.62, scale: sz(1.35), duration: 0.18, ease: "power2.inOut" },
         0.48
       );
       tl.fromTo(
         wipe2MidRef.current,
-        { yPercent: 135, xPercent: 10, opacity: 0, scale: 1.3 },
-        { yPercent: -5, xPercent: -10, opacity: 0.47, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
+        { yPercent: 135, xPercent: px(10), opacity: 0, scale: sz(1.3) },
+        { yPercent: -5, xPercent: px(-10), opacity: 0.47, scale: sz(1.55), duration: 0.15, ease: "power2.inOut" },
         0.50
       );
       tl.fromTo(
         wipe2FrontRef.current,
-        { yPercent: 155, xPercent: -15, opacity: 0, scale: 1.5 },
-        { yPercent: -35, xPercent: 10, opacity: 0.57, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
+        { yPercent: 155, xPercent: px(-15), opacity: 0, scale: sz(1.5) },
+        { yPercent: -35, xPercent: px(10), opacity: 0.57, scale: sz(1.75), duration: 0.2, ease: "power2.inOut" },
         0.51
       );
       tl.set(wipe2HazeRef.current, { opacity: 0 }, 0.48);
 
-      // SWAP background — gentle crossfade BEHIND translucent clouds (peak density 0.55-0.58)
       tl.to(mountainRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
       tl.to(ambientFogRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
       tl.fromTo(
         kumtorRef.current,
-        { opacity: 0, scale: 1.15, xPercent: 4 },
-        { opacity: 1, scale: 1.05, xPercent: 0, duration: 0.12, ease: "power2.out" },
+        { opacity: 0, scale: sz(1.15), xPercent: px(4) },
+        { opacity: 1, scale: sz(1.05), xPercent: 0, duration: 0.12, ease: "power2.out" },
         0.55
       );
 
-      // Finance title emerges through dispersing clouds — drifts slightly LEFT
       tl.fromTo(
         financeRef.current,
-        { opacity: 0, y: 40, xPercent: 5, filter: "blur(20px)" },
-        { opacity: 1, y: 0, xPercent: -2, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        { opacity: 0, y: 40, xPercent: px(5), filter: "blur(20px)" },
+        { opacity: 1, y: 0, xPercent: px(-2), filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
         0.59
       );
 
-      // Clouds dissipate
       tl.to(wipe2HazeRef.current, { opacity: 0, duration: 0.12, ease: "power1.out" }, 0.60);
-      tl.to(wipe2BackRef.current, { yPercent: -120, xPercent: 14, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.60);
-      tl.to(wipe2MidRef.current, { yPercent: -130, xPercent: -16, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.61);
-      tl.to(wipe2FrontRef.current, { yPercent: -140, xPercent: 18, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.62);
+      tl.to(wipe2BackRef.current, { yPercent: -120, xPercent: px(14), opacity: 0, duration: 0.14, ease: "power2.in" }, 0.60);
+      tl.to(wipe2MidRef.current, { yPercent: -130, xPercent: px(-16), opacity: 0, duration: 0.14, ease: "power2.in" }, 0.61);
+      tl.to(wipe2FrontRef.current, { yPercent: -140, xPercent: px(18), opacity: 0, duration: 0.14, ease: "power2.in" }, 0.62);
 
       // ============ CINEMAGRAPH HOLD — Kumtor breathes alive (0.66 → 0.74) ============
-      // subtle continuous zoom 1.05 → 1.10 + slow left drift
-      tl.to(kumtorRef.current, { scale: 1.10, xPercent: -3, duration: 0.08, ease: "sine.inOut" }, 0.66);
-      // finance card drifts gently LEFT against the camera
-      tl.to(financeRef.current, { xPercent: -5, duration: 0.08, ease: "sine.inOut" }, 0.66);
+      tl.to(kumtorRef.current, { scale: sz(1.10), xPercent: px(-3), duration: 0.08, ease: "sine.inOut" }, 0.66);
+      tl.to(financeRef.current, { xPercent: px(-5), duration: 0.08, ease: "sine.inOut" }, 0.66);
 
       // ============ WIPE 3 — Realistic cumulus clouds engulf, swap to earth depths, clouds fly up (0.74 → 0.94) ============
       tl.to(financeRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.74);
@@ -261,51 +256,47 @@ export function Scrollytelling() {
       // TOP cumulus strip slides down from above + drifts RIGHT (foreground parallax)
       tl.fromTo(
         wipe3BackRef.current,
-        { yPercent: -120, xPercent: -8, opacity: 0, scale: 1.15 },
-        { yPercent: -10, xPercent: 6, opacity: 0.28, scale: 1.05, duration: 0.18, ease: "power2.out" },
+        { yPercent: -120, xPercent: px(-8), opacity: 0, scale: sz(1.15) },
+        { yPercent: -10, xPercent: px(6), opacity: 0.28, scale: sz(1.05), duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // BOTTOM cumulus strip slides up from below + drifts RIGHT
       tl.fromTo(
         wipe3MidRef.current,
-        { yPercent: 120, xPercent: -10, opacity: 0, scale: 1.15 },
-        { yPercent: 10, xPercent: 8, opacity: 0.26, scale: 1.05, duration: 0.18, ease: "power2.out" },
+        { yPercent: 120, xPercent: px(-10), opacity: 0, scale: sz(1.15) },
+        { yPercent: 10, xPercent: px(8), opacity: 0.26, scale: sz(1.05), duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // CENTER soft veil — drifts LEFT for opposing parallax depth
       tl.fromTo(
         wipe3FrontRef.current,
-        { yPercent: 40, xPercent: 6, opacity: 0, scale: 1.3 },
-        { yPercent: 0, xPercent: -5, opacity: 0.18, scale: 1.1, duration: 0.16, ease: "power2.out" },
+        { yPercent: 40, xPercent: px(6), opacity: 0, scale: sz(1.3) },
+        { yPercent: 0, xPercent: px(-5), opacity: 0.18, scale: sz(1.1), duration: 0.16, ease: "power2.out" },
         0.76
       );
       tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
 
-      // SWAP behind translucent clouds — Kumtor scales up & spreads apart (camera punches through),
-      // earth depths emerge, background darkens — ALL finish exactly when title begins (0.88)
+      // SWAP behind translucent clouds — Kumtor scales up & spreads apart, earth depths emerge
       tl.to(
         kumtorRef.current,
-        { scale: 1.6, xPercent: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in" },
+        { scale: sz(1.6), xPercent: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in" },
         0.74
       );
       tl.to(
         kumtorRef.current,
-        { opacity: 0, scale: 2.1, filter: "blur(20px)", duration: 0.08, ease: "power2.in" },
+        { opacity: 0, scale: sz(2.1), filter: "blur(20px)", duration: 0.08, ease: "power2.in" },
         0.80
       );
       tl.fromTo(
         crustRef.current,
-        { opacity: 0, scale: 1.25, filter: "blur(16px)" },
+        { opacity: 0, scale: sz(1.25), filter: "blur(16px)" },
         { opacity: 1, scale: 1.0, filter: "blur(0px)", duration: 0.08, ease: "power2.out" },
         0.80
       );
-      // darken background gradient behind earth depths — ends at 0.88 with text
       tl.to(sceneRef.current, { backgroundColor: "#0a0806", duration: 0.14, ease: "none" }, 0.74);
 
-      // Light clouds fly UP and away, clearing the frame exactly as the title appears
-      tl.to(wipe3BackRef.current, { yPercent: -180, opacity: 0, scale: 1.3, duration: 0.14, ease: "power2.in" }, 0.80);
-      tl.to(wipe3FrontRef.current, { yPercent: -200, opacity: 0, scale: 1.4, duration: 0.14, ease: "power2.in" }, 0.80);
-      tl.to(wipe3MidRef.current, { yPercent: -220, opacity: 0, scale: 1.5, duration: 0.14, ease: "power2.in" }, 0.80);
+      // Light clouds fly UP and away with strong sideways depth — opposing X for true parallax
+      tl.to(wipe3BackRef.current, { yPercent: -180, xPercent: px(18), opacity: 0, scale: sz(1.3), duration: 0.14, ease: "power2.in" }, 0.80);
+      tl.to(wipe3FrontRef.current, { yPercent: -200, xPercent: px(-22), opacity: 0, scale: sz(1.4), duration: 0.14, ease: "power2.in" }, 0.80);
+      tl.to(wipe3MidRef.current, { yPercent: -220, xPercent: px(20), opacity: 0, scale: sz(1.5), duration: 0.14, ease: "power2.in" }, 0.80);
 
 
       // Directions title emerges from dark depths — perfectly synced: swap completes at 0.88
