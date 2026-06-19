@@ -40,6 +40,7 @@ export function Scrollytelling() {
   const aboutRef = useRef<HTMLDivElement>(null);
   const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
+  const msbRef = useRef<HTMLDivElement>(null);
   const partnersRef = useRef<HTMLDivElement>(null);
 
   // Underground dark smoke layers (crust scene → magma transition)
