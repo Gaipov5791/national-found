@@ -166,19 +166,19 @@ export function Scrollytelling() {
       tl.fromTo(
         wipe1BackRef.current,
         { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -20, opacity: 0.7, scale: 1.3, duration: 0.16, ease: "power2.inOut" },
+        { yPercent: -20, opacity: 0.62, scale: 1.3, duration: 0.16, ease: "power2.inOut" },
         0.22
       );
       tl.fromTo(
         wipe1MidRef.current,
         { yPercent: 130, xPercent: -10, opacity: 0, scale: 1.25 },
-        { yPercent: -5, xPercent: 8, opacity: 0.55, scale: 1.5, duration: 0.14, ease: "power2.inOut" },
+        { yPercent: -5, xPercent: 8, opacity: 0.47, scale: 1.5, duration: 0.14, ease: "power2.inOut" },
         0.24
       );
       tl.fromTo(
         wipe1FrontRef.current,
         { yPercent: 150, xPercent: 15, opacity: 0, scale: 1.4 },
-        { yPercent: -30, xPercent: -8, opacity: 0.65, scale: 1.7, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: -30, xPercent: -8, opacity: 0.57, scale: 1.7, duration: 0.18, ease: "power2.inOut" },
         0.25
       );
       // haze disabled to avoid solid white wash
