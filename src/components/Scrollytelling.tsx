@@ -140,7 +140,7 @@ export function Scrollytelling() {
         scrollTrigger: {
           trigger: rootRef.current,
           start: "top top",
-          end: "+=7200",
+          end: "+=10000",
           scrub: 1.2,
           pin: sceneRef.current,
           anticipatePin: 1,
@@ -332,7 +332,7 @@ export function Scrollytelling() {
     const st = ScrollTrigger.create({
       trigger: rootRef.current,
       start: "top top",
-      end: "+=7200",
+      end: "+=10000",
       onUpdate: (self) => {
         const p = (self.progress - 0.10) / 0.14;
         setCountProgress(Math.max(0, Math.min(1, p)));
@@ -348,7 +348,7 @@ export function Scrollytelling() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative overflow-x-hidden" style={{ height: "7700px" }}>
+    <div ref={rootRef} className="relative overflow-x-hidden" style={{ height: "10500px" }}>
       <div
         ref={sceneRef}
         className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
