@@ -102,19 +102,33 @@ export function Scrollytelling() {
         ease: "sine.inOut",
       });
 
-      // Subtle perpetual drift on ALL fog layers so they never look static
+      // Subtle perpetual drift on overhead fog layers (horizontal — sky scenes only)
       [
         wipe1BackRef, wipe1MidRef, wipe1FrontRef,
         wipe2BackRef, wipe2MidRef, wipe2FrontRef,
         wipe3BackRef, wipe3MidRef, wipe3FrontRef,
         ambientFogRef,
-        undergroundSmokeBackRef, undergroundSmokeMidRef, undergroundSmokeFrontRef,
-        magmaSmokeBackRef, magmaSmokeFrontRef,
       ].forEach((r, i) => {
         if (r.current) {
           gsap.to(r.current, {
             xPercent: px(i % 2 === 0 ? 4 : -4),
             duration: 14 + i,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+        }
+      });
+
+      // Underground / magma smoke drifts VERTICALLY only (no X) — keeps the descent feel
+      [
+        undergroundSmokeBackRef, undergroundSmokeMidRef, undergroundSmokeFrontRef,
+        magmaSmokeBackRef, magmaSmokeFrontRef,
+      ].forEach((r, i) => {
+        if (r.current) {
+          gsap.to(r.current, {
+            yPercent: i % 2 === 0 ? -6 : 6,
+            duration: 12 + i,
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut",
