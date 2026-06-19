@@ -346,9 +346,9 @@ export function Scrollytelling() {
       >
         {/* Ambient drifting CSS clouds — no image, just blurred gradient blobs */}
         <div ref={cloudDriftRef} className="pointer-events-none absolute inset-0 z-[5] overflow-hidden">
-          <div className="absolute left-[-10%] top-[12%] h-[28vh] w-[55vw] rounded-full bg-gradient-to-t from-white/70 via-white/40 to-transparent blur-3xl" />
-          <div className="absolute right-[-8%] top-[22%] h-[24vh] w-[45vw] rounded-full bg-gradient-to-t from-white/60 via-white/30 to-transparent blur-3xl" />
-          <div className="absolute left-[20%] top-[6%] h-[18vh] w-[35vw] rounded-full bg-gradient-to-t from-white/50 via-white/25 to-transparent blur-2xl" />
+          <div className="absolute left-[-10%] top-[12%] h-[28vh] w-[55vw] rounded-full bg-gradient-to-t from-white/70 via-white/40 to-transparent blur-[150px] scale-150" style={{ maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" }} />
+          <div className="absolute right-[-8%] top-[22%] h-[24vh] w-[45vw] rounded-full bg-gradient-to-t from-white/60 via-white/30 to-transparent blur-[150px] scale-150" style={{ maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" }} />
+          <div className="absolute left-[20%] top-[6%] h-[18vh] w-[35vw] rounded-full bg-gradient-to-t from-white/50 via-white/25 to-transparent blur-[150px] scale-150" style={{ maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" }} />
         </div>
 
 
@@ -487,8 +487,8 @@ export function Scrollytelling() {
             "radial-gradient(ellipse 110% 90% at 60% 65%, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.75) 30%, rgba(230,240,250,0.35) 65%, rgba(210,225,240,0) 100%)";
           const haze =
             "linear-gradient(to top, rgba(255,255,255,0.85) 0%, rgba(250,252,255,0.6) 40%, rgba(235,242,250,0.25) 75%, rgba(220,230,245,0) 100%)";
-          const layerBase = "pointer-events-none absolute inset-0 opacity-0";
-          const styleWithWillChange = { willChange: "transform, opacity" as const };
+          const layerBase = "pointer-events-none absolute left-1/2 top-1/2 -ml-[100vw] -mt-[100vh] w-[200vw] h-[200vh] rounded-full opacity-0 blur-[150px]";
+          const styleWithWillChange = { willChange: "transform, opacity", maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" };
           return (
             <>
               {/* WIPE 1 */}
