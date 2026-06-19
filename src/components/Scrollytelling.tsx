@@ -251,51 +251,51 @@ export function Scrollytelling() {
       // Hold finance (0.66 → 0.74)
       tl.to({}, { duration: 0.08 }, 0.66);
 
-      // ============ WIPE 3 — Clouds engulf, reveal Earth Crust + "ПЕРСПЕКТИВНЫЕ" (0.74 → 0.94) ============
+      // ============ WIPE 3 — Realistic cumulus clouds engulf, swap to earth depths, clouds fly up (0.74 → 0.94) ============
       tl.to(financeRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.74);
 
+      // TOP cumulus strip slides down from above
       tl.fromTo(
         wipe3BackRef.current,
-        { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -25, opacity: 0.7, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: -110, opacity: 0, scale: 1.15 },
+        { yPercent: 0, opacity: 1, scale: 1.05, duration: 0.16, ease: "power2.out" },
         0.74
       );
+      // BOTTOM cumulus strip slides up from below
       tl.fromTo(
         wipe3MidRef.current,
-        { yPercent: 135, xPercent: -10, opacity: 0, scale: 1.3 },
-        { yPercent: -5, xPercent: 10, opacity: 0.55, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
-        0.76
+        { yPercent: 110, opacity: 0, scale: 1.15 },
+        { yPercent: 0, opacity: 1, scale: 1.05, duration: 0.16, ease: "power2.out" },
+        0.74
       );
+      // EXTRA dense overlay (covers center seam at peak)
       tl.fromTo(
         wipe3FrontRef.current,
-        { yPercent: 155, xPercent: 15, opacity: 0, scale: 1.5 },
-        { yPercent: -35, xPercent: -10, opacity: 0.65, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
-        0.77
+        { yPercent: 60, opacity: 0, scale: 1.3 },
+        { yPercent: 0, opacity: 1, scale: 1.1, duration: 0.14, ease: "power2.out" },
+        0.76
       );
       tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
 
-      // SWAP at peak — gentle crossfade behind translucent clouds
-      tl.to(kumtorRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.80);
-      tl.fromTo(
-        crustRef.current,
-        { opacity: 0, scale: 1.15 },
-        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power2.out" },
-        0.81
-      );
+      // SWAP at peak density — hidden behind solid cumulus mass
+      tl.to(kumtorRef.current, { opacity: 0, duration: 0.04, ease: "none" }, 0.82);
+      tl.set(crustRef.current, { opacity: 1, scale: 1.1 }, 0.82);
+      tl.to(crustRef.current, { scale: 1.0, duration: 0.12, ease: "power2.out" }, 0.82);
+      // darken background gradient behind earth depths
+      tl.to(sceneRef.current, { backgroundColor: "#0a0806", duration: 0.08, ease: "none" }, 0.82);
 
-      // Directions title emerges
+      // Clouds fly UP together — camera falls through them into the depths
+      tl.to(wipe3BackRef.current, { yPercent: -160, opacity: 0, scale: 1.3, duration: 0.16, ease: "power2.in" }, 0.84);
+      tl.to(wipe3FrontRef.current, { yPercent: -180, opacity: 0, scale: 1.4, duration: 0.16, ease: "power2.in" }, 0.84);
+      tl.to(wipe3MidRef.current, { yPercent: -200, opacity: 0, scale: 1.5, duration: 0.18, ease: "power2.in" }, 0.85);
+
+      // Directions title emerges from dark depths
       tl.fromTo(
         directionsRef.current,
-        { opacity: 0, y: 40, filter: "blur(20px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
-        0.85
+        { opacity: 0, y: 60, filter: "blur(24px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.14, ease: "power2.out" },
+        0.88
       );
-
-      // Clouds dissipate
-      tl.to(wipe3HazeRef.current, { opacity: 0, duration: 0.12, ease: "power1.out" }, 0.86);
-      tl.to(wipe3BackRef.current, { yPercent: -120, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.86);
-      tl.to(wipe3MidRef.current, { yPercent: -130, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.87);
-      tl.to(wipe3FrontRef.current, { yPercent: -140, opacity: 0, duration: 0.14, ease: "power2.in" }, 0.88);
 
       // Decree text — re-purposed: shown over mountains briefly between scene 1 & wipe1
       tl.fromTo(
