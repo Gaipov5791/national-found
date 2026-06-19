@@ -107,6 +107,8 @@ export function Scrollytelling() {
         wipe2BackRef, wipe2MidRef, wipe2FrontRef,
         wipe3BackRef, wipe3MidRef, wipe3FrontRef,
         ambientFogRef,
+        undergroundSmokeBackRef, undergroundSmokeMidRef, undergroundSmokeFrontRef,
+        magmaSmokeBackRef, magmaSmokeFrontRef,
       ].forEach((r, i) => {
         if (r.current) {
           gsap.to(r.current, {
