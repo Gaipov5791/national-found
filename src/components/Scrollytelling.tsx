@@ -256,51 +256,47 @@ export function Scrollytelling() {
       // TOP cumulus strip slides down from above + drifts RIGHT (foreground parallax)
       tl.fromTo(
         wipe3BackRef.current,
-        { yPercent: -120, xPercent: -8, opacity: 0, scale: 1.15 },
-        { yPercent: -10, xPercent: 6, opacity: 0.28, scale: 1.05, duration: 0.18, ease: "power2.out" },
+        { yPercent: -120, xPercent: px(-8), opacity: 0, scale: sz(1.15) },
+        { yPercent: -10, xPercent: px(6), opacity: 0.28, scale: sz(1.05), duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // BOTTOM cumulus strip slides up from below + drifts RIGHT
       tl.fromTo(
         wipe3MidRef.current,
-        { yPercent: 120, xPercent: -10, opacity: 0, scale: 1.15 },
-        { yPercent: 10, xPercent: 8, opacity: 0.26, scale: 1.05, duration: 0.18, ease: "power2.out" },
+        { yPercent: 120, xPercent: px(-10), opacity: 0, scale: sz(1.15) },
+        { yPercent: 10, xPercent: px(8), opacity: 0.26, scale: sz(1.05), duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // CENTER soft veil — drifts LEFT for opposing parallax depth
       tl.fromTo(
         wipe3FrontRef.current,
-        { yPercent: 40, xPercent: 6, opacity: 0, scale: 1.3 },
-        { yPercent: 0, xPercent: -5, opacity: 0.18, scale: 1.1, duration: 0.16, ease: "power2.out" },
+        { yPercent: 40, xPercent: px(6), opacity: 0, scale: sz(1.3) },
+        { yPercent: 0, xPercent: px(-5), opacity: 0.18, scale: sz(1.1), duration: 0.16, ease: "power2.out" },
         0.76
       );
       tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
 
-      // SWAP behind translucent clouds — Kumtor scales up & spreads apart (camera punches through),
-      // earth depths emerge, background darkens — ALL finish exactly when title begins (0.88)
+      // SWAP behind translucent clouds — Kumtor scales up & spreads apart, earth depths emerge
       tl.to(
         kumtorRef.current,
-        { scale: 1.6, xPercent: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in" },
+        { scale: sz(1.6), xPercent: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in" },
         0.74
       );
       tl.to(
         kumtorRef.current,
-        { opacity: 0, scale: 2.1, filter: "blur(20px)", duration: 0.08, ease: "power2.in" },
+        { opacity: 0, scale: sz(2.1), filter: "blur(20px)", duration: 0.08, ease: "power2.in" },
         0.80
       );
       tl.fromTo(
         crustRef.current,
-        { opacity: 0, scale: 1.25, filter: "blur(16px)" },
+        { opacity: 0, scale: sz(1.25), filter: "blur(16px)" },
         { opacity: 1, scale: 1.0, filter: "blur(0px)", duration: 0.08, ease: "power2.out" },
         0.80
       );
-      // darken background gradient behind earth depths — ends at 0.88 with text
       tl.to(sceneRef.current, { backgroundColor: "#0a0806", duration: 0.14, ease: "none" }, 0.74);
 
-      // Light clouds fly UP and away, clearing the frame exactly as the title appears
-      tl.to(wipe3BackRef.current, { yPercent: -180, opacity: 0, scale: 1.3, duration: 0.14, ease: "power2.in" }, 0.80);
-      tl.to(wipe3FrontRef.current, { yPercent: -200, opacity: 0, scale: 1.4, duration: 0.14, ease: "power2.in" }, 0.80);
-      tl.to(wipe3MidRef.current, { yPercent: -220, opacity: 0, scale: 1.5, duration: 0.14, ease: "power2.in" }, 0.80);
+      // Light clouds fly UP and away with strong sideways depth — opposing X for true parallax
+      tl.to(wipe3BackRef.current, { yPercent: -180, xPercent: px(18), opacity: 0, scale: sz(1.3), duration: 0.14, ease: "power2.in" }, 0.80);
+      tl.to(wipe3FrontRef.current, { yPercent: -200, xPercent: px(-22), opacity: 0, scale: sz(1.4), duration: 0.14, ease: "power2.in" }, 0.80);
+      tl.to(wipe3MidRef.current, { yPercent: -220, xPercent: px(20), opacity: 0, scale: sz(1.5), duration: 0.14, ease: "power2.in" }, 0.80);
 
 
       // Directions title emerges from dark depths — perfectly synced: swap completes at 0.88
