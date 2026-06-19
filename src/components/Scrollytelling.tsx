@@ -4,6 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import mountains from "@/assets/mountains.jpg";
 import clouds from "@/assets/clouds.png";
+import kumtor from "@/assets/kumtor.jpg";
+import earthCrust from "@/assets/earth-crust.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,6 +31,15 @@ export function Scrollytelling() {
   const cloudDriftRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
 
+  // new scene refs
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const kumtorRef = useRef<HTMLImageElement>(null);
+  const financeRef = useRef<HTMLDivElement>(null);
+  const fogLiftRef = useRef<HTMLImageElement>(null);
+  const crustRef = useRef<HTMLImageElement>(null);
+  const fogCoverRef = useRef<HTMLImageElement>(null);
+  const directionsRef = useRef<HTMLDivElement>(null);
+
   const [countProgress, setCountProgress] = useState(0);
 
   useEffect(() => {
@@ -52,7 +63,6 @@ export function Scrollytelling() {
         ease: "none",
       });
 
-      // Compute target docking position for the brand (top-left inside Navbar)
       const computeBrandTarget = () => {
         const slot = document.getElementById("navbar-brand-slot");
         const el = brandRef.current;
@@ -63,7 +73,6 @@ export function Scrollytelling() {
         const scaledW = elRect.width * targetScale;
         const cx = elRect.left + elRect.width / 2;
         const cy = elRect.top + elRect.height / 2;
-        // align scaled left edge with slot left edge (small padding)
         const tx = slotRect.left + scaledW / 2;
         const ty = slotRect.top + slotRect.height / 2;
         return { x: tx - cx, y: ty - cy, scale: targetScale };
@@ -73,7 +82,7 @@ export function Scrollytelling() {
         scrollTrigger: {
           trigger: rootRef.current,
           start: "top top",
-          end: "+=3600",
+          end: "+=6400",
           scrub: true,
           pin: sceneRef.current,
           anticipatePin: 1,
@@ -81,11 +90,11 @@ export function Scrollytelling() {
         },
       });
 
-      // BRAND: from giant center -> shrinks into Navbar slot (0 → 0.12), stays after
+      // BRAND dock 0 → 0.08
       tl.to(
         brandRef.current,
         {
-          duration: 0.12,
+          duration: 0.08,
           ease: "none",
           x: () => computeBrandTarget().x,
           y: () => computeBrandTarget().y,
@@ -95,46 +104,108 @@ export function Scrollytelling() {
         0
       );
 
-      // STEP 1 (0 → 0.5): mountains scale up, stats fade in
-      tl.to(mountainRef.current, { scale: 1.25, duration: 0.5, ease: "none" }, 0);
+      // SCENE 1 — Mountains zoom + stats (0 → 0.30)
+      tl.to(mountainRef.current, { scale: 1.25, duration: 0.30, ease: "none" }, 0);
       tl.fromTo(
         statsRef.current,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.3, ease: "none" },
-        0.2
+        { opacity: 1, y: 0, duration: 0.15, ease: "none" },
+        0.12
       );
 
-      // STEP 2: stats fade out, mountains keep zooming, fog rises
-      tl.to(statsRef.current, { opacity: 0, y: -30, duration: 0.2, ease: "none" }, 0.5);
-      tl.to(mountainRef.current, { scale: 1.55, duration: 0.5, ease: "none" }, 0.5);
+      // Stats fade out + fog rises (0.30 → 0.42)
+      tl.to(statsRef.current, { opacity: 0, y: -30, duration: 0.10, ease: "none" }, 0.30);
+      tl.to(mountainRef.current, { scale: 1.55, duration: 0.20, ease: "none" }, 0.30);
       tl.fromTo(
         fogRef.current,
         { yPercent: 90, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.35, ease: "none" },
-        0.55
+        { yPercent: 0, opacity: 1, duration: 0.14, ease: "none" },
+        0.32
       );
       tl.fromTo(
         fogFrontRef.current,
         { yPercent: 100, opacity: 0 },
-        { yPercent: 20, opacity: 0.95, duration: 0.35, ease: "none" },
-        0.6
+        { yPercent: 20, opacity: 0.95, duration: 0.16, ease: "none" },
+        0.34
       );
 
-      // STEP 3: decree appears only AFTER fog has settled — long, soft fade
+      // Decree text — fade in (0.44 → 0.55)
       tl.fromTo(
         decreeRef.current,
-        { opacity: 0, y: 120 },
-        { opacity: 1, y: 0, duration: 0.25, ease: "power1.out" },
-        0.85
+        { opacity: 0, y: 80 },
+        { opacity: 1, y: 0, duration: 0.11, ease: "power1.out" },
+        0.44
+      );
+
+      // Decree fades out (0.56 → 0.62) — fog densifies further
+      tl.to(decreeRef.current, { opacity: 0, y: -40, duration: 0.06, ease: "none" }, 0.56);
+      tl.to(fogFrontRef.current, { yPercent: 0, opacity: 1, duration: 0.08, ease: "none" }, 0.56);
+
+      // SCENE 2 — "О ФОНДЕ" — emerges from dense fog (0.60 → 0.70)
+      tl.fromTo(
+        aboutRef.current,
+        { opacity: 0, y: 60 },
+        { opacity: 1, y: 0, duration: 0.10, ease: "power1.out" },
+        0.60
+      );
+      // About fades out (0.70 → 0.76)
+      tl.to(aboutRef.current, { opacity: 0, y: -40, duration: 0.06, ease: "none" }, 0.70);
+
+      // SCENE 3 — Fog lifts UP, revealing Kumtor (0.70 → 0.82)
+      // Hide mountains (we crossfade to kumtor)
+      tl.to(mountainRef.current, { opacity: 0, duration: 0.08, ease: "none" }, 0.72);
+      tl.fromTo(
+        kumtorRef.current,
+        { opacity: 0, scale: 1.15 },
+        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power1.out" },
+        0.72
+      );
+      // Fog lifts up but stays as a hovering veil above
+      tl.to(fogRef.current, { yPercent: -75, opacity: 0.75, duration: 0.14, ease: "power1.inOut" }, 0.70);
+      tl.to(fogFrontRef.current, { yPercent: -90, opacity: 0.55, duration: 0.14, ease: "power1.inOut" }, 0.70);
+
+      // Финансирование проектов title (0.78 → 0.84)
+      tl.fromTo(
+        financeRef.current,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.08, ease: "power1.out" },
+        0.78
+      );
+      // fade out finance (0.86 → 0.90)
+      tl.to(financeRef.current, { opacity: 0, y: -30, duration: 0.05, ease: "none" }, 0.86);
+
+      // SCENE 4 — New fog blanket covers Kumtor → earth crust appears (0.86 → 0.96)
+      tl.fromTo(
+        fogCoverRef.current,
+        { yPercent: 100, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.10, ease: "power1.inOut" },
+        0.84
+      );
+      tl.to(kumtorRef.current, { opacity: 0, duration: 0.08, ease: "none" }, 0.88);
+      tl.fromTo(
+        crustRef.current,
+        { opacity: 0, scale: 1.12 },
+        { opacity: 1, scale: 1.0, duration: 0.12, ease: "power1.out" },
+        0.88
+      );
+      // fog cover lifts gently to reveal crust
+      tl.to(fogCoverRef.current, { yPercent: -60, opacity: 0.5, duration: 0.10, ease: "power1.inOut" }, 0.92);
+
+      // Перспективные направления (0.94 → 1.00)
+      tl.fromTo(
+        directionsRef.current,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.06, ease: "power1.out" },
+        0.94
       );
     }, rootRef);
 
     const st = ScrollTrigger.create({
       trigger: rootRef.current,
       start: "top top",
-      end: "+=3600",
+      end: "+=6400",
       onUpdate: (self) => {
-        const p = (self.progress - 0.2) / 0.3;
+        const p = (self.progress - 0.12) / 0.18;
         setCountProgress(Math.max(0, Math.min(1, p)));
       },
     });
@@ -148,7 +219,7 @@ export function Scrollytelling() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative" style={{ height: "4100px" }}>
+    <div ref={rootRef} className="relative" style={{ height: "6900px" }}>
       <div
         ref={sceneRef}
         className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
@@ -165,7 +236,7 @@ export function Scrollytelling() {
           }}
         />
 
-        {/* Whole mountain image (two peaks) */}
+        {/* Mountains */}
         <img
           ref={mountainRef}
           src={mountains}
@@ -174,7 +245,25 @@ export function Scrollytelling() {
           style={{ transformOrigin: "50% 70%" }}
         />
 
-        {/* BRAND TITLE — starts large center, scrubs into Navbar slot on desktop */}
+        {/* Kumtor — behind fog layers */}
+        <img
+          ref={kumtorRef}
+          src={kumtor}
+          alt="Золоторудный комбинат Кумтор"
+          className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
+          style={{ transformOrigin: "50% 60%" }}
+        />
+
+        {/* Earth crust */}
+        <img
+          ref={crustRef}
+          src={earthCrust}
+          alt="Земная кора в разрезе"
+          className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
+          style={{ transformOrigin: "50% 50%" }}
+        />
+
+        {/* BRAND TITLE */}
         <div
           ref={brandRef}
           className="pointer-events-none absolute left-1/2 top-[42%] z-[60] -translate-x-1/2 -translate-y-1/2 will-change-transform hidden md:block"
@@ -187,13 +276,12 @@ export function Scrollytelling() {
           </h1>
         </div>
 
-        {/* Stats — lower, in the valley between peaks, with soft dark backdrop */}
+        {/* Stats */}
         <div
           ref={statsRef}
           className="pointer-events-none absolute inset-x-0 top-[46%] z-20 px-6 opacity-0"
         >
           <div className="relative mx-auto max-w-3xl text-center">
-            {/* soft radial dark vignette for legibility */}
             <div
               className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[140%] w-[120%] -translate-x-1/2 -translate-y-1/2"
               style={{
@@ -227,22 +315,22 @@ export function Scrollytelling() {
           </div>
         </div>
 
-        {/* Rising fog (back) */}
+        {/* Fog back */}
         <img
           ref={fogRef}
           src={clouds}
           alt=""
           className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[60%] w-full object-cover object-top opacity-0"
         />
-        {/* Dense fog (front) */}
+        {/* Fog front */}
         <img
           ref={fogFrontRef}
           src={clouds}
           alt=""
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[45%] w-full object-cover object-top opacity-0"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[60%] w-full object-cover object-top opacity-0"
         />
 
-        {/* Decree text — appears slowly AFTER fog settles */}
+        {/* Decree text */}
         <div
           ref={decreeRef}
           className="pointer-events-none absolute inset-x-0 bottom-[10%] z-30 px-6 text-center opacity-0"
@@ -258,6 +346,54 @@ export function Scrollytelling() {
             Президента Кыргызской Республики № 155 от 14 июня 2024 года.
           </p>
         </div>
+
+        {/* О ФОНДЕ */}
+        <div
+          ref={aboutRef}
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0"
+        >
+          <h2 className="font-display text-4xl font-bold tracking-[0.2em] text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.6)] md:text-6xl">
+            О ФОНДЕ
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-[color:var(--ink)]/85 md:text-base">
+            Национальный инвестиционный фонд — стратегический институт развития,
+            направляющий капитал в проекты, формирующие будущее Кыргызской Республики.
+          </p>
+        </div>
+
+        {/* ФИНАНСИРОВАНИЕ ПРОЕКТОВ */}
+        <div
+          ref={financeRef}
+          className="pointer-events-none absolute inset-x-0 top-[40%] z-30 px-6 text-center opacity-0"
+        >
+          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.7)] md:text-6xl">
+            ФИНАНСИРОВАНИЕ ПРОЕКТОВ
+          </h2>
+        </div>
+
+        {/* Cover fog for transition to crust */}
+        <img
+          ref={fogCoverRef}
+          src={clouds}
+          alt=""
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[28] h-[110%] w-full object-cover object-top opacity-0"
+        />
+
+        {/* ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ */}
+        <div
+          ref={directionsRef}
+          className="pointer-events-none absolute inset-x-0 top-[38%] z-30 px-6 text-center opacity-0"
+        >
+          <h2 className="font-display text-4xl font-bold tracking-[0.16em] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] md:text-6xl">
+            ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)] md:text-base">
+            Инвестиции в недра — золото, медь, редкоземельные металлы и стратегические ресурсы Кыргызстана.
+          </p>
+        </div>
+
+        {/* unused ref placeholder */}
+        <span ref={fogLiftRef} className="hidden" />
       </div>
     </div>
   );

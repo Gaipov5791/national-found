@@ -31,8 +31,8 @@
   --color-ink: var(--ink);
   --color-platinum: var(--platinum);
   --color-gold: var(--gold);
-  --font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-  --font-sans: "Manrope", "Inter", system-ui, sans-serif;
+  --font-display: "Montserrat", "Geometria", "Gotham", system-ui, sans-serif;
+  --font-sans: "Montserrat", "Geometria", "Gotham", system-ui, sans-serif;
 }
 
 :root {
