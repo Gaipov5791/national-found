@@ -7,6 +7,7 @@ import mountains from "@/assets/mountains.jpg";
 import kumtor from "@/assets/kumtor.jpg";
 import earthCrust from "@/assets/earth-depths.jpg";
 import cumulus from "@/assets/cumulus-clouds.png";
+import magma from "@/assets/magma.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -33,11 +34,21 @@ export function Scrollytelling() {
   // background scene refs
   const kumtorRef = useRef<HTMLImageElement>(null);
   const crustRef = useRef<HTMLImageElement>(null);
+  const magmaRef = useRef<HTMLImageElement>(null);
 
   // text scene refs
   const aboutRef = useRef<HTMLDivElement>(null);
   const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
+  const partnersRef = useRef<HTMLDivElement>(null);
+
+  // Underground dark smoke layers (crust scene → magma transition)
+  const undergroundSmokeBackRef = useRef<HTMLDivElement>(null);
+  const undergroundSmokeMidRef = useRef<HTMLDivElement>(null);
+  const undergroundSmokeFrontRef = useRef<HTMLDivElement>(null);
+  // Hot smoke over magma (glowing veils)
+  const magmaSmokeBackRef = useRef<HTMLDivElement>(null);
+  const magmaSmokeFrontRef = useRef<HTMLDivElement>(null);
 
   // CLOUD WIPE LAYERS — each transition uses dedicated multi-layer fog (divs with CSS gradients)
   const wipe1BackRef = useRef<HTMLDivElement>(null);
@@ -96,6 +107,8 @@ export function Scrollytelling() {
         wipe2BackRef, wipe2MidRef, wipe2FrontRef,
         wipe3BackRef, wipe3MidRef, wipe3FrontRef,
         ambientFogRef,
+        undergroundSmokeBackRef, undergroundSmokeMidRef, undergroundSmokeFrontRef,
+        magmaSmokeBackRef, magmaSmokeFrontRef,
       ].forEach((r, i) => {
         if (r.current) {
           gsap.to(r.current, {
@@ -127,7 +140,7 @@ export function Scrollytelling() {
         scrollTrigger: {
           trigger: rootRef.current,
           start: "top top",
-          end: "+=7200",
+          end: "+=10000",
           scrub: 1.2,
           pin: sceneRef.current,
           anticipatePin: 1,
@@ -303,9 +316,86 @@ export function Scrollytelling() {
       tl.fromTo(
         directionsRef.current,
         { opacity: 0, y: 60, filter: "blur(24px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.06, ease: "power2.out" },
+        0.86
+      );
+
+      // ============ UNDERGROUND SCENE — dark smoke rises over crust (0.88 → 0.93) ============
+      // Continuous slight X-pan on crust (camera in confined space)
+      tl.to(crustRef.current, { xPercent: px(5), scale: sz(1.08), duration: 0.10, ease: "sine.inOut" }, 0.88);
+      tl.to(directionsRef.current, { xPercent: px(-4), duration: 0.10, ease: "sine.inOut" }, 0.88);
+
+      tl.fromTo(
+        undergroundSmokeBackRef.current,
+        { opacity: 0, xPercent: px(-10), yPercent: 20 },
+        { opacity: 0.45, xPercent: px(8), yPercent: -4, duration: 0.10, ease: "power1.out" },
         0.88
       );
+      tl.fromTo(
+        undergroundSmokeMidRef.current,
+        { opacity: 0, xPercent: px(12), yPercent: 30 },
+        { opacity: 0.42, xPercent: px(-10), yPercent: 0, duration: 0.10, ease: "power1.out" },
+        0.89
+      );
+      tl.fromTo(
+        undergroundSmokeFrontRef.current,
+        { opacity: 0, xPercent: px(-8), yPercent: 40 },
+        { opacity: 0.5, xPercent: px(10), yPercent: -6, duration: 0.10, ease: "power1.out" },
+        0.90
+      );
+
+      // ============ TRANSITION — Crust flies UP, smoke warms to golden-orange (0.93 → 0.96) ============
+      tl.to(directionsRef.current, { opacity: 0, y: -40, filter: "blur(10px)", duration: 0.03, ease: "none" }, 0.93);
+      tl.to(crustRef.current, { yPercent: -60, scale: sz(1.3), opacity: 0, filter: "blur(14px)", duration: 0.05, ease: "power2.in" }, 0.93);
+
+      // Smoke densifies and shifts to warm golden glow
+      tl.to(undergroundSmokeBackRef.current,
+        { opacity: 0.55, backgroundColor: "rgba(120, 60, 20, 0.55)", duration: 0.05, ease: "none" }, 0.93);
+      tl.to(undergroundSmokeMidRef.current,
+        { opacity: 0.5, backgroundColor: "rgba(180, 95, 30, 0.5)", duration: 0.05, ease: "none" }, 0.93);
+      tl.to(undergroundSmokeFrontRef.current,
+        { opacity: 0.55, backgroundColor: "rgba(220, 130, 40, 0.5)", duration: 0.05, ease: "none" }, 0.93);
+
+      tl.to(sceneRef.current, { backgroundColor: "#1a0a05", duration: 0.05, ease: "none" }, 0.93);
+
+      // Magma proves from blur beneath the warm smoke
+      tl.fromTo(
+        magmaRef.current,
+        { opacity: 0, scale: sz(1.2), filter: "blur(22px)", xPercent: px(4) },
+        { opacity: 1, scale: sz(1.05), filter: "blur(0px)", xPercent: 0, duration: 0.06, ease: "power2.out" },
+        0.94
+      );
+
+      // Smoke fades back so magma reads, but stays as veil
+      tl.to(undergroundSmokeBackRef.current, { opacity: 0.18, yPercent: -40, duration: 0.05, ease: "power1.out" }, 0.95);
+      tl.to(undergroundSmokeMidRef.current, { opacity: 0.15, yPercent: -50, duration: 0.05, ease: "power1.out" }, 0.95);
+      tl.to(undergroundSmokeFrontRef.current, { opacity: 0.2, yPercent: -30, duration: 0.05, ease: "power1.out" }, 0.95);
+
+      // ============ MAGMA CINEMAGRAPH — slow scale + hot smoke drifts (0.96 → 1.0) ============
+      tl.fromTo(
+        magmaSmokeBackRef.current,
+        { opacity: 0, xPercent: px(-12), yPercent: 10 },
+        { opacity: 0.4, xPercent: px(10), yPercent: -8, duration: 0.06, ease: "sine.inOut" },
+        0.96
+      );
+      tl.fromTo(
+        magmaSmokeFrontRef.current,
+        { opacity: 0, xPercent: px(14), yPercent: -10 },
+        { opacity: 0.35, xPercent: px(-12), yPercent: 6, duration: 0.06, ease: "sine.inOut" },
+        0.96
+      );
+
+      // Magma breathes: very slow scale + subtle X-pan (camera operator in confined space)
+      tl.to(magmaRef.current, { scale: sz(1.12), xPercent: px(4), duration: 0.04, ease: "sine.inOut" }, 0.96);
+
+      // Partners title appears with opposing X-pan (text slides LEFT, image went RIGHT)
+      tl.fromTo(
+        partnersRef.current,
+        { opacity: 0, y: 50, xPercent: px(6), filter: "blur(20px)" },
+        { opacity: 1, y: 0, xPercent: px(-3), filter: "blur(0px)", duration: 0.05, ease: "power2.out" },
+        0.96
+      );
+
 
       // Decree text — re-purposed: shown over mountains briefly between scene 1 & wipe1
       tl.fromTo(
@@ -319,7 +409,7 @@ export function Scrollytelling() {
     const st = ScrollTrigger.create({
       trigger: rootRef.current,
       start: "top top",
-      end: "+=7200",
+      end: "+=10000",
       onUpdate: (self) => {
         const p = (self.progress - 0.10) / 0.14;
         setCountProgress(Math.max(0, Math.min(1, p)));
@@ -335,7 +425,7 @@ export function Scrollytelling() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative overflow-x-hidden" style={{ height: "7700px" }}>
+    <div ref={rootRef} className="relative overflow-x-hidden" style={{ height: "10500px" }}>
       <div
         ref={sceneRef}
         className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
@@ -369,6 +459,72 @@ export function Scrollytelling() {
           alt="Земная кора в разрезе"
           className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
           style={{ transformOrigin: "50% 50%" }}
+        />
+        <img
+          ref={magmaRef}
+          src={magma}
+          alt="Плавящаяся магма"
+          className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
+          style={{ transformOrigin: "50% 60%" }}
+        />
+
+        {/* Underground dark smoke layers (over crust → warms to gold) */}
+        <div
+          ref={undergroundSmokeBackRef}
+          className="pointer-events-none absolute inset-0 z-[9] opacity-0"
+          style={{
+            willChange: "transform, opacity, background-color",
+            backgroundColor: "rgba(20, 16, 14, 0.5)",
+            filter: "blur(80px)",
+            WebkitMaskImage: "radial-gradient(ellipse 90% 80% at 50% 60%, black 40%, transparent 100%)",
+            maskImage: "radial-gradient(ellipse 90% 80% at 50% 60%, black 40%, transparent 100%)",
+          }}
+        />
+        <div
+          ref={undergroundSmokeMidRef}
+          className="pointer-events-none absolute inset-0 z-[10] opacity-0"
+          style={{
+            willChange: "transform, opacity, background-color",
+            backgroundColor: "rgba(30, 22, 18, 0.45)",
+            filter: "blur(110px)",
+            WebkitMaskImage: "radial-gradient(ellipse 100% 90% at 50% 50%, black 30%, transparent 100%)",
+            maskImage: "radial-gradient(ellipse 100% 90% at 50% 50%, black 30%, transparent 100%)",
+          }}
+        />
+        <div
+          ref={undergroundSmokeFrontRef}
+          className="pointer-events-none absolute inset-0 z-[11] opacity-0"
+          style={{
+            willChange: "transform, opacity, background-color",
+            backgroundColor: "rgba(40, 28, 20, 0.5)",
+            filter: "blur(90px)",
+            WebkitMaskImage: "radial-gradient(ellipse 80% 70% at 50% 40%, black 25%, transparent 100%)",
+            maskImage: "radial-gradient(ellipse 80% 70% at 50% 40%, black 25%, transparent 100%)",
+          }}
+        />
+
+        {/* Hot smoke veils over magma */}
+        <div
+          ref={magmaSmokeBackRef}
+          className="pointer-events-none absolute inset-0 z-[12] opacity-0"
+          style={{
+            willChange: "transform, opacity",
+            background:
+              "radial-gradient(ellipse 90% 70% at 50% 30%, rgba(255, 160, 70, 0.35) 0%, rgba(200, 80, 30, 0.18) 45%, transparent 80%)",
+            filter: "blur(60px)",
+            mixBlendMode: "screen",
+          }}
+        />
+        <div
+          ref={magmaSmokeFrontRef}
+          className="pointer-events-none absolute inset-0 z-[13] opacity-0"
+          style={{
+            willChange: "transform, opacity",
+            background:
+              "radial-gradient(ellipse 70% 50% at 50% 70%, rgba(255, 90, 30, 0.3) 0%, rgba(120, 40, 15, 0.15) 50%, transparent 85%)",
+            filter: "blur(80px)",
+            mixBlendMode: "screen",
+          }}
         />
 
         {/* Ambient fog over mountains — soft gradient, no hard edges */}
@@ -467,6 +623,18 @@ export function Scrollytelling() {
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)] md:text-base">
             Инвестиции в недра — золото, медь, редкоземельные металлы и стратегические ресурсы Кыргызстана.
+          </p>
+        </div>
+
+        <div
+          ref={partnersRef}
+          className="pointer-events-none absolute inset-x-0 top-[40%] z-[30] px-6 text-center opacity-0"
+        >
+          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_8px_40px_rgba(255,90,30,0.6)] md:text-6xl">
+            ПАРТНЁРЫ
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] md:text-base">
+            Глубоко под поверхностью — энергия, что движет будущее. Вместе с партнёрами фонд превращает её в реальные проекты.
           </p>
         </div>
 
