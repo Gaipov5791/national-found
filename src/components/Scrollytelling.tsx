@@ -207,19 +207,19 @@ export function Scrollytelling() {
       tl.fromTo(
         wipe2BackRef.current,
         { yPercent: 110, opacity: 0, scale: 1.1 },
-        { yPercent: -25, opacity: 0.7, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
+        { yPercent: -25, opacity: 0.62, scale: 1.35, duration: 0.18, ease: "power2.inOut" },
         0.48
       );
       tl.fromTo(
         wipe2MidRef.current,
         { yPercent: 135, xPercent: 10, opacity: 0, scale: 1.3 },
-        { yPercent: -5, xPercent: -10, opacity: 0.55, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
+        { yPercent: -5, xPercent: -10, opacity: 0.47, scale: 1.55, duration: 0.15, ease: "power2.inOut" },
         0.50
       );
       tl.fromTo(
         wipe2FrontRef.current,
         { yPercent: 155, xPercent: -15, opacity: 0, scale: 1.5 },
-        { yPercent: -35, xPercent: 10, opacity: 0.65, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
+        { yPercent: -35, xPercent: 10, opacity: 0.57, scale: 1.75, duration: 0.2, ease: "power2.inOut" },
         0.51
       );
       tl.set(wipe2HazeRef.current, { opacity: 0 }, 0.48);
