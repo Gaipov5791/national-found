@@ -258,25 +258,25 @@ export function Scrollytelling() {
       // ============ WIPE 3 — Realistic cumulus clouds engulf, swap to earth depths, clouds fly up (0.74 → 0.94) ============
       tl.to(financeRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.74);
 
-      // TOP cumulus strip slides down from above — light & airy (max 0.28)
+      // TOP cumulus strip slides down from above + drifts RIGHT (foreground parallax)
       tl.fromTo(
         wipe3BackRef.current,
-        { yPercent: -120, opacity: 0, scale: 1.15 },
-        { yPercent: -10, opacity: 0.28, scale: 1.05, duration: 0.18, ease: "power2.out" },
+        { yPercent: -120, xPercent: -8, opacity: 0, scale: 1.15 },
+        { yPercent: -10, xPercent: 6, opacity: 0.28, scale: 1.05, duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // BOTTOM cumulus strip slides up from below — light & airy (max 0.26)
+      // BOTTOM cumulus strip slides up from below + drifts RIGHT
       tl.fromTo(
         wipe3MidRef.current,
-        { yPercent: 120, opacity: 0, scale: 1.15 },
-        { yPercent: 10, opacity: 0.26, scale: 1.05, duration: 0.18, ease: "power2.out" },
+        { yPercent: 120, xPercent: -10, opacity: 0, scale: 1.15 },
+        { yPercent: 10, xPercent: 8, opacity: 0.26, scale: 1.05, duration: 0.18, ease: "power2.out" },
         0.74
       );
-      // CENTER soft veil — translucent only (max 0.18)
+      // CENTER soft veil — drifts LEFT for opposing parallax depth
       tl.fromTo(
         wipe3FrontRef.current,
-        { yPercent: 40, opacity: 0, scale: 1.3 },
-        { yPercent: 0, opacity: 0.18, scale: 1.1, duration: 0.16, ease: "power2.out" },
+        { yPercent: 40, xPercent: 6, opacity: 0, scale: 1.3 },
+        { yPercent: 0, xPercent: -5, opacity: 0.18, scale: 1.1, duration: 0.16, ease: "power2.out" },
         0.76
       );
       tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
