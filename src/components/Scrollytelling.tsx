@@ -38,24 +38,24 @@ export function Scrollytelling() {
   const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
 
-  // CLOUD WIPE LAYERS — each transition uses dedicated multi-layer fog
-  const wipe1BackRef = useRef<HTMLImageElement>(null);   // stats -> about
-  const wipe1MidRef = useRef<HTMLImageElement>(null);
-  const wipe1FrontRef = useRef<HTMLImageElement>(null);
+  // CLOUD WIPE LAYERS — each transition uses dedicated multi-layer fog (divs with CSS gradients)
+  const wipe1BackRef = useRef<HTMLDivElement>(null);
+  const wipe1MidRef = useRef<HTMLDivElement>(null);
+  const wipe1FrontRef = useRef<HTMLDivElement>(null);
   const wipe1HazeRef = useRef<HTMLDivElement>(null);
 
-  const wipe2BackRef = useRef<HTMLImageElement>(null);   // about -> kumtor/finance
-  const wipe2MidRef = useRef<HTMLImageElement>(null);
-  const wipe2FrontRef = useRef<HTMLImageElement>(null);
+  const wipe2BackRef = useRef<HTMLDivElement>(null);
+  const wipe2MidRef = useRef<HTMLDivElement>(null);
+  const wipe2FrontRef = useRef<HTMLDivElement>(null);
   const wipe2HazeRef = useRef<HTMLDivElement>(null);
 
-  const wipe3BackRef = useRef<HTMLImageElement>(null);   // kumtor -> crust/directions
-  const wipe3MidRef = useRef<HTMLImageElement>(null);
-  const wipe3FrontRef = useRef<HTMLImageElement>(null);
+  const wipe3BackRef = useRef<HTMLDivElement>(null);
+  const wipe3MidRef = useRef<HTMLDivElement>(null);
+  const wipe3FrontRef = useRef<HTMLDivElement>(null);
   const wipe3HazeRef = useRef<HTMLDivElement>(null);
 
   // ambient fog over mountains during decree
-  const ambientFogRef = useRef<HTMLImageElement>(null);
+  const ambientFogRef = useRef<HTMLDivElement>(null);
 
   const [countProgress, setCountProgress] = useState(0);
 
