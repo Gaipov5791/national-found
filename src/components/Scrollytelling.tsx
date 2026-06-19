@@ -74,8 +74,16 @@ export function Scrollytelling() {
     lenis.on("scroll", ScrollTrigger.update);
 
     const ctx = gsap.context(() => {
+      // Viewport-aware parallax amplifier — bigger pans on desktop, gentler on mobile
+      const vw = typeof window !== "undefined" ? window.innerWidth : 1280;
+      const panK = vw < 640 ? 0.55 : vw < 1024 ? 0.8 : vw < 1536 ? 1.15 : 1.35;
+      const px = (v: number) => +(v * panK).toFixed(2);
+      // Z-depth amplifier — extra scale push for foreground layers (camera-truck feel)
+      const zK = vw < 640 ? 0.85 : vw < 1024 ? 1.0 : 1.15;
+      const sz = (base: number) => +(1 + (base - 1) * zK).toFixed(3);
+
       gsap.to(cloudDriftRef.current, {
-        xPercent: -8,
+        xPercent: px(-8),
         duration: 60,
         repeat: -1,
         yoyo: true,
@@ -91,7 +99,7 @@ export function Scrollytelling() {
       ].forEach((r, i) => {
         if (r.current) {
           gsap.to(r.current, {
-            xPercent: i % 2 === 0 ? 4 : -4,
+            xPercent: px(i % 2 === 0 ? 4 : -4),
             duration: 14 + i,
             repeat: -1,
             yoyo: true,
