@@ -82,6 +82,16 @@
   }
 }
 
+@media (max-width: 767px) {
+  .scene-gpu-layer,
+  .scene-gpu-layer img {
+    will-change: opacity;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+}
+
 /* hide default cursor for premium feel on pointer devices */
 @media (pointer: fine) {
   html, body, a, button { cursor: none; }

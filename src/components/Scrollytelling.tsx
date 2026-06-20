@@ -159,14 +159,29 @@ function computeTimelineMarkers() {
 
 const NAV_SECTION_TIMELINE_PROGRESS: Record<NavItem, (m: ReturnType<typeof computeTimelineMarkers>) => number> = {
   ГЛАВНАЯ: () => 0,
-  "О ФОНДЕ": (m) => m.aboutEnterT / m.totalDuration,
-  "ФИНАНСИРОВАНИЕ ПРОЕКТОВ": (m) => m.financeEnterT / m.totalDuration,
-  "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ": (m) => m.directionsEnterT / m.totalDuration,
-  "ПРОЕКТЫ МСБ": (m) => m.msbEnterT / m.totalDuration,
-  ПАРТНЁРЫ: (m) => m.partnersEnterT / m.totalDuration,
-  НОВОСТИ: (m) => m.newsEnterT / m.totalDuration,
-  КОНТАКТЫ: (m) => m.contactsEnterT / m.totalDuration,
+  "О ФОНДЕ": (m) => (m.aboutEnterT + m.enterDur * 0.35) / m.totalDuration,
+  "ФИНАНСИРОВАНИЕ ПРОЕКТОВ": (m) => (m.financeEnterT + m.enterDur * 0.35) / m.totalDuration,
+  "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ": (m) => (m.directionsEnterT + m.enterDur * 0.35) / m.totalDuration,
+  "ПРОЕКТЫ МСБ": (m) => (m.msbEnterT + m.enterDur * 0.35) / m.totalDuration,
+  ПАРТНЁРЫ: (m) => (m.partnersEnterT + m.enterDur * 0.35) / m.totalDuration,
+  НОВОСТИ: (m) => (m.newsEnterT + m.enterDur * 0.35) / m.totalDuration,
+  КОНТАКТЫ: (m) => (m.contactsEnterT + m.enterDur * 0.35) / m.totalDuration,
 };
+
+const NAV_SCROLL_NAV_BUFFER = 8;
+
+function resolveNavScrollTarget(
+  label: NavItem,
+  scrollTrigger: ScrollTrigger,
+  navbarHeight: number
+): number {
+  const markers = computeTimelineMarkers();
+  const progress = NAV_SECTION_TIMELINE_PROGRESS[label](markers);
+  const range = scrollTrigger.end - scrollTrigger.start;
+  const navBuffer = navbarHeight + NAV_SCROLL_NAV_BUFFER;
+  const target = scrollTrigger.start + range * progress - navBuffer;
+  return Math.max(scrollTrigger.start, Math.min(scrollTrigger.end, Math.round(target)));
+}
 
 function getScrollDistanceForViewport(width = typeof window !== "undefined" ? window.innerWidth : 1280) {
   if (width >= 1024) return SCROLL_DISTANCE_DESKTOP;
@@ -261,12 +276,19 @@ export function Scrollytelling() {
   const contactsContentRef = useRef<HTMLDivElement>(null);
   const footerContentZoneRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
+  const masterScrollTriggerRef = useRef<ScrollTrigger | null>(null);
+  const navHeaderRef = useRef<HTMLElement>(null);
 
   const scrollToSection = useCallback((label: NavItem) => {
-    const scrollDistance = getScrollDistanceForViewport();
-    const target = getNavScrollDestinations(scrollDistance)[label];
     const mobile = window.innerWidth < 768;
     const duration = mobile ? 1.2 : 1.6;
+    ScrollTrigger.update();
+
+    const st = masterScrollTriggerRef.current;
+    const navbarHeight = navHeaderRef.current?.offsetHeight ?? (mobile ? 72 : 96);
+    const target = st
+      ? resolveNavScrollTarget(label, st, navbarHeight)
+      : getNavScrollDestinations(getScrollDistanceForViewport())[label];
 
     if (lenisRef.current) {
       lenisRef.current.scrollTo(target, {
@@ -467,9 +489,21 @@ export function Scrollytelling() {
 
       gsap.set(financeBgRef.current, { opacity: 0, yPercent: 0, scale: sz(1.0) });
       gsap.set([sunsetBgRef.current, twilightBgRef.current, midnightBgRef.current], { opacity: 0 });
-      gsap.set(directionsCollageRef.current, { opacity: 0, scale: 1 });
-      gsap.set(msbCollageRef.current, { opacity: 0, scale: 1 });
-      gsap.set(spaceZoomBaseRef.current, { opacity: 0, scale: 1 });
+      gsap.set(directionsCollageRef.current, { opacity: 0, scale: 1, visibility: "visible" });
+      gsap.set(msbCollageRef.current, { opacity: 0, scale: 1, visibility: "visible" });
+      gsap.set(spaceZoomBaseRef.current, { opacity: 0, scale: 1, visibility: "visible" });
+
+      if (mobile) {
+        [heroBgRef, financeBgRef, directionsCollageRef, msbCollageRef, spaceZoomBaseRef].forEach((layerRef) => {
+          if (layerRef.current) {
+            gsap.set(layerRef.current, {
+              force3D: true,
+              visibility: "visible",
+              backfaceVisibility: "hidden",
+            });
+          }
+        });
+      }
       gsap.set(cyberOverlayRef.current, { opacity: 0 });
       gsap.set(footerBgRef.current, { scale: mobile ? 1 : sz(1.15) });
       gsap.set(partnerFlareRef.current, { opacity: 0, xPercent: -40 });
@@ -500,6 +534,7 @@ export function Scrollytelling() {
 
       const tl = gsap.timeline({
         scrollTrigger: {
+          id: "master-scrolly",
           trigger: scrollTrackRef.current,
           start: "top top",
           end: `+=${scrollDistance}`,
@@ -510,6 +545,8 @@ export function Scrollytelling() {
           onUpdate: (self) => updateCounts(self.progress),
         },
       });
+
+      masterScrollTriggerRef.current = tl.scrollTrigger ?? ScrollTrigger.getById("master-scrolly") ?? null;
 
       const brandDockDur = 0.08;
       tl.fromTo(
@@ -632,10 +669,31 @@ export function Scrollytelling() {
       );
 
       tl.to(noonTintRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
-      tl.to(financeBgRef.current, { opacity: 0, scale: sz(1.35), duration: lightCrossfadeDur, ease: "power2.in" }, sunsetBgSwapT);
+      if (mobile) {
+        tl.to(
+          directionsCollageRef.current,
+          { opacity: 1, duration: lightCrossfadeDur, ease: "power1.inOut" },
+          sunsetBgSwapT
+        );
+        tl.to(
+          financeBgRef.current,
+          { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" },
+          sunsetBgSwapT
+        );
+      } else {
+        tl.to(
+          financeBgRef.current,
+          { opacity: 0, scale: sz(1.35), duration: lightCrossfadeDur, ease: "power2.in" },
+          sunsetBgSwapT
+        );
+        tl.to(
+          directionsCollageRef.current,
+          { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" },
+          sunsetBgSwapT
+        );
+      }
       tl.to(amberBurnRef.current, { opacity: 0.92, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
       tl.to(amberGlowRef.current, { opacity: 0.58, duration: lightCrossfadeDur + 0.006, ease: "power2.out" }, sunsetBgSwapT + 0.004);
-      tl.to(directionsCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
       if (cursorRing) {
         tl.to(
           cursorRing,
@@ -862,6 +920,7 @@ export function Scrollytelling() {
         return () => {
           cancelled = true;
           cancelAnimationFrame(rafId);
+          masterScrollTriggerRef.current = null;
           lenis.off("scroll", ScrollTrigger.update);
           lenis.destroy();
           lenisRef.current = null;
@@ -914,6 +973,7 @@ export function Scrollytelling() {
     <div ref={rootRef} className="relative overflow-hidden">
       {/* === STABLE NAVBAR (fixed, outside pinned scene) === */}
       <header
+        ref={navHeaderRef}
         className="fixed left-0 right-0 top-0 z-[70] px-6 pt-4 will-change-transform md:px-12 md:pt-5"
         style={{ transform: "translate3d(0, 0, 0)" }}
       >
@@ -1066,14 +1126,14 @@ export function Scrollytelling() {
           ref={heroBgRef}
           src={SCENE_IMAGES.hero}
           alt="Горы"
-          className="absolute inset-0 z-0 h-full w-full object-cover object-bottom will-change-[transform,opacity]"
+          className="scene-gpu-layer absolute inset-0 z-0 h-full w-full object-cover object-bottom will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 70%" }}
         />
         <img
           ref={financeBgRef}
           src={SCENE_IMAGES.finance}
           alt="Стратегические промышленные активы"
-          className="absolute inset-0 z-0 h-full w-full object-cover opacity-0 will-change-[transform,opacity]"
+          className="scene-gpu-layer absolute inset-0 z-0 h-full w-full object-cover opacity-0 will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 60%" }}
         />
         <div
@@ -1105,26 +1165,26 @@ export function Scrollytelling() {
         {/* === SCENE IMAGES (z-[2]) === */}
         <div
           ref={directionsCollageRef}
-          className="pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
+          className="scene-gpu-layer pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 55%", isolation: "isolate" }}
         >
           <img
             src={SCENE_IMAGES.directions}
             alt="Гидроэлектростанция на закате"
-            className="absolute inset-0 h-full w-full object-cover will-change-transform"
+            className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
             style={{ transformOrigin: "50% 55%" }}
           />
         </div>
 
         <div
           ref={msbCollageRef}
-          className="pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
+          className="scene-gpu-layer pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 55%", isolation: "isolate" }}
         >
           <img
             src={SCENE_IMAGES.msb}
             alt="Курорт на берегу Иссык-Куля"
-            className="absolute inset-0 h-full w-full object-cover will-change-transform"
+            className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
             style={{ transformOrigin: "50% 55%" }}
           />
         </div>
@@ -1132,13 +1192,13 @@ export function Scrollytelling() {
         {/* === SPACE ZOOM TRILOGY BASE (z-[5]) — Partners → News → Contacts === */}
         <div
           ref={spaceZoomBaseRef}
-          className="pointer-events-none absolute inset-0 z-[5] opacity-0 will-change-[transform,opacity]"
+          className="scene-gpu-layer pointer-events-none absolute inset-0 z-[5] opacity-0 will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 50%" }}
         >
           <img
             src={SCENE_IMAGES.space}
             alt="Кыргызстан из космоса"
-            className="absolute inset-0 h-full w-full object-cover will-change-transform"
+            className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
             style={{ transformOrigin: "50% 50%" }}
           />
         </div>
