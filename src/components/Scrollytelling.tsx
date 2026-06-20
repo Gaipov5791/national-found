@@ -10,7 +10,9 @@ import fundLogo from "@/assets/fund-logo.png.asset.json";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const SCROLL_DISTANCE = 14500;
+const SCROLL_DISTANCE_DESKTOP = 14500;
+const SCROLL_DISTANCE_TABLET = 11500;
+const SCROLL_DISTANCE_MOBILE = 9000;
 
 const NAV_ITEMS = [
   "ГЛАВНАЯ",
@@ -110,21 +112,38 @@ export function Scrollytelling() {
 
   useGSAP(
     () => {
-      const lenis = new Lenis({
-        duration: 1.6,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-      });
+      const mm = gsap.matchMedia();
 
-      let rafId = 0;
-      let cancelled = false;
-      const raf = (time: number) => {
-        if (cancelled) return;
-        lenis.raf(time);
+      const runExperience = (cfg: {
+        scrollDistance: number;
+        scrub: number | boolean;
+        mobile: boolean;
+      }) => {
+        const { scrollDistance, scrub, mobile } = cfg;
+
+        if (scrollTrackRef.current) {
+          scrollTrackRef.current.style.height = `${scrollDistance}px`;
+        }
+
+        const lenis = new Lenis({
+          duration: mobile ? 0.85 : 1.6,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: !mobile,
+          syncTouch: false,
+          touchMultiplier: mobile ? 1.15 : 1,
+          wheelMultiplier: mobile ? 0.9 : 1,
+          lerp: mobile ? 0.12 : 0.1,
+        });
+
+        let rafId = 0;
+        let cancelled = false;
+        const raf = (time: number) => {
+          if (cancelled) return;
+          lenis.raf(time);
+          rafId = requestAnimationFrame(raf);
+        };
         rafId = requestAnimationFrame(raf);
-      };
-      rafId = requestAnimationFrame(raf);
-      lenis.on("scroll", ScrollTrigger.update);
+        lenis.on("scroll", ScrollTrigger.update);
 
       const enterDur = 0.028;
       const exitDur = 0.028;
@@ -211,35 +230,44 @@ export function Scrollytelling() {
       const zK = vw < 640 ? 0.85 : vw < 1024 ? 1.0 : 1.15;
       const sz = (base: number) => +(1 + (base - 1) * zK).toFixed(3);
 
-      gsap.to(cloudDriftRef.current, {
-        yPercent: -5,
-        duration: 60,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
+      const brandStartY =
+        typeof window !== "undefined"
+          ? window.innerHeight * (mobile ? 0.18 : 0.28)
+          : mobile
+            ? 140
+            : 220;
 
-      [
-        wipe1BackRef, wipe1MidRef, wipe1FrontRef,
-        wipe2BackRef, wipe2MidRef, wipe2FrontRef,
-        ambientFogRef,
-        sunsetAtmoBackRef, sunsetAtmoMidRef, sunsetAtmoFrontRef,
-        twilightAtmoBackRef, twilightAtmoMidRef, twilightAtmoFrontRef,
-      ].forEach((r, i) => {
-        if (r.current) {
-          gsap.to(r.current, {
-            yPercent: i % 2 === 0 ? 4 : -4,
-            duration: 14 + i,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-          });
-        }
-      });
+      if (!mobile) {
+        gsap.to(cloudDriftRef.current, {
+          yPercent: -5,
+          duration: 60,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+
+        [
+          wipe1BackRef, wipe1MidRef, wipe1FrontRef,
+          wipe2BackRef, wipe2MidRef, wipe2FrontRef,
+          ambientFogRef,
+          sunsetAtmoBackRef, sunsetAtmoMidRef, sunsetAtmoFrontRef,
+          twilightAtmoBackRef, twilightAtmoMidRef, twilightAtmoFrontRef,
+        ].forEach((r, i) => {
+          if (r.current) {
+            gsap.to(r.current, {
+              yPercent: i % 2 === 0 ? 4 : -4,
+              duration: 14 + i,
+              repeat: -1,
+              yoyo: true,
+              ease: "sine.inOut",
+            });
+          }
+        });
+      }
 
       gsap.set(brandRef.current, {
         opacity: 0,
-        y: typeof window !== "undefined" ? window.innerHeight * 0.28 : 220,
+        y: brandStartY,
         scale: 0.97,
       });
       gsap.set(
@@ -306,10 +334,10 @@ export function Scrollytelling() {
         scrollTrigger: {
           trigger: scrollTrackRef.current,
           start: "top top",
-          end: `+=${SCROLL_DISTANCE}`,
-          scrub: 1,
+          end: `+=${scrollDistance}`,
+          scrub,
           pin: sceneRef.current,
-          anticipatePin: 1,
+          anticipatePin: mobile ? 0 : 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => updateCounts(self.progress),
         },
@@ -318,7 +346,7 @@ export function Scrollytelling() {
       const brandDockDur = 0.08;
       tl.fromTo(
         brandRef.current,
-        { opacity: 0, y: typeof window !== "undefined" ? window.innerHeight * 0.28 : 220, scale: 0.97 },
+        { opacity: 0, y: brandStartY, scale: 0.97 },
         { opacity: 1, y: 0, scale: 1, duration: brandDockDur, ease: "power2.out" },
         0
       );
@@ -607,19 +635,49 @@ export function Scrollytelling() {
         footerEnterT + enterDur
       );
 
-      return () => {
-        cancelled = true;
-        cancelAnimationFrame(rafId);
-        lenis.off("scroll", ScrollTrigger.update);
-        lenis.destroy();
-        if (cursorRing) {
-          gsap.set(cursorRing, { borderColor: CURSOR_BORDER_DARK });
-          cursorRing.setAttribute("data-cursor-theme", "dark");
-        }
-        if (cursorDot) {
-          gsap.set(cursorDot, { backgroundColor: CURSOR_BORDER_DARK });
-        }
+        return () => {
+          cancelled = true;
+          cancelAnimationFrame(rafId);
+          lenis.off("scroll", ScrollTrigger.update);
+          lenis.destroy();
+          if (cursorRing) {
+            gsap.set(cursorRing, { borderColor: CURSOR_BORDER_DARK });
+            cursorRing.setAttribute("data-cursor-theme", "dark");
+          }
+          if (cursorDot) {
+            gsap.set(cursorDot, { backgroundColor: CURSOR_BORDER_DARK });
+          }
+        };
       };
+
+      mm.add("(max-width: 767px)", () => {
+        ScrollTrigger.config({ ignoreMobileResize: true });
+        return runExperience({
+          scrollDistance: SCROLL_DISTANCE_MOBILE,
+          scrub: true,
+          mobile: true,
+        });
+      });
+
+      mm.add("(min-width: 768px) and (max-width: 1023px)", () => {
+        ScrollTrigger.config({ ignoreMobileResize: true });
+        return runExperience({
+          scrollDistance: SCROLL_DISTANCE_TABLET,
+          scrub: 0.5,
+          mobile: false,
+        });
+      });
+
+      mm.add("(min-width: 1024px)", () => {
+        ScrollTrigger.config({ ignoreMobileResize: false });
+        return runExperience({
+          scrollDistance: SCROLL_DISTANCE_DESKTOP,
+          scrub: 1,
+          mobile: false,
+        });
+      });
+
+      return () => mm.revert();
     },
     { scope: rootRef }
   );
@@ -729,15 +787,14 @@ export function Scrollytelling() {
       {/* === PERMANENT BRAND HEADER (fixed below nav, isolated from blend modes) === */}
       <div
         ref={brandRef}
-        className="pointer-events-none fixed left-1/2 z-[65] hidden w-full max-w-[min(100%,920px)] -translate-x-1/2 px-6 will-change-transform md:block"
+        className="pointer-events-none fixed left-1/2 top-[4.25rem] z-[65] w-full max-w-[min(100%,920px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:px-6 md:top-[5.75rem]"
         style={{
-          top: "5.75rem",
           mixBlendMode: "normal",
           isolation: "isolate",
         }}
       >
         <h1
-          className="text-center font-display text-[clamp(0.72rem,1.55vw,1.08rem)] font-bold leading-[1.2] tracking-[0.14em] text-white opacity-100"
+          className="text-center font-display text-[clamp(0.5rem,2.6vw,0.68rem)] font-bold leading-[1.15] tracking-[0.06em] text-white opacity-100 sm:text-[clamp(0.62rem,1.9vw,0.88rem)] sm:tracking-[0.1em] md:text-[clamp(0.72rem,1.55vw,1.08rem)] md:leading-[1.2] md:tracking-[0.14em]"
           style={{
             mixBlendMode: "normal",
             color: "#ffffff",
@@ -750,7 +807,7 @@ export function Scrollytelling() {
         </h1>
       </div>
 
-      <div ref={scrollTrackRef} style={{ height: `${SCROLL_DISTANCE}px` }}>
+      <div ref={scrollTrackRef} style={{ height: `${SCROLL_DISTANCE_DESKTOP}px` }}>
       <div
         ref={sceneRef}
         className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
@@ -766,19 +823,19 @@ export function Scrollytelling() {
           ref={mountainRef}
           src={mountains}
           alt="Горы"
-          className="absolute inset-0 z-0 h-full w-full object-cover object-bottom will-change-transform"
+          className="absolute inset-0 z-0 h-full w-full object-cover object-bottom will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 70%" }}
         />
         <img
           ref={kumtorBgRef}
           src={kumtor}
           alt="Золоторудный комбинат Кумтор"
-          className="absolute inset-0 z-0 h-full w-full object-cover opacity-0 will-change-transform"
+          className="absolute inset-0 z-0 h-full w-full object-cover opacity-0 will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 60%" }}
         />
         <div
           ref={sunsetBgRef}
-          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[transform,opacity]"
           style={{
             background:
               "linear-gradient(175deg, #120804 0%, #4a2008 14%, #8a4010 32%, #c46828 52%, #e89840 68%, #f5c070 82%, #ffe8b8 96%)",
@@ -786,7 +843,7 @@ export function Scrollytelling() {
         />
         <div
           ref={twilightBgRef}
-          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[transform,opacity]"
           style={{
             background:
               "linear-gradient(180deg, #080c18 0%, #101830 18%, #1a2848 38%, #304870 58%, #5078a0 75%, #88a8c8 90%, #b8cce0 100%)",
@@ -794,7 +851,7 @@ export function Scrollytelling() {
         />
         <div
           ref={midnightBgRef}
-          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[opacity,transform]"
+          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[transform,opacity]"
           style={{
             transformOrigin: "50% 50%",
             background:
@@ -883,13 +940,13 @@ export function Scrollytelling() {
 
         <div
           ref={msbCollageRef}
-          className="pointer-events-none absolute inset-0 z-[2] opacity-0"
+          className="pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
           style={{ isolation: "isolate" }}
         >
           <div className="absolute inset-x-0 bottom-0 flex items-end justify-center gap-2 px-[5%] pb-[10%] md:gap-4 md:px-[9%] md:pb-[12%]">
             <div
               ref={msbCollageLeftRef}
-              className="relative h-[48vh] w-[44%] max-w-md overflow-hidden will-change-transform md:h-[52vh]"
+              className="relative h-[48vh] w-[44%] max-w-md overflow-hidden will-change-[transform,opacity] md:h-[52vh]"
               style={{
                 transformOrigin: "50% 100%",
                 background:
@@ -915,7 +972,7 @@ export function Scrollytelling() {
             </div>
             <div
               ref={msbCollageRightRef}
-              className="relative h-[48vh] w-[44%] max-w-md overflow-hidden will-change-transform md:h-[52vh]"
+              className="relative h-[48vh] w-[44%] max-w-md overflow-hidden will-change-[transform,opacity] md:h-[52vh]"
               style={{
                 transformOrigin: "50% 100%",
                 background:
@@ -978,7 +1035,7 @@ export function Scrollytelling() {
           />
           <div
             ref={handshakeRimRef}
-            className="pointer-events-none absolute inset-0 opacity-0 will-change-[opacity]"
+            className="pointer-events-none absolute inset-0 opacity-0 will-change-[transform,opacity]"
             style={{
               background:
                 "radial-gradient(ellipse 45% 28% at 50% 56%, rgba(255,220,160,0.55) 0%, rgba(255,180,100,0.22) 35%, transparent 70%)",
@@ -1029,7 +1086,7 @@ export function Scrollytelling() {
         {/* === OVERLAY TINT LAYERS (z-10) — dual blend stacks === */}
         <div
           ref={noonTintRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
           style={{
             background:
               "linear-gradient(180deg, rgba(255,248,220,0.35) 0%, rgba(255,235,180,0.18) 40%, rgba(200,210,230,0.08) 100%)",
@@ -1037,7 +1094,7 @@ export function Scrollytelling() {
         />
         <div
           ref={amberBurnRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
           style={{
             mixBlendMode: "multiply",
             background:
@@ -1046,7 +1103,7 @@ export function Scrollytelling() {
         />
         <div
           ref={amberGlowRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
           style={{
             mixBlendMode: "screen",
             background:
@@ -1055,7 +1112,7 @@ export function Scrollytelling() {
         />
         <div
           ref={twilightBlueRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
           style={{
             mixBlendMode: "multiply",
             background:
@@ -1064,7 +1121,7 @@ export function Scrollytelling() {
         />
         <div
           ref={twilightRoseRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
           style={{
             mixBlendMode: "screen",
             background:
@@ -1073,7 +1130,7 @@ export function Scrollytelling() {
         />
         <div
           ref={msbHazeRef}
-          className="pointer-events-none absolute inset-0 z-[4] opacity-0 will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-[4] opacity-0 will-change-[transform,opacity]"
           style={{
             background:
               "radial-gradient(ellipse 120% 85% at 50% 70%, rgba(60,80,140,0.45) 0%, rgba(40,55,110,0.32) 40%, rgba(25,35,80,0.18) 65%, transparent 90%)",
@@ -1111,7 +1168,7 @@ export function Scrollytelling() {
 
         <div
           ref={ambientFogRef}
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full opacity-0"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full opacity-0 will-change-[transform,opacity]"
           style={{
             willChange: "transform, opacity",
             background:
@@ -1121,7 +1178,7 @@ export function Scrollytelling() {
 
         <div
           ref={statsRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-20 -translate-y-1/2 px-6 opacity-0 will-change-transform"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-20 -translate-y-1/2 px-4 opacity-0 will-change-[transform,opacity] sm:px-6"
         >
           <div className="relative mx-auto max-w-3xl text-center">
             <div
@@ -1132,24 +1189,24 @@ export function Scrollytelling() {
                 filter: "blur(8px)",
               }}
             />
-            <p className="font-display text-2xl text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] md:text-4xl">
+            <p className="font-display text-lg tracking-tighter text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] sm:text-2xl sm:tracking-tight md:text-4xl">
               Инвестиции в проекты будущего
             </p>
-            <div className="mt-6 inline-flex items-stretch gap-10 rounded-3xl border border-white/30 bg-white/10 px-8 py-6 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)]">
+            <div className="mt-4 flex flex-col items-stretch gap-4 rounded-2xl border border-white/30 bg-white/10 px-5 py-4 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-6 sm:inline-flex sm:flex-row sm:gap-10 sm:rounded-3xl sm:px-8 sm:py-6">
               <div className="text-center">
-                <div className="font-display text-5xl font-semibold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] md:text-6xl">
+                <div className="font-display text-3xl font-semibold tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl sm:tracking-tight md:text-5xl lg:text-6xl">
                   <span ref={count200Ref}>0+</span>
                 </div>
-                <div className="mt-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/85">
+                <div className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.25em]">
                   Проектов в реализации
                 </div>
               </div>
-              <div className="w-px bg-white/25" />
+              <div className="hidden h-px w-full bg-white/25 sm:block sm:h-auto sm:w-px" />
               <div className="text-center">
-                <div className="font-display text-5xl font-semibold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] md:text-6xl">
+                <div className="font-display text-3xl font-semibold tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl sm:tracking-tight md:text-5xl lg:text-6xl">
                   <span ref={count8000Ref}>0</span>
                 </div>
-                <div className="mt-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/85">
+                <div className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.25em]">
                   Завершённых проектов
                 </div>
               </div>
@@ -1160,15 +1217,15 @@ export function Scrollytelling() {
         {/* === CONTENT LAYER (z-30) === */}
         <div
           ref={decreeRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-[25] -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-[25] -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
         >
-          <p className="font-display text-base text-[color:var(--primary)]/85 md:text-lg">
+          <p className="font-display text-sm tracking-tight text-[color:var(--primary)]/85 sm:text-base md:text-lg">
             Фонд учрежден постановлением
           </p>
-          <h2 className="mt-2 font-display text-2xl font-bold leading-snug text-[color:var(--primary)] md:text-4xl">
+          <h2 className="mt-2 font-display text-xl font-bold leading-snug tracking-tighter text-[color:var(--primary)] sm:text-2xl sm:tracking-tight md:text-4xl lg:text-5xl">
             Кабинета Министров Кыргызской Республики
           </h2>
-          <p className="mx-auto mt-5 max-w-3xl text-xs leading-relaxed text-[color:var(--ink)]/75 md:text-sm">
+          <p className="mx-auto mt-4 max-w-3xl text-[11px] leading-relaxed tracking-tight text-[color:var(--ink)]/75 sm:mt-5 sm:text-xs md:text-sm">
             от 5 ноября 2024 года № 666 во исполнение Закона Кыргызской Республики
             «О Национальном инвестиционном фонде Кыргызской Республики» и Указа
             Президента Кыргызской Республики № 155 от 14 июня 2024 года.
@@ -1177,12 +1234,12 @@ export function Scrollytelling() {
 
         <div
           ref={aboutRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.2em] text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.8)] md:text-6xl">
+          <h2 className="font-display text-2xl font-bold tracking-tighter text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.8)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.2em] lg:text-7xl">
             О ФОНДЕ
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-[color:var(--ink)]/85 md:text-base">
+          <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-[color:var(--ink)]/85 sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
             Национальный инвестиционный фонд — стратегический институт развития,
             направляющий капитал в проекты, формирующие будущее Кыргызской Республики.
           </p>
@@ -1190,33 +1247,33 @@ export function Scrollytelling() {
 
         <div
           ref={financeRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.7)] md:text-6xl">
+          <h2 className="font-display text-xl font-bold tracking-tighter text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.7)] sm:text-3xl sm:tracking-tight md:text-5xl md:tracking-[0.18em] lg:text-6xl">
             ФИНАНСИРОВАНИЕ ПРОЕКТОВ
           </h2>
         </div>
 
         <div
           ref={directionsRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_6px_36px_rgba(180,80,20,0.75)] md:text-6xl">
+          <h2 className="font-display text-lg font-bold tracking-tighter text-white drop-shadow-[0_6px_36px_rgba(180,80,20,0.75)] sm:text-3xl sm:tracking-tight md:text-5xl md:tracking-[0.18em] lg:text-6xl">
             ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_14px_rgba(80,30,5,0.6)] md:text-base">
+          <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-white/90 drop-shadow-[0_2px_14px_rgba(80,30,5,0.6)] sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
             Стратегические отрасли, где капитал фонда раскрывает потенциал экономики в золотом свете заката.
           </p>
         </div>
 
         <div
           ref={msbRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_6px_32px_rgba(40,60,120,0.7)] md:text-6xl">
+          <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_6px_32px_rgba(40,60,120,0.7)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
             ПРОЕКТЫ МСБ
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/88 drop-shadow-[0_2px_12px_rgba(20,30,60,0.65)] md:text-base">
+          <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-white/88 drop-shadow-[0_2px_12px_rgba(20,30,60,0.65)] sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
             Поддержка малого и среднего бизнеса в мягком сумеречном свете — там, где идеи превращаются в устойчивый рост.
           </p>
         </div>
@@ -1227,12 +1284,12 @@ export function Scrollytelling() {
         >
           <div
             ref={partnersTextRef}
-            className="opacity-0 will-change-transform"
+            className="opacity-0 will-change-[transform,opacity]"
           >
-            <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] md:text-6xl">
+            <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
               ПАРТНЁРЫ
             </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/75 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] md:text-base">
+            <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-white/75 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
               Как огни города в полночь — партнёры фонда зажигают новые точки роста по всей республике.
             </p>
           </div>
@@ -1256,9 +1313,9 @@ export function Scrollytelling() {
           ref={newsTitleRef}
           id="novosti"
           aria-label="Новости"
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] md:text-6xl">
+          <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
             НОВОСТИ
           </h2>
         </div>
@@ -1279,9 +1336,9 @@ export function Scrollytelling() {
           ref={contactsTitleRef}
           id="kontakty"
           aria-label="Контакты"
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] md:text-6xl">
+          <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
             КОНТАКТЫ
           </h2>
         </div>
@@ -1304,7 +1361,7 @@ export function Scrollytelling() {
           id="footer-content-zone"
           data-lovable-slot="footer-content"
           aria-label="Footer content zone"
-          className="pointer-events-none absolute inset-0 z-[35] bg-black opacity-0 will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-[35] bg-black opacity-0 will-change-[transform,opacity]"
         />
 
         {(() => {
@@ -1325,7 +1382,7 @@ export function Scrollytelling() {
 
               <div
                 ref={wipe2HazeRef}
-                className="pointer-events-none absolute inset-0 z-[40] opacity-0"
+                className="pointer-events-none absolute inset-0 z-[40] opacity-0 will-change-[transform,opacity]"
                 style={{
                   willChange: "opacity",
                   background:
