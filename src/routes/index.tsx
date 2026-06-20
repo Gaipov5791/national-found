@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Navbar } from "@/components/Navbar";
 import { Scrollytelling } from "@/components/Scrollytelling";
 import { CustomCursor } from "@/components/CustomCursor";
 
@@ -21,7 +20,6 @@ function Index() {
   return (
     <main className="relative min-h-screen bg-background text-foreground">
       <CustomCursor />
-      <Navbar />
       <Scrollytelling />
     </main>
   );

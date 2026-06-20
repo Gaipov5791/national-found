@@ -52,18 +52,20 @@ export function CustomCursor() {
     <div className="pointer-events-none fixed inset-0 z-[100] hidden md:block">
       <div
         ref={ringRef}
-        className="absolute left-0 top-0 rounded-full border border-[color:var(--ink)]/60 transition-[width,height,background-color,border-color] duration-300 ease-out"
+        id="custom-cursor-ring"
+        data-cursor-theme="dark"
+        className="absolute left-0 top-0 rounded-full border border-neutral-800 bg-transparent transition-[width,height] duration-300 transition-colors duration-500 ease-out"
         style={{
           width: hovering ? 56 : 32,
           height: hovering ? 56 : 32,
-          backgroundColor: hovering ? "color-mix(in oklab, var(--ink) 12%, transparent)" : "transparent",
-          mixBlendMode: "difference",
+          willChange: "transform",
         }}
       />
       <div
         ref={dotRef}
-        className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-[color:var(--ink)]"
-        style={{ mixBlendMode: "difference" }}
+        id="custom-cursor-dot"
+        className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-neutral-800 transition-colors duration-500 ease-out"
+        style={{ willChange: "transform" }}
       />
     </div>
   );

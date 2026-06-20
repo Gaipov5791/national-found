@@ -1,29 +1,45 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { Menu, X } from "lucide-react";
 import mountains from "@/assets/mountains.jpg";
-
 import kumtor from "@/assets/kumtor.jpg";
-import earthCrust from "@/assets/earth-depths.jpg";
-import cumulus from "@/assets/cumulus-clouds.png";
-import magma from "@/assets/magma.jpg";
+import fundLogo from "@/assets/fund-logo.png.asset.json";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-function CountUp({ to, progress, suffix = "" }: { to: number; progress: number; suffix?: string }) {
+const SCROLL_DISTANCE = 14500;
+
+const NAV_ITEMS = [
+  "ГЛАВНАЯ",
+  "О ФОНДЕ",
+  "ФИНАНСИРОВАНИЕ ПРОЕКТОВ",
+  "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ",
+  "ПРОЕКТЫ МСБ",
+  "ПАРТНЁРЫ",
+  "НОВОСТИ",
+  "КОНТАКТЫ",
+];
+
+const LANGS = ["RU", "KG", "EN"];
+
+const CURSOR_BORDER_DARK = "#262626";
+const CURSOR_BORDER_LIGHT = "#ffffff";
+
+function formatCount(value: number, progress: number, suffix = "") {
   const eased = 1 - Math.pow(1 - Math.max(0, Math.min(1, progress)), 3);
-  const val = Math.round(eased * to);
-  return (
-    <span>
-      {val.toLocaleString("ru-RU").replace(",", " ")}
-      {suffix}
-    </span>
-  );
+  const val = Math.round(eased * value);
+  return `${val.toLocaleString("ru-RU").replace(",", " ")}${suffix}`;
 }
 
 export function Scrollytelling() {
+  const [lang, setLang] = useState("RU");
+  const [navOpen, setNavOpen] = useState(false);
+
   const rootRef = useRef<HTMLDivElement>(null);
+  const scrollTrackRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const mountainRef = useRef<HTMLImageElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -31,27 +47,46 @@ export function Scrollytelling() {
   const cloudDriftRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
 
-  // background scene refs
-  const kumtorRef = useRef<HTMLImageElement>(null);
-  const crustRef = useRef<HTMLImageElement>(null);
-  const magmaRef = useRef<HTMLImageElement>(null);
+  // Cinematic background layers (z-0)
+  const kumtorBgRef = useRef<HTMLImageElement>(null);
+  const sunsetBgRef = useRef<HTMLDivElement>(null);
+  const twilightBgRef = useRef<HTMLDivElement>(null);
+  const midnightBgRef = useRef<HTMLDivElement>(null);
 
-  // text scene refs
+  // Lighting tint overlays (z-10) — dual-layer blend stacks per scene
+  const noonTintRef = useRef<HTMLDivElement>(null);
+  const amberBurnRef = useRef<HTMLDivElement>(null);
+  const amberGlowRef = useRef<HTMLDivElement>(null);
+  const twilightBlueRef = useRef<HTMLDivElement>(null);
+  const twilightRoseRef = useRef<HTMLDivElement>(null);
+  const msbHazeRef = useRef<HTMLDivElement>(null);
+  const handshakeRimRef = useRef<HTMLDivElement>(null);
+
+  // Atmosphere scene-cut wipes (z-20)
+  const sunsetAtmoBackRef = useRef<HTMLDivElement>(null);
+  const sunsetAtmoMidRef = useRef<HTMLDivElement>(null);
+  const sunsetAtmoFrontRef = useRef<HTMLDivElement>(null);
+  const twilightAtmoBackRef = useRef<HTMLDivElement>(null);
+  const twilightAtmoMidRef = useRef<HTMLDivElement>(null);
+  const twilightAtmoFrontRef = useRef<HTMLDivElement>(null);
+
+  // Scene collage & backdrop layers (z-[2])
+  const directionsCollageRef = useRef<HTMLDivElement>(null);
+  const msbCollageRef = useRef<HTMLDivElement>(null);
+  const msbCollageLeftRef = useRef<HTMLDivElement>(null);
+  const msbCollageRightRef = useRef<HTMLDivElement>(null);
+  const handshakeBgRef = useRef<HTMLDivElement>(null);
+  const partnerFlareRef = useRef<HTMLDivElement>(null);
+
+  // Text scene refs (z-30)
   const aboutRef = useRef<HTMLDivElement>(null);
   const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
   const msbRef = useRef<HTMLDivElement>(null);
   const partnersRef = useRef<HTMLDivElement>(null);
+  const partnersTextRef = useRef<HTMLDivElement>(null);
+  const partnerLogosRef = useRef<HTMLDivElement>(null);
 
-  // Underground dark smoke layers (crust scene → magma transition)
-  const undergroundSmokeBackRef = useRef<HTMLDivElement>(null);
-  const undergroundSmokeMidRef = useRef<HTMLDivElement>(null);
-  const undergroundSmokeFrontRef = useRef<HTMLDivElement>(null);
-  // Hot smoke over magma (glowing veils)
-  const magmaSmokeBackRef = useRef<HTMLDivElement>(null);
-  const magmaSmokeFrontRef = useRef<HTMLDivElement>(null);
-
-  // CLOUD WIPE LAYERS — each transition uses dedicated multi-layer fog (divs with CSS gradients)
   const wipe1BackRef = useRef<HTMLDivElement>(null);
   const wipe1MidRef = useRef<HTMLDivElement>(null);
   const wipe1FrontRef = useRef<HTMLDivElement>(null);
@@ -62,56 +97,138 @@ export function Scrollytelling() {
   const wipe2FrontRef = useRef<HTMLDivElement>(null);
   const wipe2HazeRef = useRef<HTMLDivElement>(null);
 
-  const wipe3BackRef = useRef<HTMLDivElement>(null);
-  const wipe3MidRef = useRef<HTMLDivElement>(null);
-  const wipe3FrontRef = useRef<HTMLDivElement>(null);
-  const wipe3HazeRef = useRef<HTMLDivElement>(null);
-
-  // ambient fog over mountains during decree
   const ambientFogRef = useRef<HTMLDivElement>(null);
 
-  const [countProgress, setCountProgress] = useState(0);
+  const count200Ref = useRef<HTMLSpanElement>(null);
+  const count8000Ref = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.6,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-    });
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    const rafId = requestAnimationFrame(raf);
-    lenis.on("scroll", ScrollTrigger.update);
+  const newsTitleRef = useRef<HTMLDivElement>(null);
+  const newsContentRef = useRef<HTMLDivElement>(null);
+  const contactsTitleRef = useRef<HTMLDivElement>(null);
+  const contactsContentRef = useRef<HTMLDivElement>(null);
+  const footerContentZoneRef = useRef<HTMLDivElement>(null);
 
-    const ctx = gsap.context(() => {
-      // Viewport-aware parallax amplifier — bigger pans on desktop, gentler on mobile
+  useGSAP(
+    () => {
+      const lenis = new Lenis({
+        duration: 1.6,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+
+      let rafId = 0;
+      let cancelled = false;
+      const raf = (time: number) => {
+        if (cancelled) return;
+        lenis.raf(time);
+        rafId = requestAnimationFrame(raf);
+      };
+      rafId = requestAnimationFrame(raf);
+      lenis.on("scroll", ScrollTrigger.update);
+
+      const enterDur = 0.028;
+      const exitDur = 0.028;
+      const holdDur = 0.014;
+      const textEnterY = 30;
+      const textExitY = -45;
+      const textExitScale = 1.03;
+      const textEnterEase = "power2.out";
+      const textExitEase = "power1.in";
+      const textOverlap = 0.016;
+      const textIdle = { opacity: 0, yPercent: textEnterY, scale: 1 };
+      const textArrived = { opacity: 1, yPercent: 0, scale: 1 };
+      const textEvaporated = { yPercent: textExitY, opacity: 0, scale: textExitScale };
+      const breatheAfter = (exitStart: number) => exitStart + exitDur - textOverlap;
+      const gapAfterExit = (exitStart: number, gap: number) => exitStart + exitDur + gap;
+
+      const lightCrossfadeDur = 0.034;
+      const atmoWipeDur = 0.032;
+      const collageParallaxDur = 0.048;
+      const convergeDur = 0.042;
+      const flareDur = 0.030;
+
+      const statsEnterT = 0.06;
+      const statsExitT = statsEnterT + enterDur + holdDur;
+
+      const decreeCloudsT = breatheAfter(statsExitT);
+      const decreeEnterT = decreeCloudsT + 0.052;
+      const decreeExitT = decreeEnterT + enterDur + holdDur;
+
+      const decreeAboutGap = 0.012;
+      const aboutEnterT = gapAfterExit(decreeExitT, decreeAboutGap);
+      const aboutExitT = aboutEnterT + enterDur + holdDur;
+
+      const financeCloudsT = breatheAfter(aboutExitT);
+      const kumtorBgSwapT = financeCloudsT + 0.008;
+      const bgCrossfadeDur = 0.020;
+      const kumtorRevealT = financeCloudsT + 0.026;
+      const financeEnterT = kumtorRevealT;
+      const financeExitT = financeEnterT + enterDur + holdDur;
+
+      // Kumtor → Sunset Amber
+      const sunsetAtmoT = breatheAfter(financeExitT);
+      const sunsetBgSwapT = sunsetAtmoT + 0.010;
+      const sunsetRevealT = sunsetAtmoT + atmoWipeDur;
+      const directionsEnterT = sunsetRevealT;
+      const directionsExitT = directionsEnterT + enterDur + holdDur;
+
+      // Sunset → Twilight (MSB)
+      const twilightAtmoT = breatheAfter(directionsExitT);
+      const twilightBgSwapT = twilightAtmoT + 0.010;
+      const twilightRevealT = twilightAtmoT + atmoWipeDur;
+      const msbEnterT = twilightRevealT;
+      const msbExitT = msbEnterT + enterDur + holdDur;
+
+      // Twilight → Midnight (Partners)
+      const midnightAtmoT = breatheAfter(msbExitT);
+      const midnightBgSwapT = midnightAtmoT + 0.010;
+      const midnightRevealT = midnightAtmoT + atmoWipeDur * 0.85;
+      const partnersEnterT = midnightRevealT;
+      const partnersHoldT = partnersEnterT + enterDur + holdDur;
+      const partnersCinemagraphDur = 0.008;
+      const partnerLogoExitT = partnersHoldT + partnersCinemagraphDur;
+      const partnersTextExitT = gapAfterExit(partnerLogoExitT, 0.006);
+
+      const newsEnterT = breatheAfter(partnersTextExitT);
+      const newsExitT = newsEnterT + enterDur + holdDur;
+
+      const contactsEnterT = breatheAfter(newsExitT);
+      const contactsExitT = contactsEnterT + enterDur + holdDur;
+
+      const footerEnterT = gapAfterExit(contactsExitT, 0.008);
+      const footerHoldDur = 0.072;
+
+      const updateCounts = (progress: number) => {
+        const p = Math.max(0, Math.min(1, (progress - statsEnterT) / (statsExitT + exitDur - statsEnterT)));
+        if (count200Ref.current) {
+          count200Ref.current.textContent = formatCount(200, p, "+");
+        }
+        if (count8000Ref.current) {
+          count8000Ref.current.textContent = formatCount(8000, p);
+        }
+      };
       const vw = typeof window !== "undefined" ? window.innerWidth : 1280;
-      const panK = vw < 640 ? 0.55 : vw < 1024 ? 0.8 : vw < 1536 ? 1.15 : 1.35;
-      const px = (v: number) => +(v * panK).toFixed(2);
-      // Z-depth amplifier — extra scale push for foreground layers (camera-truck feel)
       const zK = vw < 640 ? 0.85 : vw < 1024 ? 1.0 : 1.15;
       const sz = (base: number) => +(1 + (base - 1) * zK).toFixed(3);
 
       gsap.to(cloudDriftRef.current, {
-        xPercent: px(-8),
+        yPercent: -5,
         duration: 60,
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut",
       });
 
-      // Subtle perpetual drift on overhead fog layers (horizontal — sky scenes only)
       [
         wipe1BackRef, wipe1MidRef, wipe1FrontRef,
         wipe2BackRef, wipe2MidRef, wipe2FrontRef,
-        wipe3BackRef, wipe3MidRef, wipe3FrontRef,
         ambientFogRef,
+        sunsetAtmoBackRef, sunsetAtmoMidRef, sunsetAtmoFrontRef,
+        twilightAtmoBackRef, twilightAtmoMidRef, twilightAtmoFrontRef,
       ].forEach((r, i) => {
         if (r.current) {
           gsap.to(r.current, {
-            xPercent: px(i % 2 === 0 ? 4 : -4),
+            yPercent: i % 2 === 0 ? 4 : -4,
             duration: 14 + i,
             repeat: -1,
             yoyo: true,
@@ -120,491 +237,878 @@ export function Scrollytelling() {
         }
       });
 
-      // Underground / magma smoke drifts VERTICALLY only (no X) — keeps the descent feel
-      [
-        undergroundSmokeBackRef, undergroundSmokeMidRef, undergroundSmokeFrontRef,
-        magmaSmokeBackRef, magmaSmokeFrontRef,
-      ].forEach((r, i) => {
-        if (r.current) {
-          gsap.to(r.current, {
-            yPercent: i % 2 === 0 ? -6 : 6,
-            duration: 12 + i,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-          });
-        }
+      gsap.set(brandRef.current, {
+        opacity: 0,
+        y: typeof window !== "undefined" ? window.innerHeight * 0.28 : 220,
+        scale: 0.97,
       });
+      gsap.set(
+        [
+          statsRef.current,
+          decreeRef.current,
+          aboutRef.current,
+          financeRef.current,
+          directionsRef.current,
+          msbRef.current,
+          partnersTextRef.current,
+          newsTitleRef.current,
+          contactsTitleRef.current,
+        ],
+        { opacity: 0, yPercent: textEnterY, scale: 1, xPercent: 0, x: 0 }
+      );
+      gsap.set([newsContentRef.current, contactsContentRef.current], { opacity: 0, visibility: "hidden" });
+      gsap.set(footerContentZoneRef.current, { opacity: 0 });
 
-      const computeBrandTarget = () => {
-        const slot = document.getElementById("navbar-brand-slot");
-        const el = brandRef.current;
-        if (!slot || !el) return { x: 0, y: 0, scale: 1 };
-        const slotRect = slot.getBoundingClientRect();
-        const elRect = el.getBoundingClientRect();
-        const targetScale = elRect.width > 0 ? (slotRect.width / elRect.width) * 0.95 : 0.22;
-        const scaledW = elRect.width * targetScale;
-        const cx = elRect.left + elRect.width / 2;
-        const cy = elRect.top + elRect.height / 2;
-        const tx = slotRect.left + scaledW / 2;
-        const ty = slotRect.top + slotRect.height / 2;
-        return { x: tx - cx, y: ty - cy, scale: targetScale };
-      };
+      const cursorRing = document.getElementById("custom-cursor-ring");
+      const cursorDot = document.getElementById("custom-cursor-dot");
+      if (cursorRing) {
+        gsap.set(cursorRing, { borderColor: CURSOR_BORDER_DARK });
+        cursorRing.setAttribute("data-cursor-theme", "dark");
+      }
+      if (cursorDot) {
+        gsap.set(cursorDot, { backgroundColor: CURSOR_BORDER_DARK });
+      }
+
+      gsap.set(kumtorBgRef.current, { opacity: 0, yPercent: 0, scale: sz(1.0) });
+      gsap.set([sunsetBgRef.current, twilightBgRef.current, midnightBgRef.current], { opacity: 0 });
+      gsap.set(directionsCollageRef.current, { opacity: 0, scale: 1 });
+      gsap.set(msbCollageRef.current, { opacity: 0 });
+      gsap.set(msbCollageLeftRef.current, { xPercent: -10, yPercent: 15, opacity: 1 });
+      gsap.set(msbCollageRightRef.current, { xPercent: 10, yPercent: 15, opacity: 1 });
+      gsap.set(handshakeBgRef.current, { opacity: 0, scale: sz(1.06) });
+      gsap.set(partnerFlareRef.current, { opacity: 0, xPercent: -40 });
+      gsap.set(noonTintRef.current, { opacity: 0 });
+      gsap.set([amberBurnRef.current, amberGlowRef.current, twilightBlueRef.current, twilightRoseRef.current, msbHazeRef.current], { opacity: 0 });
+      gsap.set(handshakeRimRef.current, { opacity: 0 });
+      gsap.set(
+        [sunsetAtmoBackRef.current, sunsetAtmoMidRef.current, sunsetAtmoFrontRef.current,
+          twilightAtmoBackRef.current, twilightAtmoMidRef.current, twilightAtmoFrontRef.current],
+        { opacity: 0, yPercent: 110, scale: sz(1.1) }
+      );
+      gsap.set(sunsetAtmoMidRef.current, { yPercent: 130, scale: sz(1.2) });
+      gsap.set(sunsetAtmoFrontRef.current, { yPercent: 150, scale: sz(1.35) });
+      gsap.set(twilightAtmoMidRef.current, { yPercent: 130, scale: sz(1.2) });
+      gsap.set(twilightAtmoFrontRef.current, { yPercent: 150, scale: sz(1.35) });
+
+      const partnerLogoEls = partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
+      if (partnerLogoEls?.length) {
+        gsap.set(partnerLogoEls, { opacity: 0, scale: 0.88 });
+      }
+
+      gsap.set(
+        [wipe2BackRef.current, wipe2MidRef.current, wipe2FrontRef.current],
+        { opacity: 0, yPercent: 110, scale: sz(1.1) }
+      );
+      gsap.set(wipe2MidRef.current, { yPercent: 130, scale: sz(1.2) });
+      gsap.set(wipe2FrontRef.current, { yPercent: 150, scale: sz(1.35) });
 
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: rootRef.current,
+          trigger: scrollTrackRef.current,
           start: "top top",
-          end: "+=10000",
-          scrub: 1.2,
+          end: `+=${SCROLL_DISTANCE}`,
+          scrub: 1,
           pin: sceneRef.current,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: (self) => updateCounts(self.progress),
         },
       });
 
-      // BRAND dock 0 → 0.08
-      tl.to(
+      const brandDockDur = 0.08;
+      tl.fromTo(
         brandRef.current,
-        {
-          duration: 0.08,
-          ease: "none",
-          x: () => computeBrandTarget().x,
-          y: () => computeBrandTarget().y,
-          scale: () => computeBrandTarget().scale,
-          letterSpacing: "0.04em",
-        },
+        { opacity: 0, y: typeof window !== "undefined" ? window.innerHeight * 0.28 : 220, scale: 0.97 },
+        { opacity: 1, y: 0, scale: 1, duration: brandDockDur, ease: "power2.out" },
         0
       );
 
-      // ============ SCENE 1 — Mountains + stats (0 → 0.22) ============
-      tl.to(mountainRef.current, { scale: sz(1.25), xPercent: px(-6), duration: 0.22, ease: "none" }, 0);
-      tl.fromTo(
-        statsRef.current,
-        { opacity: 0, y: 30, xPercent: px(4) },
-        { opacity: 1, y: 0, xPercent: px(-3), duration: 0.10, ease: "power1.out" },
-        0.10
-      );
+      // ============ SCENE 1 — Mountains + stats ============
+      tl.to(mountainRef.current, { scale: sz(1.18), duration: statsExitT + exitDur, ease: "none" }, 0);
 
+      tl.fromTo(statsRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, statsEnterT);
+      tl.to(statsRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, statsExitT);
+
+      // ============ SCENE 2 — Clouds + decree ============
       tl.fromTo(
         ambientFogRef.current,
-        { opacity: 0, yPercent: 30, xPercent: px(-8) },
-        { opacity: 0.55, yPercent: 0, xPercent: px(6), duration: 0.16, ease: "none" },
-        0.06
+        { opacity: 0, yPercent: 40 },
+        { opacity: 0.55, yPercent: 0, duration: enterDur + 0.02, ease: "power2.out" },
+        decreeCloudsT
       );
-
-      // ============ WIPE 1 ============
-      tl.to(statsRef.current, { opacity: 0, y: -20, duration: 0.08, ease: "none" }, 0.22);
-
       tl.fromTo(
         wipe1BackRef.current,
         { yPercent: 110, opacity: 0, scale: sz(1.1) },
-        { yPercent: -20, opacity: 0.62, scale: sz(1.3), duration: 0.16, ease: "power2.inOut" },
-        0.22
+        { yPercent: -15, opacity: 0.58, scale: sz(1.25), duration: enterDur + 0.02, ease: "power2.inOut" },
+        decreeCloudsT
       );
       tl.fromTo(
         wipe1MidRef.current,
-        { yPercent: 130, xPercent: px(-10), opacity: 0, scale: sz(1.25) },
-        { yPercent: -5, xPercent: px(8), opacity: 0.47, scale: sz(1.5), duration: 0.14, ease: "power2.inOut" },
-        0.24
+        { yPercent: 130, opacity: 0, scale: sz(1.2) },
+        { yPercent: -5, opacity: 0.42, scale: sz(1.4), duration: enterDur + 0.018, ease: "power2.inOut" },
+        decreeCloudsT + 0.008
       );
       tl.fromTo(
         wipe1FrontRef.current,
-        { yPercent: 150, xPercent: px(15), opacity: 0, scale: sz(1.4) },
-        { yPercent: -30, xPercent: px(-8), opacity: 0.57, scale: sz(1.7), duration: 0.18, ease: "power2.inOut" },
-        0.25
+        { yPercent: 150, opacity: 0, scale: sz(1.3) },
+        { yPercent: -25, opacity: 0.48, scale: sz(1.55), duration: enterDur + 0.02, ease: "power2.inOut" },
+        decreeCloudsT + 0.012
       );
-      tl.set(wipe1HazeRef.current, { opacity: 0 }, 0.22);
+      tl.set(wipe1HazeRef.current, { opacity: 0 }, decreeCloudsT);
 
-      tl.fromTo(
-        aboutRef.current,
-        { opacity: 0, y: 40, xPercent: px(5), filter: "blur(20px)" },
-        { opacity: 1, y: 0, xPercent: px(-2), filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
-        0.31
-      );
-      tl.to(wipe1HazeRef.current, { opacity: 0, duration: 0.10, ease: "power1.out" }, 0.32);
-      tl.to(wipe1BackRef.current, { yPercent: -110, xPercent: px(12), opacity: 0, duration: 0.12, ease: "power2.in" }, 0.32);
-      tl.to(wipe1MidRef.current, { yPercent: -120, xPercent: px(-14), opacity: 0, duration: 0.12, ease: "power2.in" }, 0.33);
-      tl.to(wipe1FrontRef.current, { yPercent: -130, xPercent: px(16), opacity: 0, duration: 0.12, ease: "power2.in" }, 0.34);
+      tl.fromTo(decreeRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, decreeEnterT);
+      tl.to(decreeRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, decreeExitT);
+      tl.to(wipe1BackRef.current, { yPercent: -120, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT);
+      tl.to(wipe1MidRef.current, { yPercent: -130, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT + 0.004);
+      tl.to(wipe1FrontRef.current, { yPercent: -140, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT + 0.008);
+      tl.to(ambientFogRef.current, { yPercent: -30, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT);
 
-      // ============ Hold "О ФОНДЕ" briefly (0.40 → 0.48) ============
-      tl.to({}, { duration: 0.08 }, 0.40);
+      // ============ SCENE 3 — «О ФОНДЕ» ============
+      tl.fromTo(aboutRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, aboutEnterT);
+      tl.to(aboutRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, aboutExitT);
 
-      // ============ WIPE 2 — Clouds engulf About, reveal Kumtor + "ФИНАНСИРОВАНИЕ" (0.48 → 0.66) ============
-      tl.to(aboutRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.48);
-
+      // ============ SCENE 4 — Kumtor + «ФИНАНСИРОВАНИЕ» ============
+      const cloudCoverDur = enterDur + 0.022;
       tl.fromTo(
         wipe2BackRef.current,
         { yPercent: 110, opacity: 0, scale: sz(1.1) },
-        { yPercent: -25, opacity: 0.62, scale: sz(1.35), duration: 0.18, ease: "power2.inOut" },
-        0.48
+        { yPercent: 0, opacity: 0.92, scale: sz(1.3), duration: cloudCoverDur, ease: "power2.inOut" },
+        financeCloudsT
       );
       tl.fromTo(
         wipe2MidRef.current,
-        { yPercent: 135, xPercent: px(10), opacity: 0, scale: sz(1.3) },
-        { yPercent: -5, xPercent: px(-10), opacity: 0.47, scale: sz(1.55), duration: 0.15, ease: "power2.inOut" },
-        0.50
+        { yPercent: 130, opacity: 0, scale: sz(1.2) },
+        { yPercent: -5, opacity: 0.85, scale: sz(1.45), duration: cloudCoverDur, ease: "power2.inOut" },
+        financeCloudsT + 0.006
       );
       tl.fromTo(
         wipe2FrontRef.current,
-        { yPercent: 155, xPercent: px(-15), opacity: 0, scale: sz(1.5) },
-        { yPercent: -35, xPercent: px(10), opacity: 0.57, scale: sz(1.75), duration: 0.2, ease: "power2.inOut" },
-        0.51
-      );
-      tl.set(wipe2HazeRef.current, { opacity: 0 }, 0.48);
-
-      tl.to(mountainRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
-      tl.to(ambientFogRef.current, { opacity: 0, duration: 0.08, ease: "power1.inOut" }, 0.54);
-      tl.fromTo(
-        kumtorRef.current,
-        { opacity: 0, scale: sz(1.15), xPercent: px(4) },
-        { opacity: 1, scale: sz(1.05), xPercent: 0, duration: 0.12, ease: "power2.out" },
-        0.55
-      );
-
-      tl.fromTo(
-        financeRef.current,
-        { opacity: 0, y: 40, xPercent: px(5), filter: "blur(20px)" },
-        { opacity: 1, y: 0, xPercent: px(-2), filter: "blur(0px)", duration: 0.12, ease: "power2.out" },
-        0.59
-      );
-
-      tl.to(wipe2HazeRef.current, { opacity: 0, duration: 0.12, ease: "power1.out" }, 0.60);
-      tl.to(wipe2BackRef.current, { yPercent: -120, xPercent: px(14), opacity: 0, duration: 0.14, ease: "power2.in" }, 0.60);
-      tl.to(wipe2MidRef.current, { yPercent: -130, xPercent: px(-16), opacity: 0, duration: 0.14, ease: "power2.in" }, 0.61);
-      tl.to(wipe2FrontRef.current, { yPercent: -140, xPercent: px(18), opacity: 0, duration: 0.14, ease: "power2.in" }, 0.62);
-
-      // ============ CINEMAGRAPH HOLD — Kumtor breathes alive (0.66 → 0.74) ============
-      tl.to(kumtorRef.current, { scale: sz(1.10), xPercent: px(-3), duration: 0.08, ease: "sine.inOut" }, 0.66);
-      tl.to(financeRef.current, { xPercent: px(-5), duration: 0.08, ease: "sine.inOut" }, 0.66);
-
-      // ============ WIPE 3 — Realistic cumulus clouds engulf, swap to earth depths, clouds fly up (0.74 → 0.94) ============
-      tl.to(financeRef.current, { opacity: 0, y: -30, filter: "blur(12px)", duration: 0.08, ease: "none" }, 0.74);
-
-      // TOP cumulus strip slides down from above + drifts RIGHT (foreground parallax)
-      tl.fromTo(
-        wipe3BackRef.current,
-        { yPercent: -120, xPercent: px(-8), opacity: 0, scale: sz(1.15) },
-        { yPercent: -10, xPercent: px(6), opacity: 0.28, scale: sz(1.05), duration: 0.18, ease: "power2.out" },
-        0.74
+        { yPercent: 150, opacity: 0, scale: sz(1.35) },
+        { yPercent: -12, opacity: 0.88, scale: sz(1.6), duration: cloudCoverDur, ease: "power2.inOut" },
+        financeCloudsT + 0.010
       );
       tl.fromTo(
-        wipe3MidRef.current,
-        { yPercent: 120, xPercent: px(-10), opacity: 0, scale: sz(1.15) },
-        { yPercent: 10, xPercent: px(8), opacity: 0.26, scale: sz(1.05), duration: 0.18, ease: "power2.out" },
-        0.74
+        wipe2HazeRef.current,
+        { opacity: 0 },
+        { opacity: 0.35, duration: cloudCoverDur * 0.8, ease: "power2.out" },
+        financeCloudsT + 0.004
       );
-      tl.fromTo(
-        wipe3FrontRef.current,
-        { yPercent: 40, xPercent: px(6), opacity: 0, scale: sz(1.3) },
-        { yPercent: 0, xPercent: px(-5), opacity: 0.18, scale: sz(1.1), duration: 0.16, ease: "power2.out" },
-        0.76
-      );
-      tl.set(wipe3HazeRef.current, { opacity: 0 }, 0.74);
 
-      // SWAP behind translucent clouds — Kumtor scales up & spreads apart, earth depths emerge
+      tl.to(mountainRef.current, { opacity: 0, duration: bgCrossfadeDur, ease: "power1.inOut" }, kumtorBgSwapT);
       tl.to(
-        kumtorRef.current,
-        { scale: sz(1.6), xPercent: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in" },
-        0.74
+        kumtorBgRef.current,
+        { opacity: 1, scale: sz(1.08), duration: bgCrossfadeDur, ease: "power2.out" },
+        kumtorBgSwapT
+      );
+      tl.to(noonTintRef.current, { opacity: 0.28, duration: bgCrossfadeDur, ease: "power2.out" }, kumtorBgSwapT);
+      tl.to(
+        kumtorBgRef.current,
+        { scale: sz(1.22), duration: financeExitT + exitDur - kumtorBgSwapT, ease: "none" },
+        kumtorBgSwapT + bgCrossfadeDur
+      );
+
+      tl.to(wipe2BackRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, kumtorRevealT);
+      tl.to(wipe2MidRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, kumtorRevealT + 0.004);
+      tl.to(wipe2FrontRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, kumtorRevealT + 0.008);
+      tl.to(wipe2HazeRef.current, { opacity: 0, duration: exitDur, ease: "power2.in" }, kumtorRevealT);
+
+      tl.fromTo(financeRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, financeEnterT);
+      tl.to(financeRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, financeExitT);
+
+      // ============ CINEMATIC ACT II — Noon → Sunset Amber ============
+      tl.fromTo(
+        sunsetAtmoBackRef.current,
+        { yPercent: 110, opacity: 0, scale: sz(1.1) },
+        { yPercent: -8, opacity: 0.72, scale: sz(1.28), duration: atmoWipeDur, ease: "power2.inOut" },
+        sunsetAtmoT
+      );
+      tl.fromTo(
+        sunsetAtmoMidRef.current,
+        { yPercent: 130, opacity: 0, scale: sz(1.2) },
+        { yPercent: -4, opacity: 0.58, scale: sz(1.42), duration: atmoWipeDur, ease: "power2.inOut" },
+        sunsetAtmoT + 0.006
+      );
+      tl.fromTo(
+        sunsetAtmoFrontRef.current,
+        { yPercent: 150, opacity: 0, scale: sz(1.35) },
+        { yPercent: -14, opacity: 0.65, scale: sz(1.55), duration: atmoWipeDur, ease: "power2.inOut" },
+        sunsetAtmoT + 0.010
+      );
+
+      tl.to(noonTintRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
+      tl.to(kumtorBgRef.current, { opacity: 0, scale: sz(1.35), duration: lightCrossfadeDur, ease: "power2.in" }, sunsetBgSwapT);
+      tl.to(sunsetBgRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
+      tl.to(amberBurnRef.current, { opacity: 0.92, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
+      tl.to(amberGlowRef.current, { opacity: 0.58, duration: lightCrossfadeDur + 0.006, ease: "power2.out" }, sunsetBgSwapT + 0.004);
+      tl.to(directionsCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
+      if (cursorRing) {
+        tl.to(
+          cursorRing,
+          {
+            borderColor: CURSOR_BORDER_LIGHT,
+            duration: lightCrossfadeDur,
+            ease: "power1.inOut",
+            onUpdate: function () {
+              cursorRing.setAttribute("data-cursor-theme", this.progress() > 0.5 ? "light" : "dark");
+            },
+          },
+          sunsetBgSwapT
+        );
+      }
+      if (cursorDot) {
+        tl.to(
+          cursorDot,
+          { backgroundColor: CURSOR_BORDER_LIGHT, duration: lightCrossfadeDur, ease: "power1.inOut" },
+          sunsetBgSwapT
+        );
+      }
+
+      tl.to(sunsetAtmoBackRef.current, { yPercent: -110, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT);
+      tl.to(sunsetAtmoMidRef.current, { yPercent: -115, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.004);
+      tl.to(sunsetAtmoFrontRef.current, { yPercent: -120, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.008);
+
+      tl.fromTo(
+        directionsCollageRef.current,
+        { scale: 1 },
+        { scale: sz(1.08), duration: collageParallaxDur, ease: "power2.out" },
+        sunsetRevealT
+      );
+      tl.to(amberGlowRef.current, { opacity: 0.82, duration: collageParallaxDur, ease: "power1.inOut" }, sunsetRevealT);
+
+      tl.fromTo(directionsRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, directionsEnterT);
+      tl.to(directionsRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, directionsExitT);
+      tl.to(directionsCollageRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, directionsExitT);
+      tl.to(amberBurnRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, directionsExitT);
+      tl.to(amberGlowRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, directionsExitT);
+
+      // ============ Sunset → Twilight Blue (MSB) ============
+      tl.fromTo(
+        twilightAtmoBackRef.current,
+        { yPercent: 110, opacity: 0, scale: sz(1.1) },
+        { yPercent: -6, opacity: 0.55, scale: sz(1.25), duration: atmoWipeDur, ease: "power2.inOut" },
+        twilightAtmoT
+      );
+      tl.fromTo(
+        twilightAtmoMidRef.current,
+        { yPercent: 130, opacity: 0, scale: sz(1.2) },
+        { yPercent: -2, opacity: 0.42, scale: sz(1.38), duration: atmoWipeDur, ease: "power2.inOut" },
+        twilightAtmoT + 0.006
+      );
+      tl.fromTo(
+        twilightAtmoFrontRef.current,
+        { yPercent: 150, opacity: 0, scale: sz(1.35) },
+        { yPercent: -10, opacity: 0.48, scale: sz(1.5), duration: atmoWipeDur, ease: "power2.inOut" },
+        twilightAtmoT + 0.010
+      );
+
+      tl.to(amberBurnRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.55, ease: "power1.inOut" }, twilightAtmoT);
+      tl.to(amberGlowRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.55, ease: "power1.inOut" }, twilightAtmoT);
+      tl.to(sunsetBgRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power2.in" }, twilightBgSwapT);
+      tl.to(twilightBgRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, twilightBgSwapT);
+      tl.to(msbCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, twilightBgSwapT);
+      tl.set(msbCollageLeftRef.current, { xPercent: -10, yPercent: 15 }, twilightAtmoT);
+      tl.set(msbCollageRightRef.current, { xPercent: 10, yPercent: 15 }, twilightAtmoT);
+
+      tl.to(twilightRoseRef.current, { opacity: 0.42, duration: convergeDur * 0.45, ease: "power2.out" }, twilightAtmoT);
+      tl.to(twilightBlueRef.current, { opacity: 0.18, duration: convergeDur * 0.4, ease: "power2.out" }, twilightAtmoT + 0.004);
+      tl.to(msbHazeRef.current, { opacity: 0.62, duration: convergeDur * 0.55, ease: "power2.inOut" }, twilightAtmoT + 0.006);
+
+      tl.to(msbCollageLeftRef.current, { xPercent: 0, yPercent: 0, duration: convergeDur, ease: "power2.out" }, twilightAtmoT);
+      tl.to(msbCollageRightRef.current, { xPercent: 0, yPercent: 0, duration: convergeDur, ease: "power2.out" }, twilightAtmoT);
+      tl.to(twilightRoseRef.current, { opacity: 0.32, duration: convergeDur, ease: "power1.inOut" }, twilightAtmoT + convergeDur * 0.25);
+      tl.to(twilightBlueRef.current, { opacity: 0.78, duration: convergeDur, ease: "power2.out" }, twilightAtmoT + convergeDur * 0.2);
+      tl.to(msbHazeRef.current, { opacity: 0.38, duration: convergeDur * 0.7, ease: "power1.inOut" }, twilightAtmoT + convergeDur * 0.35);
+
+      tl.to(twilightAtmoBackRef.current, { yPercent: -108, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT);
+      tl.to(twilightAtmoMidRef.current, { yPercent: -112, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.004);
+      tl.to(twilightAtmoFrontRef.current, { yPercent: -118, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.008);
+
+      tl.fromTo(msbRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, msbEnterT);
+      tl.to(msbRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, msbExitT);
+      tl.to(msbCollageRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
+      tl.to(twilightBlueRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
+      tl.to(twilightRoseRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
+      tl.to(msbHazeRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
+      tl.set(msbCollageLeftRef.current, { xPercent: -10, yPercent: 15 }, msbExitT + exitDur);
+      tl.set(msbCollageRightRef.current, { xPercent: 10, yPercent: 15 }, msbExitT + exitDur);
+
+      // ============ Twilight → Deep Midnight (Partners) ============
+      tl.to(twilightBlueRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
+      tl.to(twilightRoseRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
+      tl.to(msbHazeRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.8, ease: "power1.inOut" }, midnightBgSwapT);
+      tl.to(twilightBgRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power2.in" }, midnightBgSwapT);
+      tl.to(midnightBgRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, midnightBgSwapT);
+      tl.fromTo(
+        handshakeBgRef.current,
+        { opacity: 0, scale: sz(1.06) },
+        { opacity: 1, scale: 1, duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
+        midnightBgSwapT
+      );
+
+      tl.fromTo(
+        partnerFlareRef.current,
+        { opacity: 0, xPercent: -40 },
+        { opacity: 1, xPercent: 28, duration: flareDur, ease: "power2.inOut" },
+        partnersEnterT - 0.008
+      );
+      tl.fromTo(
+        handshakeRimRef.current,
+        { opacity: 0 },
+        { opacity: 0.85, duration: flareDur * 0.55, ease: "power2.out" },
+        partnersEnterT - 0.004
       );
       tl.to(
-        kumtorRef.current,
-        { opacity: 0, scale: sz(2.1), filter: "blur(20px)", duration: 0.08, ease: "power2.in" },
-        0.80
+        partnerFlareRef.current,
+        { opacity: 0, xPercent: 92, duration: flareDur * 0.85, ease: "power2.inOut" },
+        partnersEnterT + enterDur * 0.25
       );
-      tl.fromTo(
-        crustRef.current,
-        { opacity: 0, scale: sz(1.25), filter: "blur(16px)" },
-        { opacity: 1, scale: 1.0, filter: "blur(0px)", duration: 0.08, ease: "power2.out" },
-        0.80
-      );
-      tl.to(sceneRef.current, { backgroundColor: "#0a0806", duration: 0.14, ease: "none" }, 0.74);
-
-      // Light clouds fly UP and away with strong sideways depth — opposing X for true parallax
-      tl.to(wipe3BackRef.current, { yPercent: -180, xPercent: px(18), opacity: 0, scale: sz(1.3), duration: 0.14, ease: "power2.in" }, 0.80);
-      tl.to(wipe3FrontRef.current, { yPercent: -200, xPercent: px(-22), opacity: 0, scale: sz(1.4), duration: 0.14, ease: "power2.in" }, 0.80);
-      tl.to(wipe3MidRef.current, { yPercent: -220, xPercent: px(20), opacity: 0, scale: sz(1.5), duration: 0.14, ease: "power2.in" }, 0.80);
-
-
-      // =====================================================================
-      // STRICT LAYERED PARALLAX — each underground slide has 3 layers:
-      //   z-0  BG     image          (slowest:  yPercent ±30)
-      //   z-10 SMOKE  fog veils      (medium:   yPercent ±60)
-      //   z-20 TEXT   Gotham content (fastest:  yPercent ±100)
-      // Next slide mirrors entrance from yPercent +30 / +60 / +100.
-      // No opacity "switches" — everything translates through space.
-      // =====================================================================
-
-      // ----- SLIDE: ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ (0.83 → 0.90) -----
-      // BG (crust) — already visible from wipe3; start its slow upward drift
-      tl.fromTo(
-        crustRef.current,
-        { yPercent: 30 },
-        { yPercent: 0, duration: 0.05, ease: "none" },
-        0.83
-      );
-      // SMOKE veils — drift in from below, faster than bg
-      tl.fromTo(
-        undergroundSmokeBackRef.current,
-        { opacity: 0, yPercent: 60 },
-        { opacity: 0.45, yPercent: 0, duration: 0.06, ease: "none" },
-        0.83
-      );
-      tl.fromTo(
-        undergroundSmokeMidRef.current,
-        { opacity: 0, yPercent: 60 },
-        { opacity: 0.42, yPercent: 0, duration: 0.06, ease: "none" },
-        0.83
-      );
-      tl.fromTo(
-        undergroundSmokeFrontRef.current,
-        { opacity: 0, yPercent: 60 },
-        { opacity: 0.5, yPercent: 0, duration: 0.06, ease: "none" },
-        0.83
-      );
-      // TEXT — fastest, comes from below
-      tl.fromTo(
-        directionsRef.current,
-        { opacity: 0, yPercent: 100, filter: "blur(18px)" },
-        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.05, ease: "power2.out" },
-        0.83
-      );
-
-      // ----- TRANSITION: ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ → ПРОЕКТЫ МСБ (0.89 → 0.93) -----
-      // Same crust bg continues — slow upward parallax (bg never "switches", just keeps drifting up)
-      tl.to(crustRef.current, { yPercent: -30, duration: 0.04, ease: "none" }, 0.89);
-      // Smoke flies up at 2x speed
-      tl.to(undergroundSmokeBackRef.current,  { yPercent: -60, duration: 0.04, ease: "none" }, 0.89);
-      tl.to(undergroundSmokeMidRef.current,   { yPercent: -60, duration: 0.04, ease: "none" }, 0.89);
-      tl.to(undergroundSmokeFrontRef.current, { yPercent: -60, duration: 0.04, ease: "none" }, 0.89);
-      // Directions text flies up at full speed
       tl.to(
-        directionsRef.current,
-        { yPercent: -100, opacity: 0, filter: "blur(10px)", duration: 0.04, ease: "power2.in" },
-        0.89
+        handshakeRimRef.current,
+        { opacity: 0.35, duration: flareDur * 0.6, ease: "power1.inOut" },
+        partnersEnterT + enterDur * 0.35
       );
 
-      // ----- SLIDE: ПРОЕКТЫ МСБ (0.89 → 0.95) -----
-      // BG continuation — crust scrolls into next viewport from below (same image, continuous descent)
-      // We piggy-back the bg from the previous slide; for the new "viewport" we move the smoke + text fresh.
-      // Fresh smoke layer entrance (mirrors entrance schema)
+      tl.fromTo(partnersTextRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, partnersEnterT);
+      if (partnerLogoEls?.length) {
+        tl.to(
+          partnerLogoEls,
+          { opacity: 1, scale: 1, duration: 0.022, stagger: 0.008, ease: "power2.out" },
+          partnersEnterT + enterDur * 0.5
+        );
+      }
+
+      tl.to(handshakeBgRef.current, { scale: sz(1.04), duration: partnersCinemagraphDur, ease: "sine.inOut" }, partnersHoldT);
+
+      // ============ Partners exit → News → Contacts → Footer zone (midnight holds) ============
+      if (partnerLogoEls?.length) {
+        tl.to(
+          partnerLogoEls,
+          { ...textEvaporated, duration: exitDur, stagger: 0.005, ease: textExitEase },
+          partnerLogoExitT
+        );
+      }
+      tl.to(partnersTextRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, partnersTextExitT);
+
+      tl.fromTo(newsTitleRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, newsEnterT);
+      tl.to(newsTitleRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, newsExitT);
+
+      tl.fromTo(contactsTitleRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, contactsEnterT);
+      tl.to(contactsTitleRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, contactsExitT);
+
       tl.fromTo(
-        undergroundSmokeBackRef.current,
-        { yPercent: 60, opacity: 0.45 },
-        { yPercent: 0, opacity: 0.45, duration: 0.04, ease: "none" },
-        0.93
+        footerContentZoneRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: enterDur, ease: "power2.out" },
+        footerEnterT
       );
-      tl.fromTo(
-        undergroundSmokeMidRef.current,
-        { yPercent: 60, opacity: 0.42 },
-        { yPercent: 0, opacity: 0.42, duration: 0.04, ease: "none" },
-        0.93
-      );
-      tl.fromTo(
-        undergroundSmokeFrontRef.current,
-        { yPercent: 60, opacity: 0.5 },
-        { yPercent: 0, opacity: 0.5, duration: 0.04, ease: "none" },
-        0.93
-      );
-      // Crust bg resets to 0 and starts new slow drift
-      tl.fromTo(
-        crustRef.current,
-        { yPercent: 30 },
-        { yPercent: 0, duration: 0.04, ease: "none" },
-        0.93
-      );
-      // МСБ text rises from below
-      tl.fromTo(
-        msbRef.current,
-        { opacity: 0, yPercent: 100, filter: "blur(18px)" },
-        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.04, ease: "power2.out" },
-        0.93
+      tl.to(
+        footerContentZoneRef.current,
+        { opacity: 1, duration: footerHoldDur, ease: "none" },
+        footerEnterT + enterDur
       );
 
-      // ----- TRANSITION: ПРОЕКТЫ МСБ → ПАРТНЁРЫ (0.95 → 0.99) -----
-      // BG crust flies up SLOW (-30) — deep background
-      tl.to(crustRef.current, { yPercent: -30, opacity: 0, duration: 0.04, ease: "none" }, 0.95);
-      // Smoke flies up FASTER (-60) AND warms to golden-orange (heat from rising lava)
-      tl.to(undergroundSmokeBackRef.current,
-        { yPercent: -60, opacity: 0.5, backgroundColor: "rgba(120, 60, 20, 0.55)", duration: 0.04, ease: "none" }, 0.95);
-      tl.to(undergroundSmokeMidRef.current,
-        { yPercent: -60, opacity: 0.5, backgroundColor: "rgba(180, 95, 30, 0.5)", duration: 0.04, ease: "none" }, 0.95);
-      tl.to(undergroundSmokeFrontRef.current,
-        { yPercent: -60, opacity: 0.55, backgroundColor: "rgba(230, 140, 45, 0.55)", duration: 0.04, ease: "none" }, 0.95);
-      // МСБ text flies up FASTEST (-100)
-      tl.to(msbRef.current,
-        { yPercent: -100, opacity: 0, filter: "blur(10px)", duration: 0.04, ease: "power2.in" }, 0.95);
-
-      // Scene tint shifts to magma-warm
-      tl.to(sceneRef.current, { backgroundColor: "#1a0a05", duration: 0.04, ease: "none" }, 0.95);
-
-      // ----- SLIDE: ПАРТНЁРЫ — mirrored entrance (fly-through continues) -----
-      // BG (magma) — slowest, enters from +30
-      tl.fromTo(
-        magmaRef.current,
-        { opacity: 0, yPercent: 30, scale: sz(1.05) },
-        { opacity: 1, yPercent: 0, scale: sz(1.05), duration: 0.04, ease: "none" },
-        0.95
-      );
-      // SMOKE (hot, golden) — enters from +60
-      tl.fromTo(
-        magmaSmokeBackRef.current,
-        { opacity: 0, yPercent: 60 },
-        { opacity: 0.4, yPercent: 0, duration: 0.04, ease: "none" },
-        0.95
-      );
-      tl.fromTo(
-        magmaSmokeFrontRef.current,
-        { opacity: 0, yPercent: 60 },
-        { opacity: 0.4, yPercent: 0, duration: 0.04, ease: "none" },
-        0.95
-      );
-      // TEXT (Партнёры) — enters from +100
-      tl.fromTo(
-        partnersRef.current,
-        { opacity: 0, yPercent: 100, filter: "blur(18px)" },
-        { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 0.04, ease: "power2.out" },
-        0.95
-      );
-
-      // ----- MAGMA CINEMAGRAPH (0.99 → 1.0) — slow breathing, hot smoke continues drifting up -----
-      tl.to(magmaRef.current, { scale: sz(1.12), duration: 0.01, ease: "sine.inOut" }, 0.99);
-      tl.to(magmaSmokeBackRef.current,  { yPercent: -10, duration: 0.01, ease: "sine.inOut" }, 0.99);
-      tl.to(magmaSmokeFrontRef.current, { yPercent: -14, duration: 0.01, ease: "sine.inOut" }, 0.99);
-
-
-      // Decree text — re-purposed: shown over mountains briefly between scene 1 & wipe1
-      tl.fromTo(
-        decreeRef.current,
-        { opacity: 0, y: 40 },
-        { opacity: 0, duration: 0.01 },
-        0
-      );
-    }, rootRef);
-
-    const st = ScrollTrigger.create({
-      trigger: rootRef.current,
-      start: "top top",
-      end: "+=10000",
-      onUpdate: (self) => {
-        const p = (self.progress - 0.10) / 0.14;
-        setCountProgress(Math.max(0, Math.min(1, p)));
-      },
-    });
-
-    return () => {
-      st.kill();
-      ctx.revert();
-      lenis.destroy();
-      cancelAnimationFrame(rafId);
-    };
-  }, []);
+      return () => {
+        cancelled = true;
+        cancelAnimationFrame(rafId);
+        lenis.off("scroll", ScrollTrigger.update);
+        lenis.destroy();
+        if (cursorRing) {
+          gsap.set(cursorRing, { borderColor: CURSOR_BORDER_DARK });
+          cursorRing.setAttribute("data-cursor-theme", "dark");
+        }
+        if (cursorDot) {
+          gsap.set(cursorDot, { backgroundColor: CURSOR_BORDER_DARK });
+        }
+      };
+    },
+    { scope: rootRef }
+  );
 
   return (
-    <div ref={rootRef} className="relative overflow-x-hidden" style={{ height: "10500px" }}>
+    <div ref={rootRef} className="relative overflow-hidden">
+      {/* === STABLE NAVBAR (fixed, outside pinned scene) === */}
+      <header className="fixed left-0 right-0 top-0 z-[70] px-4 pt-4 md:px-8 md:pt-5">
+        <nav className="mx-auto flex w-full max-w-[min(100%,1720px)] items-center justify-between gap-6 rounded-full border border-white/40 bg-white/40 px-5 py-2.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] md:gap-8 md:px-7">
+          <div className="flex shrink-0 items-center">
+            <img
+              src={fundLogo.url}
+              alt="НИФ КР"
+              className="block h-9 w-auto md:hidden"
+            />
+            <div className="hidden md:block h-[44px] w-[52px]" aria-hidden />
+          </div>
+
+          <ul className="hidden lg:flex flex-1 items-center justify-end gap-x-6 text-[10.5px] font-semibold tracking-[0.16em] text-[color:var(--ink)] xl:gap-x-8 xl:text-[11px] xl:tracking-[0.18em]">
+            {NAV_ITEMS.map((label) => (
+              <li key={label} className="shrink-0">
+                <a
+                  href="#"
+                  data-cursor-hover
+                  className="inline-block whitespace-nowrap py-1.5 transition-transform duration-300 ease-out hover:scale-110 hover:text-[color:var(--gold)]"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div className="hidden md:flex shrink-0 items-center gap-2 pl-2 text-[11px] font-semibold tracking-[0.16em] text-[color:var(--ink)]">
+            <span className="whitespace-nowrap">{lang}</span>
+            <div className="flex gap-1.5">
+              {LANGS.map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  data-cursor-hover
+                  aria-label={l}
+                  className={`h-2 w-2 rounded-full transition-all ${
+                    lang === l
+                      ? "bg-[color:var(--ink)] scale-125"
+                      : "bg-[color:var(--ink)]/30 hover:bg-[color:var(--ink)]/60"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={() => setNavOpen((v) => !v)}
+            aria-label="Меню"
+            className="lg:hidden inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/60 text-[color:var(--ink)] shadow-sm transition hover:bg-white"
+          >
+            {navOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </nav>
+
+        <div
+          className={`lg:hidden mx-auto mt-3 w-full max-w-[min(100%,1720px)] overflow-hidden rounded-3xl border border-white/40 bg-white/80 font-display backdrop-blur-2xl shadow-[0_20px_60px_rgba(20,40,90,0.18)] transition-all duration-500 ease-out ${
+            navOpen ? "max-h-[720px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+          }`}
+        >
+          <ul className="flex flex-col divide-y divide-[color:var(--ink)]/10 px-2 py-2 text-[12px] font-semibold tracking-[0.16em] text-[color:var(--ink)]">
+            {NAV_ITEMS.map((label, i) => (
+              <li
+                key={label}
+                style={{ transitionDelay: navOpen ? `${80 + i * 45}ms` : "0ms" }}
+                className={`transform transition-all duration-500 ${
+                  navOpen ? "translate-x-0 opacity-100" : "translate-x-3 opacity-0"
+                }`}
+              >
+                <a
+                  href="#"
+                  onClick={() => setNavOpen(false)}
+                  className="flex items-center justify-between rounded-2xl px-4 py-3.5 whitespace-nowrap transition hover:bg-[color:var(--ink)]/5 hover:text-[color:var(--gold)]"
+                >
+                  <span>{label}</span>
+                  <span className="text-[color:var(--gold)] opacity-60">→</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="flex items-center justify-between border-t border-[color:var(--ink)]/10 px-5 py-4">
+            <span className="text-[11px] font-semibold tracking-[0.22em] text-[color:var(--ink)]/70">ЯЗЫК</span>
+            <div className="flex gap-2">
+              {LANGS.map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.16em] transition ${
+                    lang === l
+                      ? "bg-[color:var(--ink)] text-white"
+                      : "bg-transparent text-[color:var(--ink)]/70 hover:bg-[color:var(--ink)]/10"
+                  }`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* === PERMANENT BRAND HEADER (fixed below nav, isolated from blend modes) === */}
+      <div
+        ref={brandRef}
+        className="pointer-events-none fixed left-1/2 z-[65] hidden w-full max-w-[min(100%,920px)] -translate-x-1/2 px-6 will-change-transform md:block"
+        style={{
+          top: "5.75rem",
+          mixBlendMode: "normal",
+          isolation: "isolate",
+        }}
+      >
+        <h1
+          className="text-center font-display text-[clamp(0.72rem,1.55vw,1.08rem)] font-bold leading-[1.2] tracking-[0.14em] text-white opacity-100"
+          style={{
+            mixBlendMode: "normal",
+            color: "#ffffff",
+            textShadow: "0 4px 24px rgba(8,16,36,0.72)",
+          }}
+        >
+          НАЦИОНАЛЬНЫЙ<br />
+          ИНВЕСТИЦИОННЫЙ ФОНД<br />
+          КЫРГЫЗСКОЙ РЕСПУБЛИКИ
+        </h1>
+      </div>
+
+      <div ref={scrollTrackRef} style={{ height: `${SCROLL_DISTANCE}px` }}>
       <div
         ref={sceneRef}
         className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
       >
-        {/* Ambient drifting CSS clouds — no image, just blurred gradient blobs */}
         <div ref={cloudDriftRef} className="pointer-events-none absolute inset-0 z-[5] overflow-hidden">
           <div className="absolute left-[-10%] top-[12%] h-[28vh] w-[55vw] rounded-full bg-gradient-to-t from-white/70 via-white/40 to-transparent blur-[150px] scale-150" style={{ maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" }} />
           <div className="absolute right-[-8%] top-[22%] h-[24vh] w-[45vw] rounded-full bg-gradient-to-t from-white/60 via-white/30 to-transparent blur-[150px] scale-150" style={{ maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" }} />
           <div className="absolute left-[20%] top-[6%] h-[18vh] w-[35vw] rounded-full bg-gradient-to-t from-white/50 via-white/25 to-transparent blur-[150px] scale-150" style={{ maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" }} />
         </div>
 
-
-        {/* === BACKGROUND LAYERS === */}
+        {/* === BACKGROUND LAYER (z-0) === */}
         <img
           ref={mountainRef}
           src={mountains}
           alt="Горы"
-          className="absolute inset-0 h-full w-full object-cover object-bottom will-change-transform"
+          className="absolute inset-0 z-0 h-full w-full object-cover object-bottom will-change-transform"
           style={{ transformOrigin: "50% 70%" }}
         />
         <img
-          ref={kumtorRef}
+          ref={kumtorBgRef}
           src={kumtor}
           alt="Золоторудный комбинат Кумтор"
-          className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
+          className="absolute inset-0 z-0 h-full w-full object-cover opacity-0 will-change-transform"
           style={{ transformOrigin: "50% 60%" }}
         />
-        <img
-          ref={crustRef}
-          src={earthCrust}
-          alt="Земная кора в разрезе"
-          className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
-          style={{ transformOrigin: "50% 50%" }}
-        />
-        <img
-          ref={magmaRef}
-          src={magma}
-          alt="Плавящаяся магма"
-          className="absolute inset-0 h-full w-full object-cover opacity-0 will-change-transform"
-          style={{ transformOrigin: "50% 60%" }}
-        />
-
-        {/* Underground dark smoke layers (over crust → warms to gold) */}
         <div
-          ref={undergroundSmokeBackRef}
-          className="pointer-events-none absolute inset-0 z-[9] opacity-0"
+          ref={sunsetBgRef}
+          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[opacity]"
           style={{
-            willChange: "transform, opacity, background-color",
-            backgroundColor: "rgba(20, 16, 14, 0.5)",
-            filter: "blur(80px)",
-            WebkitMaskImage: "radial-gradient(ellipse 90% 80% at 50% 60%, black 40%, transparent 100%)",
-            maskImage: "radial-gradient(ellipse 90% 80% at 50% 60%, black 40%, transparent 100%)",
-          }}
-        />
-        <div
-          ref={undergroundSmokeMidRef}
-          className="pointer-events-none absolute inset-0 z-[10] opacity-0"
-          style={{
-            willChange: "transform, opacity, background-color",
-            backgroundColor: "rgba(30, 22, 18, 0.45)",
-            filter: "blur(110px)",
-            WebkitMaskImage: "radial-gradient(ellipse 100% 90% at 50% 50%, black 30%, transparent 100%)",
-            maskImage: "radial-gradient(ellipse 100% 90% at 50% 50%, black 30%, transparent 100%)",
-          }}
-        />
-        <div
-          ref={undergroundSmokeFrontRef}
-          className="pointer-events-none absolute inset-0 z-[11] opacity-0"
-          style={{
-            willChange: "transform, opacity, background-color",
-            backgroundColor: "rgba(40, 28, 20, 0.5)",
-            filter: "blur(90px)",
-            WebkitMaskImage: "radial-gradient(ellipse 80% 70% at 50% 40%, black 25%, transparent 100%)",
-            maskImage: "radial-gradient(ellipse 80% 70% at 50% 40%, black 25%, transparent 100%)",
-          }}
-        />
-
-        {/* Hot smoke veils over magma */}
-        <div
-          ref={magmaSmokeBackRef}
-          className="pointer-events-none absolute inset-0 z-[12] opacity-0"
-          style={{
-            willChange: "transform, opacity",
             background:
-              "radial-gradient(ellipse 90% 70% at 50% 30%, rgba(255, 160, 70, 0.35) 0%, rgba(200, 80, 30, 0.18) 45%, transparent 80%)",
-            filter: "blur(60px)",
-            mixBlendMode: "screen",
+              "linear-gradient(175deg, #120804 0%, #4a2008 14%, #8a4010 32%, #c46828 52%, #e89840 68%, #f5c070 82%, #ffe8b8 96%)",
           }}
         />
         <div
-          ref={magmaSmokeFrontRef}
-          className="pointer-events-none absolute inset-0 z-[13] opacity-0"
+          ref={twilightBgRef}
+          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[opacity]"
           style={{
-            willChange: "transform, opacity",
             background:
-              "radial-gradient(ellipse 70% 50% at 50% 70%, rgba(255, 90, 30, 0.3) 0%, rgba(120, 40, 15, 0.15) 50%, transparent 85%)",
-            filter: "blur(80px)",
-            mixBlendMode: "screen",
+              "linear-gradient(180deg, #080c18 0%, #101830 18%, #1a2848 38%, #304870 58%, #5078a0 75%, #88a8c8 90%, #b8cce0 100%)",
+          }}
+        />
+        <div
+          ref={midnightBgRef}
+          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[opacity,transform]"
+          style={{
+            transformOrigin: "50% 50%",
+            background:
+              "linear-gradient(180deg, #06080c 0%, #0c1018 30%, #121820 55%, #181e28 78%, #1e2430 100%)",
           }}
         />
 
-        {/* Ambient fog over mountains — soft gradient, no hard edges */}
+        {/* === SCENE COLLAGES & BACKDROPS (z-[2]) === */}
+        <div
+          ref={directionsCollageRef}
+          className="pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
+          style={{ transformOrigin: "50% 55%", isolation: "isolate" }}
+        >
+          <div className="absolute inset-0 flex">
+            <div
+              className="relative h-full flex-1 overflow-hidden"
+              style={{
+                background:
+                  "linear-gradient(160deg, #1a2840 0%, #2a5070 35%, #3a7090 62%, #5a98b0 100%)",
+                WebkitMaskImage: "linear-gradient(90deg, black 72%, transparent 100%)",
+                maskImage: "linear-gradient(90deg, black 72%, transparent 100%)",
+              }}
+            >
+              <div
+                className="absolute inset-0 opacity-80"
+                style={{
+                  background:
+                    "repeating-linear-gradient(90deg, transparent 0px, transparent 18px, rgba(255,255,255,0.06) 18px, rgba(255,255,255,0.06) 20px)",
+                }}
+              />
+              <div className="absolute bottom-[18%] left-[12%] h-[42%] w-[8%] rounded-sm bg-gradient-to-t from-white/35 via-white/15 to-transparent blur-[1px]" />
+              <div className="absolute bottom-[22%] left-[22%] h-[38%] w-[6%] rounded-sm bg-gradient-to-t from-white/28 via-white/12 to-transparent blur-[1px]" />
+              <div className="absolute bottom-[16%] left-[32%] h-[48%] w-[7%] rounded-sm bg-gradient-to-t from-white/38 via-white/16 to-transparent blur-[1px]" />
+              <span className="absolute bottom-6 left-6 font-display text-[9px] font-semibold uppercase tracking-[0.22em] text-white/50 mix-blend-screen">
+                ГЭС
+              </span>
+            </div>
+            <div
+              className="relative h-full flex-1 overflow-hidden"
+              style={{
+                background:
+                  "linear-gradient(200deg, #2a1808 0%, #5a3818 28%, #8a5828 52%, #b87838 75%, #d89848 100%)",
+                WebkitMaskImage: "linear-gradient(270deg, black 72%, transparent 100%)",
+                maskImage: "linear-gradient(270deg, black 72%, transparent 100%)",
+              }}
+            >
+              <div className="absolute bottom-[20%] left-[8%] h-[28%] w-[55%] rounded-t-sm bg-gradient-to-t from-white/22 via-white/10 to-transparent" />
+              <div className="absolute bottom-[20%] right-[10%] h-[22%] w-[35%] rounded-t-sm bg-gradient-to-t from-white/18 via-white/8 to-transparent" />
+              <div className="absolute bottom-[48%] left-[20%] h-[3%] w-[60%] rounded-full bg-white/18 blur-[2px]" />
+              <span className="absolute bottom-6 right-6 font-display text-[9px] font-semibold uppercase tracking-[0.22em] text-white/50 mix-blend-screen">
+                Промышленность
+              </span>
+            </div>
+          </div>
+          {/* In-collage golden hour bleed — saturates panels from within */}
+          <div
+            className="pointer-events-none absolute inset-0 mix-blend-multiply"
+            style={{
+              background:
+                "radial-gradient(ellipse 130% 90% at 50% 85%, rgba(255,120,20,0.85) 0%, rgba(220,80,15,0.55) 35%, rgba(160,50,10,0.25) 60%, transparent 85%)",
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 mix-blend-color-burn"
+            style={{
+              background:
+                "linear-gradient(175deg, rgba(180,60,8,0.55) 0%, rgba(255,140,30,0.35) 45%, rgba(255,200,80,0.2) 75%, transparent 100%)",
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 mix-blend-screen"
+            style={{
+              background:
+                "radial-gradient(ellipse 100% 55% at 50% 70%, rgba(255,210,120,0.65) 0%, rgba(255,170,60,0.35) 40%, transparent 75%)",
+            }}
+          />
+          <div
+            className="absolute inset-y-0 left-1/2 z-10 w-[22%] -translate-x-1/2 mix-blend-screen"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent 0%, rgba(255,180,60,0.45) 40%, rgba(255,220,140,0.65) 50%, rgba(255,180,60,0.45) 60%, transparent 100%)",
+              filter: "blur(32px)",
+            }}
+          />
+        </div>
+
+        <div
+          ref={msbCollageRef}
+          className="pointer-events-none absolute inset-0 z-[2] opacity-0"
+          style={{ isolation: "isolate" }}
+        >
+          <div className="absolute inset-x-0 bottom-0 flex items-end justify-center gap-2 px-[5%] pb-[10%] md:gap-4 md:px-[9%] md:pb-[12%]">
+            <div
+              ref={msbCollageLeftRef}
+              className="relative h-[48vh] w-[44%] max-w-md overflow-hidden will-change-transform md:h-[52vh]"
+              style={{
+                transformOrigin: "50% 100%",
+                background:
+                  "linear-gradient(175deg, #182840 0%, #284868 38%, #386890 68%, #4888b0 100%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 95% 92% at 55% 58%, black 35%, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0.4) 75%, transparent 100%)",
+                maskImage:
+                  "radial-gradient(ellipse 95% 92% at 55% 58%, black 35%, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0.4) 75%, transparent 100%)",
+              }}
+            >
+              <div
+                className="absolute inset-0 mix-blend-soft-light"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 80% 60% at 40% 70%, rgba(120,160,220,0.35) 0%, transparent 70%)",
+                }}
+              />
+              <div className="absolute left-[15%] top-[20%] h-[35%] w-[70%] rounded-md border border-white/8 bg-white/[0.05]" />
+              <div className="absolute bottom-[18%] left-[12%] right-[12%] h-[2px] bg-white/12" />
+              <span className="absolute bottom-4 left-4 font-display text-[8px] font-semibold uppercase tracking-[0.2em] text-white/50 md:text-[9px]">
+                Ремесло
+              </span>
+            </div>
+            <div
+              ref={msbCollageRightRef}
+              className="relative h-[48vh] w-[44%] max-w-md overflow-hidden will-change-transform md:h-[52vh]"
+              style={{
+                transformOrigin: "50% 100%",
+                background:
+                  "linear-gradient(185deg, #142038 0%, #243858 32%, #345880 62%, #4478a0 100%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 95% 92% at 45% 58%, black 35%, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0.4) 75%, transparent 100%)",
+                maskImage:
+                  "radial-gradient(ellipse 95% 92% at 45% 58%, black 35%, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0.4) 75%, transparent 100%)",
+              }}
+            >
+              <div
+                className="absolute inset-0 mix-blend-soft-light"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 80% 60% at 60% 65%, rgba(180,120,160,0.28) 0%, transparent 70%)",
+                }}
+              />
+              <div className="absolute left-[18%] top-[28%] h-[28%] w-[55%] rounded-full border border-white/8 bg-white/[0.04]" />
+              <div className="absolute bottom-[22%] left-[20%] h-[18%] w-[60%] rounded-sm bg-white/[0.06]" />
+              <span className="absolute bottom-4 right-4 font-display text-[8px] font-semibold uppercase tracking-[0.2em] text-white/50 md:text-[9px]">
+                Сервис
+              </span>
+            </div>
+          </div>
+          {/* Per-panel dusk absorption — rose + blue wash as panels converge */}
+          <div
+            className="pointer-events-none absolute inset-0 mix-blend-multiply"
+            style={{
+              background:
+                "radial-gradient(ellipse 110% 80% at 50% 75%, rgba(40,60,120,0.55) 0%, rgba(30,45,95,0.35) 45%, transparent 80%)",
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 mix-blend-screen"
+            style={{
+              background:
+                "radial-gradient(ellipse 90% 55% at 50% 60%, rgba(255,160,130,0.28) 0%, rgba(200,120,160,0.15) 50%, transparent 80%)",
+            }}
+          />
+        </div>
+
+        <div
+          ref={handshakeBgRef}
+          className="pointer-events-none absolute inset-0 z-[1] opacity-0 will-change-[transform,opacity]"
+          style={{
+            transformOrigin: "50% 60%",
+            background:
+              "radial-gradient(ellipse 95% 75% at 50% 62%, rgba(18,22,32,0.85) 0%, rgba(8,10,16,0.95) 55%, #06080c 100%)",
+          }}
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 500'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff' stop-opacity='0.08'/%3E%3Cstop offset='50%25' stop-color='%23ffffff' stop-opacity='0.38'/%3E%3Cstop offset='100%25' stop-color='%23ffffff' stop-opacity='0.06'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M120 340c40-80 100-140 180-160 30-8 60-6 85 8 25-30 65-50 110-48 70 3 130 55 155 130 10 30 8 65-5 95-25 55-80 90-140 95H200c-55-5-95-45-80-120z'/%3E%3Cpath fill='%23ffffff' fill-opacity='0.22' d='M280 260c15-25 45-40 75-38 20 1 38 10 50 25 18-15 42-22 68-18 45 6 82 42 95 88 8 30 4 62-10 88-20 38-58 62-100 65H310c-35-2-65-28-70-70 20 5 42 0 58-15 12-12 18-28 16-45-18 8-40 8-58-2-15-9-24-24-26-40z'/%3E%3C/svg%3E")`,
+              backgroundSize: "cover",
+              backgroundPosition: "center 55%",
+              backgroundRepeat: "no-repeat",
+              filter: "contrast(1.08) brightness(0.78) saturate(0.85)",
+            }}
+          />
+          <div
+            ref={handshakeRimRef}
+            className="pointer-events-none absolute inset-0 opacity-0 will-change-[opacity]"
+            style={{
+              background:
+                "radial-gradient(ellipse 45% 28% at 50% 56%, rgba(255,220,160,0.55) 0%, rgba(255,180,100,0.22) 35%, transparent 70%)",
+              mixBlendMode: "screen",
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 45% at 50% 58%, rgba(255,255,255,0.04) 0%, transparent 65%), linear-gradient(180deg, rgba(6,8,12,0.15) 0%, rgba(6,8,12,0.55) 100%)",
+            }}
+          />
+        </div>
+
+        <div
+          ref={partnerFlareRef}
+          className="pointer-events-none absolute inset-0 z-[15] opacity-0 will-change-[transform,opacity]"
+          style={{ transformOrigin: "50% 58%", mixBlendMode: "screen" }}
+        >
+          <div
+            className="absolute left-1/2 top-[54%] h-[38vh] w-[70vw] -translate-x-1/2 -translate-y-1/2"
+            style={{
+              background:
+                "radial-gradient(ellipse 55% 35% at 50% 50%, rgba(255,210,140,0.55) 0%, rgba(255,170,80,0.22) 40%, transparent 75%)",
+              filter: "blur(28px)",
+            }}
+          />
+          <div
+            className="absolute left-1/2 top-[54%] h-[3px] w-[62vw] -translate-x-1/2 -translate-y-1/2 rotate-[-6deg]"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent 0%, rgba(255,200,120,0) 8%, rgba(255,230,180,0.95) 46%, rgba(255,245,210,1) 50%, rgba(255,230,180,0.95) 54%, rgba(255,200,120,0) 92%, transparent 100%)",
+              filter: "blur(2px)",
+              boxShadow: "0 0 40px 8px rgba(255,190,100,0.35)",
+            }}
+          />
+          <div
+            className="absolute left-1/2 top-[54%] h-[22vh] w-[22vh] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(255,240,200,0.75) 0%, rgba(255,200,120,0.35) 30%, rgba(255,160,60,0.08) 55%, transparent 75%)",
+              filter: "blur(18px)",
+            }}
+          />
+        </div>
+
+        {/* === OVERLAY TINT LAYERS (z-10) — dual blend stacks === */}
+        <div
+          ref={noonTintRef}
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,248,220,0.35) 0%, rgba(255,235,180,0.18) 40%, rgba(200,210,230,0.08) 100%)",
+          }}
+        />
+        <div
+          ref={amberBurnRef}
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          style={{
+            mixBlendMode: "multiply",
+            background:
+              "radial-gradient(ellipse 140% 95% at 50% 78%, rgba(255,100,10,0.95) 0%, rgba(220,60,5,0.75) 30%, rgba(160,35,0,0.45) 55%, rgba(80,20,0,0.15) 75%, transparent 92%)",
+          }}
+        />
+        <div
+          ref={amberGlowRef}
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          style={{
+            mixBlendMode: "screen",
+            background:
+              "radial-gradient(ellipse 120% 70% at 50% 72%, rgba(255,220,140,0.85) 0%, rgba(255,180,70,0.5) 35%, rgba(255,140,40,0.2) 60%, transparent 85%), linear-gradient(0deg, rgba(255,160,50,0.35) 0%, transparent 45%)",
+          }}
+        />
+        <div
+          ref={twilightBlueRef}
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          style={{
+            mixBlendMode: "multiply",
+            background:
+              "radial-gradient(ellipse 130% 90% at 50% 55%, rgba(25,45,110,0.85) 0%, rgba(35,55,130,0.6) 35%, rgba(45,70,150,0.35) 60%, transparent 88%), linear-gradient(180deg, rgba(15,25,60,0.4) 0%, rgba(40,70,140,0.25) 50%, rgba(80,110,170,0.12) 100%)",
+          }}
+        />
+        <div
+          ref={twilightRoseRef}
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[opacity]"
+          style={{
+            mixBlendMode: "screen",
+            background:
+              "radial-gradient(ellipse 100% 65% at 50% 68%, rgba(255,150,120,0.45) 0%, rgba(220,120,140,0.28) 40%, rgba(180,100,160,0.12) 65%, transparent 85%)",
+          }}
+        />
+        <div
+          ref={msbHazeRef}
+          className="pointer-events-none absolute inset-0 z-[4] opacity-0 will-change-[opacity]"
+          style={{
+            background:
+              "radial-gradient(ellipse 120% 85% at 50% 70%, rgba(60,80,140,0.45) 0%, rgba(40,55,110,0.32) 40%, rgba(25,35,80,0.18) 65%, transparent 90%)",
+            filter: "blur(48px)",
+          }}
+        />
+
+        {/* === ATMOSPHERE LAYER (z-20) — cinematic scene-cut wipes === */}
+        {(() => {
+          const goldenEdge =
+            "radial-gradient(ellipse 90% 55% at 50% 100%, rgba(255,190,80,0.65) 0%, rgba(240,140,40,0.45) 30%, rgba(200,90,25,0.2) 55%, transparent 80%)";
+          const goldenGlow =
+            "radial-gradient(ellipse 85% 50% at 45% 95%, rgba(255,210,120,0.55) 0%, rgba(230,150,50,0.35) 40%, transparent 75%)";
+          const goldenHaze =
+            "radial-gradient(ellipse 100% 60% at 55% 90%, rgba(255,175,70,0.5) 0%, rgba(210,110,35,0.28) 45%, transparent 80%)";
+          const twilightHaze =
+            "radial-gradient(ellipse 95% 55% at 50% 50%, rgba(100,130,190,0.4) 0%, rgba(70,95,160,0.28) 40%, transparent 75%)";
+          const twilightVeil =
+            "radial-gradient(ellipse 90% 50% at 40% 55%, rgba(120,150,210,0.35) 0%, rgba(80,110,175,0.22) 45%, transparent 80%)";
+          const twilightMist =
+            "radial-gradient(ellipse 100% 55% at 60% 45%, rgba(90,120,180,0.32) 0%, rgba(60,85,145,0.18) 50%, transparent 85%)";
+          const layerBase = "pointer-events-none absolute left-1/2 top-1/2 -ml-[100vw] -mt-[100vh] w-[200vw] h-[200vh] rounded-full opacity-0 blur-[120px]";
+          const styleWithWillChange = { willChange: "transform, opacity", maskImage: "radial-gradient(ellipse 90% 90% at center, white 55%, transparent 100%)" };
+          return (
+            <>
+              <div ref={sunsetAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenEdge }} />
+              <div ref={sunsetAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenGlow }} />
+              <div ref={sunsetAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenHaze }} />
+              <div ref={twilightAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightHaze }} />
+              <div ref={twilightAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightVeil }} />
+              <div ref={twilightAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightMist }} />
+            </>
+          );
+        })()}
+
         <div
           ref={ambientFogRef}
           className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full opacity-0"
@@ -615,24 +1119,9 @@ export function Scrollytelling() {
           }}
         />
 
-
-        {/* BRAND TITLE */}
-        <div
-          ref={brandRef}
-          className="pointer-events-none absolute left-1/2 top-[42%] z-[60] -translate-x-1/2 -translate-y-1/2 will-change-transform hidden md:block"
-          style={{ transformOrigin: "50% 50%" }}
-        >
-          <h1 className="text-center font-display text-[clamp(1.4rem,3.4vw,2.8rem)] font-bold leading-[1.15] tracking-[0.08em] text-white drop-shadow-[0_8px_32px_rgba(20,40,90,0.55)]">
-            НАЦИОНАЛЬНЫЙ<br />
-            ИНВЕСТИЦИОННЫЙ ФОНД<br />
-            КЫРГЫЗСКОЙ РЕСПУБЛИКИ
-          </h1>
-        </div>
-
-        {/* Stats (Scene 1) */}
         <div
           ref={statsRef}
-          className="pointer-events-none absolute inset-x-0 top-[52%] z-20 px-6 opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-20 -translate-y-1/2 px-6 opacity-0 will-change-transform"
         >
           <div className="relative mx-auto max-w-3xl text-center">
             <div
@@ -649,7 +1138,7 @@ export function Scrollytelling() {
             <div className="mt-6 inline-flex items-stretch gap-10 rounded-3xl border border-white/30 bg-white/10 px-8 py-6 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)]">
               <div className="text-center">
                 <div className="font-display text-5xl font-semibold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] md:text-6xl">
-                  <CountUp to={200} progress={countProgress} suffix="+" />
+                  <span ref={count200Ref}>0+</span>
                 </div>
                 <div className="mt-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/85">
                   Проектов в реализации
@@ -658,7 +1147,7 @@ export function Scrollytelling() {
               <div className="w-px bg-white/25" />
               <div className="text-center">
                 <div className="font-display text-5xl font-semibold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] md:text-6xl">
-                  <CountUp to={8000} progress={countProgress} />
+                  <span ref={count8000Ref}>0</span>
                 </div>
                 <div className="mt-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/85">
                   Завершённых проектов
@@ -668,10 +1157,27 @@ export function Scrollytelling() {
           </div>
         </div>
 
-        {/* === TEXT SCENES (z-[30]) === */}
+        {/* === CONTENT LAYER (z-30) === */}
+        <div
+          ref={decreeRef}
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-[25] -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+        >
+          <p className="font-display text-base text-[color:var(--primary)]/85 md:text-lg">
+            Фонд учрежден постановлением
+          </p>
+          <h2 className="mt-2 font-display text-2xl font-bold leading-snug text-[color:var(--primary)] md:text-4xl">
+            Кабинета Министров Кыргызской Республики
+          </h2>
+          <p className="mx-auto mt-5 max-w-3xl text-xs leading-relaxed text-[color:var(--ink)]/75 md:text-sm">
+            от 5 ноября 2024 года № 666 во исполнение Закона Кыргызской Республики
+            «О Национальном инвестиционном фонде Кыргызской Республики» и Указа
+            Президента Кыргызской Республики № 155 от 14 июня 2024 года.
+          </p>
+        </div>
+
         <div
           ref={aboutRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-[30] -translate-y-1/2 px-6 text-center opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
         >
           <h2 className="font-display text-4xl font-bold tracking-[0.2em] text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.8)] md:text-6xl">
             О ФОНДЕ
@@ -684,7 +1190,7 @@ export function Scrollytelling() {
 
         <div
           ref={financeRef}
-          className="pointer-events-none absolute inset-x-0 top-[40%] z-[30] px-6 text-center opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
         >
           <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.7)] md:text-6xl">
             ФИНАНСИРОВАНИЕ ПРОЕКТОВ
@@ -693,46 +1199,115 @@ export function Scrollytelling() {
 
         <div
           ref={directionsRef}
-          className="pointer-events-none absolute inset-x-0 top-[38%] z-[30] px-6 text-center opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.16em] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)] md:text-6xl">
+          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_6px_36px_rgba(180,80,20,0.75)] md:text-6xl">
             ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)] md:text-base">
-            Инвестиции в недра — золото, медь, редкоземельные металлы и стратегические ресурсы Кыргызстана.
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_14px_rgba(80,30,5,0.6)] md:text-base">
+            Стратегические отрасли, где капитал фонда раскрывает потенциал экономики в золотом свете заката.
           </p>
         </div>
 
         <div
           ref={msbRef}
-          className="pointer-events-none absolute inset-x-0 top-[38%] z-[30] px-6 text-center opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.16em] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.8)] md:text-6xl">
+          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_6px_32px_rgba(40,60,120,0.7)] md:text-6xl">
             ПРОЕКТЫ МСБ
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)] md:text-base">
-            Поддержка малого и среднего бизнеса — золотые пласты экономики страны, где рождаются новые отрасли.
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/88 drop-shadow-[0_2px_12px_rgba(20,30,60,0.65)] md:text-base">
+            Поддержка малого и среднего бизнеса в мягком сумеречном свете — там, где идеи превращаются в устойчивый рост.
           </p>
         </div>
 
         <div
           ref={partnersRef}
-          className="pointer-events-none absolute inset-x-0 top-[40%] z-[30] px-6 text-center opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center"
         >
-          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_8px_40px_rgba(255,90,30,0.6)] md:text-6xl">
-            ПАРТНЁРЫ
-          </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] md:text-base">
-            Глубоко под поверхностью — энергия, что движет будущее. Вместе с партнёрами фонд превращает её в реальные проекты.
-          </p>
+          <div
+            ref={partnersTextRef}
+            className="opacity-0 will-change-transform"
+          >
+            <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] md:text-6xl">
+              ПАРТНЁРЫ
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/75 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] md:text-base">
+              Как огни города в полночь — партнёры фонда зажигают новые точки роста по всей республике.
+            </p>
+          </div>
+          <div ref={partnerLogosRef} className="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-6 md:gap-10">
+            {["EBRD", "IFC", "ADB", "AIIB", "KfW"].map((name) => (
+              <div
+                key={name}
+                data-partner-logo
+                className="flex h-12 w-24 items-center justify-center rounded-lg border border-white/15 bg-white/[0.06] px-3 backdrop-blur-sm will-change-[transform,opacity] md:h-14 md:w-28"
+              >
+                <span className="font-display text-[10px] font-semibold tracking-[0.18em] text-white/70 md:text-xs">
+                  {name}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* hidden decree placeholder */}
-        <div ref={decreeRef} className="hidden" />
+        {/* === CINEMATIC SLIDES — News & Contacts titles (midnight atmosphere) === */}
+        <div
+          ref={newsTitleRef}
+          id="novosti"
+          aria-label="Новости"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+        >
+          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] md:text-6xl">
+            НОВОСТИ
+          </h2>
+        </div>
+        <div
+          ref={newsContentRef}
+          data-lovable-slot="news-content"
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-[58%] z-30 mx-auto max-w-5xl px-6 font-display opacity-0 invisible"
+        >
+          <div className="grid gap-5 md:grid-cols-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-48 rounded-2xl border border-transparent" />
+            ))}
+          </div>
+        </div>
 
-        {/* ============ CLOUD WIPE LAYERS — pure CSS gradients (no hard edges) ============ */}
+        <div
+          ref={contactsTitleRef}
+          id="kontakty"
+          aria-label="Контакты"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center opacity-0 will-change-transform"
+        >
+          <h2 className="font-display text-4xl font-bold tracking-[0.18em] text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] md:text-6xl">
+            КОНТАКТЫ
+          </h2>
+        </div>
+        <div
+          ref={contactsContentRef}
+          data-lovable-slot="contacts-content"
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-[58%] z-30 mx-auto max-w-3xl px-6 font-display opacity-0 invisible"
+        >
+          <div className="grid gap-6 md:grid-cols-2">
+            {[0, 1].map((i) => (
+              <div key={i} className="h-40 rounded-2xl border border-transparent" />
+            ))}
+          </div>
+        </div>
+
+        {/* === FOOTER SLIDE — full-viewport black finale (Lovable slot) === */}
+        <div
+          ref={footerContentZoneRef}
+          id="footer-content-zone"
+          data-lovable-slot="footer-content"
+          aria-label="Footer content zone"
+          className="pointer-events-none absolute inset-0 z-[35] bg-black opacity-0 will-change-[opacity]"
+        />
+
         {(() => {
-          // Three tinted translucent cloud layers — never fully opaque so the scene behind shows through
           const cloudWhite =
             "radial-gradient(ellipse 85% 65% at 50% 55%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.38) 35%, rgba(255,255,255,0.12) 65%, rgba(255,255,255,0) 100%)";
           const cloudBlue =
@@ -743,76 +1318,27 @@ export function Scrollytelling() {
           const styleWithWillChange = { willChange: "transform, opacity", maskImage: "radial-gradient(ellipse 90% 90% at center, white 55%, transparent 100%)" };
           return (
             <>
-              {/* WIPE 1 — Mountains → About */}
               <div ref={wipe1HazeRef} className="hidden" />
               <div ref={wipe1BackRef} className={`${layerBase} z-[36]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
               <div ref={wipe1MidRef} className={`${layerBase} z-[37]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
               <div ref={wipe1FrontRef} className={`${layerBase} z-[38]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
 
-              {/* WIPE 2 — About → Kumtor */}
-              <div ref={wipe2HazeRef} className="hidden" />
+              <div
+                ref={wipe2HazeRef}
+                className="pointer-events-none absolute inset-0 z-[40] opacity-0"
+                style={{
+                  willChange: "opacity",
+                  background:
+                    "linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(245,250,255,0.45) 50%, rgba(235,242,250,0.35) 100%)",
+                }}
+              />
               <div ref={wipe2BackRef} className={`${layerBase} z-[41]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
               <div ref={wipe2MidRef} className={`${layerBase} z-[42]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
               <div ref={wipe2FrontRef} className={`${layerBase} z-[43]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
-
-              {/* WIPE 3 — Kumtor → Earth Depths: realistic cumulus strips converge then fly up */}
-              <div ref={wipe3HazeRef} className="hidden" />
-              {/* TOP cumulus strip — flipped so puffy edge faces down, edges fade to transparent */}
-              <div
-                ref={wipe3BackRef}
-                className="pointer-events-none absolute left-[-10%] top-[-15%] z-[46] h-[85vh] w-[120vw] opacity-0"
-                style={{
-                  willChange: "transform, opacity",
-                  backgroundImage: `url(${cumulus})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center top",
-                  backgroundRepeat: "no-repeat",
-                  WebkitMaskImage:
-                    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 22%, rgba(0,0,0,0.85) 70%, transparent 100%)",
-                  maskImage:
-                    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 22%, rgba(0,0,0,0.85) 70%, transparent 100%)",
-                  filter: "blur(2px) drop-shadow(0 20px 40px rgba(40,55,80,0.2))",
-                }}
-              />
-              {/* BOTTOM cumulus strip — edges fade to transparent */}
-              <div
-                ref={wipe3MidRef}
-                className="pointer-events-none absolute left-[-10%] bottom-[-15%] z-[47] h-[90vh] w-[120vw] opacity-0"
-                style={{
-                  willChange: "transform, opacity",
-                  backgroundImage: `url(${cumulus})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center top",
-                  backgroundRepeat: "no-repeat",
-                  WebkitMaskImage:
-                    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 25%, rgba(0,0,0,0.85) 72%, transparent 100%)",
-                  maskImage:
-                    "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 25%, rgba(0,0,0,0.85) 72%, transparent 100%)",
-                  filter: "blur(2px) drop-shadow(0 -20px 40px rgba(40,55,80,0.2))",
-                }}
-              />
-              {/* CENTER soft veil — radial mask, fully translucent */}
-              <div
-                ref={wipe3FrontRef}
-                className="pointer-events-none absolute left-[-15%] top-[5%] z-[48] h-[95vh] w-[130vw] opacity-0"
-                style={{
-                  willChange: "transform, opacity",
-                  backgroundImage: `url(${cumulus})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center center",
-                  backgroundRepeat: "no-repeat",
-                  WebkitMaskImage:
-                    "radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 55%, transparent 100%)",
-                  maskImage:
-                    "radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 55%, transparent 100%)",
-                  filter: "blur(3px)",
-                }}
-              />
-
-
             </>
           );
         })()}
+      </div>
       </div>
     </div>
   );
