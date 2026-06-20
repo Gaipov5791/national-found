@@ -1,26 +1,25 @@
-import { useCallback, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import Lenis from "lenis";
-import { Menu, X } from "lucide-react";
-import fundLogo from "@/assets/fund-logo.png.asset.json";
+import { Navbar } from "@/components/global/Navbar";
+import { AboutSection } from "@/components/sections/AboutSection";
+import { CountersSection } from "@/components/sections/CountersSection";
+import { DecreeSection } from "@/components/sections/DecreeSection";
+import { DirectionsSection } from "@/components/sections/DirectionsSection";
+import { FinanceSection } from "@/components/sections/FinanceSection";
+import { FooterSection } from "@/components/sections/FooterSection";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { MsbSection } from "@/components/sections/MsbSection";
+import { SpaceTrilogyContainer } from "@/components/sections/SpaceTrilogyContainer";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
 
 const SCROLL_DISTANCE_DESKTOP = 14500;
 const SCROLL_DISTANCE_TABLET = 11500;
 const SCROLL_DISTANCE_MOBILE = 9000;
-
-const SCENE_IMAGES = {
-  hero: "/images/mountains.jpg",
-  footer: "/images/mountains.jpg",
-  finance: "/images/kumtor-optimized.jpg",
-  directions: "/images/hpp-sunset.webp",
-  msb: "/images/issykkul-resort.webp",
-  space: "/images/kyrgyzstan-space.webp",
-  cyber: "/images/cyber-electricity.webp",
-} as const;
 
 const NAV_ITEMS = [
   "ГЛАВНАЯ",
@@ -157,54 +156,22 @@ function computeTimelineMarkers() {
   };
 }
 
-const NAV_SECTION_TIMELINE_PROGRESS: Record<NavItem, (m: ReturnType<typeof computeTimelineMarkers>) => number> = {
-  ГЛАВНАЯ: () => 0,
-  "О ФОНДЕ": (m) => (m.aboutEnterT + m.enterDur * 0.35) / m.totalDuration,
-  "ФИНАНСИРОВАНИЕ ПРОЕКТОВ": (m) => (m.financeEnterT + m.enterDur * 0.35) / m.totalDuration,
-  "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ": (m) => (m.directionsEnterT + m.enterDur * 0.35) / m.totalDuration,
-  "ПРОЕКТЫ МСБ": (m) => (m.msbEnterT + m.enterDur * 0.35) / m.totalDuration,
-  ПАРТНЁРЫ: (m) => (m.partnersEnterT + m.enterDur * 0.35) / m.totalDuration,
-  НОВОСТИ: (m) => (m.newsEnterT + m.enterDur * 0.35) / m.totalDuration,
-  КОНТАКТЫ: (m) => (m.contactsEnterT + m.enterDur * 0.35) / m.totalDuration,
+const NAV_SCENE_LABELS: Record<NavItem, string> = {
+  ГЛАВНАЯ: "sc_hero",
+  "О ФОНДЕ": "sc_about",
+  "ФИНАНСИРОВАНИЕ ПРОЕКТОВ": "sc_finance",
+  "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ": "sc_directions",
+  "ПРОЕКТЫ МСБ": "sc_msb",
+  ПАРТНЁРЫ: "sc_partners",
+  НОВОСТИ: "sc_news",
+  КОНТАКТЫ: "sc_contacts",
 };
 
 const NAV_SCROLL_NAV_BUFFER = 8;
-
-function resolveNavScrollTarget(
-  label: NavItem,
-  scrollTrigger: ScrollTrigger,
-  navbarHeight: number
-): number {
-  const markers = computeTimelineMarkers();
-  const progress = NAV_SECTION_TIMELINE_PROGRESS[label](markers);
-  const range = scrollTrigger.end - scrollTrigger.start;
-  const navBuffer = navbarHeight + NAV_SCROLL_NAV_BUFFER;
-  const target = scrollTrigger.start + range * progress - navBuffer;
-  return Math.max(scrollTrigger.start, Math.min(scrollTrigger.end, Math.round(target)));
-}
-
-function getScrollDistanceForViewport(width = typeof window !== "undefined" ? window.innerWidth : 1280) {
-  if (width >= 1024) return SCROLL_DISTANCE_DESKTOP;
-  if (width >= 768) return SCROLL_DISTANCE_TABLET;
-  return SCROLL_DISTANCE_MOBILE;
-}
-
-function getNavScrollDestinations(scrollDistance: number) {
-  const markers = computeTimelineMarkers();
-  return NAV_ITEMS.reduce(
-    (acc, label) => {
-      acc[label] = Math.round(NAV_SECTION_TIMELINE_PROGRESS[label](markers) * scrollDistance);
-      return acc;
-    },
-    {} as Record<NavItem, number>
-  );
-}
-
 const NAV_SCROLL_EASE = gsap.parseEase("power3.inOut");
 
 export function Scrollytelling() {
   const [lang, setLang] = useState("RU");
-  const [navOpen, setNavOpen] = useState(false);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollTrackRef = useRef<HTMLDivElement>(null);
@@ -276,19 +243,27 @@ export function Scrollytelling() {
   const contactsContentRef = useRef<HTMLDivElement>(null);
   const footerContentZoneRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
-  const masterScrollTriggerRef = useRef<ScrollTrigger | null>(null);
-  const navHeaderRef = useRef<HTMLElement>(null);
+  const masterTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const navHeaderRef = useRef<HTMLDivElement>(null);
 
   const scrollToSection = useCallback((label: NavItem) => {
     const mobile = window.innerWidth < 768;
     const duration = mobile ? 1.2 : 1.6;
     ScrollTrigger.update();
 
-    const st = masterScrollTriggerRef.current;
-    const navbarHeight = navHeaderRef.current?.offsetHeight ?? (mobile ? 72 : 96);
-    const target = st
-      ? resolveNavScrollTarget(label, st, navbarHeight)
-      : getNavScrollDestinations(getScrollDistanceForViewport())[label];
+    const masterTimeline = masterTimelineRef.current;
+    const scrollTrigger = masterTimeline?.scrollTrigger;
+    const sceneLabel = NAV_SCENE_LABELS[label];
+    const navbarHeight = (navHeaderRef.current?.offsetHeight ?? 90) + NAV_SCROLL_NAV_BUFFER;
+
+    let target = 0;
+    if (scrollTrigger?.labelToScroll) {
+      const targetScrollPos = scrollTrigger.labelToScroll(sceneLabel);
+      target = Math.max(
+        scrollTrigger.start,
+        Math.min(scrollTrigger.end, Math.round(targetScrollPos - navbarHeight))
+      );
+    }
 
     if (lenisRef.current) {
       lenisRef.current.scrollTo(target, {
@@ -298,14 +273,16 @@ export function Scrollytelling() {
       return;
     }
 
-    window.scrollTo({ top: target, behavior: "smooth" });
+    gsap.to(window, {
+      scrollTo: target,
+      duration: mobile ? 1.2 : duration,
+      ease: mobile ? "power2.out" : "power3.inOut",
+    });
   }, []);
 
   const handleNavClick = useCallback(
-    (label: NavItem, e: MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      setNavOpen(false);
-      scrollToSection(label);
+    (label: string) => {
+      scrollToSection(label as NavItem);
     },
     [scrollToSection]
   );
@@ -330,26 +307,34 @@ export function Scrollytelling() {
           scrollTrackRef.current.style.height = `${scrollDistance}px`;
         }
 
-        const lenis = new Lenis({
-          duration: mobile ? 0.85 : 1.6,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-          smoothWheel: !mobile,
-          syncTouch: false,
-          touchMultiplier: mobile ? 1.15 : 1,
-          wheelMultiplier: mobile ? 0.9 : 1,
-          lerp: mobile ? 0.12 : 0.1,
-        });
-        lenisRef.current = lenis;
+        const useNativeScroll = mobile;
 
+        let lenis: Lenis | null = null;
         let rafId = 0;
         let cancelled = false;
-        const raf = (time: number) => {
-          if (cancelled) return;
-          lenis.raf(time);
+
+        if (!useNativeScroll) {
+          lenis = new Lenis({
+            duration: 1.6,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            syncTouch: false,
+            touchMultiplier: 1,
+            wheelMultiplier: 1,
+            lerp: 0.1,
+          });
+          lenisRef.current = lenis;
+
+          const raf = (time: number) => {
+            if (cancelled) return;
+            lenis!.raf(time);
+            rafId = requestAnimationFrame(raf);
+          };
           rafId = requestAnimationFrame(raf);
-        };
-        rafId = requestAnimationFrame(raf);
-        lenis.on("scroll", ScrollTrigger.update);
+          lenis.on("scroll", ScrollTrigger.update);
+        } else {
+          lenisRef.current = null;
+        }
 
       const {
         enterDur,
@@ -546,7 +531,16 @@ export function Scrollytelling() {
         },
       });
 
-      masterScrollTriggerRef.current = tl.scrollTrigger ?? ScrollTrigger.getById("master-scrolly") ?? null;
+      masterTimelineRef.current = tl;
+
+      tl.addLabel("sc_hero", 0);
+      tl.addLabel("sc_about", aboutEnterT + enterDur);
+      tl.addLabel("sc_finance", financeEnterT + enterDur);
+      tl.addLabel("sc_directions", directionsEnterT + enterDur);
+      tl.addLabel("sc_msb", msbEnterT + enterDur);
+      tl.addLabel("sc_partners", partnersEnterT + enterDur);
+      tl.addLabel("sc_news", newsEnterT + enterDur);
+      tl.addLabel("sc_contacts", contactsEnterT + enterDur);
 
       const brandDockDur = 0.08;
       tl.fromTo(
@@ -919,10 +913,12 @@ export function Scrollytelling() {
 
         return () => {
           cancelled = true;
-          cancelAnimationFrame(rafId);
-          masterScrollTriggerRef.current = null;
-          lenis.off("scroll", ScrollTrigger.update);
-          lenis.destroy();
+          if (lenis) {
+            cancelAnimationFrame(rafId);
+            lenis.off("scroll", ScrollTrigger.update);
+            lenis.destroy();
+          }
+          masterTimelineRef.current = null;
           lenisRef.current = null;
           if (cursorRing) {
             gsap.set(cursorRing, { borderColor: CURSOR_BORDER_DARK });
@@ -971,630 +967,92 @@ export function Scrollytelling() {
 
   return (
     <div ref={rootRef} className="relative overflow-hidden">
-      {/* === STABLE NAVBAR (fixed, outside pinned scene) === */}
-      <header
+      <Navbar
         ref={navHeaderRef}
-        className="fixed left-0 right-0 top-0 z-[70] px-6 pt-4 will-change-transform md:px-12 md:pt-5"
-        style={{ transform: "translate3d(0, 0, 0)" }}
-      >
-        <div
-          className="mx-auto w-full max-w-7xl will-change-transform"
-          style={{ transform: "translate3d(0, 0, 0)" }}
-        >
-          <nav
-            className="flex w-full items-center justify-between gap-3 rounded-full border border-white/40 bg-white/40 px-4 py-2.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] will-change-transform md:gap-4 md:px-6"
-            style={{ transform: "translate3d(0, 0, 0)" }}
-          >
-            <div className="flex shrink-0 items-center">
-              <img
-                src={fundLogo.url}
-                alt="НИФ КР"
-                className="block h-9 w-auto md:hidden"
-              />
-              <div className="hidden md:block h-[44px] w-[52px]" aria-hidden />
-            </div>
-
-            <ul className="hidden min-w-0 flex-1 items-center justify-center gap-x-4 text-[9.5px] font-semibold tracking-[0.14em] text-[color:var(--ink)] lg:flex xl:gap-x-6 xl:text-[10.5px] xl:tracking-[0.16em]">
-              {NAV_ITEMS.map((label) => (
-                <li key={label} className="shrink-0">
-                  <a
-                    href="#"
-                    data-cursor-hover
-                    onClick={(e) => handleNavClick(label, e)}
-                    className="inline-block whitespace-nowrap py-1.5 transition-transform duration-300 ease-out hover:scale-110 hover:text-[color:var(--gold)]"
-                  >
-                    {label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <div className="hidden shrink-0 items-center gap-2 text-[11px] font-semibold tracking-[0.16em] text-[color:var(--ink)] md:flex">
-              <span className="whitespace-nowrap">{lang}</span>
-              <div className="flex gap-1.5">
-                {LANGS.map((l) => (
-                  <button
-                    key={l}
-                    type="button"
-                    onClick={() => setLang(l)}
-                    data-cursor-hover
-                    aria-label={l}
-                    className={`h-2 w-2 rounded-full transition-all ${
-                      lang === l
-                        ? "bg-[color:var(--ink)] scale-125"
-                        : "bg-[color:var(--ink)]/30 hover:bg-[color:var(--ink)]/60"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setNavOpen((v) => !v)}
-              aria-label="Меню"
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/60 text-[color:var(--ink)] shadow-sm transition hover:bg-white lg:hidden"
-            >
-              {navOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </nav>
-
-          <div
-            className={`mt-3 w-full overflow-hidden rounded-3xl border border-white/40 bg-white/80 font-display backdrop-blur-2xl shadow-[0_20px_60px_rgba(20,40,90,0.18)] transition-all duration-500 ease-out will-change-transform lg:hidden ${
-              navOpen ? "max-h-[720px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-            }`}
-            style={{ transform: "translate3d(0, 0, 0)" }}
-          >
-          <ul className="flex flex-col divide-y divide-[color:var(--ink)]/10 px-2 py-2 text-[12px] font-semibold tracking-[0.16em] text-[color:var(--ink)]">
-            {NAV_ITEMS.map((label, i) => (
-              <li
-                key={label}
-                style={{ transitionDelay: navOpen ? `${80 + i * 45}ms` : "0ms" }}
-                className={`transform transition-all duration-500 ${
-                  navOpen ? "translate-x-0 opacity-100" : "translate-x-3 opacity-0"
-                }`}
-              >
-                <a
-                  href="#"
-                  onClick={(e) => handleNavClick(label, e)}
-                  className="flex items-center justify-between rounded-2xl px-4 py-3.5 whitespace-nowrap transition hover:bg-[color:var(--ink)]/5 hover:text-[color:var(--gold)]"
-                >
-                  <span>{label}</span>
-                  <span className="text-[color:var(--gold)] opacity-60">→</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-          <div className="flex items-center justify-between border-t border-[color:var(--ink)]/10 px-5 py-4">
-            <span className="text-[11px] font-semibold tracking-[0.22em] text-[color:var(--ink)]/70">ЯЗЫК</span>
-            <div className="flex gap-2">
-              {LANGS.map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.16em] transition ${
-                    lang === l
-                      ? "bg-[color:var(--ink)] text-white"
-                      : "bg-transparent text-[color:var(--ink)]/70 hover:bg-[color:var(--ink)]/10"
-                  }`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        </div>
-      </header>
-
-      {/* === PERMANENT BRAND HEADER (fixed below nav, isolated from blend modes) === */}
-      <div
-        ref={brandRef}
-        className="pointer-events-none fixed left-1/2 top-[5.75rem] z-[65] w-full max-w-[min(100%,920px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:top-[6rem] sm:px-6 md:top-[7rem]"
-        style={{
-          mixBlendMode: "normal",
-          isolation: "isolate",
-        }}
-      >
-        <h1
-          className="text-center font-display text-[clamp(0.5rem,2.6vw,0.68rem)] font-bold leading-[1.15] tracking-[0.06em] text-white opacity-100 sm:text-[clamp(0.62rem,1.9vw,0.88rem)] sm:tracking-[0.1em] md:text-[clamp(0.72rem,1.55vw,1.08rem)] md:leading-[1.2] md:tracking-[0.14em]"
-          style={{
-            mixBlendMode: "normal",
-            color: "#ffffff",
-            textShadow: "0 4px 24px rgba(8,16,36,0.72)",
-          }}
-        >
-          НАЦИОНАЛЬНЫЙ<br />
-          ИНВЕСТИЦИОННЫЙ ФОНД<br />
-          КЫРГЫЗСКОЙ РЕСПУБЛИКИ
-        </h1>
-      </div>
+        brandRef={brandRef}
+        navItems={NAV_ITEMS}
+        langs={LANGS}
+        lang={lang}
+        onLangChange={setLang}
+        onNavClick={handleNavClick}
+      />
 
       <div ref={scrollTrackRef} style={{ height: `${SCROLL_DISTANCE_DESKTOP}px` }}>
       <div
         ref={sceneRef}
-        className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
+        className="relative h-[100svh] md:h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
       >
-        <div ref={cloudDriftRef} className="pointer-events-none absolute inset-0 z-[5] overflow-hidden">
-          <div className="absolute left-[-10%] top-[12%] h-[28vh] w-[55vw] rounded-full bg-gradient-to-t from-white/70 via-white/40 to-transparent blur-[150px] scale-150" style={{ maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" }} />
-          <div className="absolute right-[-8%] top-[22%] h-[24vh] w-[45vw] rounded-full bg-gradient-to-t from-white/60 via-white/30 to-transparent blur-[150px] scale-150" style={{ maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" }} />
-          <div className="absolute left-[20%] top-[6%] h-[18vh] w-[35vw] rounded-full bg-gradient-to-t from-white/50 via-white/25 to-transparent blur-[150px] scale-150" style={{ maskImage: "radial-gradient(ellipse 100% 100% at center, white 60%, transparent 100%)" }} />
-        </div>
+        <HeroSection heroBgRef={heroBgRef} cloudDriftRef={cloudDriftRef} />
 
-        {/* === BACKGROUND LAYER (z-0) === */}
-        <img
-          ref={heroBgRef}
-          src={SCENE_IMAGES.hero}
-          alt="Горы"
-          className="scene-gpu-layer absolute inset-0 z-0 h-full w-full object-cover object-bottom will-change-[transform,opacity]"
-          style={{ transformOrigin: "50% 70%" }}
-        />
-        <img
-          ref={financeBgRef}
-          src={SCENE_IMAGES.finance}
-          alt="Стратегические промышленные активы"
-          className="scene-gpu-layer absolute inset-0 z-0 h-full w-full object-cover opacity-0 will-change-[transform,opacity]"
-          style={{ transformOrigin: "50% 60%" }}
-        />
-        <div
-          ref={sunsetBgRef}
-          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[transform,opacity]"
-          style={{
-            background:
-              "linear-gradient(175deg, #120804 0%, #4a2008 14%, #8a4010 32%, #c46828 52%, #e89840 68%, #f5c070 82%, #ffe8b8 96%)",
-          }}
-        />
-        <div
-          ref={twilightBgRef}
-          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[transform,opacity]"
-          style={{
-            background:
-              "linear-gradient(180deg, #080c18 0%, #101830 18%, #1a2848 38%, #304870 58%, #5078a0 75%, #88a8c8 90%, #b8cce0 100%)",
-          }}
-        />
-        <div
-          ref={midnightBgRef}
-          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[transform,opacity]"
-          style={{
-            transformOrigin: "50% 50%",
-            background:
-              "linear-gradient(180deg, #06080c 0%, #0c1018 30%, #121820 55%, #181e28 78%, #1e2430 100%)",
-          }}
+        <CountersSection statsRef={statsRef} count200Ref={count200Ref} count8000Ref={count8000Ref} />
+
+        <DecreeSection
+          decreeRef={decreeRef}
+          ambientFogRef={ambientFogRef}
+          wipe1HazeRef={wipe1HazeRef}
+          wipe1BackRef={wipe1BackRef}
+          wipe1MidRef={wipe1MidRef}
+          wipe1FrontRef={wipe1FrontRef}
         />
 
-        {/* === SCENE IMAGES (z-[2]) === */}
-        <div
-          ref={directionsCollageRef}
-          className="scene-gpu-layer pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
-          style={{ transformOrigin: "50% 55%", isolation: "isolate" }}
-        >
-          <img
-            src={SCENE_IMAGES.directions}
-            alt="Гидроэлектростанция на закате"
-            className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
-            style={{ transformOrigin: "50% 55%" }}
-          />
-        </div>
+        <AboutSection aboutRef={aboutRef} />
 
-        <div
-          ref={msbCollageRef}
-          className="scene-gpu-layer pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
-          style={{ transformOrigin: "50% 55%", isolation: "isolate" }}
-        >
-          <img
-            src={SCENE_IMAGES.msb}
-            alt="Курорт на берегу Иссык-Куля"
-            className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
-            style={{ transformOrigin: "50% 55%" }}
-          />
-        </div>
-
-        {/* === SPACE ZOOM TRILOGY BASE (z-[5]) — Partners → News → Contacts === */}
-        <div
-          ref={spaceZoomBaseRef}
-          className="scene-gpu-layer pointer-events-none absolute inset-0 z-[5] opacity-0 will-change-[transform,opacity]"
-          style={{ transformOrigin: "50% 50%" }}
-        >
-          <img
-            src={SCENE_IMAGES.space}
-            alt="Кыргызстан из космоса"
-            className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
-            style={{ transformOrigin: "50% 50%" }}
-          />
-        </div>
-        <div
-          ref={cyberOverlayRef}
-          className="pointer-events-none absolute inset-0 z-[6] hidden opacity-0 will-change-[transform,opacity] md:block md:[mix-blend-mode:screen]"
-        >
-          <img
-            src={SCENE_IMAGES.cyber}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 h-full w-full object-cover will-change-[transform,opacity]"
-          />
-        </div>
-
-        <div
-          ref={handshakeRimRef}
-          className="pointer-events-none absolute inset-0 z-[7] opacity-0 will-change-[transform,opacity]"
-          style={{
-            background:
-              "radial-gradient(ellipse 45% 28% at 50% 56%, rgba(255,220,160,0.55) 0%, rgba(255,180,100,0.22) 35%, transparent 70%)",
-            mixBlendMode: "screen",
-          }}
+        <FinanceSection
+          financeBgRef={financeBgRef}
+          noonTintRef={noonTintRef}
+          financeRef={financeRef}
+          wipe2HazeRef={wipe2HazeRef}
+          wipe2BackRef={wipe2BackRef}
+          wipe2MidRef={wipe2MidRef}
+          wipe2FrontRef={wipe2FrontRef}
         />
 
-        <div
-          ref={partnerFlareRef}
-          className="pointer-events-none absolute inset-0 z-[15] opacity-0 will-change-[transform,opacity]"
-          style={{ transformOrigin: "50% 58%", mixBlendMode: "screen" }}
-        >
-          <div
-            className="absolute left-1/2 top-[54%] h-[38vh] w-[70vw] -translate-x-1/2 -translate-y-1/2"
-            style={{
-              background:
-                "radial-gradient(ellipse 55% 35% at 50% 50%, rgba(255,210,140,0.55) 0%, rgba(255,170,80,0.22) 40%, transparent 75%)",
-              filter: "blur(28px)",
-            }}
-          />
-          <div
-            className="absolute left-1/2 top-[54%] h-[3px] w-[62vw] -translate-x-1/2 -translate-y-1/2 rotate-[-6deg]"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent 0%, rgba(255,200,120,0) 8%, rgba(255,230,180,0.95) 46%, rgba(255,245,210,1) 50%, rgba(255,230,180,0.95) 54%, rgba(255,200,120,0) 92%, transparent 100%)",
-              filter: "blur(2px)",
-              boxShadow: "0 0 40px 8px rgba(255,190,100,0.35)",
-            }}
-          />
-          <div
-            className="absolute left-1/2 top-[54%] h-[22vh] w-[22vh] -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(255,240,200,0.75) 0%, rgba(255,200,120,0.35) 30%, rgba(255,160,60,0.08) 55%, transparent 75%)",
-              filter: "blur(18px)",
-            }}
-          />
-        </div>
-
-        {/* === OVERLAY TINT LAYERS (z-10) — dual blend stacks === */}
-        <div
-          ref={noonTintRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(255,248,220,0.35) 0%, rgba(255,235,180,0.18) 40%, rgba(200,210,230,0.08) 100%)",
-          }}
-        />
-        <div
-          ref={amberBurnRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
-          style={{
-            mixBlendMode: "multiply",
-            background:
-              "radial-gradient(ellipse 140% 95% at 50% 78%, rgba(255,100,10,0.95) 0%, rgba(220,60,5,0.75) 30%, rgba(160,35,0,0.45) 55%, rgba(80,20,0,0.15) 75%, transparent 92%)",
-          }}
-        />
-        <div
-          ref={amberGlowRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
-          style={{
-            mixBlendMode: "screen",
-            background:
-              "radial-gradient(ellipse 120% 70% at 50% 72%, rgba(255,220,140,0.85) 0%, rgba(255,180,70,0.5) 35%, rgba(255,140,40,0.2) 60%, transparent 85%), linear-gradient(0deg, rgba(255,160,50,0.35) 0%, transparent 45%)",
-          }}
-        />
-        <div
-          ref={twilightBlueRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
-          style={{
-            mixBlendMode: "multiply",
-            background:
-              "radial-gradient(ellipse 130% 90% at 50% 55%, rgba(25,45,110,0.85) 0%, rgba(35,55,130,0.6) 35%, rgba(45,70,150,0.35) 60%, transparent 88%), linear-gradient(180deg, rgba(15,25,60,0.4) 0%, rgba(40,70,140,0.25) 50%, rgba(80,110,170,0.12) 100%)",
-          }}
-        />
-        <div
-          ref={twilightRoseRef}
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
-          style={{
-            mixBlendMode: "screen",
-            background:
-              "radial-gradient(ellipse 100% 65% at 50% 68%, rgba(255,150,120,0.45) 0%, rgba(220,120,140,0.28) 40%, rgba(180,100,160,0.12) 65%, transparent 85%)",
-          }}
-        />
-        <div
-          ref={msbHazeRef}
-          className="pointer-events-none absolute inset-0 z-[4] opacity-0 will-change-[transform,opacity]"
-          style={{
-            background:
-              "radial-gradient(ellipse 120% 85% at 50% 70%, rgba(60,80,140,0.45) 0%, rgba(40,55,110,0.32) 40%, rgba(25,35,80,0.18) 65%, transparent 90%)",
-            filter: "blur(48px)",
-          }}
+        <DirectionsSection
+          sunsetBgRef={sunsetBgRef}
+          directionsCollageRef={directionsCollageRef}
+          amberBurnRef={amberBurnRef}
+          amberGlowRef={amberGlowRef}
+          sunsetAtmoBackRef={sunsetAtmoBackRef}
+          sunsetAtmoMidRef={sunsetAtmoMidRef}
+          sunsetAtmoFrontRef={sunsetAtmoFrontRef}
+          directionsRef={directionsRef}
         />
 
-        {/* === ATMOSPHERE LAYER (z-20) — cinematic scene-cut wipes === */}
-        {(() => {
-          const goldenEdge =
-            "radial-gradient(ellipse 90% 55% at 50% 100%, rgba(255,190,80,0.65) 0%, rgba(240,140,40,0.45) 30%, rgba(200,90,25,0.2) 55%, transparent 80%)";
-          const goldenGlow =
-            "radial-gradient(ellipse 85% 50% at 45% 95%, rgba(255,210,120,0.55) 0%, rgba(230,150,50,0.35) 40%, transparent 75%)";
-          const goldenHaze =
-            "radial-gradient(ellipse 100% 60% at 55% 90%, rgba(255,175,70,0.5) 0%, rgba(210,110,35,0.28) 45%, transparent 80%)";
-          const twilightHaze =
-            "radial-gradient(ellipse 95% 55% at 50% 50%, rgba(100,130,190,0.4) 0%, rgba(70,95,160,0.28) 40%, transparent 75%)";
-          const twilightVeil =
-            "radial-gradient(ellipse 90% 50% at 40% 55%, rgba(120,150,210,0.35) 0%, rgba(80,110,175,0.22) 45%, transparent 80%)";
-          const twilightMist =
-            "radial-gradient(ellipse 100% 55% at 60% 45%, rgba(90,120,180,0.32) 0%, rgba(60,85,145,0.18) 50%, transparent 85%)";
-          const layerBase = "pointer-events-none absolute left-1/2 top-1/2 -ml-[100vw] -mt-[100vh] w-[200vw] h-[200vh] rounded-full opacity-0 blur-[120px]";
-          const styleWithWillChange = { willChange: "transform, opacity", maskImage: "radial-gradient(ellipse 90% 90% at center, white 55%, transparent 100%)" };
-          return (
-            <>
-              <div ref={sunsetAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenEdge }} />
-              <div ref={sunsetAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenGlow }} />
-              <div ref={sunsetAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenHaze }} />
-              <div ref={twilightAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightHaze }} />
-              <div ref={twilightAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightVeil }} />
-              <div ref={twilightAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightMist }} />
-            </>
-          );
-        })()}
-
-        <div
-          ref={ambientFogRef}
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full opacity-0 will-change-[transform,opacity]"
-          style={{
-            willChange: "transform, opacity",
-            background:
-              "linear-gradient(to top, rgba(255,255,255,0.6) 0%, rgba(245,250,255,0.4) 35%, rgba(230,240,250,0.2) 65%, rgba(220,235,250,0) 100%)",
-          }}
+        <MsbSection
+          twilightBgRef={twilightBgRef}
+          msbCollageRef={msbCollageRef}
+          twilightBlueRef={twilightBlueRef}
+          twilightRoseRef={twilightRoseRef}
+          msbHazeRef={msbHazeRef}
+          twilightAtmoBackRef={twilightAtmoBackRef}
+          twilightAtmoMidRef={twilightAtmoMidRef}
+          twilightAtmoFrontRef={twilightAtmoFrontRef}
+          msbRef={msbRef}
         />
 
-        <div
-          ref={statsRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-20 -translate-y-1/2 px-4 opacity-0 will-change-[transform,opacity] sm:px-6"
-        >
-          <div className="relative mx-auto max-w-3xl text-center">
-            <div
-              className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[140%] w-[120%] -translate-x-1/2 -translate-y-1/2"
-              style={{
-                background:
-                  "radial-gradient(ellipse at center, rgba(10,20,45,0.55) 0%, rgba(10,20,45,0.32) 40%, rgba(10,20,45,0) 70%)",
-                filter: "blur(8px)",
-              }}
-            />
-            <p className="font-display text-lg tracking-tighter text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] sm:text-2xl sm:tracking-tight md:text-4xl">
-              Инвестиции в проекты будущего
-            </p>
-            <div className="mt-4 flex flex-col items-stretch gap-4 rounded-2xl border border-white/30 bg-white/10 px-5 py-4 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-6 sm:inline-flex sm:flex-row sm:gap-10 sm:rounded-3xl sm:px-8 sm:py-6">
-              <div className="text-center">
-                <div className="font-display text-3xl font-semibold tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl sm:tracking-tight md:text-5xl lg:text-6xl">
-                  <span ref={count200Ref}>0+</span>
-                </div>
-                <div className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.25em]">
-                  Проектов в реализации
-                </div>
-              </div>
-              <div className="hidden h-px w-full bg-white/25 sm:block sm:h-auto sm:w-px" />
-              <div className="text-center">
-                <div className="font-display text-3xl font-semibold tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl sm:tracking-tight md:text-5xl lg:text-6xl">
-                  <span ref={count8000Ref}>0</span>
-                </div>
-                <div className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.25em]">
-                  Завершённых проектов
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <SpaceTrilogyContainer
+          midnightBgRef={midnightBgRef}
+          spaceZoomBaseRef={spaceZoomBaseRef}
+          cyberOverlayRef={cyberOverlayRef}
+          handshakeRimRef={handshakeRimRef}
+          partnerFlareRef={partnerFlareRef}
+          partnersRef={partnersRef}
+          partnersTextRef={partnersTextRef}
+          partnerLogosRef={partnerLogosRef}
+          newsTitleRef={newsTitleRef}
+          newsContentRef={newsContentRef}
+          contactsTitleRef={contactsTitleRef}
+          contactsContentRef={contactsContentRef}
+        />
 
-        {/* === CONTENT LAYER (z-30) === */}
-        <div
-          ref={decreeRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-[25] -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
-        >
-          <p className="font-display text-sm tracking-tight text-[color:var(--primary)]/85 sm:text-base md:text-lg">
-            Фонд учрежден постановлением
-          </p>
-          <h2 className="mt-2 font-display text-xl font-bold leading-snug tracking-tighter text-[color:var(--primary)] sm:text-2xl sm:tracking-tight md:text-4xl lg:text-5xl">
-            Кабинета Министров Кыргызской Республики
-          </h2>
-          <p className="mx-auto mt-4 max-w-3xl text-[11px] leading-relaxed tracking-tight text-[color:var(--ink)]/75 sm:mt-5 sm:text-xs md:text-sm">
-            от 5 ноября 2024 года № 666 во исполнение Закона Кыргызской Республики
-            «О Национальном инвестиционном фонде Кыргызской Республики» и Указа
-            Президента Кыргызской Республики № 155 от 14 июня 2024 года.
-          </p>
-        </div>
-
-        <div
-          ref={aboutRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
-        >
-          <h2 className="font-display text-2xl font-bold tracking-tighter text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.8)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.2em] lg:text-7xl">
-            О ФОНДЕ
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-[color:var(--ink)]/85 sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
-            Национальный инвестиционный фонд — стратегический институт развития,
-            направляющий капитал в проекты, формирующие будущее Кыргызской Республики.
-          </p>
-        </div>
-
-        <div
-          ref={financeRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
-        >
-          <h2 className="font-display text-xl font-bold tracking-tighter text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.7)] sm:text-3xl sm:tracking-tight md:text-5xl md:tracking-[0.18em] lg:text-6xl">
-            ФИНАНСИРОВАНИЕ ПРОЕКТОВ
-          </h2>
-        </div>
-
-        <div
-          ref={directionsRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
-        >
-          <h2 className="font-display text-lg font-bold tracking-tighter text-white drop-shadow-[0_6px_36px_rgba(180,80,20,0.75)] sm:text-3xl sm:tracking-tight md:text-5xl md:tracking-[0.18em] lg:text-6xl">
-            ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-white/90 drop-shadow-[0_2px_14px_rgba(80,30,5,0.6)] sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
-            Стратегические отрасли, где капитал фонда раскрывает потенциал экономики в золотом свете заката.
-          </p>
-        </div>
-
-        <div
-          ref={msbRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
-        >
-          <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_6px_32px_rgba(40,60,120,0.7)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
-            ПРОЕКТЫ МСБ
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-white/88 drop-shadow-[0_2px_12px_rgba(20,30,60,0.65)] sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
-            Поддержка малого и среднего бизнеса в мягком сумеречном свете — там, где идеи превращаются в устойчивый рост.
-          </p>
-        </div>
-
-        <div
-          ref={partnersRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center"
-        >
-          <div
-            ref={partnersTextRef}
-            className="opacity-0 will-change-[transform,opacity]"
-          >
-            <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
-              ПАРТНЁРЫ
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-white/75 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
-              Как огни города в полночь — партнёры фонда зажигают новые точки роста по всей республике.
-            </p>
-          </div>
-          <div ref={partnerLogosRef} className="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-6 md:gap-10">
-            {["EBRD", "IFC", "ADB", "AIIB", "KfW"].map((name) => (
-              <div
-                key={name}
-                data-partner-logo
-                className="flex h-12 w-24 items-center justify-center rounded-lg border border-white/15 bg-white/[0.06] px-3 backdrop-blur-sm will-change-[transform,opacity] md:h-14 md:w-28"
-              >
-                <span className="font-display text-[10px] font-semibold tracking-[0.18em] text-white/70 md:text-xs">
-                  {name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* === CINEMATIC SLIDES — News & Contacts titles (midnight atmosphere) === */}
-        <div
-          ref={newsTitleRef}
-          id="novosti"
-          aria-label="Новости"
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
-        >
-          <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
-            НОВОСТИ
-          </h2>
-        </div>
-        <div
-          ref={newsContentRef}
-          data-lovable-slot="news-content"
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-[58%] z-30 mx-auto max-w-5xl px-6 font-display opacity-0 invisible"
-        >
-          <div className="grid gap-5 md:grid-cols-3">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="h-48 rounded-2xl border border-transparent" />
-            ))}
-          </div>
-        </div>
-
-        <div
-          ref={contactsTitleRef}
-          id="kontakty"
-          aria-label="Контакты"
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
-        >
-          <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(120,140,200,0.35)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
-            КОНТАКТЫ
-          </h2>
-        </div>
-        <div
-          ref={contactsContentRef}
-          data-lovable-slot="contacts-content"
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-[58%] z-30 mx-auto max-w-3xl px-6 font-display opacity-0 invisible"
-        >
-          <div className="grid gap-6 md:grid-cols-2">
-            {[0, 1].map((i) => (
-              <div key={i} className="h-40 rounded-2xl border border-transparent" />
-            ))}
-          </div>
-        </div>
-
-        {/* === FOOTER SLIDE — mountain reverse return (Lovable slot) === */}
-        <div
-          ref={footerContentZoneRef}
-          id="footer-content-zone"
-          data-lovable-slot="footer-content"
-          aria-label="Footer content zone"
-          className="pointer-events-none absolute inset-0 z-[35] overflow-hidden opacity-0 will-change-[transform,opacity]"
-        >
-          <img
-            ref={footerBgRef}
-            src={SCENE_IMAGES.footer}
-            alt=""
-            aria-hidden
-            className="w-full h-full object-cover absolute inset-0 will-change-transform"
-            style={{ transformOrigin: "50% 70%" }}
-          />
-          <div className="pointer-events-none absolute inset-0 bg-black/80" aria-hidden />
-          <div
-            className="pointer-events-auto absolute bottom-10 left-1/2 z-10 will-change-transform sm:bottom-12"
-            style={{ transform: "translate3d(-50%, 0, 0)" }}
-          >
-            <button
-              type="button"
-              onClick={scrollToTop}
-              data-cursor-hover
-              aria-label="Вернуться наверх"
-              className="flex h-14 w-14 items-center justify-center rounded-full border border-white/40 bg-transparent font-display text-[9px] font-semibold tracking-[0.28em] text-white transition-all duration-300 will-change-transform hover:scale-110 hover:border-white sm:h-16 sm:w-16 sm:text-[10px]"
-            >
-              <span className="sr-only">Вернуться наверх</span>
-              <span aria-hidden className="text-base leading-none sm:text-lg">↑</span>
-            </button>
-          </div>
-        </div>
-
-        {(() => {
-          const cloudWhite =
-            "radial-gradient(ellipse 85% 65% at 50% 55%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.38) 35%, rgba(255,255,255,0.12) 65%, rgba(255,255,255,0) 100%)";
-          const cloudBlue =
-            "radial-gradient(ellipse 95% 70% at 45% 60%, rgba(224,242,254,0.4) 0%, rgba(214,232,248,0.28) 40%, rgba(200,222,242,0.08) 70%, rgba(200,222,242,0) 100%)";
-          const cloudPlatinum =
-            "radial-gradient(ellipse 100% 75% at 55% 50%, rgba(241,245,249,0.4) 0%, rgba(230,236,244,0.28) 40%, rgba(220,228,238,0.08) 70%, rgba(220,228,238,0) 100%)";
-          const layerBase = "pointer-events-none absolute left-1/2 top-1/2 -ml-[100vw] -mt-[100vh] w-[200vw] h-[200vh] rounded-full opacity-0 blur-[140px]";
-          const styleWithWillChange = { willChange: "transform, opacity", maskImage: "radial-gradient(ellipse 90% 90% at center, white 55%, transparent 100%)" };
-          return (
-            <>
-              <div ref={wipe1HazeRef} className="hidden" />
-              <div ref={wipe1BackRef} className={`${layerBase} z-[36]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
-              <div ref={wipe1MidRef} className={`${layerBase} z-[37]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
-              <div ref={wipe1FrontRef} className={`${layerBase} z-[38]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
-
-              <div
-                ref={wipe2HazeRef}
-                className="pointer-events-none absolute inset-0 z-[40] opacity-0 will-change-[transform,opacity]"
-                style={{
-                  willChange: "opacity",
-                  background:
-                    "linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(245,250,255,0.45) 50%, rgba(235,242,250,0.35) 100%)",
-                }}
-              />
-              <div ref={wipe2BackRef} className={`${layerBase} z-[41]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
-              <div ref={wipe2MidRef} className={`${layerBase} z-[42]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
-              <div ref={wipe2FrontRef} className={`${layerBase} z-[43]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
-            </>
-          );
-        })()}
+        <FooterSection
+          footerContentZoneRef={footerContentZoneRef}
+          footerBgRef={footerBgRef}
+          onScrollToTop={scrollToTop}
+        />
       </div>
       </div>
     </div>
   );
 }
+
