@@ -81,6 +81,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     wipe2FrontRef: refs.wipe2FrontRef,
   };
   const directionsRefs = {
+    sunsetBgRef: refs.sunsetBgRef,
     financeBgRef: refs.financeBgRef,
     directionsCollageRef: refs.directionsCollageRef,
     amberBurnRef: refs.amberBurnRef,
