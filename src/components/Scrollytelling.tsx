@@ -787,7 +787,7 @@ export function Scrollytelling() {
       {/* === PERMANENT BRAND HEADER (fixed below nav, isolated from blend modes) === */}
       <div
         ref={brandRef}
-        className="pointer-events-none fixed left-1/2 top-[4.25rem] z-[65] w-full max-w-[min(100%,920px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:px-6 md:top-[5.75rem]"
+        className="pointer-events-none fixed left-1/2 top-[5.75rem] z-[65] w-full max-w-[min(100%,920px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:top-[6rem] sm:px-6 md:top-[7rem]"
         style={{
           mixBlendMode: "normal",
           isolation: "isolate",
