@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type MouseEvent } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -35,6 +35,149 @@ function formatCount(value: number, progress: number, suffix = "") {
   const val = Math.round(eased * value);
   return `${val.toLocaleString("ru-RU").replace(",", " ")}${suffix}`;
 }
+
+type NavItem = (typeof NAV_ITEMS)[number];
+
+function computeTimelineMarkers() {
+  const enterDur = 0.028;
+  const exitDur = 0.028;
+  const holdDur = 0.014;
+  const textOverlap = 0.016;
+  const atmoWipeDur = 0.032;
+
+  const breatheAfter = (exitStart: number) => exitStart + exitDur - textOverlap;
+  const gapAfterExit = (exitStart: number, gap: number) => exitStart + exitDur + gap;
+
+  const statsEnterT = 0.06;
+  const statsExitT = statsEnterT + enterDur + holdDur;
+
+  const decreeCloudsT = breatheAfter(statsExitT);
+  const decreeEnterT = decreeCloudsT + 0.052;
+  const decreeExitT = decreeEnterT + enterDur + holdDur;
+
+  const aboutEnterT = gapAfterExit(decreeExitT, 0.012);
+  const aboutExitT = aboutEnterT + enterDur + holdDur;
+
+  const financeCloudsT = breatheAfter(aboutExitT);
+  const kumtorBgSwapT = financeCloudsT + 0.008;
+  const kumtorRevealT = financeCloudsT + 0.026;
+  const financeEnterT = kumtorRevealT;
+  const financeExitT = financeEnterT + enterDur + holdDur;
+
+  const sunsetAtmoT = breatheAfter(financeExitT);
+  const sunsetBgSwapT = sunsetAtmoT + 0.010;
+  const sunsetRevealT = sunsetAtmoT + atmoWipeDur;
+  const directionsEnterT = sunsetRevealT;
+  const directionsExitT = directionsEnterT + enterDur + holdDur;
+
+  const twilightAtmoT = breatheAfter(directionsExitT);
+  const twilightBgSwapT = twilightAtmoT + 0.010;
+  const twilightRevealT = twilightAtmoT + atmoWipeDur;
+  const msbEnterT = twilightRevealT;
+  const msbExitT = msbEnterT + enterDur + holdDur;
+
+  const midnightAtmoT = breatheAfter(msbExitT);
+  const midnightBgSwapT = midnightAtmoT + 0.010;
+  const midnightRevealT = midnightAtmoT + atmoWipeDur * 0.85;
+  const partnersEnterT = midnightRevealT;
+  const partnersHoldT = partnersEnterT + enterDur + holdDur;
+  const partnerLogoExitT = partnersHoldT + 0.008;
+  const partnersTextExitT = gapAfterExit(partnerLogoExitT, 0.006);
+
+  const newsEnterT = breatheAfter(partnersTextExitT);
+  const newsExitT = newsEnterT + enterDur + holdDur;
+
+  const contactsEnterT = breatheAfter(newsExitT);
+  const contactsExitT = contactsEnterT + enterDur + holdDur;
+
+  const footerEnterT = gapAfterExit(contactsExitT, 0.008);
+  const footerHoldDur = 0.072;
+  const totalDuration = footerEnterT + enterDur + footerHoldDur;
+
+  return {
+    enterDur,
+    exitDur,
+    holdDur,
+    textOverlap,
+    textEnterY: 30,
+    textExitY: -45,
+    textExitScale: 1.03,
+    lightCrossfadeDur: 0.034,
+    atmoWipeDur,
+    collageParallaxDur: 0.048,
+    convergeDur: 0.042,
+    flareDur: 0.030,
+    bgCrossfadeDur: 0.020,
+    statsEnterT,
+    statsExitT,
+    decreeCloudsT,
+    decreeEnterT,
+    decreeExitT,
+    aboutEnterT,
+    aboutExitT,
+    financeCloudsT,
+    kumtorBgSwapT,
+    kumtorRevealT,
+    financeEnterT,
+    financeExitT,
+    sunsetAtmoT,
+    sunsetBgSwapT,
+    sunsetRevealT,
+    directionsEnterT,
+    directionsExitT,
+    twilightAtmoT,
+    twilightBgSwapT,
+    twilightRevealT,
+    msbEnterT,
+    msbExitT,
+    midnightAtmoT,
+    midnightBgSwapT,
+    midnightRevealT,
+    partnersEnterT,
+    partnersHoldT,
+    partnerLogoExitT,
+    partnersTextExitT,
+    newsEnterT,
+    newsExitT,
+    contactsEnterT,
+    contactsExitT,
+    footerEnterT,
+    footerHoldDur,
+    totalDuration,
+    breatheAfter,
+    gapAfterExit,
+  };
+}
+
+const NAV_SECTION_TIMELINE_PROGRESS: Record<NavItem, (m: ReturnType<typeof computeTimelineMarkers>) => number> = {
+  ГЛАВНАЯ: () => 0,
+  "О ФОНДЕ": (m) => m.aboutEnterT / m.totalDuration,
+  "ФИНАНСИРОВАНИЕ ПРОЕКТОВ": (m) => m.financeEnterT / m.totalDuration,
+  "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ": (m) => m.directionsEnterT / m.totalDuration,
+  "ПРОЕКТЫ МСБ": (m) => m.msbEnterT / m.totalDuration,
+  ПАРТНЁРЫ: (m) => m.partnersEnterT / m.totalDuration,
+  НОВОСТИ: (m) => m.newsEnterT / m.totalDuration,
+  КОНТАКТЫ: (m) => m.contactsEnterT / m.totalDuration,
+};
+
+function getScrollDistanceForViewport(width = typeof window !== "undefined" ? window.innerWidth : 1280) {
+  if (width >= 1024) return SCROLL_DISTANCE_DESKTOP;
+  if (width >= 768) return SCROLL_DISTANCE_TABLET;
+  return SCROLL_DISTANCE_MOBILE;
+}
+
+function getNavScrollDestinations(scrollDistance: number) {
+  const markers = computeTimelineMarkers();
+  return NAV_ITEMS.reduce(
+    (acc, label) => {
+      acc[label] = Math.round(NAV_SECTION_TIMELINE_PROGRESS[label](markers) * scrollDistance);
+      return acc;
+    },
+    {} as Record<NavItem, number>
+  );
+}
+
+const NAV_SCROLL_EASE = gsap.parseEase("power3.inOut");
 
 export function Scrollytelling() {
   const [lang, setLang] = useState("RU");
@@ -111,16 +254,35 @@ export function Scrollytelling() {
   const footerContentZoneRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
 
-  const scrollToTop = useCallback(() => {
+  const scrollToSection = useCallback((label: NavItem) => {
+    const scrollDistance = getScrollDistanceForViewport();
+    const target = getNavScrollDestinations(scrollDistance)[label];
+    const mobile = window.innerWidth < 768;
+    const duration = mobile ? 1.2 : 1.6;
+
     if (lenisRef.current) {
-      lenisRef.current.scrollTo(0, {
-        duration: 2.4,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      lenisRef.current.scrollTo(target, {
+        duration,
+        easing: NAV_SCROLL_EASE,
       });
       return;
     }
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    window.scrollTo({ top: target, behavior: "smooth" });
   }, []);
+
+  const handleNavClick = useCallback(
+    (label: NavItem, e: MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      setNavOpen(false);
+      scrollToSection(label);
+    },
+    [scrollToSection]
+  );
+
+  const scrollToTop = useCallback(() => {
+    scrollToSection("ГЛАВНАЯ");
+  }, [scrollToSection]);
 
   useGSAP(
     () => {
@@ -159,76 +321,61 @@ export function Scrollytelling() {
         rafId = requestAnimationFrame(raf);
         lenis.on("scroll", ScrollTrigger.update);
 
-      const enterDur = 0.028;
-      const exitDur = 0.028;
-      const holdDur = 0.014;
-      const textEnterY = 30;
-      const textExitY = -45;
-      const textExitScale = 1.03;
+      const {
+        enterDur,
+        exitDur,
+        holdDur,
+        textEnterY,
+        textExitY,
+        textExitScale,
+        lightCrossfadeDur,
+        atmoWipeDur,
+        collageParallaxDur,
+        convergeDur,
+        flareDur,
+        bgCrossfadeDur,
+        statsEnterT,
+        statsExitT,
+        decreeCloudsT,
+        decreeEnterT,
+        decreeExitT,
+        aboutEnterT,
+        aboutExitT,
+        financeCloudsT,
+        kumtorBgSwapT,
+        kumtorRevealT,
+        financeEnterT,
+        financeExitT,
+        sunsetAtmoT,
+        sunsetBgSwapT,
+        sunsetRevealT,
+        directionsEnterT,
+        directionsExitT,
+        twilightAtmoT,
+        twilightBgSwapT,
+        twilightRevealT,
+        msbEnterT,
+        msbExitT,
+        midnightAtmoT,
+        midnightBgSwapT,
+        midnightRevealT,
+        partnersEnterT,
+        partnersHoldT,
+        partnerLogoExitT,
+        partnersTextExitT,
+        newsEnterT,
+        newsExitT,
+        contactsEnterT,
+        contactsExitT,
+        footerEnterT,
+        footerHoldDur,
+      } = computeTimelineMarkers();
+
       const textEnterEase = "power2.out";
       const textExitEase = "power1.in";
-      const textOverlap = 0.016;
       const textIdle = { opacity: 0, yPercent: textEnterY, scale: 1 };
       const textArrived = { opacity: 1, yPercent: 0, scale: 1 };
       const textEvaporated = { yPercent: textExitY, opacity: 0, scale: textExitScale };
-      const breatheAfter = (exitStart: number) => exitStart + exitDur - textOverlap;
-      const gapAfterExit = (exitStart: number, gap: number) => exitStart + exitDur + gap;
-
-      const lightCrossfadeDur = 0.034;
-      const atmoWipeDur = 0.032;
-      const collageParallaxDur = 0.048;
-      const convergeDur = 0.042;
-      const flareDur = 0.030;
-
-      const statsEnterT = 0.06;
-      const statsExitT = statsEnterT + enterDur + holdDur;
-
-      const decreeCloudsT = breatheAfter(statsExitT);
-      const decreeEnterT = decreeCloudsT + 0.052;
-      const decreeExitT = decreeEnterT + enterDur + holdDur;
-
-      const decreeAboutGap = 0.012;
-      const aboutEnterT = gapAfterExit(decreeExitT, decreeAboutGap);
-      const aboutExitT = aboutEnterT + enterDur + holdDur;
-
-      const financeCloudsT = breatheAfter(aboutExitT);
-      const kumtorBgSwapT = financeCloudsT + 0.008;
-      const bgCrossfadeDur = 0.020;
-      const kumtorRevealT = financeCloudsT + 0.026;
-      const financeEnterT = kumtorRevealT;
-      const financeExitT = financeEnterT + enterDur + holdDur;
-
-      // Kumtor → Sunset Amber
-      const sunsetAtmoT = breatheAfter(financeExitT);
-      const sunsetBgSwapT = sunsetAtmoT + 0.010;
-      const sunsetRevealT = sunsetAtmoT + atmoWipeDur;
-      const directionsEnterT = sunsetRevealT;
-      const directionsExitT = directionsEnterT + enterDur + holdDur;
-
-      // Sunset → Twilight (MSB)
-      const twilightAtmoT = breatheAfter(directionsExitT);
-      const twilightBgSwapT = twilightAtmoT + 0.010;
-      const twilightRevealT = twilightAtmoT + atmoWipeDur;
-      const msbEnterT = twilightRevealT;
-      const msbExitT = msbEnterT + enterDur + holdDur;
-
-      // Twilight → Midnight (Partners)
-      const midnightAtmoT = breatheAfter(msbExitT);
-      const midnightBgSwapT = midnightAtmoT + 0.010;
-      const midnightRevealT = midnightAtmoT + atmoWipeDur * 0.85;
-      const partnersEnterT = midnightRevealT;
-      const partnersHoldT = partnersEnterT + enterDur + holdDur;
-      const partnerLogoExitT = partnersHoldT + 0.008;
-      const partnersTextExitT = gapAfterExit(partnerLogoExitT, 0.006);
-
-      const newsEnterT = breatheAfter(partnersTextExitT);
-      const newsExitT = newsEnterT + enterDur + holdDur;
-
-      const contactsEnterT = breatheAfter(newsExitT);
-      const contactsExitT = contactsEnterT + enterDur + holdDur;
-
-      const footerEnterT = gapAfterExit(contactsExitT, 0.008);
-      const footerHoldDur = 0.072;
 
       const updateCounts = (progress: number) => {
         const p = Math.max(0, Math.min(1, (progress - statsEnterT) / (statsExitT + exitDur - statsEnterT)));
@@ -785,6 +932,7 @@ export function Scrollytelling() {
                   <a
                     href="#"
                     data-cursor-hover
+                    onClick={(e) => handleNavClick(label, e)}
                     className="inline-block whitespace-nowrap py-1.5 transition-transform duration-300 ease-out hover:scale-110 hover:text-[color:var(--gold)]"
                   >
                     {label}
@@ -840,7 +988,7 @@ export function Scrollytelling() {
               >
                 <a
                   href="#"
-                  onClick={() => setNavOpen(false)}
+                  onClick={(e) => handleNavClick(label, e)}
                   className="flex items-center justify-between rounded-2xl px-4 py-3.5 whitespace-nowrap transition hover:bg-[color:var(--ink)]/5 hover:text-[color:var(--gold)]"
                 >
                   <span>{label}</span>
