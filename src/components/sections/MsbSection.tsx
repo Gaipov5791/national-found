@@ -4,7 +4,6 @@ import { SCENE_IMAGES } from "./sceneImages";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type MsbSceneRefs = {
-  twilightBgRef: RefObject<HTMLDivElement | null>;
   directionsCollageRef: RefObject<HTMLDivElement | null>;
   msbCollageRef: RefObject<HTMLDivElement | null>;
   amberBurnRef: RefObject<HTMLDivElement | null>;
