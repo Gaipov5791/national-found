@@ -13,8 +13,9 @@ const SCROLL_DISTANCE_TABLET = 11500;
 const SCROLL_DISTANCE_MOBILE = 9000;
 
 const SCENE_IMAGES = {
-  hero: "/images/kyrgyzstan-space.webp",
-  finance: "/images/hpp-sunset.webp",
+  hero: "/images/mountains.jpg",
+  footer: "/images/mountains.jpg",
+  finance: "/images/kumtor-optimized.jpg",
   directions: "/images/hpp-sunset.webp",
   msb: "/images/issykkul-resort.webp",
   space: "/images/kyrgyzstan-space.webp",
@@ -518,7 +519,7 @@ export function Scrollytelling() {
         0
       );
 
-      // ============ SCENE 1 — Hero + stats ============
+      // ============ SCENE 1 — Mountains + stats ============
       tl.to(heroBgRef.current, { scale: sz(1.18), duration: statsExitT + exitDur, ease: "none" }, 0);
 
       tl.fromTo(statsRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, statsEnterT);
@@ -562,7 +563,7 @@ export function Scrollytelling() {
       tl.fromTo(aboutRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, aboutEnterT);
       tl.to(aboutRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, aboutExitT);
 
-      // ============ SCENE 4 — Finance backdrop + «ФИНАНСИРОВАНИЕ» ============
+      // ============ SCENE 4 — Industrial finance backdrop + «ФИНАНСИРОВАНИЕ» ============
       const cloudCoverDur = enterDur + 0.022;
       tl.fromTo(
         wipe2BackRef.current,
@@ -1064,14 +1065,14 @@ export function Scrollytelling() {
         <img
           ref={heroBgRef}
           src={SCENE_IMAGES.hero}
-          alt="Кыргызстан из космоса"
+          alt="Горы"
           className="absolute inset-0 z-0 h-full w-full object-cover object-bottom will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 70%" }}
         />
         <img
           ref={financeBgRef}
           src={SCENE_IMAGES.finance}
-          alt="Гидроэлектростанция на закате"
+          alt="Стратегические промышленные активы"
           className="absolute inset-0 z-0 h-full w-full object-cover opacity-0 will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 60%" }}
         />
@@ -1467,7 +1468,7 @@ export function Scrollytelling() {
           </div>
         </div>
 
-        {/* === FOOTER SLIDE — hero return (Lovable slot) === */}
+        {/* === FOOTER SLIDE — mountain reverse return (Lovable slot) === */}
         <div
           ref={footerContentZoneRef}
           id="footer-content-zone"
@@ -1477,7 +1478,7 @@ export function Scrollytelling() {
         >
           <img
             ref={footerBgRef}
-            src={SCENE_IMAGES.hero}
+            src={SCENE_IMAGES.footer}
             alt=""
             aria-hidden
             className="w-full h-full object-cover absolute inset-0 will-change-transform"
