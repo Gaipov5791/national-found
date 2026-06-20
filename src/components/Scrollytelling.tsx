@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -109,6 +109,18 @@ export function Scrollytelling() {
   const contactsTitleRef = useRef<HTMLDivElement>(null);
   const contactsContentRef = useRef<HTMLDivElement>(null);
   const footerContentZoneRef = useRef<HTMLDivElement>(null);
+  const lenisRef = useRef<Lenis | null>(null);
+
+  const scrollToTop = useCallback(() => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, {
+        duration: 2.4,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   useGSAP(
     () => {
@@ -134,6 +146,7 @@ export function Scrollytelling() {
           wheelMultiplier: mobile ? 0.9 : 1,
           lerp: mobile ? 0.12 : 0.1,
         });
+        lenisRef.current = lenis;
 
         let rafId = 0;
         let cancelled = false;
@@ -676,6 +689,7 @@ export function Scrollytelling() {
           cancelAnimationFrame(rafId);
           lenis.off("scroll", ScrollTrigger.update);
           lenis.destroy();
+          lenisRef.current = null;
           if (cursorRing) {
             gsap.set(cursorRing, { borderColor: CURSOR_BORDER_DARK });
             cursorRing.setAttribute("data-cursor-theme", "dark");
@@ -721,64 +735,67 @@ export function Scrollytelling() {
   return (
     <div ref={rootRef} className="relative overflow-hidden">
       {/* === STABLE NAVBAR (fixed, outside pinned scene) === */}
-      <header className="fixed left-0 right-0 top-0 z-[70] px-4 pt-4 md:px-8 md:pt-5">
-        <nav className="mx-auto flex w-full max-w-[min(100%,1720px)] items-center justify-between gap-6 rounded-full border border-white/40 bg-white/40 px-5 py-2.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] md:gap-8 md:px-7">
-          <div className="flex shrink-0 items-center">
-            <img
-              src={fundLogo.url}
-              alt="НИФ КР"
-              className="block h-9 w-auto md:hidden"
-            />
-            <div className="hidden md:block h-[44px] w-[52px]" aria-hidden />
-          </div>
-
-          <ul className="hidden lg:flex flex-1 items-center justify-end gap-x-6 text-[10.5px] font-semibold tracking-[0.16em] text-[color:var(--ink)] xl:gap-x-8 xl:text-[11px] xl:tracking-[0.18em]">
-            {NAV_ITEMS.map((label) => (
-              <li key={label} className="shrink-0">
-                <a
-                  href="#"
-                  data-cursor-hover
-                  className="inline-block whitespace-nowrap py-1.5 transition-transform duration-300 ease-out hover:scale-110 hover:text-[color:var(--gold)]"
-                >
-                  {label}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          <div className="hidden md:flex shrink-0 items-center gap-2 pl-2 text-[11px] font-semibold tracking-[0.16em] text-[color:var(--ink)]">
-            <span className="whitespace-nowrap">{lang}</span>
-            <div className="flex gap-1.5">
-              {LANGS.map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  data-cursor-hover
-                  aria-label={l}
-                  className={`h-2 w-2 rounded-full transition-all ${
-                    lang === l
-                      ? "bg-[color:var(--ink)] scale-125"
-                      : "bg-[color:var(--ink)]/30 hover:bg-[color:var(--ink)]/60"
-                  }`}
-                />
-              ))}
+      <header className="fixed left-0 right-0 top-0 z-[70] px-6 pt-4 md:px-12 md:pt-5">
+        <div className="mx-auto w-full max-w-7xl">
+          <nav className="flex w-full items-center justify-between gap-3 rounded-full border border-white/40 bg-white/40 px-4 py-2.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] md:gap-4 md:px-6">
+            <div className="flex shrink-0 items-center">
+              <img
+                src={fundLogo.url}
+                alt="НИФ КР"
+                className="block h-9 w-auto md:hidden"
+              />
+              <div className="hidden md:block h-[44px] w-[52px]" aria-hidden />
             </div>
-          </div>
 
-          <button
-            onClick={() => setNavOpen((v) => !v)}
-            aria-label="Меню"
-            className="lg:hidden inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/60 text-[color:var(--ink)] shadow-sm transition hover:bg-white"
+            <ul className="hidden min-w-0 flex-1 items-center justify-center gap-x-4 text-[9.5px] font-semibold tracking-[0.14em] text-[color:var(--ink)] lg:flex xl:gap-x-6 xl:text-[10.5px] xl:tracking-[0.16em]">
+              {NAV_ITEMS.map((label) => (
+                <li key={label} className="shrink-0">
+                  <a
+                    href="#"
+                    data-cursor-hover
+                    className="inline-block whitespace-nowrap py-1.5 transition-transform duration-300 ease-out hover:scale-110 hover:text-[color:var(--gold)]"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="hidden shrink-0 items-center gap-2 text-[11px] font-semibold tracking-[0.16em] text-[color:var(--ink)] md:flex">
+              <span className="whitespace-nowrap">{lang}</span>
+              <div className="flex gap-1.5">
+                {LANGS.map((l) => (
+                  <button
+                    key={l}
+                    type="button"
+                    onClick={() => setLang(l)}
+                    data-cursor-hover
+                    aria-label={l}
+                    className={`h-2 w-2 rounded-full transition-all ${
+                      lang === l
+                        ? "bg-[color:var(--ink)] scale-125"
+                        : "bg-[color:var(--ink)]/30 hover:bg-[color:var(--ink)]/60"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setNavOpen((v) => !v)}
+              aria-label="Меню"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/60 text-[color:var(--ink)] shadow-sm transition hover:bg-white lg:hidden"
+            >
+              {navOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </nav>
+
+          <div
+            className={`mt-3 w-full overflow-hidden rounded-3xl border border-white/40 bg-white/80 font-display backdrop-blur-2xl shadow-[0_20px_60px_rgba(20,40,90,0.18)] transition-all duration-500 ease-out lg:hidden ${
+              navOpen ? "max-h-[720px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+            }`}
           >
-            {navOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </nav>
-
-        <div
-          className={`lg:hidden mx-auto mt-3 w-full max-w-[min(100%,1720px)] overflow-hidden rounded-3xl border border-white/40 bg-white/80 font-display backdrop-blur-2xl shadow-[0_20px_60px_rgba(20,40,90,0.18)] transition-all duration-500 ease-out ${
-            navOpen ? "max-h-[720px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-          }`}
-        >
           <ul className="flex flex-col divide-y divide-[color:var(--ink)]/10 px-2 py-2 text-[12px] font-semibold tracking-[0.16em] text-[color:var(--ink)]">
             {NAV_ITEMS.map((label, i) => (
               <li
@@ -817,6 +834,7 @@ export function Scrollytelling() {
               ))}
             </div>
           </div>
+        </div>
         </div>
       </header>
 
@@ -1279,6 +1297,16 @@ export function Scrollytelling() {
             style={{ transformOrigin: "50% 70%" }}
           />
           <div className="pointer-events-none absolute inset-0 bg-black/80" aria-hidden />
+          <button
+            type="button"
+            onClick={scrollToTop}
+            data-cursor-hover
+            aria-label="Вернуться наверх"
+            className="pointer-events-auto absolute bottom-10 left-1/2 z-10 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full border border-white/40 bg-transparent font-display text-[9px] font-semibold tracking-[0.28em] text-white transition-all duration-300 hover:scale-110 hover:border-white sm:bottom-12 sm:h-16 sm:w-16 sm:text-[10px]"
+          >
+            <span className="sr-only">Вернуться наверх</span>
+            <span aria-hidden className="text-base leading-none sm:text-lg">↑</span>
+          </button>
         </div>
 
         {(() => {
