@@ -302,7 +302,7 @@ export function Scrollytelling() {
       gsap.set(msbCollageRef.current, { opacity: 0, scale: 1 });
       gsap.set(spaceZoomBaseRef.current, { opacity: 0, scale: sz(1.0) });
       gsap.set(cyberOverlayRef.current, { opacity: 0 });
-      gsap.set(footerMountainRef.current, { scale: sz(1.05) });
+      gsap.set(footerMountainRef.current, { scale: sz(1.15) });
       gsap.set(partnerFlareRef.current, { opacity: 0, xPercent: -40 });
       gsap.set(noonTintRef.current, { opacity: 0 });
       gsap.set([amberBurnRef.current, amberGlowRef.current, twilightBlueRef.current, twilightRoseRef.current, msbHazeRef.current], { opacity: 0 });
@@ -659,9 +659,10 @@ export function Scrollytelling() {
         { opacity: 1, duration: enterDur, ease: "power2.out" },
         footerEnterT
       );
-      tl.to(
+      tl.fromTo(
         footerMountainRef.current,
-        { scale: sz(0.93), duration: footerHoldDur + enterDur, ease: "power2.inOut" },
+        { scale: sz(1.15) },
+        { scale: sz(1.0), duration: footerHoldDur + enterDur, ease: "power2.inOut" },
         footerEnterT
       );
       tl.to(
@@ -1274,7 +1275,7 @@ export function Scrollytelling() {
             src={mountains}
             alt=""
             aria-hidden
-            className="absolute inset-0 h-full w-full object-cover object-bottom will-change-transform"
+            className="w-full h-full object-cover absolute inset-0 will-change-transform"
             style={{ transformOrigin: "50% 70%" }}
           />
           <div className="pointer-events-none absolute inset-0 bg-black/80" aria-hidden />
