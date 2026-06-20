@@ -4,8 +4,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { Menu, X } from "lucide-react";
-import mountains from "@/assets/mountains.jpg";
-import kumtor from "@/assets/kumtor.jpg";
 import fundLogo from "@/assets/fund-logo.png.asset.json";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -13,6 +11,15 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const SCROLL_DISTANCE_DESKTOP = 14500;
 const SCROLL_DISTANCE_TABLET = 11500;
 const SCROLL_DISTANCE_MOBILE = 9000;
+
+const SCENE_IMAGES = {
+  hero: "/images/kyrgyzstan-space.webp",
+  finance: "/images/hpp-sunset.webp",
+  directions: "/images/hpp-sunset.webp",
+  msb: "/images/issykkul-resort.webp",
+  space: "/images/kyrgyzstan-space.webp",
+  cyber: "/images/cyber-electricity.webp",
+} as const;
 
 const NAV_ITEMS = [
   "ГЛАВНАЯ",
@@ -59,9 +66,9 @@ function computeTimelineMarkers() {
   const aboutExitT = aboutEnterT + enterDur + holdDur;
 
   const financeCloudsT = breatheAfter(aboutExitT);
-  const kumtorBgSwapT = financeCloudsT + 0.008;
-  const kumtorRevealT = financeCloudsT + 0.026;
-  const financeEnterT = kumtorRevealT;
+  const financeBgSwapT = financeCloudsT + 0.008;
+  const financeRevealT = financeCloudsT + 0.026;
+  const financeEnterT = financeRevealT;
   const financeExitT = financeEnterT + enterDur + holdDur;
 
   const sunsetAtmoT = breatheAfter(financeExitT);
@@ -116,8 +123,8 @@ function computeTimelineMarkers() {
     aboutEnterT,
     aboutExitT,
     financeCloudsT,
-    kumtorBgSwapT,
-    kumtorRevealT,
+    financeBgSwapT,
+    financeRevealT,
     financeEnterT,
     financeExitT,
     sunsetAtmoT,
@@ -186,14 +193,14 @@ export function Scrollytelling() {
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollTrackRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
-  const mountainRef = useRef<HTMLImageElement>(null);
+  const heroBgRef = useRef<HTMLImageElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const decreeRef = useRef<HTMLDivElement>(null);
   const cloudDriftRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
 
   // Cinematic background layers (z-0)
-  const kumtorBgRef = useRef<HTMLImageElement>(null);
+  const financeBgRef = useRef<HTMLImageElement>(null);
   const sunsetBgRef = useRef<HTMLDivElement>(null);
   const twilightBgRef = useRef<HTMLDivElement>(null);
   const midnightBgRef = useRef<HTMLDivElement>(null);
@@ -221,7 +228,7 @@ export function Scrollytelling() {
   const spaceZoomBaseRef = useRef<HTMLDivElement>(null);
   const cyberOverlayRef = useRef<HTMLDivElement>(null);
   const partnerFlareRef = useRef<HTMLDivElement>(null);
-  const footerMountainRef = useRef<HTMLImageElement>(null);
+  const footerBgRef = useRef<HTMLImageElement>(null);
 
   // Text scene refs (z-30)
   const aboutRef = useRef<HTMLDivElement>(null);
@@ -342,8 +349,8 @@ export function Scrollytelling() {
         aboutEnterT,
         aboutExitT,
         financeCloudsT,
-        kumtorBgSwapT,
-        kumtorRevealT,
+        financeBgSwapT,
+        financeRevealT,
         financeEnterT,
         financeExitT,
         sunsetAtmoT,
@@ -457,13 +464,13 @@ export function Scrollytelling() {
         gsap.set(cursorDot, { backgroundColor: CURSOR_BORDER_DARK });
       }
 
-      gsap.set(kumtorBgRef.current, { opacity: 0, yPercent: 0, scale: sz(1.0) });
+      gsap.set(financeBgRef.current, { opacity: 0, yPercent: 0, scale: sz(1.0) });
       gsap.set([sunsetBgRef.current, twilightBgRef.current, midnightBgRef.current], { opacity: 0 });
       gsap.set(directionsCollageRef.current, { opacity: 0, scale: 1 });
       gsap.set(msbCollageRef.current, { opacity: 0, scale: 1 });
       gsap.set(spaceZoomBaseRef.current, { opacity: 0, scale: 1 });
       gsap.set(cyberOverlayRef.current, { opacity: 0 });
-      gsap.set(footerMountainRef.current, { scale: mobile ? 1 : sz(1.15) });
+      gsap.set(footerBgRef.current, { scale: mobile ? 1 : sz(1.15) });
       gsap.set(partnerFlareRef.current, { opacity: 0, xPercent: -40 });
       gsap.set(noonTintRef.current, { opacity: 0 });
       gsap.set([amberBurnRef.current, amberGlowRef.current, twilightBlueRef.current, twilightRoseRef.current, msbHazeRef.current], { opacity: 0 });
@@ -511,8 +518,8 @@ export function Scrollytelling() {
         0
       );
 
-      // ============ SCENE 1 — Mountains + stats ============
-      tl.to(mountainRef.current, { scale: sz(1.18), duration: statsExitT + exitDur, ease: "none" }, 0);
+      // ============ SCENE 1 — Hero + stats ============
+      tl.to(heroBgRef.current, { scale: sz(1.18), duration: statsExitT + exitDur, ease: "none" }, 0);
 
       tl.fromTo(statsRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, statsEnterT);
       tl.to(statsRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, statsExitT);
@@ -555,7 +562,7 @@ export function Scrollytelling() {
       tl.fromTo(aboutRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, aboutEnterT);
       tl.to(aboutRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, aboutExitT);
 
-      // ============ SCENE 4 — Kumtor + «ФИНАНСИРОВАНИЕ» ============
+      // ============ SCENE 4 — Finance backdrop + «ФИНАНСИРОВАНИЕ» ============
       const cloudCoverDur = enterDur + 0.022;
       tl.fromTo(
         wipe2BackRef.current,
@@ -582,23 +589,23 @@ export function Scrollytelling() {
         financeCloudsT + 0.004
       );
 
-      tl.to(mountainRef.current, { opacity: 0, duration: bgCrossfadeDur, ease: "power1.inOut" }, kumtorBgSwapT);
+      tl.to(heroBgRef.current, { opacity: 0, duration: bgCrossfadeDur, ease: "power1.inOut" }, financeBgSwapT);
       tl.to(
-        kumtorBgRef.current,
+        financeBgRef.current,
         { opacity: 1, scale: sz(1.08), duration: bgCrossfadeDur, ease: "power2.out" },
-        kumtorBgSwapT
+        financeBgSwapT
       );
-      tl.to(noonTintRef.current, { opacity: 0.28, duration: bgCrossfadeDur, ease: "power2.out" }, kumtorBgSwapT);
+      tl.to(noonTintRef.current, { opacity: 0.28, duration: bgCrossfadeDur, ease: "power2.out" }, financeBgSwapT);
       tl.to(
-        kumtorBgRef.current,
-        { scale: sz(1.22), duration: financeExitT + exitDur - kumtorBgSwapT, ease: "none" },
-        kumtorBgSwapT + bgCrossfadeDur
+        financeBgRef.current,
+        { scale: sz(1.22), duration: financeExitT + exitDur - financeBgSwapT, ease: "none" },
+        financeBgSwapT + bgCrossfadeDur
       );
 
-      tl.to(wipe2BackRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, kumtorRevealT);
-      tl.to(wipe2MidRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, kumtorRevealT + 0.004);
-      tl.to(wipe2FrontRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, kumtorRevealT + 0.008);
-      tl.to(wipe2HazeRef.current, { opacity: 0, duration: exitDur, ease: "power2.in" }, kumtorRevealT);
+      tl.to(wipe2BackRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, financeRevealT);
+      tl.to(wipe2MidRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, financeRevealT + 0.004);
+      tl.to(wipe2FrontRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, financeRevealT + 0.008);
+      tl.to(wipe2HazeRef.current, { opacity: 0, duration: exitDur, ease: "power2.in" }, financeRevealT);
 
       tl.fromTo(financeRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, financeEnterT);
       tl.to(financeRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, financeExitT);
@@ -624,7 +631,7 @@ export function Scrollytelling() {
       );
 
       tl.to(noonTintRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
-      tl.to(kumtorBgRef.current, { opacity: 0, scale: sz(1.35), duration: lightCrossfadeDur, ease: "power2.in" }, sunsetBgSwapT);
+      tl.to(financeBgRef.current, { opacity: 0, scale: sz(1.35), duration: lightCrossfadeDur, ease: "power2.in" }, sunsetBgSwapT);
       tl.to(amberBurnRef.current, { opacity: 0.92, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
       tl.to(amberGlowRef.current, { opacity: 0.58, duration: lightCrossfadeDur + 0.006, ease: "power2.out" }, sunsetBgSwapT + 0.004);
       tl.to(directionsCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
@@ -839,7 +846,7 @@ export function Scrollytelling() {
       );
       if (!mobile) {
         tl.fromTo(
-          footerMountainRef.current,
+          footerBgRef.current,
           { scale: sz(1.15) },
           { scale: sz(1.0), duration: footerHoldDur + enterDur, ease: "power2.inOut" },
           footerEnterT
@@ -1055,16 +1062,16 @@ export function Scrollytelling() {
 
         {/* === BACKGROUND LAYER (z-0) === */}
         <img
-          ref={mountainRef}
-          src={mountains}
-          alt="Горы"
+          ref={heroBgRef}
+          src={SCENE_IMAGES.hero}
+          alt="Кыргызстан из космоса"
           className="absolute inset-0 z-0 h-full w-full object-cover object-bottom will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 70%" }}
         />
         <img
-          ref={kumtorBgRef}
-          src={kumtor}
-          alt="Золоторудный комбинат Кумтор"
+          ref={financeBgRef}
+          src={SCENE_IMAGES.finance}
+          alt="Гидроэлектростанция на закате"
           className="absolute inset-0 z-0 h-full w-full object-cover opacity-0 will-change-[transform,opacity]"
           style={{ transformOrigin: "50% 60%" }}
         />
@@ -1101,7 +1108,7 @@ export function Scrollytelling() {
           style={{ transformOrigin: "50% 55%", isolation: "isolate" }}
         >
           <img
-            src="/images/hpp-sunset.png"
+            src={SCENE_IMAGES.directions}
             alt="Гидроэлектростанция на закате"
             className="absolute inset-0 h-full w-full object-cover will-change-transform"
             style={{ transformOrigin: "50% 55%" }}
@@ -1114,7 +1121,7 @@ export function Scrollytelling() {
           style={{ transformOrigin: "50% 55%", isolation: "isolate" }}
         >
           <img
-            src="/images/issykkul-resort.png"
+            src={SCENE_IMAGES.msb}
             alt="Курорт на берегу Иссык-Куля"
             className="absolute inset-0 h-full w-full object-cover will-change-transform"
             style={{ transformOrigin: "50% 55%" }}
@@ -1128,7 +1135,7 @@ export function Scrollytelling() {
           style={{ transformOrigin: "50% 50%" }}
         >
           <img
-            src="/images/kyrgyzstan-space.png"
+            src={SCENE_IMAGES.space}
             alt="Кыргызстан из космоса"
             className="absolute inset-0 h-full w-full object-cover will-change-transform"
             style={{ transformOrigin: "50% 50%" }}
@@ -1139,7 +1146,7 @@ export function Scrollytelling() {
           className="pointer-events-none absolute inset-0 z-[6] hidden opacity-0 will-change-[transform,opacity] md:block md:[mix-blend-mode:screen]"
         >
           <img
-            src="/images/cyber-electricity.png"
+            src={SCENE_IMAGES.cyber}
             alt=""
             aria-hidden
             className="absolute inset-0 h-full w-full object-cover will-change-[transform,opacity]"
@@ -1460,7 +1467,7 @@ export function Scrollytelling() {
           </div>
         </div>
 
-        {/* === FOOTER SLIDE — mountain reverse return (Lovable slot) === */}
+        {/* === FOOTER SLIDE — hero return (Lovable slot) === */}
         <div
           ref={footerContentZoneRef}
           id="footer-content-zone"
@@ -1469,8 +1476,8 @@ export function Scrollytelling() {
           className="pointer-events-none absolute inset-0 z-[35] overflow-hidden opacity-0 will-change-[transform,opacity]"
         >
           <img
-            ref={footerMountainRef}
-            src={mountains}
+            ref={footerBgRef}
+            src={SCENE_IMAGES.hero}
             alt=""
             aria-hidden
             className="w-full h-full object-cover absolute inset-0 will-change-transform"
