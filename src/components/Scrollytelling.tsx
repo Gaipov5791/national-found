@@ -130,8 +130,9 @@ export function Scrollytelling() {
         scrollDistance: number;
         scrub: number | boolean;
         mobile: boolean;
+        cinematic: boolean;
       }) => {
-        const { scrollDistance, scrub, mobile } = cfg;
+        const { scrollDistance, scrub, mobile, cinematic } = cfg;
 
         if (scrollTrackRef.current) {
           scrollTrackRef.current.style.height = `${scrollDistance}px`;
@@ -241,14 +242,6 @@ export function Scrollytelling() {
       const vw = typeof window !== "undefined" ? window.innerWidth : 1280;
       const zK = vw < 640 ? 0.85 : vw < 1024 ? 1.0 : 1.15;
       const sz = (base: number) => +(1 + (base - 1) * zK).toFixed(3);
-      // Mobile: cap heavy scene-image zoom to keep GPU texture work minimal (desktop unchanged).
-      const imgScale = (base: number) => {
-        if (!mobile) return sz(base);
-        if (base <= 1) return 1;
-        return Math.min(1.02, +(1 + (base - 1) * 0.036).toFixed(3));
-      };
-      const cyberNewsOpacity = mobile ? 0.5 : 0.7;
-      const cyberContactsOpacity = mobile ? 0.5 : 1;
 
       const brandStartY =
         typeof window !== "undefined"
@@ -321,12 +314,9 @@ export function Scrollytelling() {
       gsap.set([sunsetBgRef.current, twilightBgRef.current, midnightBgRef.current], { opacity: 0 });
       gsap.set(directionsCollageRef.current, { opacity: 0, scale: 1 });
       gsap.set(msbCollageRef.current, { opacity: 0, scale: 1 });
-      gsap.set(spaceZoomBaseRef.current, { opacity: 0, scale: imgScale(1.0) });
+      gsap.set(spaceZoomBaseRef.current, { opacity: 0, scale: 1 });
       gsap.set(cyberOverlayRef.current, { opacity: 0 });
-      if (cyberOverlayRef.current) {
-        cyberOverlayRef.current.style.mixBlendMode = mobile ? "normal" : "screen";
-      }
-      gsap.set(footerMountainRef.current, { scale: imgScale(1.15) });
+      gsap.set(footerMountainRef.current, { scale: mobile ? 1 : sz(1.15) });
       gsap.set(partnerFlareRef.current, { opacity: 0, xPercent: -40 });
       gsap.set(noonTintRef.current, { opacity: 0 });
       gsap.set([amberBurnRef.current, amberGlowRef.current, twilightBlueRef.current, twilightRoseRef.current, msbHazeRef.current], { opacity: 0 });
@@ -517,12 +507,14 @@ export function Scrollytelling() {
       tl.to(sunsetAtmoMidRef.current, { yPercent: -115, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.004);
       tl.to(sunsetAtmoFrontRef.current, { yPercent: -120, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.008);
 
-      tl.fromTo(
-        directionsCollageRef.current,
-        { scale: 1 },
-        { scale: imgScale(1.08), duration: collageParallaxDur, ease: "power2.out" },
-        sunsetRevealT
-      );
+      if (!mobile) {
+        tl.fromTo(
+          directionsCollageRef.current,
+          { scale: 1 },
+          { scale: sz(1.08), duration: collageParallaxDur, ease: "power2.out" },
+          sunsetRevealT
+        );
+      }
       tl.to(amberGlowRef.current, { opacity: 0.82, duration: collageParallaxDur, ease: "power1.inOut" }, sunsetRevealT);
 
       tl.fromTo(directionsRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, directionsEnterT);
@@ -567,12 +559,14 @@ export function Scrollytelling() {
       tl.to(twilightAtmoMidRef.current, { yPercent: -112, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.004);
       tl.to(twilightAtmoFrontRef.current, { yPercent: -118, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.008);
 
-      tl.fromTo(
-        msbCollageRef.current,
-        { scale: 1 },
-        { scale: imgScale(1.1), duration: msbExitT + exitDur - twilightRevealT, ease: "none" },
-        twilightRevealT
-      );
+      if (!mobile) {
+        tl.fromTo(
+          msbCollageRef.current,
+          { scale: 1 },
+          { scale: sz(1.1), duration: msbExitT + exitDur - twilightRevealT, ease: "none" },
+          twilightRevealT
+        );
+      }
 
       tl.fromTo(msbRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, msbEnterT);
       tl.to(msbRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, msbExitT);
@@ -585,12 +579,21 @@ export function Scrollytelling() {
       tl.to(twilightBlueRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
       tl.to(twilightRoseRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
       tl.to(msbHazeRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.8, ease: "power1.inOut" }, midnightBgSwapT);
-      tl.fromTo(
-        spaceZoomBaseRef.current,
-        { opacity: 0, scale: imgScale(1.0) },
-        { opacity: 1, scale: imgScale(1.0), duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
-        midnightBgSwapT
-      );
+      if (mobile) {
+        tl.fromTo(
+          spaceZoomBaseRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
+          midnightBgSwapT
+        );
+      } else {
+        tl.fromTo(
+          spaceZoomBaseRef.current,
+          { opacity: 0, scale: sz(1.0) },
+          { opacity: 1, scale: sz(1.0), duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
+          midnightBgSwapT
+        );
+      }
 
       tl.fromTo(
         partnerFlareRef.current,
@@ -637,37 +640,33 @@ export function Scrollytelling() {
       const spaceZoomNewsDur = newsExitT + exitDur - newsEnterT;
       const spaceZoomContactsDur = contactsExitT + exitDur - contactsEnterT;
 
-      tl.fromTo(
-        spaceZoomBaseRef.current,
-        { scale: imgScale(1.0) },
-        { scale: imgScale(1.25), duration: spaceZoomNewsDur, ease: "none" },
-        newsEnterT
-      );
-      tl.fromTo(
-        cyberOverlayRef.current,
-        { opacity: 0 },
-        { opacity: cyberNewsOpacity, duration: enterDur + holdDur, ease: "power2.out" },
-        newsEnterT
-      );
+      if (cinematic) {
+        tl.fromTo(
+          spaceZoomBaseRef.current,
+          { scale: sz(1.0) },
+          { scale: sz(1.25), duration: spaceZoomNewsDur, ease: "none" },
+          newsEnterT
+        );
+        tl.fromTo(
+          cyberOverlayRef.current,
+          { opacity: 0 },
+          { opacity: 0.7, duration: enterDur + holdDur, ease: "power2.out" },
+          newsEnterT
+        );
+      }
 
       tl.fromTo(newsTitleRef.current, textIdle, { ...textArrived, duration: enterDur, ease: textEnterEase }, newsEnterT);
       tl.to(newsTitleRef.current, { ...textEvaporated, duration: exitDur, ease: textExitEase }, newsExitT);
 
-      tl.to(
-        spaceZoomBaseRef.current,
-        { scale: imgScale(1.55), duration: spaceZoomContactsDur, ease: "none" },
-        contactsEnterT
-      );
-      if (mobile) {
+      if (cinematic) {
         tl.to(
-          cyberOverlayRef.current,
-          { opacity: cyberContactsOpacity, duration: enterDur + holdDur, ease: "power2.out" },
+          spaceZoomBaseRef.current,
+          { scale: sz(1.55), duration: spaceZoomContactsDur, ease: "none" },
           contactsEnterT
         );
-      } else {
         tl.to(
           cyberOverlayRef.current,
-          { opacity: cyberContactsOpacity, duration: enterDur + holdDur * 0.45, ease: "power2.out" },
+          { opacity: 1, duration: enterDur + holdDur * 0.45, ease: "power2.out" },
           contactsEnterT
         );
         tl.to(
@@ -691,12 +690,14 @@ export function Scrollytelling() {
         { opacity: 1, duration: enterDur, ease: "power2.out" },
         footerEnterT
       );
-      tl.fromTo(
-        footerMountainRef.current,
-        { scale: imgScale(1.15) },
-        { scale: imgScale(1.0), duration: footerHoldDur + enterDur, ease: "power2.inOut" },
-        footerEnterT
-      );
+      if (!mobile) {
+        tl.fromTo(
+          footerMountainRef.current,
+          { scale: sz(1.15) },
+          { scale: sz(1.0), duration: footerHoldDur + enterDur, ease: "power2.inOut" },
+          footerEnterT
+        );
+      }
       tl.to(
         footerContentZoneRef.current,
         { opacity: 1, duration: footerHoldDur, ease: "none" },
@@ -725,6 +726,7 @@ export function Scrollytelling() {
           scrollDistance: SCROLL_DISTANCE_MOBILE,
           scrub: true,
           mobile: true,
+          cinematic: false,
         });
       });
 
@@ -734,6 +736,7 @@ export function Scrollytelling() {
           scrollDistance: SCROLL_DISTANCE_TABLET,
           scrub: 0.5,
           mobile: false,
+          cinematic: false,
         });
       });
 
@@ -743,6 +746,7 @@ export function Scrollytelling() {
           scrollDistance: SCROLL_DISTANCE_DESKTOP,
           scrub: 1,
           mobile: false,
+          cinematic: true,
         });
       });
 
@@ -820,9 +824,10 @@ export function Scrollytelling() {
           </nav>
 
           <div
-            className={`mt-3 w-full overflow-hidden rounded-3xl border border-white/40 bg-white/80 font-display backdrop-blur-2xl shadow-[0_20px_60px_rgba(20,40,90,0.18)] transition-all duration-500 ease-out lg:hidden ${
+            className={`mt-3 w-full overflow-hidden rounded-3xl border border-white/40 bg-white/80 font-display backdrop-blur-2xl shadow-[0_20px_60px_rgba(20,40,90,0.18)] transition-all duration-500 ease-out will-change-transform lg:hidden ${
               navOpen ? "max-h-[720px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
             }`}
+            style={{ transform: "translate3d(0, 0, 0)" }}
           >
           <ul className="flex flex-col divide-y divide-[color:var(--ink)]/10 px-2 py-2 text-[12px] font-semibold tracking-[0.16em] text-[color:var(--ink)]">
             {NAV_ITEMS.map((label, i) => (
@@ -983,7 +988,7 @@ export function Scrollytelling() {
         </div>
         <div
           ref={cyberOverlayRef}
-          className="pointer-events-none absolute inset-0 z-[6] opacity-0 will-change-[transform,opacity] max-md:[mix-blend-mode:normal] md:[mix-blend-mode:screen]"
+          className="pointer-events-none absolute inset-0 z-[6] hidden opacity-0 will-change-[transform,opacity] md:block md:[mix-blend-mode:screen]"
         >
           <img
             src="/images/cyber-electricity.png"
