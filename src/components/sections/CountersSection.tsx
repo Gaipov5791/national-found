@@ -1,4 +1,40 @@
 import { forwardRef, type RefObject } from "react";
+import gsap from "gsap";
+import { formatCount, type SceneAnimationContext, type SceneTimeline } from "./sceneAnimationShared";
+
+export type CountersSceneRefs = {
+  statsRef: RefObject<HTMLDivElement | null>;
+  count200Ref: RefObject<HTMLSpanElement | null>;
+  count8000Ref: RefObject<HTMLSpanElement | null>;
+};
+
+export function prepareCountersScene(refs: CountersSceneRefs, ctx: SceneAnimationContext) {
+  const { text } = ctx;
+  gsap.set(refs.statsRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+}
+
+export function createCountUpdater(refs: CountersSceneRefs, ctx: SceneAnimationContext) {
+  const { timings } = ctx;
+  const { statsEnterT, statsExitT, exitDur } = timings;
+
+  return (progress: number) => {
+    const p = Math.max(0, Math.min(1, (progress - statsEnterT) / (statsExitT + exitDur - statsEnterT)));
+    if (refs.count200Ref.current) {
+      refs.count200Ref.current.textContent = formatCount(200, p, "+");
+    }
+    if (refs.count8000Ref.current) {
+      refs.count8000Ref.current.textContent = formatCount(8000, p);
+    }
+  };
+}
+
+export function animateCountersScene(tl: SceneTimeline, refs: CountersSceneRefs, ctx: SceneAnimationContext) {
+  const { timings, text } = ctx;
+  const { statsEnterT, statsExitT, enterDur, exitDur } = timings;
+
+  tl.fromTo(refs.statsRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, statsEnterT);
+  tl.to(refs.statsRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, statsExitT);
+}
 
 export type CountersSectionProps = {
   statsRef: RefObject<HTMLDivElement | null>;

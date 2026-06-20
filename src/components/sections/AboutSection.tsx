@@ -1,4 +1,23 @@
 import { forwardRef, type RefObject } from "react";
+import gsap from "gsap";
+import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
+
+export type AboutSceneRefs = {
+  aboutRef: RefObject<HTMLDivElement | null>;
+};
+
+export function prepareAboutScene(refs: AboutSceneRefs, ctx: SceneAnimationContext) {
+  const { text } = ctx;
+  gsap.set(refs.aboutRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+}
+
+export function animateAboutScene(tl: SceneTimeline, refs: AboutSceneRefs, ctx: SceneAnimationContext) {
+  const { timings, text } = ctx;
+  const { aboutEnterT, aboutExitT, enterDur, exitDur } = timings;
+
+  tl.fromTo(refs.aboutRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, aboutEnterT);
+  tl.to(refs.aboutRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, aboutExitT);
+}
 
 export type AboutSectionProps = {
   aboutRef: RefObject<HTMLDivElement | null>;

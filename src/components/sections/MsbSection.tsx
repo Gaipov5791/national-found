@@ -1,5 +1,125 @@
 import { forwardRef, type RefObject } from "react";
+import gsap from "gsap";
 import { SCENE_IMAGES } from "./sceneImages";
+import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
+
+export type MsbSceneRefs = {
+  twilightBgRef: RefObject<HTMLDivElement | null>;
+  directionsCollageRef: RefObject<HTMLDivElement | null>;
+  msbCollageRef: RefObject<HTMLDivElement | null>;
+  amberBurnRef: RefObject<HTMLDivElement | null>;
+  amberGlowRef: RefObject<HTMLDivElement | null>;
+  twilightBlueRef: RefObject<HTMLDivElement | null>;
+  twilightRoseRef: RefObject<HTMLDivElement | null>;
+  msbHazeRef: RefObject<HTMLDivElement | null>;
+  twilightAtmoBackRef: RefObject<HTMLDivElement | null>;
+  twilightAtmoMidRef: RefObject<HTMLDivElement | null>;
+  twilightAtmoFrontRef: RefObject<HTMLDivElement | null>;
+  msbRef: RefObject<HTMLDivElement | null>;
+};
+
+export function prepareMsbScene(refs: MsbSceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, text, sz } = ctx;
+
+  if (!mobile) {
+    [refs.twilightAtmoBackRef, refs.twilightAtmoMidRef, refs.twilightAtmoFrontRef].forEach((r, i) => {
+      if (r.current) {
+        gsap.to(r.current, {
+          yPercent: i % 2 === 0 ? 4 : -4,
+          duration: 23 + i,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
+    });
+  }
+
+  gsap.set(refs.msbRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.msbCollageRef.current, { opacity: 0, scale: 1, visibility: "visible" });
+  gsap.set([refs.twilightBlueRef.current, refs.twilightRoseRef.current, refs.msbHazeRef.current], { opacity: 0 });
+  gsap.set(
+    [refs.twilightAtmoBackRef.current, refs.twilightAtmoMidRef.current, refs.twilightAtmoFrontRef.current],
+    { opacity: 0, yPercent: 110, scale: sz(1.1) }
+  );
+  gsap.set(refs.twilightAtmoMidRef.current, { yPercent: 130, scale: sz(1.2) });
+  gsap.set(refs.twilightAtmoFrontRef.current, { yPercent: 150, scale: sz(1.35) });
+
+  if (mobile && refs.msbCollageRef.current) {
+    gsap.set(refs.msbCollageRef.current, {
+      force3D: true,
+      visibility: "visible",
+      backfaceVisibility: "hidden",
+    });
+  }
+}
+
+export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, timings, text, sz } = ctx;
+  const {
+    enterDur,
+    exitDur,
+    atmoWipeDur,
+    lightCrossfadeDur,
+    convergeDur,
+    twilightAtmoT,
+    twilightBgSwapT,
+    twilightRevealT,
+    msbEnterT,
+    msbExitT,
+  } = timings;
+
+  tl.fromTo(
+    refs.twilightAtmoBackRef.current,
+    { yPercent: 110, opacity: 0, scale: sz(1.1) },
+    { yPercent: -6, opacity: 0.55, scale: sz(1.25), duration: atmoWipeDur, ease: "power2.inOut" },
+    twilightAtmoT
+  );
+  tl.fromTo(
+    refs.twilightAtmoMidRef.current,
+    { yPercent: 130, opacity: 0, scale: sz(1.2) },
+    { yPercent: -2, opacity: 0.42, scale: sz(1.38), duration: atmoWipeDur, ease: "power2.inOut" },
+    twilightAtmoT + 0.006
+  );
+  tl.fromTo(
+    refs.twilightAtmoFrontRef.current,
+    { yPercent: 150, opacity: 0, scale: sz(1.35) },
+    { yPercent: -10, opacity: 0.48, scale: sz(1.5), duration: atmoWipeDur, ease: "power2.inOut" },
+    twilightAtmoT + 0.010
+  );
+
+  tl.to(refs.amberBurnRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.55, ease: "power1.inOut" }, twilightAtmoT);
+  tl.to(refs.amberGlowRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.55, ease: "power1.inOut" }, twilightAtmoT);
+  tl.to(refs.directionsCollageRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.6, ease: "power2.in" }, twilightAtmoT);
+  tl.to(refs.msbCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, twilightBgSwapT);
+
+  tl.to(refs.twilightRoseRef.current, { opacity: 0.42, duration: convergeDur * 0.45, ease: "power2.out" }, twilightAtmoT);
+  tl.to(refs.twilightBlueRef.current, { opacity: 0.18, duration: convergeDur * 0.4, ease: "power2.out" }, twilightAtmoT + 0.004);
+  tl.to(refs.msbHazeRef.current, { opacity: 0.62, duration: convergeDur * 0.55, ease: "power2.inOut" }, twilightAtmoT + 0.006);
+  tl.to(refs.twilightRoseRef.current, { opacity: 0.32, duration: convergeDur, ease: "power1.inOut" }, twilightAtmoT + convergeDur * 0.25);
+  tl.to(refs.twilightBlueRef.current, { opacity: 0.78, duration: convergeDur, ease: "power2.out" }, twilightAtmoT + convergeDur * 0.2);
+  tl.to(refs.msbHazeRef.current, { opacity: 0.38, duration: convergeDur * 0.7, ease: "power1.inOut" }, twilightAtmoT + convergeDur * 0.35);
+
+  tl.to(refs.twilightAtmoBackRef.current, { yPercent: -108, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT);
+  tl.to(refs.twilightAtmoMidRef.current, { yPercent: -112, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.004);
+  tl.to(refs.twilightAtmoFrontRef.current, { yPercent: -118, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.008);
+
+  if (!mobile) {
+    tl.fromTo(
+      refs.msbCollageRef.current,
+      { scale: 1 },
+      { scale: sz(1.1), duration: msbExitT + exitDur - twilightRevealT, ease: "none" },
+      twilightRevealT
+    );
+  }
+
+  tl.fromTo(refs.msbRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, msbEnterT);
+  tl.to(refs.msbRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, msbExitT);
+  tl.to(refs.msbCollageRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
+  tl.to(refs.twilightBlueRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
+  tl.to(refs.twilightRoseRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
+  tl.to(refs.msbHazeRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
+}
 
 export type MsbSectionProps = {
   twilightBgRef: RefObject<HTMLDivElement | null>;

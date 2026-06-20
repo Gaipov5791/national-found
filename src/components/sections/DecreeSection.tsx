@@ -1,4 +1,73 @@
 import { forwardRef, type RefObject } from "react";
+import gsap from "gsap";
+import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
+
+export type DecreeSceneRefs = {
+  decreeRef: RefObject<HTMLDivElement | null>;
+  ambientFogRef: RefObject<HTMLDivElement | null>;
+  wipe1HazeRef: RefObject<HTMLDivElement | null>;
+  wipe1BackRef: RefObject<HTMLDivElement | null>;
+  wipe1MidRef: RefObject<HTMLDivElement | null>;
+  wipe1FrontRef: RefObject<HTMLDivElement | null>;
+};
+
+export function prepareDecreeScene(refs: DecreeSceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, text } = ctx;
+
+  if (!mobile) {
+    [refs.wipe1BackRef, refs.wipe1MidRef, refs.wipe1FrontRef, refs.ambientFogRef].forEach((r, i) => {
+      if (r.current) {
+        gsap.to(r.current, {
+          yPercent: i % 2 === 0 ? 4 : -4,
+          duration: 14 + i,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
+    });
+  }
+
+  gsap.set(refs.decreeRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+}
+
+export function animateDecreeScene(tl: SceneTimeline, refs: DecreeSceneRefs, ctx: SceneAnimationContext) {
+  const { timings, text, sz } = ctx;
+  const { enterDur, exitDur, decreeCloudsT, decreeEnterT, decreeExitT } = timings;
+
+  tl.fromTo(
+    refs.ambientFogRef.current,
+    { opacity: 0, yPercent: 40 },
+    { opacity: 0.55, yPercent: 0, duration: enterDur + 0.02, ease: "power2.out" },
+    decreeCloudsT
+  );
+  tl.fromTo(
+    refs.wipe1BackRef.current,
+    { yPercent: 110, opacity: 0, scale: sz(1.1) },
+    { yPercent: -15, opacity: 0.58, scale: sz(1.25), duration: enterDur + 0.02, ease: "power2.inOut" },
+    decreeCloudsT
+  );
+  tl.fromTo(
+    refs.wipe1MidRef.current,
+    { yPercent: 130, opacity: 0, scale: sz(1.2) },
+    { yPercent: -5, opacity: 0.42, scale: sz(1.4), duration: enterDur + 0.018, ease: "power2.inOut" },
+    decreeCloudsT + 0.008
+  );
+  tl.fromTo(
+    refs.wipe1FrontRef.current,
+    { yPercent: 150, opacity: 0, scale: sz(1.3) },
+    { yPercent: -25, opacity: 0.48, scale: sz(1.55), duration: enterDur + 0.02, ease: "power2.inOut" },
+    decreeCloudsT + 0.012
+  );
+  tl.set(refs.wipe1HazeRef.current, { opacity: 0 }, decreeCloudsT);
+
+  tl.fromTo(refs.decreeRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, decreeEnterT);
+  tl.to(refs.decreeRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, decreeExitT);
+  tl.to(refs.wipe1BackRef.current, { yPercent: -120, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT);
+  tl.to(refs.wipe1MidRef.current, { yPercent: -130, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT + 0.004);
+  tl.to(refs.wipe1FrontRef.current, { yPercent: -140, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT + 0.008);
+  tl.to(refs.ambientFogRef.current, { yPercent: -30, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT);
+}
 
 export type DecreeSectionProps = {
   decreeRef: RefObject<HTMLDivElement | null>;

@@ -1,5 +1,148 @@
 import { forwardRef, type RefObject } from "react";
+import gsap from "gsap";
 import { SCENE_IMAGES } from "./sceneImages";
+import { CURSOR_BORDER_LIGHT, type SceneAnimationContext, type SceneTimeline } from "./sceneAnimationShared";
+
+export type DirectionsSceneRefs = {
+  sunsetBgRef: RefObject<HTMLDivElement | null>;
+  financeBgRef: RefObject<HTMLImageElement | null>;
+  directionsCollageRef: RefObject<HTMLDivElement | null>;
+  amberBurnRef: RefObject<HTMLDivElement | null>;
+  amberGlowRef: RefObject<HTMLDivElement | null>;
+  noonTintRef: RefObject<HTMLDivElement | null>;
+  sunsetAtmoBackRef: RefObject<HTMLDivElement | null>;
+  sunsetAtmoMidRef: RefObject<HTMLDivElement | null>;
+  sunsetAtmoFrontRef: RefObject<HTMLDivElement | null>;
+  directionsRef: RefObject<HTMLDivElement | null>;
+};
+
+export function prepareDirectionsScene(refs: DirectionsSceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, text, sz } = ctx;
+
+  if (!mobile) {
+    [refs.sunsetAtmoBackRef, refs.sunsetAtmoMidRef, refs.sunsetAtmoFrontRef].forEach((r, i) => {
+      if (r.current) {
+        gsap.to(r.current, {
+          yPercent: i % 2 === 0 ? 4 : -4,
+          duration: 20 + i,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
+    });
+  }
+
+  gsap.set(refs.directionsRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.sunsetBgRef.current, { opacity: 0 });
+  gsap.set(refs.directionsCollageRef.current, { opacity: 0, scale: 1, visibility: "visible" });
+  gsap.set(
+    [refs.sunsetAtmoBackRef.current, refs.sunsetAtmoMidRef.current, refs.sunsetAtmoFrontRef.current],
+    { opacity: 0, yPercent: 110, scale: sz(1.1) }
+  );
+  gsap.set(refs.sunsetAtmoMidRef.current, { yPercent: 130, scale: sz(1.2) });
+  gsap.set(refs.sunsetAtmoFrontRef.current, { yPercent: 150, scale: sz(1.35) });
+  gsap.set([refs.amberBurnRef.current, refs.amberGlowRef.current], { opacity: 0 });
+
+  if (mobile && refs.directionsCollageRef.current) {
+    gsap.set(refs.directionsCollageRef.current, {
+      force3D: true,
+      visibility: "visible",
+      backfaceVisibility: "hidden",
+    });
+  }
+}
+
+export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, timings, text, sz } = ctx;
+  const {
+    enterDur,
+    exitDur,
+    atmoWipeDur,
+    lightCrossfadeDur,
+    collageParallaxDur,
+    sunsetAtmoT,
+    sunsetBgSwapT,
+    sunsetRevealT,
+    directionsEnterT,
+    directionsExitT,
+  } = timings;
+
+  const cursorRing = document.getElementById("custom-cursor-ring");
+  const cursorDot = document.getElementById("custom-cursor-dot");
+
+  tl.fromTo(
+    refs.sunsetAtmoBackRef.current,
+    { yPercent: 110, opacity: 0, scale: sz(1.1) },
+    { yPercent: -8, opacity: 0.72, scale: sz(1.28), duration: atmoWipeDur, ease: "power2.inOut" },
+    sunsetAtmoT
+  );
+  tl.fromTo(
+    refs.sunsetAtmoMidRef.current,
+    { yPercent: 130, opacity: 0, scale: sz(1.2) },
+    { yPercent: -4, opacity: 0.58, scale: sz(1.42), duration: atmoWipeDur, ease: "power2.inOut" },
+    sunsetAtmoT + 0.006
+  );
+  tl.fromTo(
+    refs.sunsetAtmoFrontRef.current,
+    { yPercent: 150, opacity: 0, scale: sz(1.35) },
+    { yPercent: -14, opacity: 0.65, scale: sz(1.55), duration: atmoWipeDur, ease: "power2.inOut" },
+    sunsetAtmoT + 0.010
+  );
+
+  tl.to(refs.noonTintRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
+  if (mobile) {
+    tl.to(refs.directionsCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
+    tl.to(refs.financeBgRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
+  } else {
+    tl.to(
+      refs.financeBgRef.current,
+      { opacity: 0, scale: sz(1.35), duration: lightCrossfadeDur, ease: "power2.in" },
+      sunsetBgSwapT
+    );
+    tl.to(refs.directionsCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
+  }
+  tl.to(refs.amberBurnRef.current, { opacity: 0.92, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
+  tl.to(refs.amberGlowRef.current, { opacity: 0.58, duration: lightCrossfadeDur + 0.006, ease: "power2.out" }, sunsetBgSwapT + 0.004);
+
+  if (cursorRing) {
+    tl.to(
+      cursorRing,
+      {
+        borderColor: CURSOR_BORDER_LIGHT,
+        duration: lightCrossfadeDur,
+        ease: "power1.inOut",
+        onUpdate: function () {
+          cursorRing.setAttribute("data-cursor-theme", this.progress() > 0.5 ? "light" : "dark");
+        },
+      },
+      sunsetBgSwapT
+    );
+  }
+  if (cursorDot) {
+    tl.to(cursorDot, { backgroundColor: CURSOR_BORDER_LIGHT, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
+  }
+
+  tl.to(refs.sunsetAtmoBackRef.current, { yPercent: -110, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT);
+  tl.to(refs.sunsetAtmoMidRef.current, { yPercent: -115, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.004);
+  tl.to(refs.sunsetAtmoFrontRef.current, { yPercent: -120, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.008);
+
+  if (!mobile) {
+    tl.fromTo(
+      refs.directionsCollageRef.current,
+      { scale: 1 },
+      { scale: sz(1.08), duration: collageParallaxDur, ease: "power2.out" },
+      sunsetRevealT
+    );
+  }
+  tl.to(refs.amberGlowRef.current, { opacity: 0.82, duration: collageParallaxDur, ease: "power1.inOut" }, sunsetRevealT);
+
+  tl.fromTo(refs.directionsRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, directionsEnterT);
+  tl.to(refs.directionsRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, directionsExitT);
+  tl.to(refs.directionsCollageRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, directionsExitT);
+  tl.to(refs.amberBurnRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, directionsExitT);
+  tl.to(refs.amberGlowRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, directionsExitT);
+}
 
 export type DirectionsSectionProps = {
   sunsetBgRef: RefObject<HTMLDivElement | null>;

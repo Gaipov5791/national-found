@@ -1,5 +1,117 @@
 import { forwardRef, type RefObject } from "react";
+import gsap from "gsap";
 import { SCENE_IMAGES } from "./sceneImages";
+import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
+
+export type FinanceSceneRefs = {
+  heroBgRef: RefObject<HTMLImageElement | null>;
+  financeBgRef: RefObject<HTMLImageElement | null>;
+  noonTintRef: RefObject<HTMLDivElement | null>;
+  financeRef: RefObject<HTMLDivElement | null>;
+  wipe2HazeRef: RefObject<HTMLDivElement | null>;
+  wipe2BackRef: RefObject<HTMLDivElement | null>;
+  wipe2MidRef: RefObject<HTMLDivElement | null>;
+  wipe2FrontRef: RefObject<HTMLDivElement | null>;
+};
+
+export function prepareFinanceScene(refs: FinanceSceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, text, sz } = ctx;
+
+  if (!mobile) {
+    [refs.wipe2BackRef, refs.wipe2MidRef, refs.wipe2FrontRef].forEach((r, i) => {
+      if (r.current) {
+        gsap.to(r.current, {
+          yPercent: i % 2 === 0 ? 4 : -4,
+          duration: 17 + i,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
+    });
+  }
+
+  gsap.set(refs.financeRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.financeBgRef.current, { opacity: 0, yPercent: 0, scale: sz(1.0) });
+  gsap.set(refs.noonTintRef.current, { opacity: 0 });
+  gsap.set([refs.wipe2BackRef.current, refs.wipe2MidRef.current, refs.wipe2FrontRef.current], {
+    opacity: 0,
+    yPercent: 110,
+    scale: sz(1.1),
+  });
+  gsap.set(refs.wipe2MidRef.current, { yPercent: 130, scale: sz(1.2) });
+  gsap.set(refs.wipe2FrontRef.current, { yPercent: 150, scale: sz(1.35) });
+
+  if (mobile && refs.financeBgRef.current) {
+    gsap.set(refs.financeBgRef.current, {
+      force3D: true,
+      visibility: "visible",
+      backfaceVisibility: "hidden",
+    });
+  }
+}
+
+export function animateFinanceScene(tl: SceneTimeline, refs: FinanceSceneRefs, ctx: SceneAnimationContext) {
+  const { timings, text, sz } = ctx;
+  const {
+    enterDur,
+    exitDur,
+    financeCloudsT,
+    financeBgSwapT,
+    financeRevealT,
+    financeEnterT,
+    financeExitT,
+    bgCrossfadeDur,
+  } = timings;
+
+  const cloudCoverDur = enterDur + 0.022;
+
+  tl.fromTo(
+    refs.wipe2BackRef.current,
+    { yPercent: 110, opacity: 0, scale: sz(1.1) },
+    { yPercent: 0, opacity: 0.92, scale: sz(1.3), duration: cloudCoverDur, ease: "power2.inOut" },
+    financeCloudsT
+  );
+  tl.fromTo(
+    refs.wipe2MidRef.current,
+    { yPercent: 130, opacity: 0, scale: sz(1.2) },
+    { yPercent: -5, opacity: 0.85, scale: sz(1.45), duration: cloudCoverDur, ease: "power2.inOut" },
+    financeCloudsT + 0.006
+  );
+  tl.fromTo(
+    refs.wipe2FrontRef.current,
+    { yPercent: 150, opacity: 0, scale: sz(1.35) },
+    { yPercent: -12, opacity: 0.88, scale: sz(1.6), duration: cloudCoverDur, ease: "power2.inOut" },
+    financeCloudsT + 0.010
+  );
+  tl.fromTo(
+    refs.wipe2HazeRef.current,
+    { opacity: 0 },
+    { opacity: 0.35, duration: cloudCoverDur * 0.8, ease: "power2.out" },
+    financeCloudsT + 0.004
+  );
+
+  tl.to(refs.heroBgRef.current, { opacity: 0, duration: bgCrossfadeDur, ease: "power1.inOut" }, financeBgSwapT);
+  tl.to(
+    refs.financeBgRef.current,
+    { opacity: 1, scale: sz(1.08), duration: bgCrossfadeDur, ease: "power2.out" },
+    financeBgSwapT
+  );
+  tl.to(refs.noonTintRef.current, { opacity: 0.28, duration: bgCrossfadeDur, ease: "power2.out" }, financeBgSwapT);
+  tl.to(
+    refs.financeBgRef.current,
+    { scale: sz(1.22), duration: financeExitT + exitDur - financeBgSwapT, ease: "none" },
+    financeBgSwapT + bgCrossfadeDur
+  );
+
+  tl.to(refs.wipe2BackRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, financeRevealT);
+  tl.to(refs.wipe2MidRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, financeRevealT + 0.004);
+  tl.to(refs.wipe2FrontRef.current, { yPercent: -100, opacity: 0, duration: exitDur + 0.010, ease: "power2.inOut" }, financeRevealT + 0.008);
+  tl.to(refs.wipe2HazeRef.current, { opacity: 0, duration: exitDur, ease: "power2.in" }, financeRevealT);
+
+  tl.fromTo(refs.financeRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, financeEnterT);
+  tl.to(refs.financeRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, financeExitT);
+}
 
 export type FinanceSectionProps = {
   financeBgRef: RefObject<HTMLImageElement | null>;

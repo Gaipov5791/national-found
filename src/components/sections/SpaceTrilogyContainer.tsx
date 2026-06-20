@@ -1,5 +1,178 @@
 import { forwardRef, type RefObject } from "react";
+import gsap from "gsap";
 import { SCENE_IMAGES } from "./sceneImages";
+import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
+
+export type SpaceTrilogySceneRefs = {
+  twilightBlueRef: RefObject<HTMLDivElement | null>;
+  twilightRoseRef: RefObject<HTMLDivElement | null>;
+  msbHazeRef: RefObject<HTMLDivElement | null>;
+  spaceZoomBaseRef: RefObject<HTMLDivElement | null>;
+  cyberOverlayRef: RefObject<HTMLDivElement | null>;
+  handshakeRimRef: RefObject<HTMLDivElement | null>;
+  partnerFlareRef: RefObject<HTMLDivElement | null>;
+  partnersTextRef: RefObject<HTMLDivElement | null>;
+  partnerLogosRef: RefObject<HTMLDivElement | null>;
+  newsTitleRef: RefObject<HTMLDivElement | null>;
+  newsContentRef: RefObject<HTMLDivElement | null>;
+  contactsTitleRef: RefObject<HTMLDivElement | null>;
+  contactsContentRef: RefObject<HTMLDivElement | null>;
+};
+
+export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, text, sz } = ctx;
+
+  gsap.set(refs.partnersTextRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.newsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.contactsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set([refs.newsContentRef.current, refs.contactsContentRef.current], { opacity: 0, visibility: "hidden" });
+  gsap.set(refs.spaceZoomBaseRef.current, { opacity: 0, scale: 1, visibility: "visible" });
+  gsap.set(refs.cyberOverlayRef.current, { opacity: 0 });
+  gsap.set(refs.partnerFlareRef.current, { opacity: 0, xPercent: -40 });
+  gsap.set(refs.handshakeRimRef.current, { opacity: 0 });
+
+  if (mobile && refs.spaceZoomBaseRef.current) {
+    gsap.set(refs.spaceZoomBaseRef.current, {
+      force3D: true,
+      visibility: "visible",
+      backfaceVisibility: "hidden",
+    });
+  }
+
+  const partnerLogoEls = refs.partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
+  if (partnerLogoEls?.length) {
+    gsap.set(partnerLogoEls, { opacity: 0, scale: 0.88 });
+  }
+}
+
+export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, cinematic, timings, text, sz } = ctx;
+  const {
+    enterDur,
+    exitDur,
+    holdDur,
+    lightCrossfadeDur,
+    flareDur,
+    midnightBgSwapT,
+    partnersEnterT,
+    partnerLogoExitT,
+    partnersTextExitT,
+    newsEnterT,
+    newsExitT,
+    contactsEnterT,
+    contactsExitT,
+  } = timings;
+
+  const partnerLogoEls = refs.partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
+
+  tl.to(refs.twilightBlueRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
+  tl.to(refs.twilightRoseRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
+  tl.to(refs.msbHazeRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.8, ease: "power1.inOut" }, midnightBgSwapT);
+
+  if (mobile) {
+    tl.fromTo(
+      refs.spaceZoomBaseRef.current,
+      { opacity: 0 },
+      { opacity: 1, duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
+      midnightBgSwapT
+    );
+  } else {
+    tl.fromTo(
+      refs.spaceZoomBaseRef.current,
+      { opacity: 0, scale: sz(1.0) },
+      { opacity: 1, scale: sz(1.0), duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
+      midnightBgSwapT
+    );
+  }
+
+  tl.fromTo(
+    refs.partnerFlareRef.current,
+    { opacity: 0, xPercent: -40 },
+    { opacity: 1, xPercent: 28, duration: flareDur, ease: "power2.inOut" },
+    partnersEnterT - 0.008
+  );
+  tl.fromTo(
+    refs.handshakeRimRef.current,
+    { opacity: 0 },
+    { opacity: 0.85, duration: flareDur * 0.55, ease: "power2.out" },
+    partnersEnterT - 0.004
+  );
+  tl.to(
+    refs.partnerFlareRef.current,
+    { opacity: 0, xPercent: 92, duration: flareDur * 0.85, ease: "power2.inOut" },
+    partnersEnterT + enterDur * 0.25
+  );
+  tl.to(
+    refs.handshakeRimRef.current,
+    { opacity: 0.35, duration: flareDur * 0.6, ease: "power1.inOut" },
+    partnersEnterT + enterDur * 0.35
+  );
+
+  tl.fromTo(refs.partnersTextRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, partnersEnterT);
+  if (partnerLogoEls?.length) {
+    tl.to(
+      partnerLogoEls,
+      { opacity: 1, scale: 1, duration: 0.022, stagger: 0.008, ease: "power2.out" },
+      partnersEnterT + enterDur * 0.5
+    );
+  }
+
+  if (partnerLogoEls?.length) {
+    tl.to(
+      partnerLogoEls,
+      { ...text.evaporated, duration: exitDur, stagger: 0.005, ease: text.exitEase },
+      partnerLogoExitT
+    );
+  }
+  tl.to(refs.partnersTextRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, partnersTextExitT);
+
+  const spaceZoomNewsDur = newsExitT + exitDur - newsEnterT;
+  const spaceZoomContactsDur = contactsExitT + exitDur - contactsEnterT;
+
+  if (cinematic) {
+    tl.fromTo(
+      refs.spaceZoomBaseRef.current,
+      { scale: sz(1.0) },
+      { scale: sz(1.25), duration: spaceZoomNewsDur, ease: "none" },
+      newsEnterT
+    );
+    tl.fromTo(
+      refs.cyberOverlayRef.current,
+      { opacity: 0 },
+      { opacity: 0.7, duration: enterDur + holdDur, ease: "power2.out" },
+      newsEnterT
+    );
+  }
+
+  tl.fromTo(refs.newsTitleRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, newsEnterT);
+  tl.to(refs.newsTitleRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, newsExitT);
+
+  if (cinematic) {
+    tl.to(
+      refs.spaceZoomBaseRef.current,
+      { scale: sz(1.55), duration: spaceZoomContactsDur, ease: "none" },
+      contactsEnterT
+    );
+    tl.to(
+      refs.cyberOverlayRef.current,
+      { opacity: 1, duration: enterDur + holdDur * 0.45, ease: "power2.out" },
+      contactsEnterT
+    );
+    tl.to(
+      refs.cyberOverlayRef.current,
+      { opacity: 0.88, duration: holdDur * 0.28, ease: "sine.inOut" },
+      contactsEnterT + enterDur + holdDur * 0.45
+    );
+    tl.to(
+      refs.cyberOverlayRef.current,
+      { opacity: 1, duration: holdDur * 0.27, ease: "sine.inOut" },
+      contactsEnterT + enterDur + holdDur * 0.73
+    );
+  }
+
+  tl.fromTo(refs.contactsTitleRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, contactsEnterT);
+  tl.to(refs.contactsTitleRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, contactsExitT);
+}
 
 export type SpaceTrilogyContainerProps = {
   midnightBgRef: RefObject<HTMLDivElement | null>;

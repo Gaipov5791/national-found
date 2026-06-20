@@ -1,7 +1,45 @@
 import { forwardRef, type RefObject } from "react";
+import gsap from "gsap";
 import { Instagram } from "lucide-react";
 import fundLogo from "@/assets/fund-logo.png.asset.json";
 import { SCENE_IMAGES } from "./sceneImages";
+import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
+
+export type FooterSceneRefs = {
+  footerContentZoneRef: RefObject<HTMLDivElement | null>;
+  footerBgRef: RefObject<HTMLImageElement | null>;
+};
+
+export function prepareFooterScene(refs: FooterSceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, sz } = ctx;
+  gsap.set(refs.footerContentZoneRef.current, { opacity: 0 });
+  gsap.set(refs.footerBgRef.current, { scale: mobile ? 1 : sz(1.15) });
+}
+
+export function animateFooterScene(tl: SceneTimeline, refs: FooterSceneRefs, ctx: SceneAnimationContext) {
+  const { mobile, timings, sz } = ctx;
+  const { enterDur, footerEnterT, footerHoldDur } = timings;
+
+  tl.fromTo(
+    refs.footerContentZoneRef.current,
+    { opacity: 0 },
+    { opacity: 1, duration: enterDur, ease: "power2.out" },
+    footerEnterT
+  );
+  if (!mobile) {
+    tl.fromTo(
+      refs.footerBgRef.current,
+      { scale: sz(1.15) },
+      { scale: sz(1.0), duration: footerHoldDur + enterDur, ease: "power2.inOut" },
+      footerEnterT
+    );
+  }
+  tl.to(
+    refs.footerContentZoneRef.current,
+    { opacity: 1, duration: footerHoldDur, ease: "none" },
+    footerEnterT + enterDur
+  );
+}
 
 export type FooterSectionProps = {
   footerContentZoneRef: RefObject<HTMLDivElement | null>;
