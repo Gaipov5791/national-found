@@ -19,8 +19,8 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <main className="relative min-h-screen bg-background text-foreground">
-      <CustomCursor />
       <Scrollytelling />
+      <CustomCursor />
     </main>
   );
 }
