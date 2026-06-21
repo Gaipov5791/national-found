@@ -43,7 +43,9 @@ const NAV_SCENE_LABELS: Record<NavItem, string> = {
 const NAV_SCROLL_NAV_BUFFER = 8;
 const NAV_SCROLL_MOBILE_PADDING = 16;
 const MOBILE_CLOSED_NAVBAR_HEIGHT = 80;
-const NAV_SCROLL_EASE = gsap.parseEase("power3.inOut");
+const NAV_SCROLL_DESKTOP_DURATION = 2;
+const NAV_SCROLL_MOBILE_DURATION = 1.4;
+const NAV_SCROLL_DESKTOP_EASE = gsap.parseEase("expo.out");
 
 type SceneLabel = (typeof NAV_SCENE_LABELS)[NavItem];
 
@@ -91,14 +93,17 @@ export function Scrollytelling() {
       }
 
       if (refs.lenisRef.current) {
-        refs.lenisRef.current.scrollTo(target, { duration: 1.6, easing: NAV_SCROLL_EASE });
+        refs.lenisRef.current.scrollTo(target, {
+          duration: NAV_SCROLL_DESKTOP_DURATION,
+          easing: NAV_SCROLL_DESKTOP_EASE,
+        });
         return;
       }
 
       gsap.to(window, {
         scrollTo: target,
-        duration: mobile ? 1.4 : 1.6,
-        ease: mobile ? "expo.out" : "power3.inOut",
+        duration: mobile ? NAV_SCROLL_MOBILE_DURATION : NAV_SCROLL_DESKTOP_DURATION,
+        ease: "expo.out",
       });
     },
     [refs]
