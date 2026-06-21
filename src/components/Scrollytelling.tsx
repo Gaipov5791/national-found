@@ -88,13 +88,20 @@ export function Scrollytelling() {
       const mm = gsap.matchMedia();
 
       mm.add("(max-width: 767px)", () => {
+        ScrollTrigger.normalizeScroll(true);
         ScrollTrigger.config({ ignoreMobileResize: true });
-        return runScrollytellingExperience(refs, {
+        const staticViewportHeight = window.innerHeight;
+        const cleanup = runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_MOBILE,
           scrub: true,
           mobile: true,
           cinematic: false,
+          staticViewportHeight,
         });
+        return () => {
+          ScrollTrigger.normalizeScroll(false);
+          cleanup();
+        };
       });
 
       mm.add("(min-width: 768px) and (max-width: 1023px)", () => {

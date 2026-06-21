@@ -127,6 +127,7 @@ export type ExperienceConfig = {
   scrub: number | boolean;
   mobile: boolean;
   cinematic: boolean;
+  staticViewportHeight?: number;
 };
 
 export type TextPresets = {

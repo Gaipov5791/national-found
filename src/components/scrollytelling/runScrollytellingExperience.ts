@@ -15,6 +15,7 @@ import type { SceneRefs } from "./useSceneRefs";
 
 export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConfig) {
   const { scrollDistance, scrub, mobile } = cfg;
+  const staticViewportHeight = cfg.staticViewportHeight ?? window.innerHeight;
   const ctx = buildSceneContext(cfg);
   const { timings } = ctx;
   const {
@@ -57,6 +58,11 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     lenis.on("scroll", ScrollTrigger.update);
   } else {
     refs.lenisRef.current = null;
+    ScrollTrigger.scrollerProxy(document.documentElement, {
+      getBoundingClientRect() {
+        return { top: 0, left: 0, width: window.innerWidth, height: staticViewportHeight };
+      },
+    });
   }
 
   const heroRefs = { heroBgRef: refs.heroBgRef, cloudDriftRef: refs.cloudDriftRef, brandRef: refs.brandRef };
@@ -146,16 +152,23 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
 
   const updateCounts = createCountUpdater(countersRefs, ctx);
 
+  const triggerEl = refs.scrollTrackRef.current;
+  const masterEnd =
+    mobile && triggerEl
+      ? triggerEl.getBoundingClientRect().top + window.scrollY + scrollDistance
+      : `+=${scrollDistance}`;
+
   const tl = gsap.timeline({
     scrollTrigger: {
       id: "master-scrolly",
-      trigger: refs.scrollTrackRef.current,
+      trigger: triggerEl,
       start: "top top",
-      end: `+=${scrollDistance}`,
+      end: masterEnd,
       scrub,
       pin: refs.sceneRef.current,
-      anticipatePin: mobile ? 0 : 1,
-      invalidateOnRefresh: true,
+      pinType: mobile ? "fixed" : "transform",
+      anticipatePin: 1,
+      invalidateOnRefresh: !mobile,
       onUpdate: (self) => updateCounts(self.progress),
     },
   });
@@ -183,6 +196,9 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
 
   return () => {
     cancelled = true;
+    if (mobile) {
+      ScrollTrigger.scrollerProxy(document.documentElement, {});
+    }
     if (lenis) {
       cancelAnimationFrame(rafId);
       lenis.off("scroll", ScrollTrigger.update);
