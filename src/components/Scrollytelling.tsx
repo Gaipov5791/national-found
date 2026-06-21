@@ -2,13 +2,11 @@ import { useCallback, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { Navbar } from "@/components/global/Navbar";
 import { runScrollytellingExperience } from "@/components/scrollytelling/runScrollytellingExperience";
 import { ScrollytellingScene } from "@/components/scrollytelling/ScrollytellingScene";
 import { useSceneRefs } from "@/components/scrollytelling/useSceneRefs";
-
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
+import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
 
 const SCROLL_DISTANCE_DESKTOP = 14500;
 const SCROLL_DISTANCE_TABLET = 11500;
@@ -45,7 +43,6 @@ const NAV_SCROLL_MOBILE_PADDING = 16;
 const MOBILE_CLOSED_NAVBAR_HEIGHT = 80;
 const NAV_SCROLL_DESKTOP_DURATION = 2;
 const NAV_SCROLL_MOBILE_DURATION = 1.4;
-const NAV_SCROLL_DESKTOP_EASE = gsap.parseEase("expo.out");
 
 type SceneLabel = (typeof NAV_SCENE_LABELS)[NavItem];
 
@@ -65,6 +62,7 @@ export function Scrollytelling() {
 
   const scrollToSection = useCallback(
     (label: NavItem) => {
+      ensureGsapPlugins();
       const mobile = window.innerWidth < 768;
       ScrollTrigger.update();
 
@@ -95,7 +93,7 @@ export function Scrollytelling() {
       if (refs.lenisRef.current) {
         refs.lenisRef.current.scrollTo(target, {
           duration: NAV_SCROLL_DESKTOP_DURATION,
-          easing: NAV_SCROLL_DESKTOP_EASE,
+          easing: getNavScrollDesktopEase(),
         });
         return;
       }
@@ -114,10 +112,16 @@ export function Scrollytelling() {
 
   useGSAP(
     () => {
+      ensureGsapPlugins();
+
       const mm = gsap.matchMedia();
 
       mm.add("(max-width: 767px)", () => {
-        ScrollTrigger.normalizeScroll(true);
+        try {
+          ScrollTrigger.normalizeScroll(true);
+        } catch (error) {
+          console.warn("ScrollTrigger.normalizeScroll unavailable", error);
+        }
         ScrollTrigger.config({ ignoreMobileResize: true });
         const staticViewportHeight = window.innerHeight;
         refs.staticViewportHeightRef.current = staticViewportHeight;
@@ -129,7 +133,11 @@ export function Scrollytelling() {
           staticViewportHeight,
         });
         return () => {
-          ScrollTrigger.normalizeScroll(false);
+          try {
+            ScrollTrigger.normalizeScroll(false);
+          } catch {
+            /* ignore teardown errors */
+          }
           refs.staticViewportHeightRef.current = null;
           cleanup();
         };
