@@ -83,12 +83,9 @@
 }
 
 @media (max-width: 767px) {
-  .scene-gpu-layer,
-  .scene-gpu-layer img {
-    will-change: opacity;
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
+  .scene-gpu-layer {
     -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 }
 
