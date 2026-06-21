@@ -11,13 +11,13 @@ export type FooterSceneRefs = {
 };
 
 export function prepareFooterScene(refs: FooterSceneRefs, ctx: SceneAnimationContext) {
-  const { mobile, sz } = ctx;
+  const { sz } = ctx;
   gsap.set(refs.footerContentZoneRef.current, { opacity: 0 });
-  gsap.set(refs.footerBgRef.current, { scale: mobile ? 1 : sz(1.15) });
+  gsap.set(refs.footerBgRef.current, { scale: sz(1.15) });
 }
 
 export function animateFooterScene(tl: SceneTimeline, refs: FooterSceneRefs, ctx: SceneAnimationContext) {
-  const { mobile, timings, sz } = ctx;
+  const { timings, sz } = ctx;
   const { enterDur, footerEnterT, footerHoldDur } = timings;
 
   tl.fromTo(
@@ -26,14 +26,12 @@ export function animateFooterScene(tl: SceneTimeline, refs: FooterSceneRefs, ctx
     { opacity: 1, duration: enterDur, ease: "power2.out" },
     footerEnterT
   );
-  if (!mobile) {
-    tl.fromTo(
-      refs.footerBgRef.current,
-      { scale: sz(1.15) },
-      { scale: sz(1.0), duration: footerHoldDur + enterDur, ease: "power2.inOut" },
-      footerEnterT
-    );
-  }
+  tl.fromTo(
+    refs.footerBgRef.current,
+    { scale: sz(1.15) },
+    { scale: sz(1.0), duration: footerHoldDur + enterDur, ease: "power2.inOut" },
+    footerEnterT
+  );
   tl.to(
     refs.footerContentZoneRef.current,
     { opacity: 1, duration: footerHoldDur, ease: "none" },

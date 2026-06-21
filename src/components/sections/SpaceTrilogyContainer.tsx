@@ -4,6 +4,7 @@ import { SCENE_IMAGES } from "./sceneImages";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type SpaceTrilogySceneRefs = {
+  midnightBgRef: RefObject<HTMLDivElement | null>;
   twilightBlueRef: RefObject<HTMLDivElement | null>;
   twilightRoseRef: RefObject<HTMLDivElement | null>;
   msbHazeRef: RefObject<HTMLDivElement | null>;
@@ -23,6 +24,7 @@ export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: Scene
   const { mobile, text, sz } = ctx;
 
   gsap.set(refs.partnersTextRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.midnightBgRef.current, { opacity: 0 });
   gsap.set(refs.newsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
   gsap.set(refs.contactsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
   gsap.set([refs.newsContentRef.current, refs.contactsContentRef.current], { opacity: 0, visibility: "hidden" });
@@ -46,7 +48,7 @@ export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: Scene
 }
 
 export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySceneRefs, ctx: SceneAnimationContext) {
-  const { mobile, cinematic, timings, text, sz } = ctx;
+  const { cinematic, timings, text, sz } = ctx;
   const {
     enterDur,
     exitDur,
@@ -65,25 +67,17 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
 
   const partnerLogoEls = refs.partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
 
+  tl.to(refs.midnightBgRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
   tl.to(refs.twilightBlueRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
   tl.to(refs.twilightRoseRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
   tl.to(refs.msbHazeRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.8, ease: "power1.inOut" }, midnightBgSwapT);
 
-  if (mobile) {
-    tl.fromTo(
-      refs.spaceZoomBaseRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
-      midnightBgSwapT
-    );
-  } else {
-    tl.fromTo(
-      refs.spaceZoomBaseRef.current,
-      { opacity: 0, scale: sz(1.0) },
-      { opacity: 1, scale: sz(1.0), duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
-      midnightBgSwapT
-    );
-  }
+  tl.fromTo(
+    refs.spaceZoomBaseRef.current,
+    { opacity: 0, scale: sz(1.0) },
+    { opacity: 1, scale: sz(1.0), duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
+    midnightBgSwapT
+  );
 
   tl.fromTo(
     refs.partnerFlareRef.current,
@@ -128,11 +122,21 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
 
   const spaceZoomNewsDur = newsExitT + exitDur - newsEnterT;
   const spaceZoomContactsDur = contactsExitT + exitDur - contactsEnterT;
+  const spaceZoomPartnersDur = newsEnterT - partnersEnterT;
+
+  if (cinematic && spaceZoomPartnersDur > 0) {
+    tl.fromTo(
+      refs.spaceZoomBaseRef.current,
+      { scale: sz(1.0) },
+      { scale: sz(1.08), duration: spaceZoomPartnersDur, ease: "none" },
+      partnersEnterT
+    );
+  }
 
   if (cinematic) {
     tl.fromTo(
       refs.spaceZoomBaseRef.current,
-      { scale: sz(1.0) },
+      { scale: sz(1.08) },
       { scale: sz(1.25), duration: spaceZoomNewsDur, ease: "none" },
       newsEnterT
     );
@@ -235,7 +239,7 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
         </div>
         <div
           ref={cyberOverlayRef}
-          className="pointer-events-none absolute inset-0 z-[6] hidden opacity-0 will-change-[transform,opacity]"
+          className="pointer-events-none absolute inset-0 z-[6] opacity-0 will-change-[transform,opacity] md:[mix-blend-mode:screen]"
         >
           <img
             src={SCENE_IMAGES.cyber}

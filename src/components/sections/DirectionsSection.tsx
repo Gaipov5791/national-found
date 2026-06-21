@@ -17,21 +17,19 @@ export type DirectionsSceneRefs = {
 };
 
 export function prepareDirectionsScene(refs: DirectionsSceneRefs, ctx: SceneAnimationContext) {
-  const { mobile, text, sz } = ctx;
+  const { text, sz } = ctx;
 
-  if (!mobile) {
-    [refs.sunsetAtmoBackRef, refs.sunsetAtmoMidRef, refs.sunsetAtmoFrontRef].forEach((r, i) => {
-      if (r.current) {
-        gsap.to(r.current, {
-          yPercent: i % 2 === 0 ? 4 : -4,
-          duration: 20 + i,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
-      }
-    });
-  }
+  [refs.sunsetAtmoBackRef, refs.sunsetAtmoMidRef, refs.sunsetAtmoFrontRef].forEach((r, i) => {
+    if (r.current) {
+      gsap.to(r.current, {
+        yPercent: i % 2 === 0 ? 4 : -4,
+        duration: 20 + i,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+    }
+  });
 
   gsap.set(refs.directionsRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
   gsap.set(refs.sunsetBgRef.current, { opacity: 0 });
@@ -54,7 +52,7 @@ export function prepareDirectionsScene(refs: DirectionsSceneRefs, ctx: SceneAnim
 }
 
 export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneRefs, ctx: SceneAnimationContext) {
-  const { mobile, timings, text, sz } = ctx;
+  const { timings, text, sz } = ctx;
   const {
     enterDur,
     exitDur,
@@ -71,6 +69,7 @@ export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneR
   const cursorRing = document.getElementById("custom-cursor-ring");
   const cursorDot = document.getElementById("custom-cursor-dot");
 
+  tl.to(refs.sunsetBgRef.current, { opacity: 1, duration: atmoWipeDur, ease: "power1.inOut" }, sunsetAtmoT);
   tl.fromTo(
     refs.sunsetAtmoBackRef.current,
     { yPercent: 110, opacity: 0, scale: sz(1.1) },
@@ -91,17 +90,12 @@ export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneR
   );
 
   tl.to(refs.noonTintRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
-  if (mobile) {
-    tl.to(refs.directionsCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
-    tl.to(refs.financeBgRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
-  } else {
-    tl.to(
-      refs.financeBgRef.current,
-      { opacity: 0, scale: sz(1.35), duration: lightCrossfadeDur, ease: "power2.in" },
-      sunsetBgSwapT
-    );
-    tl.to(refs.directionsCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
-  }
+  tl.to(
+    refs.financeBgRef.current,
+    { opacity: 0, scale: sz(1.35), duration: lightCrossfadeDur, ease: "power2.in" },
+    sunsetBgSwapT
+  );
+  tl.to(refs.directionsCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
   tl.to(refs.amberBurnRef.current, { opacity: 0.92, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
   tl.to(refs.amberGlowRef.current, { opacity: 0.58, duration: lightCrossfadeDur + 0.006, ease: "power2.out" }, sunsetBgSwapT + 0.004);
 
@@ -127,14 +121,12 @@ export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneR
   tl.to(refs.sunsetAtmoMidRef.current, { yPercent: -115, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.004);
   tl.to(refs.sunsetAtmoFrontRef.current, { yPercent: -120, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.008);
 
-  if (!mobile) {
-    tl.fromTo(
-      refs.directionsCollageRef.current,
-      { scale: 1 },
-      { scale: sz(1.08), duration: collageParallaxDur, ease: "power2.out" },
-      sunsetRevealT
-    );
-  }
+  tl.fromTo(
+    refs.directionsCollageRef.current,
+    { scale: 1 },
+    { scale: sz(1.08), duration: collageParallaxDur, ease: "power2.out" },
+    sunsetRevealT
+  );
   tl.to(refs.amberGlowRef.current, { opacity: 0.82, duration: collageParallaxDur, ease: "power1.inOut" }, sunsetRevealT);
 
   tl.fromTo(refs.directionsRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, directionsEnterT);
@@ -224,9 +216,9 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
         }}
       />
 
-      <div ref={sunsetAtmoBackRef} className="hidden" />
-      <div ref={sunsetAtmoMidRef} className="hidden" />
-      <div ref={sunsetAtmoFrontRef} className="hidden" />
+      <div ref={sunsetAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenEdge }} />
+      <div ref={sunsetAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenGlow }} />
+      <div ref={sunsetAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenHaze }} />
 
       <div
         ref={directionsRef}

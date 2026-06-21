@@ -102,6 +102,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     directionsRef: refs.directionsRef,
   };
   const msbRefs = {
+    twilightBgRef: refs.twilightBgRef,
     directionsCollageRef: refs.directionsCollageRef,
     msbCollageRef: refs.msbCollageRef,
     amberBurnRef: refs.amberBurnRef,
@@ -115,6 +116,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     msbRef: refs.msbRef,
   };
   const spaceRefs = {
+    midnightBgRef: refs.midnightBgRef,
     twilightBlueRef: refs.twilightBlueRef,
     twilightRoseRef: refs.twilightRoseRef,
     msbHazeRef: refs.msbHazeRef,

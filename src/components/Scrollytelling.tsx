@@ -125,7 +125,7 @@ export function Scrollytelling() {
           scrollDistance: SCROLL_DISTANCE_MOBILE,
           scrub: true,
           mobile: true,
-          cinematic: false,
+          cinematic: true,
           staticViewportHeight,
         });
         return () => {

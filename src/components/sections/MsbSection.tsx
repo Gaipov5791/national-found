@@ -4,6 +4,7 @@ import { SCENE_IMAGES } from "./sceneImages";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type MsbSceneRefs = {
+  twilightBgRef: RefObject<HTMLDivElement | null>;
   directionsCollageRef: RefObject<HTMLDivElement | null>;
   msbCollageRef: RefObject<HTMLDivElement | null>;
   amberBurnRef: RefObject<HTMLDivElement | null>;
@@ -20,21 +21,20 @@ export type MsbSceneRefs = {
 export function prepareMsbScene(refs: MsbSceneRefs, ctx: SceneAnimationContext) {
   const { mobile, text, sz } = ctx;
 
-  if (!mobile) {
-    [refs.twilightAtmoBackRef, refs.twilightAtmoMidRef, refs.twilightAtmoFrontRef].forEach((r, i) => {
-      if (r.current) {
-        gsap.to(r.current, {
-          yPercent: i % 2 === 0 ? 4 : -4,
-          duration: 23 + i,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
-      }
-    });
-  }
+  [refs.twilightAtmoBackRef, refs.twilightAtmoMidRef, refs.twilightAtmoFrontRef].forEach((r, i) => {
+    if (r.current) {
+      gsap.to(r.current, {
+        yPercent: i % 2 === 0 ? 4 : -4,
+        duration: 23 + i,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+    }
+  });
 
   gsap.set(refs.msbRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.twilightBgRef.current, { opacity: 0 });
   gsap.set(refs.msbCollageRef.current, { opacity: 0, scale: 1, visibility: "visible" });
   gsap.set([refs.twilightBlueRef.current, refs.twilightRoseRef.current, refs.msbHazeRef.current], { opacity: 0 });
   gsap.set(
@@ -54,7 +54,7 @@ export function prepareMsbScene(refs: MsbSceneRefs, ctx: SceneAnimationContext) 
 }
 
 export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: SceneAnimationContext) {
-  const { mobile, timings, text, sz } = ctx;
+  const { timings, text, sz } = ctx;
   const {
     enterDur,
     exitDur,
@@ -68,6 +68,7 @@ export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: Scen
     msbExitT,
   } = timings;
 
+  tl.to(refs.twilightBgRef.current, { opacity: 1, duration: atmoWipeDur, ease: "power1.inOut" }, twilightAtmoT);
   tl.fromTo(
     refs.twilightAtmoBackRef.current,
     { yPercent: 110, opacity: 0, scale: sz(1.1) },
@@ -89,7 +90,11 @@ export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: Scen
 
   tl.to(refs.amberBurnRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.55, ease: "power1.inOut" }, twilightAtmoT);
   tl.to(refs.amberGlowRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.55, ease: "power1.inOut" }, twilightAtmoT);
-  tl.to(refs.directionsCollageRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.6, ease: "power2.in" }, twilightAtmoT);
+  tl.to(
+    refs.directionsCollageRef.current,
+    { opacity: 0, scale: sz(1.12), duration: lightCrossfadeDur * 0.6, ease: "power2.in" },
+    twilightAtmoT
+  );
   tl.to(refs.msbCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, twilightBgSwapT);
 
   tl.to(refs.twilightRoseRef.current, { opacity: 0.42, duration: convergeDur * 0.45, ease: "power2.out" }, twilightAtmoT);
@@ -103,14 +108,12 @@ export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: Scen
   tl.to(refs.twilightAtmoMidRef.current, { yPercent: -112, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.004);
   tl.to(refs.twilightAtmoFrontRef.current, { yPercent: -118, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.008);
 
-  if (!mobile) {
-    tl.fromTo(
-      refs.msbCollageRef.current,
-      { scale: 1 },
-      { scale: sz(1.1), duration: msbExitT + exitDur - twilightRevealT, ease: "none" },
-      twilightRevealT
-    );
-  }
+  tl.fromTo(
+    refs.msbCollageRef.current,
+    { scale: 1 },
+    { scale: sz(1.1), duration: msbExitT + exitDur - twilightRevealT, ease: "none" },
+    twilightRevealT
+  );
 
   tl.fromTo(refs.msbRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, msbEnterT);
   tl.to(refs.msbRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, msbExitT);
@@ -211,9 +214,9 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
         }}
       />
 
-      <div ref={twilightAtmoBackRef} className="hidden" />
-      <div ref={twilightAtmoMidRef} className="hidden" />
-      <div ref={twilightAtmoFrontRef} className="hidden" />
+      <div ref={twilightAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightHaze }} />
+      <div ref={twilightAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightVeil }} />
+      <div ref={twilightAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightMist }} />
 
       <div
         ref={msbRef}
