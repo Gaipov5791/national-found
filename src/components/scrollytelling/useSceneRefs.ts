@@ -31,7 +31,6 @@ export function useSceneRefs() {
   const directionsCollageRef = useRef<HTMLDivElement>(null);
   const msbCollageRef = useRef<HTMLDivElement>(null);
   const spaceZoomBaseRef = useRef<HTMLDivElement>(null);
-  const cyberOverlayRef = useRef<HTMLDivElement>(null);
   const partnerFlareRef = useRef<HTMLDivElement>(null);
   const footerBgRef = useRef<HTMLImageElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
@@ -91,7 +90,6 @@ export function useSceneRefs() {
     directionsCollageRef,
     msbCollageRef,
     spaceZoomBaseRef,
-    cyberOverlayRef,
     partnerFlareRef,
     footerBgRef,
     aboutRef,

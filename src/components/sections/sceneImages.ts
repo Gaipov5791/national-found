@@ -5,5 +5,4 @@ export const SCENE_IMAGES = {
   directions: "/images/hpp-sunset.webp",
   msb: "/images/issykkul-resort.webp",
   space: "/images/kyrgyzstan-space.webp",
-  cyber: "/images/cyber-electricity.webp",
 } as const;

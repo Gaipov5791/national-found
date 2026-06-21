@@ -121,7 +121,6 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     twilightRoseRef: refs.twilightRoseRef,
     msbHazeRef: refs.msbHazeRef,
     spaceZoomBaseRef: refs.spaceZoomBaseRef,
-    cyberOverlayRef: refs.cyberOverlayRef,
     handshakeRimRef: refs.handshakeRimRef,
     partnerFlareRef: refs.partnerFlareRef,
     partnersTextRef: refs.partnersTextRef,

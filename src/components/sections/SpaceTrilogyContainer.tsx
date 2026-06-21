@@ -9,7 +9,6 @@ export type SpaceTrilogySceneRefs = {
   twilightRoseRef: RefObject<HTMLDivElement | null>;
   msbHazeRef: RefObject<HTMLDivElement | null>;
   spaceZoomBaseRef: RefObject<HTMLDivElement | null>;
-  cyberOverlayRef: RefObject<HTMLDivElement | null>;
   handshakeRimRef: RefObject<HTMLDivElement | null>;
   partnerFlareRef: RefObject<HTMLDivElement | null>;
   partnersTextRef: RefObject<HTMLDivElement | null>;
@@ -29,7 +28,6 @@ export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: Scene
   gsap.set(refs.contactsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
   gsap.set([refs.newsContentRef.current, refs.contactsContentRef.current], { opacity: 0, visibility: "hidden" });
   gsap.set(refs.spaceZoomBaseRef.current, { opacity: 0, scale: 1, visibility: "visible" });
-  gsap.set(refs.cyberOverlayRef.current, { opacity: 0 });
   gsap.set(refs.partnerFlareRef.current, { opacity: 0, xPercent: -40 });
   gsap.set(refs.handshakeRimRef.current, { opacity: 0 });
 
@@ -52,7 +50,6 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
   const {
     enterDur,
     exitDur,
-    holdDur,
     lightCrossfadeDur,
     flareDur,
     midnightBgSwapT,
@@ -140,12 +137,6 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
       { scale: sz(1.25), duration: spaceZoomNewsDur, ease: "none" },
       newsEnterT
     );
-    tl.fromTo(
-      refs.cyberOverlayRef.current,
-      { opacity: 0 },
-      { opacity: 0.7, duration: enterDur + holdDur, ease: "power2.out" },
-      newsEnterT
-    );
   }
 
   tl.fromTo(refs.newsTitleRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, newsEnterT);
@@ -157,21 +148,6 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
       { scale: sz(1.55), duration: spaceZoomContactsDur, ease: "none" },
       contactsEnterT
     );
-    tl.to(
-      refs.cyberOverlayRef.current,
-      { opacity: 1, duration: enterDur + holdDur * 0.45, ease: "power2.out" },
-      contactsEnterT
-    );
-    tl.to(
-      refs.cyberOverlayRef.current,
-      { opacity: 0.88, duration: holdDur * 0.28, ease: "sine.inOut" },
-      contactsEnterT + enterDur + holdDur * 0.45
-    );
-    tl.to(
-      refs.cyberOverlayRef.current,
-      { opacity: 1, duration: holdDur * 0.27, ease: "sine.inOut" },
-      contactsEnterT + enterDur + holdDur * 0.73
-    );
   }
 
   tl.fromTo(refs.contactsTitleRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, contactsEnterT);
@@ -181,7 +157,6 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
 export type SpaceTrilogyContainerProps = {
   midnightBgRef: RefObject<HTMLDivElement | null>;
   spaceZoomBaseRef: RefObject<HTMLDivElement | null>;
-  cyberOverlayRef: RefObject<HTMLDivElement | null>;
   handshakeRimRef: RefObject<HTMLDivElement | null>;
   partnerFlareRef: RefObject<HTMLDivElement | null>;
   partnersRef: RefObject<HTMLDivElement | null>;
@@ -200,7 +175,6 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
     {
       midnightBgRef,
       spaceZoomBaseRef,
-      cyberOverlayRef,
       handshakeRimRef,
       partnerFlareRef,
       partnersRef,
@@ -235,17 +209,6 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
             alt="Кыргызстан из космоса"
             className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
             style={{ transformOrigin: "50% 50%" }}
-          />
-        </div>
-        <div
-          ref={cyberOverlayRef}
-          className="pointer-events-none absolute inset-0 z-[6] opacity-0 will-change-[transform,opacity] md:[mix-blend-mode:screen]"
-        >
-          <img
-            src={SCENE_IMAGES.cyber}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 h-full w-full object-cover will-change-[transform,opacity]"
           />
         </div>
 

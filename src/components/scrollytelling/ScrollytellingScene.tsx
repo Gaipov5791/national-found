@@ -64,7 +64,6 @@ export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingScene
       <SpaceTrilogyContainer
         midnightBgRef={refs.midnightBgRef}
         spaceZoomBaseRef={refs.spaceZoomBaseRef}
-        cyberOverlayRef={refs.cyberOverlayRef}
         handshakeRimRef={refs.handshakeRimRef}
         partnerFlareRef={refs.partnerFlareRef}
         partnersRef={refs.partnersRef}
