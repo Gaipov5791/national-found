@@ -188,7 +188,7 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
 
       <div
         ref={twilightBlueRef}
-        className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
+        className="pointer-events-none absolute inset-0 z-10 hidden opacity-0 will-change-[transform,opacity]"
         style={{
           mixBlendMode: "multiply",
           background:
@@ -197,7 +197,7 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
       />
       <div
         ref={twilightRoseRef}
-        className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
+        className="pointer-events-none absolute inset-0 z-10 hidden opacity-0 will-change-[transform,opacity]"
         style={{
           mixBlendMode: "screen",
           background:
@@ -206,7 +206,7 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
       />
       <div
         ref={msbHazeRef}
-        className="pointer-events-none absolute inset-0 z-[4] opacity-0 will-change-[transform,opacity]"
+        className="pointer-events-none absolute inset-0 z-[4] hidden opacity-0 will-change-[transform,opacity]"
         style={{
           background:
             "radial-gradient(ellipse 120% 85% at 50% 70%, rgba(60,80,140,0.45) 0%, rgba(40,55,110,0.32) 40%, rgba(25,35,80,0.18) 65%, transparent 90%)",
@@ -214,9 +214,9 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
         }}
       />
 
-      <div ref={twilightAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightHaze }} />
-      <div ref={twilightAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightVeil }} />
-      <div ref={twilightAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightMist }} />
+      <div ref={twilightAtmoBackRef} className={`${layerBase} z-20 hidden`} style={{ ...styleWithWillChange, background: twilightHaze }} />
+      <div ref={twilightAtmoMidRef} className={`${layerBase} z-20 hidden`} style={{ ...styleWithWillChange, background: twilightVeil }} />
+      <div ref={twilightAtmoFrontRef} className={`${layerBase} z-20 hidden`} style={{ ...styleWithWillChange, background: twilightMist }} />
 
       <div
         ref={msbRef}

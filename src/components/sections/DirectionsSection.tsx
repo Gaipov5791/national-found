@@ -199,7 +199,7 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
 
       <div
         ref={amberBurnRef}
-        className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
+        className="pointer-events-none absolute inset-0 z-10 hidden opacity-0 will-change-[transform,opacity]"
         style={{
           mixBlendMode: "multiply",
           background:
@@ -208,7 +208,7 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
       />
       <div
         ref={amberGlowRef}
-        className="pointer-events-none absolute inset-0 z-10 opacity-0 will-change-[transform,opacity]"
+        className="pointer-events-none absolute inset-0 z-10 hidden opacity-0 will-change-[transform,opacity]"
         style={{
           mixBlendMode: "screen",
           background:
@@ -216,9 +216,9 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
         }}
       />
 
-      <div ref={sunsetAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenEdge }} />
-      <div ref={sunsetAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenGlow }} />
-      <div ref={sunsetAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenHaze }} />
+      <div ref={sunsetAtmoBackRef} className={`${layerBase} z-20 hidden`} style={{ ...styleWithWillChange, background: goldenEdge }} />
+      <div ref={sunsetAtmoMidRef} className={`${layerBase} z-20 hidden`} style={{ ...styleWithWillChange, background: goldenGlow }} />
+      <div ref={sunsetAtmoFrontRef} className={`${layerBase} z-20 hidden`} style={{ ...styleWithWillChange, background: goldenHaze }} />
 
       <div
         ref={directionsRef}
