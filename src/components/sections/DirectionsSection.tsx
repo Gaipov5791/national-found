@@ -17,7 +17,7 @@ export type DirectionsSceneRefs = {
 };
 
 export function prepareDirectionsScene(refs: DirectionsSceneRefs, ctx: SceneAnimationContext) {
-  const { text, sz } = ctx;
+  const { mobile, text, sz } = ctx;
 
   [refs.sunsetAtmoBackRef, refs.sunsetAtmoMidRef, refs.sunsetAtmoFrontRef].forEach((r, i) => {
     if (r.current) {
