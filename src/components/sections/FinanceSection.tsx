@@ -168,18 +168,10 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
         </h2>
       </div>
 
-      <div
-        ref={wipe2HazeRef}
-        className="pointer-events-none absolute inset-0 z-[40] opacity-0 will-change-[transform,opacity]"
-        style={{
-          willChange: "opacity",
-          background:
-            "linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(245,250,255,0.45) 50%, rgba(235,242,250,0.35) 100%)",
-        }}
-      />
-      <div ref={wipe2BackRef} className={`${layerBase} z-[41]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
-      <div ref={wipe2MidRef} className={`${layerBase} z-[42]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
-      <div ref={wipe2FrontRef} className={`${layerBase} z-[43]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
+      <div ref={wipe2HazeRef} className="hidden" />
+      <div ref={wipe2BackRef} className="hidden" />
+      <div ref={wipe2MidRef} className="hidden" />
+      <div ref={wipe2FrontRef} className="hidden" />
     </>
   );
 });

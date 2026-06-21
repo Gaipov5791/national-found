@@ -224,9 +224,9 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
         }}
       />
 
-      <div ref={sunsetAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenEdge }} />
-      <div ref={sunsetAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenGlow }} />
-      <div ref={sunsetAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: goldenHaze }} />
+      <div ref={sunsetAtmoBackRef} className="hidden" />
+      <div ref={sunsetAtmoMidRef} className="hidden" />
+      <div ref={sunsetAtmoFrontRef} className="hidden" />
 
       <div
         ref={directionsRef}

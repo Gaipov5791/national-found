@@ -211,9 +211,9 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
         }}
       />
 
-      <div ref={twilightAtmoBackRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightHaze }} />
-      <div ref={twilightAtmoMidRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightVeil }} />
-      <div ref={twilightAtmoFrontRef} className={`${layerBase} z-20`} style={{ ...styleWithWillChange, background: twilightMist }} />
+      <div ref={twilightAtmoBackRef} className="hidden" />
+      <div ref={twilightAtmoMidRef} className="hidden" />
+      <div ref={twilightAtmoFrontRef} className="hidden" />
 
       <div
         ref={msbRef}

@@ -235,7 +235,7 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
         </div>
         <div
           ref={cyberOverlayRef}
-          className="pointer-events-none absolute inset-0 z-[6] hidden opacity-0 will-change-[transform,opacity] md:block md:[mix-blend-mode:screen]"
+          className="pointer-events-none absolute inset-0 z-[6] hidden opacity-0 will-change-[transform,opacity]"
         >
           <img
             src={SCENE_IMAGES.cyber}

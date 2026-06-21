@@ -99,7 +99,7 @@ export const DecreeSection = forwardRef<HTMLDivElement, DecreeSectionProps>(func
     <>
       <div
         ref={ambientFogRef}
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full opacity-0 will-change-[transform,opacity]"
+        className="hidden pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[70%] w-full opacity-0 will-change-[transform,opacity]"
         style={{
           willChange: "transform, opacity",
           background:
@@ -124,9 +124,9 @@ export const DecreeSection = forwardRef<HTMLDivElement, DecreeSectionProps>(func
       </div>
 
       <div ref={wipe1HazeRef} className="hidden" />
-      <div ref={wipe1BackRef} className={`${layerBase} z-[36]`} style={{ ...styleWithWillChange, background: cloudWhite }} />
-      <div ref={wipe1MidRef} className={`${layerBase} z-[37]`} style={{ ...styleWithWillChange, background: cloudBlue }} />
-      <div ref={wipe1FrontRef} className={`${layerBase} z-[38]`} style={{ ...styleWithWillChange, background: cloudPlatinum }} />
+      <div ref={wipe1BackRef} className="hidden" />
+      <div ref={wipe1MidRef} className="hidden" />
+      <div ref={wipe1FrontRef} className="hidden" />
     </>
   );
 });
