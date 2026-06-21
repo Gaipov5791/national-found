@@ -41,6 +41,7 @@ const NAV_SCENE_LABELS: Record<NavItem, string> = {
 };
 
 const NAV_SCROLL_NAV_BUFFER = 8;
+const NAV_SCROLL_MOBILE_PADDING = 16;
 const NAV_SCROLL_EASE = gsap.parseEase("power3.inOut");
 
 export function Scrollytelling() {
@@ -50,31 +51,46 @@ export function Scrollytelling() {
   const scrollToSection = useCallback(
     (label: NavItem) => {
       const mobile = window.innerWidth < 768;
-      const duration = mobile ? 1.2 : 1.6;
       ScrollTrigger.update();
 
       const masterTimeline = refs.masterTimelineRef.current;
-      const scrollTrigger = masterTimeline?.scrollTrigger;
-      const navbarHeight = (refs.navHeaderRef.current?.offsetHeight ?? 90) + NAV_SCROLL_NAV_BUFFER;
+      const scrollTrigger =
+        ScrollTrigger.getById("master-scrolly") ?? masterTimeline?.scrollTrigger ?? undefined;
+
+      const navbarHeight = refs.navHeaderRef.current?.offsetHeight ?? 90;
+      const navOffset = mobile ? navbarHeight + NAV_SCROLL_MOBILE_PADDING : navbarHeight + NAV_SCROLL_NAV_BUFFER;
 
       let target = 0;
       if (scrollTrigger?.labelToScroll) {
-        const targetScrollPos = scrollTrigger.labelToScroll(NAV_SCENE_LABELS[label]);
+        const sceneLabel = NAV_SCENE_LABELS[label];
+        let targetScrollPos = scrollTrigger.labelToScroll(sceneLabel);
+
+        if (mobile) {
+          const staticVH = refs.staticViewportHeightRef.current ?? window.innerHeight;
+          const liveVH = window.innerHeight;
+          if (liveVH > 0 && staticVH !== liveVH) {
+            const scrollRange = scrollTrigger.end - scrollTrigger.start;
+            const progress = scrollRange > 0 ? (targetScrollPos - scrollTrigger.start) / scrollRange : 0;
+            const calibratedProgress = progress * (staticVH / liveVH);
+            targetScrollPos = scrollTrigger.start + calibratedProgress * scrollRange;
+          }
+        }
+
         target = Math.max(
           scrollTrigger.start,
-          Math.min(scrollTrigger.end, Math.round(targetScrollPos - navbarHeight))
+          Math.min(scrollTrigger.end, Math.round(targetScrollPos - navOffset))
         );
       }
 
       if (refs.lenisRef.current) {
-        refs.lenisRef.current.scrollTo(target, { duration, easing: NAV_SCROLL_EASE });
+        refs.lenisRef.current.scrollTo(target, { duration: 1.6, easing: NAV_SCROLL_EASE });
         return;
       }
 
       gsap.to(window, {
         scrollTo: target,
-        duration: mobile ? 1.2 : duration,
-        ease: mobile ? "power2.out" : "power3.inOut",
+        duration: mobile ? 1.4 : 1.6,
+        ease: mobile ? "expo.out" : "power3.inOut",
       });
     },
     [refs]
@@ -91,6 +107,7 @@ export function Scrollytelling() {
         ScrollTrigger.normalizeScroll(true);
         ScrollTrigger.config({ ignoreMobileResize: true });
         const staticViewportHeight = window.innerHeight;
+        refs.staticViewportHeightRef.current = staticViewportHeight;
         const cleanup = runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_MOBILE,
           scrub: true,
@@ -100,6 +117,7 @@ export function Scrollytelling() {
         });
         return () => {
           ScrollTrigger.normalizeScroll(false);
+          refs.staticViewportHeightRef.current = null;
           cleanup();
         };
       });

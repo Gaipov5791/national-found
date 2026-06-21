@@ -60,6 +60,7 @@ export function useSceneRefs() {
   const lenisRef = useRef<Lenis | null>(null);
   const masterTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const navHeaderRef = useRef<HTMLDivElement>(null);
+  const staticViewportHeightRef = useRef<number | null>(null);
 
   return {
     rootRef,
@@ -119,6 +120,7 @@ export function useSceneRefs() {
     lenisRef,
     masterTimelineRef,
     navHeaderRef,
+    staticViewportHeightRef,
   };
 }
 

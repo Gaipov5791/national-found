@@ -16,6 +16,9 @@ import type { SceneRefs } from "./useSceneRefs";
 export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConfig) {
   const { scrollDistance, scrub, mobile } = cfg;
   const staticViewportHeight = cfg.staticViewportHeight ?? window.innerHeight;
+  if (cfg.staticViewportHeight) {
+    refs.staticViewportHeightRef.current = cfg.staticViewportHeight;
+  }
   const ctx = buildSceneContext(cfg);
   const { timings } = ctx;
   const {
