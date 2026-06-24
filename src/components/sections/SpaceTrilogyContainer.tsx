@@ -1,14 +1,11 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
-import { SCENE_IMAGES } from "./sceneImages";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type SpaceTrilogySceneRefs = {
-  midnightBgRef: RefObject<HTMLDivElement | null>;
   twilightBlueRef: RefObject<HTMLDivElement | null>;
   twilightRoseRef: RefObject<HTMLDivElement | null>;
   msbHazeRef: RefObject<HTMLDivElement | null>;
-  spaceZoomBaseRef: RefObject<HTMLDivElement | null>;
   handshakeRimRef: RefObject<HTMLDivElement | null>;
   partnerFlareRef: RefObject<HTMLDivElement | null>;
   partnersTextRef: RefObject<HTMLDivElement | null>;
@@ -20,24 +17,14 @@ export type SpaceTrilogySceneRefs = {
 };
 
 export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: SceneAnimationContext) {
-  const { mobile, text, sz } = ctx;
+  const { text } = ctx;
 
   gsap.set(refs.partnersTextRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
-  gsap.set(refs.midnightBgRef.current, { opacity: 0 });
   gsap.set(refs.newsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
   gsap.set(refs.contactsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
   gsap.set([refs.newsContentRef.current, refs.contactsContentRef.current], { opacity: 0, visibility: "hidden" });
-  gsap.set(refs.spaceZoomBaseRef.current, { opacity: 0, scale: 1, visibility: "visible" });
   gsap.set(refs.partnerFlareRef.current, { opacity: 0, xPercent: -40 });
   gsap.set(refs.handshakeRimRef.current, { opacity: 0 });
-
-  if (mobile && refs.spaceZoomBaseRef.current) {
-    gsap.set(refs.spaceZoomBaseRef.current, {
-      force3D: true,
-      visibility: "visible",
-      backfaceVisibility: "hidden",
-    });
-  }
 
   const partnerLogoEls = refs.partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
   if (partnerLogoEls?.length) {
@@ -46,7 +33,7 @@ export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: Scene
 }
 
 export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySceneRefs, ctx: SceneAnimationContext) {
-  const { cinematic, timings, text, sz } = ctx;
+  const { timings, text } = ctx;
   const {
     enterDur,
     exitDur,
@@ -64,17 +51,9 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
 
   const partnerLogoEls = refs.partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
 
-  tl.to(refs.midnightBgRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
   tl.to(refs.twilightBlueRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
   tl.to(refs.twilightRoseRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, midnightBgSwapT);
   tl.to(refs.msbHazeRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.8, ease: "power1.inOut" }, midnightBgSwapT);
-
-  tl.fromTo(
-    refs.spaceZoomBaseRef.current,
-    { opacity: 0, scale: sz(1.0) },
-    { opacity: 1, scale: sz(1.0), duration: lightCrossfadeDur + 0.014, ease: "power2.out" },
-    midnightBgSwapT
-  );
 
   tl.fromTo(
     refs.partnerFlareRef.current,
@@ -117,46 +96,14 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
   }
   tl.to(refs.partnersTextRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, partnersTextExitT);
 
-  const spaceZoomNewsDur = newsExitT + exitDur - newsEnterT;
-  const spaceZoomContactsDur = contactsExitT + exitDur - contactsEnterT;
-  const spaceZoomPartnersDur = newsEnterT - partnersEnterT;
-
-  if (cinematic && spaceZoomPartnersDur > 0) {
-    tl.fromTo(
-      refs.spaceZoomBaseRef.current,
-      { scale: sz(1.0) },
-      { scale: sz(1.08), duration: spaceZoomPartnersDur, ease: "none" },
-      partnersEnterT
-    );
-  }
-
-  if (cinematic) {
-    tl.fromTo(
-      refs.spaceZoomBaseRef.current,
-      { scale: sz(1.08) },
-      { scale: sz(1.25), duration: spaceZoomNewsDur, ease: "none" },
-      newsEnterT
-    );
-  }
-
   tl.fromTo(refs.newsTitleRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, newsEnterT);
   tl.to(refs.newsTitleRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, newsExitT);
-
-  if (cinematic) {
-    tl.to(
-      refs.spaceZoomBaseRef.current,
-      { scale: sz(1.55), duration: spaceZoomContactsDur, ease: "none" },
-      contactsEnterT
-    );
-  }
 
   tl.fromTo(refs.contactsTitleRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, contactsEnterT);
   tl.to(refs.contactsTitleRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, contactsExitT);
 }
 
 export type SpaceTrilogyContainerProps = {
-  midnightBgRef: RefObject<HTMLDivElement | null>;
-  spaceZoomBaseRef: RefObject<HTMLDivElement | null>;
   handshakeRimRef: RefObject<HTMLDivElement | null>;
   partnerFlareRef: RefObject<HTMLDivElement | null>;
   partnersRef: RefObject<HTMLDivElement | null>;
@@ -173,8 +120,6 @@ const PARTNER_NAMES = ["EBRD", "IFC", "ADB", "AIIB", "KfW"] as const;
 export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyContainerProps>(
   function SpaceTrilogyContainer(
     {
-      midnightBgRef,
-      spaceZoomBaseRef,
       handshakeRimRef,
       partnerFlareRef,
       partnersRef,
@@ -189,29 +134,6 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
   ) {
     return (
       <>
-        <div
-          ref={midnightBgRef}
-          className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[transform,opacity]"
-          style={{
-            transformOrigin: "50% 50%",
-            background:
-              "linear-gradient(180deg, #06080c 0%, #0c1018 30%, #121820 55%, #181e28 78%, #1e2430 100%)",
-          }}
-        />
-
-        <div
-          ref={spaceZoomBaseRef}
-          className="scene-gpu-layer pointer-events-none absolute inset-0 z-[5] opacity-0 will-change-[transform,opacity]"
-          style={{ transformOrigin: "50% 50%" }}
-        >
-          <img
-            src={SCENE_IMAGES.space}
-            alt="Кыргызстан из космоса"
-            className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
-            style={{ transformOrigin: "50% 50%" }}
-          />
-        </div>
-
         <div
           ref={handshakeRimRef}
           className="pointer-events-none absolute inset-0 z-[7] opacity-0 will-change-[transform,opacity]"

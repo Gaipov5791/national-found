@@ -2,34 +2,24 @@ import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { Instagram } from "lucide-react";
 import fundLogo from "@/assets/fund-logo.png.asset.json";
-import { SCENE_IMAGES } from "./sceneImages";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type FooterSceneRefs = {
   footerContentZoneRef: RefObject<HTMLDivElement | null>;
-  footerBgRef: RefObject<HTMLImageElement | null>;
 };
 
-export function prepareFooterScene(refs: FooterSceneRefs, ctx: SceneAnimationContext) {
-  const { sz } = ctx;
+export function prepareFooterScene(refs: FooterSceneRefs, _ctx: SceneAnimationContext) {
   gsap.set(refs.footerContentZoneRef.current, { opacity: 0 });
-  gsap.set(refs.footerBgRef.current, { scale: sz(1.15) });
 }
 
 export function animateFooterScene(tl: SceneTimeline, refs: FooterSceneRefs, ctx: SceneAnimationContext) {
-  const { timings, sz } = ctx;
+  const { timings } = ctx;
   const { enterDur, footerEnterT, footerHoldDur } = timings;
 
   tl.fromTo(
     refs.footerContentZoneRef.current,
     { opacity: 0 },
     { opacity: 1, duration: enterDur, ease: "power2.out" },
-    footerEnterT
-  );
-  tl.fromTo(
-    refs.footerBgRef.current,
-    { scale: sz(1.15) },
-    { scale: sz(1.0), duration: footerHoldDur + enterDur, ease: "power2.inOut" },
     footerEnterT
   );
   tl.to(
@@ -41,7 +31,6 @@ export function animateFooterScene(tl: SceneTimeline, refs: FooterSceneRefs, ctx
 
 export type FooterSectionProps = {
   footerContentZoneRef: RefObject<HTMLDivElement | null>;
-  footerBgRef: RefObject<HTMLImageElement | null>;
   onScrollToTop: () => void;
 };
 
@@ -59,7 +48,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 }
 
 export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(function FooterSection(
-  { footerContentZoneRef, footerBgRef, onScrollToTop },
+  { footerContentZoneRef, onScrollToTop },
   _ref
 ) {
   return (
@@ -70,14 +59,6 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
       aria-label="Footer content zone"
       className="pointer-events-none absolute inset-0 z-[35] overflow-hidden opacity-0 will-change-[transform,opacity]"
     >
-      <img
-        ref={footerBgRef}
-        src={SCENE_IMAGES.footer}
-        alt=""
-        aria-hidden
-        className="w-full h-full object-cover absolute inset-0 will-change-transform"
-        style={{ transformOrigin: "50% 70%" }}
-      />
       <div className="pointer-events-none absolute inset-0 bg-black/80" aria-hidden />
 
       <footer className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 flex flex-col px-5 pb-6 pt-10 font-display text-white sm:px-8 sm:pb-8 md:px-12 lg:px-16">

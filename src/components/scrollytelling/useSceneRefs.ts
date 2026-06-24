@@ -6,16 +6,11 @@ export function useSceneRefs() {
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollTrackRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
-  const heroBgRef = useRef<HTMLImageElement>(null);
+  const cinematicCanvasRef = useRef<HTMLCanvasElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const decreeRef = useRef<HTMLDivElement>(null);
   const cloudDriftRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
-  const financeBgRef = useRef<HTMLImageElement>(null);
-  const sunsetBgRef = useRef<HTMLDivElement>(null);
-  const twilightBgRef = useRef<HTMLDivElement>(null);
-  const midnightBgRef = useRef<HTMLDivElement>(null);
-  const noonTintRef = useRef<HTMLDivElement>(null);
   const amberBurnRef = useRef<HTMLDivElement>(null);
   const amberGlowRef = useRef<HTMLDivElement>(null);
   const twilightBlueRef = useRef<HTMLDivElement>(null);
@@ -28,11 +23,7 @@ export function useSceneRefs() {
   const twilightAtmoBackRef = useRef<HTMLDivElement>(null);
   const twilightAtmoMidRef = useRef<HTMLDivElement>(null);
   const twilightAtmoFrontRef = useRef<HTMLDivElement>(null);
-  const directionsCollageRef = useRef<HTMLDivElement>(null);
-  const msbCollageRef = useRef<HTMLDivElement>(null);
-  const spaceZoomBaseRef = useRef<HTMLDivElement>(null);
   const partnerFlareRef = useRef<HTMLDivElement>(null);
-  const footerBgRef = useRef<HTMLImageElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
@@ -65,16 +56,11 @@ export function useSceneRefs() {
     rootRef,
     scrollTrackRef,
     sceneRef,
-    heroBgRef,
+    cinematicCanvasRef,
     statsRef,
     decreeRef,
     cloudDriftRef,
     brandRef,
-    financeBgRef,
-    sunsetBgRef,
-    twilightBgRef,
-    midnightBgRef,
-    noonTintRef,
     amberBurnRef,
     amberGlowRef,
     twilightBlueRef,
@@ -87,11 +73,7 @@ export function useSceneRefs() {
     twilightAtmoBackRef,
     twilightAtmoMidRef,
     twilightAtmoFrontRef,
-    directionsCollageRef,
-    msbCollageRef,
-    spaceZoomBaseRef,
     partnerFlareRef,
-    footerBgRef,
     aboutRef,
     financeRef,
     directionsRef,

@@ -3,8 +3,14 @@ import type gsap from "gsap";
 export const CURSOR_BORDER_DARK = "#262626";
 export const CURSOR_BORDER_LIGHT = "#ffffff";
 
+/** Shared easing profile — typography and virtual camera stay in lockstep. */
+export const CINEMATIC_ENTER_EASE = "power2.out";
+export const CINEMATIC_EXIT_EASE = "power2.in";
+export const CINEMATIC_MOTION_EASE = "power2.inOut";
+
 export function formatCount(value: number, progress: number, suffix = "") {
-  const eased = 1 - Math.pow(1 - Math.max(0, Math.min(1, progress)), 3);
+  const p = Math.max(0, Math.min(1, progress));
+  const eased = 1 - Math.pow(1 - p, 2);
   const val = Math.round(eased * value);
   return `${val.toLocaleString("ru-RU").replace(",", " ")}${suffix}`;
 }
@@ -157,8 +163,8 @@ export function createTextPresets(timings: SceneTimings): TextPresets {
     idle: { opacity: 0, yPercent: textEnterY, scale: 1 },
     arrived: { opacity: 1, yPercent: 0, scale: 1 },
     evaporated: { yPercent: textExitY, opacity: 0, scale: textExitScale },
-    enterEase: "power2.out",
-    exitEase: "power1.in",
+    enterEase: CINEMATIC_ENTER_EASE,
+    exitEase: CINEMATIC_EXIT_EASE,
   };
 }
 

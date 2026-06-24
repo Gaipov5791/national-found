@@ -18,9 +18,15 @@ export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingScene
   return (
     <div
       ref={refs.sceneRef}
-      className="relative h-[100svh] md:h-screen w-full overflow-hidden bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
+      className="relative h-[100svh] md:h-screen w-full overflow-hidden"
     >
-      <HeroSection heroBgRef={refs.heroBgRef} cloudDriftRef={refs.cloudDriftRef} />
+      <canvas
+        id="cinematic-canvas"
+        ref={refs.cinematicCanvasRef}
+        className="fixed top-0 left-0 w-full h-[100svh] -z-10 pointer-events-none"
+        aria-hidden
+      />
+      <HeroSection cloudDriftRef={refs.cloudDriftRef} />
       <CountersSection statsRef={refs.statsRef} count200Ref={refs.count200Ref} count8000Ref={refs.count8000Ref} />
       <DecreeSection
         decreeRef={refs.decreeRef}
@@ -32,8 +38,6 @@ export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingScene
       />
       <AboutSection aboutRef={refs.aboutRef} />
       <FinanceSection
-        financeBgRef={refs.financeBgRef}
-        noonTintRef={refs.noonTintRef}
         financeRef={refs.financeRef}
         wipe2HazeRef={refs.wipe2HazeRef}
         wipe2BackRef={refs.wipe2BackRef}
@@ -41,8 +45,6 @@ export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingScene
         wipe2FrontRef={refs.wipe2FrontRef}
       />
       <DirectionsSection
-        sunsetBgRef={refs.sunsetBgRef}
-        directionsCollageRef={refs.directionsCollageRef}
         amberBurnRef={refs.amberBurnRef}
         amberGlowRef={refs.amberGlowRef}
         sunsetAtmoBackRef={refs.sunsetAtmoBackRef}
@@ -51,8 +53,6 @@ export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingScene
         directionsRef={refs.directionsRef}
       />
       <MsbSection
-        twilightBgRef={refs.twilightBgRef}
-        msbCollageRef={refs.msbCollageRef}
         twilightBlueRef={refs.twilightBlueRef}
         twilightRoseRef={refs.twilightRoseRef}
         msbHazeRef={refs.msbHazeRef}
@@ -62,8 +62,6 @@ export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingScene
         msbRef={refs.msbRef}
       />
       <SpaceTrilogyContainer
-        midnightBgRef={refs.midnightBgRef}
-        spaceZoomBaseRef={refs.spaceZoomBaseRef}
         handshakeRimRef={refs.handshakeRimRef}
         partnerFlareRef={refs.partnerFlareRef}
         partnersRef={refs.partnersRef}
@@ -74,11 +72,7 @@ export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingScene
         contactsTitleRef={refs.contactsTitleRef}
         contactsContentRef={refs.contactsContentRef}
       />
-      <FooterSection
-        footerContentZoneRef={refs.footerContentZoneRef}
-        footerBgRef={refs.footerBgRef}
-        onScrollToTop={onScrollToTop}
-      />
+      <FooterSection footerContentZoneRef={refs.footerContentZoneRef} onScrollToTop={onScrollToTop} />
     </div>
   );
 }

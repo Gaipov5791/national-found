@@ -33,12 +33,12 @@ export function prepareDecreeScene(refs: DecreeSceneRefs, ctx: SceneAnimationCon
 
 export function animateDecreeScene(tl: SceneTimeline, refs: DecreeSceneRefs, ctx: SceneAnimationContext) {
   const { timings, text, sz } = ctx;
-  const { enterDur, exitDur, decreeCloudsT, decreeEnterT, decreeExitT } = timings;
+  const { enterDur, exitDur, decreeCloudsT, decreeExitT } = timings;
 
   tl.fromTo(
     refs.ambientFogRef.current,
     { opacity: 0, yPercent: 40 },
-    { opacity: 0.55, yPercent: 0, duration: enterDur + 0.02, ease: "power2.out" },
+    { opacity: 0.55, yPercent: 0, duration: enterDur + 0.02, ease: text.enterEase },
     decreeCloudsT
   );
   tl.fromTo(
@@ -61,12 +61,12 @@ export function animateDecreeScene(tl: SceneTimeline, refs: DecreeSceneRefs, ctx
   );
   tl.set(refs.wipe1HazeRef.current, { opacity: 0 }, decreeCloudsT);
 
-  tl.fromTo(refs.decreeRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, decreeEnterT);
+  tl.fromTo(refs.decreeRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, decreeCloudsT);
   tl.to(refs.decreeRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, decreeExitT);
-  tl.to(refs.wipe1BackRef.current, { yPercent: -120, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT);
-  tl.to(refs.wipe1MidRef.current, { yPercent: -130, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT + 0.004);
-  tl.to(refs.wipe1FrontRef.current, { yPercent: -140, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT + 0.008);
-  tl.to(refs.ambientFogRef.current, { yPercent: -30, opacity: 0, duration: exitDur, ease: "power2.in" }, decreeExitT);
+  tl.to(refs.wipe1BackRef.current, { yPercent: -120, opacity: 0, duration: exitDur, ease: text.exitEase }, decreeExitT);
+  tl.to(refs.wipe1MidRef.current, { yPercent: -130, opacity: 0, duration: exitDur, ease: text.exitEase }, decreeExitT + 0.004);
+  tl.to(refs.wipe1FrontRef.current, { yPercent: -140, opacity: 0, duration: exitDur, ease: text.exitEase }, decreeExitT + 0.008);
+  tl.to(refs.ambientFogRef.current, { yPercent: -30, opacity: 0, duration: exitDur, ease: text.exitEase }, decreeExitT);
 }
 
 export type DecreeSectionProps = {

@@ -1,14 +1,8 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
-import { SCENE_IMAGES } from "./sceneImages";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type MsbSceneRefs = {
-  twilightBgRef: RefObject<HTMLDivElement | null>;
-  directionsCollageRef: RefObject<HTMLDivElement | null>;
-  msbCollageRef: RefObject<HTMLDivElement | null>;
-  amberBurnRef: RefObject<HTMLDivElement | null>;
-  amberGlowRef: RefObject<HTMLDivElement | null>;
   twilightBlueRef: RefObject<HTMLDivElement | null>;
   twilightRoseRef: RefObject<HTMLDivElement | null>;
   msbHazeRef: RefObject<HTMLDivElement | null>;
@@ -19,7 +13,7 @@ export type MsbSceneRefs = {
 };
 
 export function prepareMsbScene(refs: MsbSceneRefs, ctx: SceneAnimationContext) {
-  const { mobile, text, sz } = ctx;
+  const { text, sz } = ctx;
 
   [refs.twilightAtmoBackRef, refs.twilightAtmoMidRef, refs.twilightAtmoFrontRef].forEach((r, i) => {
     if (r.current) {
@@ -34,8 +28,6 @@ export function prepareMsbScene(refs: MsbSceneRefs, ctx: SceneAnimationContext) 
   });
 
   gsap.set(refs.msbRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
-  gsap.set(refs.twilightBgRef.current, { opacity: 0 });
-  gsap.set(refs.msbCollageRef.current, { opacity: 0, scale: 1, visibility: "visible" });
   gsap.set([refs.twilightBlueRef.current, refs.twilightRoseRef.current, refs.msbHazeRef.current], { opacity: 0 });
   gsap.set(
     [refs.twilightAtmoBackRef.current, refs.twilightAtmoMidRef.current, refs.twilightAtmoFrontRef.current],
@@ -43,14 +35,6 @@ export function prepareMsbScene(refs: MsbSceneRefs, ctx: SceneAnimationContext) 
   );
   gsap.set(refs.twilightAtmoMidRef.current, { yPercent: 130, scale: sz(1.2) });
   gsap.set(refs.twilightAtmoFrontRef.current, { yPercent: 150, scale: sz(1.35) });
-
-  if (mobile && refs.msbCollageRef.current) {
-    gsap.set(refs.msbCollageRef.current, {
-      force3D: true,
-      visibility: "visible",
-      backfaceVisibility: "hidden",
-    });
-  }
 }
 
 export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: SceneAnimationContext) {
@@ -59,16 +43,13 @@ export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: Scen
     enterDur,
     exitDur,
     atmoWipeDur,
-    lightCrossfadeDur,
     convergeDur,
     twilightAtmoT,
-    twilightBgSwapT,
     twilightRevealT,
     msbEnterT,
     msbExitT,
   } = timings;
 
-  tl.to(refs.twilightBgRef.current, { opacity: 1, duration: atmoWipeDur, ease: "power1.inOut" }, twilightAtmoT);
   tl.fromTo(
     refs.twilightAtmoBackRef.current,
     { yPercent: 110, opacity: 0, scale: sz(1.1) },
@@ -88,15 +69,6 @@ export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: Scen
     twilightAtmoT + 0.010
   );
 
-  tl.to(refs.amberBurnRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.55, ease: "power1.inOut" }, twilightAtmoT);
-  tl.to(refs.amberGlowRef.current, { opacity: 0, duration: lightCrossfadeDur * 0.55, ease: "power1.inOut" }, twilightAtmoT);
-  tl.to(
-    refs.directionsCollageRef.current,
-    { opacity: 0, scale: sz(1.12), duration: lightCrossfadeDur * 0.6, ease: "power2.in" },
-    twilightAtmoT
-  );
-  tl.to(refs.msbCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, twilightBgSwapT);
-
   tl.to(refs.twilightRoseRef.current, { opacity: 0.42, duration: convergeDur * 0.45, ease: "power2.out" }, twilightAtmoT);
   tl.to(refs.twilightBlueRef.current, { opacity: 0.18, duration: convergeDur * 0.4, ease: "power2.out" }, twilightAtmoT + 0.004);
   tl.to(refs.msbHazeRef.current, { opacity: 0.62, duration: convergeDur * 0.55, ease: "power2.inOut" }, twilightAtmoT + 0.006);
@@ -108,24 +80,14 @@ export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: Scen
   tl.to(refs.twilightAtmoMidRef.current, { yPercent: -112, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.004);
   tl.to(refs.twilightAtmoFrontRef.current, { yPercent: -118, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, twilightRevealT + 0.008);
 
-  tl.fromTo(
-    refs.msbCollageRef.current,
-    { scale: 1 },
-    { scale: sz(1.1), duration: msbExitT + exitDur - twilightRevealT, ease: "none" },
-    twilightRevealT
-  );
-
   tl.fromTo(refs.msbRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, msbEnterT);
   tl.to(refs.msbRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, msbExitT);
-  tl.to(refs.msbCollageRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
   tl.to(refs.twilightBlueRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
   tl.to(refs.twilightRoseRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
   tl.to(refs.msbHazeRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, msbExitT);
 }
 
 export type MsbSectionProps = {
-  twilightBgRef: RefObject<HTMLDivElement | null>;
-  msbCollageRef: RefObject<HTMLDivElement | null>;
   twilightBlueRef: RefObject<HTMLDivElement | null>;
   twilightRoseRef: RefObject<HTMLDivElement | null>;
   msbHazeRef: RefObject<HTMLDivElement | null>;
@@ -150,8 +112,6 @@ const styleWithWillChange = {
 
 export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function MsbSection(
   {
-    twilightBgRef,
-    msbCollageRef,
     twilightBlueRef,
     twilightRoseRef,
     msbHazeRef,
@@ -164,28 +124,6 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
 ) {
   return (
     <>
-      <div
-        ref={twilightBgRef}
-        className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[transform,opacity]"
-        style={{
-          background:
-            "linear-gradient(180deg, #080c18 0%, #101830 18%, #1a2848 38%, #304870 58%, #5078a0 75%, #88a8c8 90%, #b8cce0 100%)",
-        }}
-      />
-
-      <div
-        ref={msbCollageRef}
-        className="scene-gpu-layer pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
-        style={{ transformOrigin: "50% 55%", isolation: "isolate" }}
-      >
-        <img
-          src={SCENE_IMAGES.msb}
-          alt="Курорт на берегу Иссык-Куля"
-          className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
-          style={{ transformOrigin: "50% 55%" }}
-        />
-      </div>
-
       <div
         ref={twilightBlueRef}
         className="pointer-events-none absolute inset-0 z-10 hidden opacity-0 will-change-[transform,opacity]"

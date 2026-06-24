@@ -1,15 +1,10 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
-import { SCENE_IMAGES } from "./sceneImages";
 import { CURSOR_BORDER_LIGHT, type SceneAnimationContext, type SceneTimeline } from "./sceneAnimationShared";
 
 export type DirectionsSceneRefs = {
-  sunsetBgRef: RefObject<HTMLDivElement | null>;
-  financeBgRef: RefObject<HTMLImageElement | null>;
-  directionsCollageRef: RefObject<HTMLDivElement | null>;
   amberBurnRef: RefObject<HTMLDivElement | null>;
   amberGlowRef: RefObject<HTMLDivElement | null>;
-  noonTintRef: RefObject<HTMLDivElement | null>;
   sunsetAtmoBackRef: RefObject<HTMLDivElement | null>;
   sunsetAtmoMidRef: RefObject<HTMLDivElement | null>;
   sunsetAtmoFrontRef: RefObject<HTMLDivElement | null>;
@@ -17,7 +12,7 @@ export type DirectionsSceneRefs = {
 };
 
 export function prepareDirectionsScene(refs: DirectionsSceneRefs, ctx: SceneAnimationContext) {
-  const { mobile, text, sz } = ctx;
+  const { text, sz } = ctx;
 
   [refs.sunsetAtmoBackRef, refs.sunsetAtmoMidRef, refs.sunsetAtmoFrontRef].forEach((r, i) => {
     if (r.current) {
@@ -32,8 +27,6 @@ export function prepareDirectionsScene(refs: DirectionsSceneRefs, ctx: SceneAnim
   });
 
   gsap.set(refs.directionsRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
-  gsap.set(refs.sunsetBgRef.current, { opacity: 0 });
-  gsap.set(refs.directionsCollageRef.current, { opacity: 0, scale: 1, visibility: "visible" });
   gsap.set(
     [refs.sunsetAtmoBackRef.current, refs.sunsetAtmoMidRef.current, refs.sunsetAtmoFrontRef.current],
     { opacity: 0, yPercent: 110, scale: sz(1.1) }
@@ -41,14 +34,6 @@ export function prepareDirectionsScene(refs: DirectionsSceneRefs, ctx: SceneAnim
   gsap.set(refs.sunsetAtmoMidRef.current, { yPercent: 130, scale: sz(1.2) });
   gsap.set(refs.sunsetAtmoFrontRef.current, { yPercent: 150, scale: sz(1.35) });
   gsap.set([refs.amberBurnRef.current, refs.amberGlowRef.current], { opacity: 0 });
-
-  if (mobile && refs.directionsCollageRef.current) {
-    gsap.set(refs.directionsCollageRef.current, {
-      force3D: true,
-      visibility: "visible",
-      backfaceVisibility: "hidden",
-    });
-  }
 }
 
 export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneRefs, ctx: SceneAnimationContext) {
@@ -58,18 +43,17 @@ export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneR
     exitDur,
     atmoWipeDur,
     lightCrossfadeDur,
-    collageParallaxDur,
     sunsetAtmoT,
     sunsetBgSwapT,
     sunsetRevealT,
     directionsEnterT,
     directionsExitT,
+    collageParallaxDur,
   } = timings;
 
   const cursorRing = document.getElementById("custom-cursor-ring");
   const cursorDot = document.getElementById("custom-cursor-dot");
 
-  tl.to(refs.sunsetBgRef.current, { opacity: 1, duration: atmoWipeDur, ease: "power1.inOut" }, sunsetAtmoT);
   tl.fromTo(
     refs.sunsetAtmoBackRef.current,
     { yPercent: 110, opacity: 0, scale: sz(1.1) },
@@ -89,13 +73,6 @@ export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneR
     sunsetAtmoT + 0.010
   );
 
-  tl.to(refs.noonTintRef.current, { opacity: 0, duration: lightCrossfadeDur, ease: "power1.inOut" }, sunsetBgSwapT);
-  tl.to(
-    refs.financeBgRef.current,
-    { opacity: 0, scale: sz(1.35), duration: lightCrossfadeDur, ease: "power2.in" },
-    sunsetBgSwapT
-  );
-  tl.to(refs.directionsCollageRef.current, { opacity: 1, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
   tl.to(refs.amberBurnRef.current, { opacity: 0.92, duration: lightCrossfadeDur, ease: "power2.out" }, sunsetBgSwapT);
   tl.to(refs.amberGlowRef.current, { opacity: 0.58, duration: lightCrossfadeDur + 0.006, ease: "power2.out" }, sunsetBgSwapT + 0.004);
 
@@ -120,25 +97,15 @@ export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneR
   tl.to(refs.sunsetAtmoBackRef.current, { yPercent: -110, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT);
   tl.to(refs.sunsetAtmoMidRef.current, { yPercent: -115, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.004);
   tl.to(refs.sunsetAtmoFrontRef.current, { yPercent: -120, opacity: 0, duration: exitDur + 0.012, ease: "power2.inOut" }, sunsetRevealT + 0.008);
-
-  tl.fromTo(
-    refs.directionsCollageRef.current,
-    { scale: 1 },
-    { scale: sz(1.08), duration: collageParallaxDur, ease: "power2.out" },
-    sunsetRevealT
-  );
   tl.to(refs.amberGlowRef.current, { opacity: 0.82, duration: collageParallaxDur, ease: "power1.inOut" }, sunsetRevealT);
 
   tl.fromTo(refs.directionsRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, directionsEnterT);
   tl.to(refs.directionsRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, directionsExitT);
-  tl.to(refs.directionsCollageRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, directionsExitT);
   tl.to(refs.amberBurnRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, directionsExitT);
   tl.to(refs.amberGlowRef.current, { opacity: 0, duration: exitDur, ease: "power1.in" }, directionsExitT);
 }
 
 export type DirectionsSectionProps = {
-  sunsetBgRef: RefObject<HTMLDivElement | null>;
-  directionsCollageRef: RefObject<HTMLDivElement | null>;
   amberBurnRef: RefObject<HTMLDivElement | null>;
   amberGlowRef: RefObject<HTMLDivElement | null>;
   sunsetAtmoBackRef: RefObject<HTMLDivElement | null>;
@@ -162,8 +129,6 @@ const styleWithWillChange = {
 
 export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionProps>(function DirectionsSection(
   {
-    sunsetBgRef,
-    directionsCollageRef,
     amberBurnRef,
     amberGlowRef,
     sunsetAtmoBackRef,
@@ -175,28 +140,6 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
 ) {
   return (
     <>
-      <div
-        ref={sunsetBgRef}
-        className="pointer-events-none absolute inset-0 z-0 opacity-0 will-change-[transform,opacity]"
-        style={{
-          background:
-            "linear-gradient(175deg, #120804 0%, #4a2008 14%, #8a4010 32%, #c46828 52%, #e89840 68%, #f5c070 82%, #ffe8b8 96%)",
-        }}
-      />
-
-      <div
-        ref={directionsCollageRef}
-        className="scene-gpu-layer pointer-events-none absolute inset-0 z-[2] opacity-0 will-change-[transform,opacity]"
-        style={{ transformOrigin: "50% 55%", isolation: "isolate" }}
-      >
-        <img
-          src={SCENE_IMAGES.directions}
-          alt="Гидроэлектростанция на закате"
-          className="absolute inset-0 h-full w-full object-cover will-change-[opacity,transform]"
-          style={{ transformOrigin: "50% 55%" }}
-        />
-      </div>
-
       <div
         ref={amberBurnRef}
         className="pointer-events-none absolute inset-0 z-10 hidden opacity-0 will-change-[transform,opacity]"
