@@ -148,6 +148,12 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     cinematicCanvas?.render();
   };
 
+  /**
+   * Cinematic background layout invariants (drone dive transitions):
+   * 1. peaksOverlay — top 34% band, drawn last on the canvas (over volumetric clouds).
+   * 2. cloudProgress — programmatic haze masks the lower 60–70% while summits stay visible.
+   * 3. Step C dives — foreground layers rise from anchorY 0.9 beneath the pinned peaks.
+   */
   const triggerEl = refs.scrollTrackRef.current;
   const masterEnd =
     mobile && triggerEl
@@ -187,6 +193,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   if (cinematicCanvas) {
     animateCinematicCanvasScene(tl, cinematicCanvas.camera, timings, ctx.sz);
     renderCinematicCanvas();
+    tl.eventCallback("onComplete", renderCinematicCanvas);
   }
 
   animateHeroScene(tl, heroRefs, ctx);

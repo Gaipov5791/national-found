@@ -33,6 +33,8 @@ export type CinematicCamera = {
   y: number;
   opacity: CinematicLayerOpacity;
   peaksOpacity: number;
+  /** 0–1 volumetric cloud cover during drone dive transitions (masks lower scenery). */
+  cloudProgress: number;
   layerSlide: CinematicLayerSlide;
   spaceDrift: CinematicSpaceDrift;
   skyTint: string;
@@ -59,12 +61,16 @@ const IMAGE_SOURCES: Record<keyof CinematicImages, string> = {
   space: SCENE_IMAGES.space,
 };
 
-/** Peak band height as a fraction of viewport — snowy summits stay pinned here. */
-const PEAKS_BAND_RATIO = 0.38;
+/** Peaks overlay band — top 34% of viewport; summits never leave the horizon grid. */
+const PEAKS_BAND_RATIO = 0.34;
 /** Vertical lift applied to mountain layers (fraction of viewport height). */
 const MOUNTAIN_LIFT_RATIO = 0.12;
 /** Horizontal overscale for panning layers — prevents edge exposure during camera.x drift. */
 const PANORAMIC_OVERSCALE = 1.15;
+/** Volumetric cloud haze covers the lower portion of the frame during dives. */
+const CLOUD_MASK_CLEAR_TOP = 0.28;
+const CLOUD_MASK_FEATHER_END = 0.36;
+const CLOUD_MASK_DENSE_BOTTOM = 0.68;
 
 type LayerDrawSpec = {
   image: HTMLImageElement;
@@ -124,6 +130,7 @@ export function createCinematicCamera(): CinematicCamera {
       footer: 0.0,
     },
     peaksOpacity: 1.0,
+    cloudProgress: 0,
     layerSlide: {
       kumtor: 1,
       hpp: 1,
@@ -259,6 +266,63 @@ function drawMountainSeamHaze(
 }
 
 /**
+ * Programmatic volumetric cloud — densest haze masks the lower 60–70% of the frame
+ * while the upper sky and peaks overlay stay clear during drone dive transitions.
+ */
+function drawVolumetricCloudLayer(
+  ctx: CanvasRenderingContext2D,
+  viewport: CinematicViewport,
+  camera: CinematicCamera
+) {
+  const progress = camera.cloudProgress;
+  if (progress <= 0.001) return;
+
+  const { width: vw, height: vh } = viewport;
+  const { ctx: sctx } = getScratchCanvas(vw, vh);
+
+  sctx.setTransform(1, 0, 0, 1, 0, 0);
+  sctx.clearRect(0, 0, vw, vh);
+
+  const expand = 0.55 + progress * 0.5;
+  const anchorY = vh * (0.92 - progress * 0.08);
+
+  const hazeLayers = [
+    { spreadX: 2.0 * expand, spreadY: 1.35 * expand, alpha: 0.62 },
+    { spreadX: 1.55 * expand, spreadY: 1.05 * expand, alpha: 0.48 },
+    { spreadX: 1.15 * expand, spreadY: 0.82 * expand, alpha: 0.38 },
+  ];
+
+  for (const layer of hazeLayers) {
+    const cx = vw * 0.5 + camera.x * 0.08 * progress;
+    const cy = anchorY + camera.y * 0.04 * progress;
+    const radius = Math.max(vw * layer.spreadX, vh * layer.spreadY) * 0.5;
+    const grad = sctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+    const a = layer.alpha * progress;
+    grad.addColorStop(0, `rgba(255,255,255,${a})`);
+    grad.addColorStop(0.38, `rgba(248,250,255,${a * 0.9})`);
+    grad.addColorStop(0.68, `rgba(230,238,248,${(a * 0.55).toFixed(3)})`);
+    grad.addColorStop(1, "rgba(255,255,255,0)");
+    sctx.fillStyle = grad;
+    sctx.fillRect(0, 0, vw, vh);
+  }
+
+  sctx.globalCompositeOperation = "destination-in";
+  const mask = sctx.createLinearGradient(0, 0, 0, vh);
+  mask.addColorStop(0, "rgba(0,0,0,0)");
+  mask.addColorStop(CLOUD_MASK_CLEAR_TOP, "rgba(0,0,0,0)");
+  mask.addColorStop(CLOUD_MASK_FEATHER_END, "rgba(0,0,0,0.35)");
+  mask.addColorStop(CLOUD_MASK_DENSE_BOTTOM, "rgba(0,0,0,1)");
+  mask.addColorStop(1, "rgba(0,0,0,1)");
+  sctx.fillStyle = mask;
+  sctx.fillRect(0, 0, vw, vh);
+  sctx.globalCompositeOperation = "source-over";
+
+  ctx.save();
+  ctx.drawImage(scratchCanvas!, 0, 0, vw, vh);
+  ctx.restore();
+}
+
+/**
  * Draw one cover-fit layer with independent translate / scale around its anchor.
  * Every layer is always evaluated — alpha gates visibility, never a hard on/off branch.
  */
@@ -349,18 +413,18 @@ function buildLayerSpecs(
       panoramicOverscale: true,
       featherBottom: true,
     },
-    // Kumtor rises from bottom edge
+    // Kumtor rises from bottom edge mist (Step C dive anchor)
     {
       image: images.kumtor,
       alpha: camera.opacity.kumtor,
       anchorX: 0.5,
-      anchorY: 0.92,
+      anchorY: 0.9,
       x: camera.x * 0.45,
       y: camera.y * 0.55 + kumtorSlideY,
       zoom: camera.zoom * 1.04,
       panoramicOverscale: true,
     },
-    // HPP slides up over Kumtor
+    // HPP slides up over Kumtor — pinned just below peaks overlay
     {
       image: images.hpp,
       alpha: camera.opacity.hpp,
@@ -371,12 +435,12 @@ function buildLayerSpecs(
       zoom: camera.zoom * 1.05,
       panoramicOverscale: true,
     },
-    // Issyk-Kul lake ascent
+    // Issyk-Kul lake ascent — same bottom-mist anchor for unified dive
     {
       image: images.lake,
       alpha: camera.opacity.lake,
       anchorX: 0.5,
-      anchorY: 0.88,
+      anchorY: 0.9,
       x: camera.x * 0.38,
       y: camera.y * 0.48 + lakeSlideY,
       zoom: camera.zoom * 1.06,
@@ -393,19 +457,29 @@ function buildLayerSpecs(
       zoom: camera.zoom * 0.98,
       panoramicOverscale: true,
     },
-    // Snowy summits — elevated peaks overlay with soft feather (no hard clip)
-    {
-      image: images.mountains,
-      alpha: camera.peaksOpacity,
-      anchorX: 0.5,
-      anchorY: 0.18,
-      x: camera.x * 0.12,
-      y: camera.y * 0.02 + mountainLift,
-      zoom: camera.zoom * 1.02,
-      panoramicOverscale: true,
-      featherPeakBand: true,
-    },
   ];
+}
+
+/** Dedicated peaks overlay — top 34% band, always composited after volumetric clouds. */
+function buildPeaksOverlaySpec(
+  camera: CinematicCamera,
+  images: CinematicImages,
+  viewport: CinematicViewport
+): LayerDrawSpec {
+  const { height: vh } = viewport;
+  const mountainLift = -vh * MOUNTAIN_LIFT_RATIO;
+
+  return {
+    image: images.mountains,
+    alpha: camera.peaksOpacity,
+    anchorX: 0.5,
+    anchorY: 0.18,
+    x: camera.x * 0.12,
+    y: camera.y * 0.02 + mountainLift,
+    zoom: camera.zoom * 1.02,
+    panoramicOverscale: true,
+    featherPeakBand: true,
+  };
 }
 
 export function drawCinematicCanvas(
@@ -424,7 +498,6 @@ export function drawCinematicCanvas(
   for (const layer of layers) {
     drawCoverLayer(ctx, layer, viewport);
 
-    // Seam haze after mountain base plate — masks the cut into rising foregrounds
     if (layer.featherBottom && layer.alpha > 0.001) {
       const hazeStrength = Math.max(
         camera.opacity.mountains,
@@ -432,9 +505,15 @@ export function drawCinematicCanvas(
         camera.opacity.hpp * 0.5,
         camera.opacity.lake * 0.4
       );
-      drawMountainSeamHaze(ctx, viewport, camera.skyTint, hazeStrength * camera.peaksOpacity);
+      drawMountainSeamHaze(ctx, viewport, camera.skyTint, hazeStrength);
     }
   }
+
+  // Volumetric cloud masks lower scenery during drone dives — peaks stay above
+  drawVolumetricCloudLayer(ctx, viewport, camera);
+
+  // Peaks overlay pass — absolute front of the background draw queue
+  drawCoverLayer(ctx, buildPeaksOverlaySpec(camera, images, viewport), viewport);
 }
 
 export type CinematicCanvasRuntime = {
@@ -502,16 +581,19 @@ export function animateCinematicCanvasScene(
   const {
     statsExitT,
     exitDur,
+    enterDur,
+    atmoWipeDur,
     aboutEnterT,
     financeCloudsT,
+    financeRevealT,
     financeExitT,
     sunsetAtmoT,
+    sunsetRevealT,
     twilightAtmoT,
+    twilightRevealT,
     midnightAtmoT,
     footerEnterT,
     footerHoldDur,
-    enterDur,
-    atmoWipeDur,
     lightCrossfadeDur,
     convergeDur,
   } = timings;
@@ -530,6 +612,8 @@ export function animateCinematicCanvasScene(
   const spaceDur = Math.max(0.001, spaceBeatEnd - midnightAtmoT);
 
   const crossfadeDur = Math.max(lightCrossfadeDur, atmoWipeDur * 0.85);
+  const financeCloudCoverDur = enterDur + 0.022;
+  const diveCloudExitDur = exitDur + 0.012;
 
   // sc_hero — breathe in (scrub-linear; pairs with brand dock power2.out)
   tl.to(camera, { zoom: 1.5, duration: heroZoomEnd, ease: "none" }, 0);
@@ -556,7 +640,12 @@ export function animateCinematicCanvasScene(
     aboutEnterT
   );
 
-  // sc_finance — Kumtor rises from bottom while peaks stay pinned
+  // sc_finance — Step C dive: cloud masks swap, Kumtor rises from bottom mist, peaks stay pinned
+  tl.to(
+    camera,
+    { cloudProgress: 1, duration: financeCloudCoverDur, ease: "power2.inOut" },
+    financeCloudsT
+  );
   tl.to(
     camera,
     {
@@ -587,9 +676,18 @@ export function animateCinematicCanvasScene(
     { zoom: sz(1.1), duration: Math.max(0.001, financeExitT + exitDur - financeCloudsT), ease: "none" },
     financeCloudsT + financeDur * 0.2
   );
-  tl.to(camera, { peaksOpacity: 0.95, duration: financeDur * 0.4, ease: "power1.inOut" }, financeCloudsT);
+  tl.to(
+    camera,
+    { cloudProgress: 0, duration: exitDur, ease: "power2.inOut" },
+    financeRevealT
+  );
 
-  // sc_directions — HPP crossfades over Kumtor, peaks remain
+  // sc_directions — HPP crossfades over Kumtor beneath pinned peaks
+  tl.to(
+    camera,
+    { cloudProgress: 1, duration: atmoWipeDur, ease: "power2.inOut" },
+    sunsetAtmoT
+  );
   tl.to(
     camera,
     {
@@ -620,8 +718,18 @@ export function animateCinematicCanvasScene(
     { skyTint: "#c46828", duration: directionsDur * 0.6, ease: "power1.inOut" },
     sunsetAtmoT + directionsDur * 0.15
   );
+  tl.to(
+    camera,
+    { cloudProgress: 0, duration: diveCloudExitDur, ease: "power2.inOut" },
+    sunsetRevealT
+  );
 
-  // sc_msb — lake twilight ascent
+  // sc_msb — lake twilight ascent beneath peaks
+  tl.to(
+    camera,
+    { cloudProgress: 1, duration: atmoWipeDur, ease: "power2.inOut" },
+    twilightAtmoT
+  );
   tl.to(
     camera,
     {
@@ -653,7 +761,11 @@ export function animateCinematicCanvasScene(
     { skyTint: "#1a2848", duration: convergeDur, ease: "power1.inOut" },
     twilightAtmoT + msbDur * 0.2
   );
-  tl.to(camera, { peaksOpacity: 0.88, duration: msbDur * 0.5, ease: "power1.inOut" }, twilightAtmoT);
+  tl.to(
+    camera,
+    { cloudProgress: 0, duration: diveCloudExitDur, ease: "power2.inOut" },
+    twilightRevealT
+  );
 
   // sc_partners / sc_news / sc_contacts — hyper-zoom + living starfield drift
   tl.to(
