@@ -10,7 +10,7 @@ import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
 
 const SCROLL_DISTANCE_DESKTOP = 17200;
 const SCROLL_DISTANCE_TABLET = 13600;
-const SCROLL_DISTANCE_MOBILE = 10600;
+const SCROLL_DISTANCE_MOBILE = 12800;
 
 const NAV_ITEMS = [
   "ГЛАВНАЯ",
@@ -46,14 +46,15 @@ const NAV_SCROLL_MOBILE_DURATION = 1.4;
 
 type SceneLabel = (typeof NAV_SCENE_LABELS)[NavItem];
 
-/** Forward pixel nudges on mobile — compensates Counters/Decree mid-timeline drift. */
+/** Forward pixel nudges on mobile — compensates pinned-scene drift after panorama timeline. */
 const MOBILE_SCENE_NUDGE: Partial<Record<SceneLabel, number>> = {
-  sc_finance: 120,
-  sc_directions: 80,
-  sc_msb: 60,
-  sc_partners: 100,
-  sc_news: 90,
-  sc_contacts: 80,
+  sc_about: 60,
+  sc_finance: 160,
+  sc_directions: 110,
+  sc_msb: 85,
+  sc_partners: 130,
+  sc_news: 115,
+  sc_contacts: 105,
 };
 
 export function Scrollytelling() {
@@ -127,7 +128,7 @@ export function Scrollytelling() {
         refs.staticViewportHeightRef.current = staticViewportHeight;
         const cleanup = runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_MOBILE,
-          scrub: true,
+          scrub: 1.25,
           mobile: true,
           cinematic: true,
           staticViewportHeight,
@@ -179,7 +180,7 @@ export function Scrollytelling() {
         onLangChange={setLang}
         onNavClick={handleNavClick}
       />
-      <div ref={refs.scrollTrackRef} style={{ height: `${SCROLL_DISTANCE_DESKTOP}px` }}>
+      <div ref={refs.scrollTrackRef}>
         <ScrollytellingScene refs={refs} onScrollToTop={scrollToTop} />
       </div>
     </div>

@@ -28,14 +28,14 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
 
   return (
     <div ref={ref} className="fixed top-0 left-0 w-full z-[100] bg-transparent">
-      <header className="px-3 pt-5 sm:px-4 md:px-5 md:pt-6 lg:px-6 xl:px-8">
+      <header className="px-3 pt-4 sm:px-4 md:px-5 md:pt-6 lg:px-6 xl:px-8">
         <div className="mx-auto w-full max-w-[min(100%,94rem)]">
           <nav
             data-cursor-surface="light"
-            className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-full border border-white/40 bg-white/40 px-4 py-3.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] md:gap-4 md:px-6 md:py-4 lg:gap-5 lg:px-7 xl:px-9"
+            className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 rounded-full border border-white/40 bg-white/40 px-3.5 py-3 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] sm:gap-3 sm:px-4 md:gap-4 md:px-6 md:py-4 lg:gap-5 lg:px-7 xl:px-9"
           >
             <div className="flex shrink-0 items-center">
-              <img src={fundLogo.url} alt="НИФ КР" className="block h-11 w-auto md:hidden" />
+              <img src={fundLogo.url} alt="НИФ КР" className="block h-10 w-auto sm:h-11 md:hidden" />
               <div className="hidden md:block h-[52px] w-[52px] shrink-0" aria-hidden />
             </div>
 
@@ -134,11 +134,11 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
 
       <div
         ref={brandRef}
-        className="pointer-events-none fixed left-1/2 top-[6.25rem] z-[65] w-full max-w-[min(100%,980px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:top-[6.75rem] sm:px-6 md:top-[7.75rem]"
+        className="pointer-events-none fixed left-1/2 top-[5.5rem] z-[65] w-full max-w-[min(100%,980px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:top-[6rem] sm:px-6 md:top-[7.75rem]"
         style={{ mixBlendMode: "normal", isolation: "isolate" }}
       >
         <h1
-          className="text-center font-display text-[clamp(0.58rem,2.8vw,0.78rem)] font-bold leading-[1.15] tracking-[0.07em] text-white opacity-100 sm:text-[clamp(0.72rem,2.1vw,1rem)] sm:tracking-[0.11em] md:text-[clamp(0.88rem,1.75vw,1.28rem)] md:leading-[1.2] md:tracking-[0.16em]"
+          className="text-center font-display text-[clamp(0.62rem,3.4vw,0.82rem)] font-bold leading-[1.15] tracking-[0.06em] text-white opacity-100 sm:text-[clamp(0.72rem,2.1vw,1rem)] sm:tracking-[0.11em] md:text-[clamp(0.88rem,1.75vw,1.28rem)] md:leading-[1.2] md:tracking-[0.16em]"
           style={{
             mixBlendMode: "normal",
             color: "#ffffff",

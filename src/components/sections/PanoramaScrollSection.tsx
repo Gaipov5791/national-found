@@ -13,8 +13,18 @@ export type PanoramaScrollSceneRefs = {
 };
 
 /** Act 1 peak zoom — scale applied to the panoramic image. */
-const ACT1_PEAK_ZOOM = 1.5;
-const PANORAMA_ORIGIN = "center 28%";
+const ACT1_PEAK_ZOOM_DESKTOP = 1.5;
+const ACT1_PEAK_ZOOM_MOBILE = 1.42;
+const PANORAMA_ORIGIN_DESKTOP = "center 28%";
+const PANORAMA_ORIGIN_MOBILE = "center 26%";
+
+function getPeakZoom(mobile: boolean) {
+  return mobile ? ACT1_PEAK_ZOOM_MOBILE : ACT1_PEAK_ZOOM_DESKTOP;
+}
+
+function getPanoramaOrigin(mobile: boolean) {
+  return mobile ? PANORAMA_ORIGIN_MOBILE : PANORAMA_ORIGIN_DESKTOP;
+}
 
 /** Vertical pan stops for Sections 3–7. */
 export const PANORAMA_STOPS = {
@@ -50,11 +60,14 @@ function tweenPanoramaPan(
   );
 }
 
-export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs) {
+export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs, ctx: SceneAnimationContext) {
+  const { mobile } = ctx;
+  const origin = getPanoramaOrigin(mobile);
+
   gsap.set(refs.panoramaBgRef.current, { opacity: 1, visibility: "visible" });
   gsap.set(refs.panoramaImgRef.current, {
     scale: 1,
-    transformOrigin: PANORAMA_ORIGIN,
+    transformOrigin: origin,
   });
   applyPanoramaPosition(refs.panoramaImgRef.current, PANORAMA_STOPS.peaks);
   gsap.set(refs.permanentCloudRef.current, { opacity: 0, yPercent: -40 });
@@ -65,7 +78,7 @@ export function animatePanoramaScrollScene(
   refs: PanoramaScrollSceneRefs,
   ctx: SceneAnimationContext
 ) {
-  const { timings } = ctx;
+  const { timings, mobile } = ctx;
   const {
     enterDur,
     decreeExitT,
@@ -82,9 +95,10 @@ export function animatePanoramaScrollScene(
   const img = refs.panoramaImgRef.current;
   const pan = { y: PANORAMA_STOPS.peaks };
   const cloudRollDur = enterDur + 0.032;
+  const peakZoom = getPeakZoom(mobile);
 
   // Act 1 — peaks fixed at top, zoom in through Section 1
-  tl.to(img, { scale: ACT1_PEAK_ZOOM, duration: peakZoomDur, ease: "none" }, 0);
+  tl.to(img, { scale: peakZoom, duration: peakZoomDur, ease: "none" }, 0);
 
   // Act 2 — permanent cloud rolls in once and locks at the top; zoom back out (same duration as zoom in)
   tl.fromTo(
@@ -152,6 +166,10 @@ export type PanoramaScrollSectionProps = {
 
 export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSectionProps>(
   function PanoramaScrollSection({ panoramaBgRef, panoramaImgRef, permanentCloudRef }, _ref) {
+    const panoramaOrigin = getPanoramaOrigin(
+      typeof window !== "undefined" ? window.innerWidth < 768 : false
+    );
+
     return (
       <>
         <div
@@ -165,7 +183,7 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
             src={SCENE_IMAGES.panorama}
             alt=""
             className="fixed inset-0 h-[100svh] w-full object-cover will-change-transform md:h-screen"
-            style={{ objectPosition: "center 0%", transformOrigin: PANORAMA_ORIGIN }}
+            style={{ objectPosition: "center 0%", transformOrigin: panoramaOrigin }}
           />
           <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
         </div>
@@ -174,7 +192,7 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
           ref={permanentCloudRef}
           data-permanent-cloud
           data-cursor-surface="light"
-          className="pointer-events-none fixed top-0 left-0 z-[8] h-[38vh] w-full opacity-0 will-change-[transform,opacity]"
+          className="pointer-events-none fixed top-0 left-0 z-[8] h-[44svh] w-full opacity-0 will-change-[transform,opacity] md:h-[38vh]"
           style={{
             maskImage: "linear-gradient(to bottom, #000 0%, #000 38%, rgba(0,0,0,0.55) 62%, transparent 100%)",
             WebkitMaskImage:

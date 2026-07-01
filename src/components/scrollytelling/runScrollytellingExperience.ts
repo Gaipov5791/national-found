@@ -99,7 +99,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   };
   const footerRefs = { footerContentZoneRef: refs.footerContentZoneRef };
 
-  preparePanoramaScrollScene(panoramaRefs);
+  preparePanoramaScrollScene(panoramaRefs, ctx);
   prepareHeroScene(heroRefs, ctx);
   prepareCountersScene(countersRefs, ctx);
   prepareDecreeScene(decreeRefs, ctx);
@@ -118,6 +118,20 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
       ? triggerEl.getBoundingClientRect().top + window.scrollY + scrollDistance
       : `+=${scrollDistance}`;
 
+  const onResize = () => {
+    if (!mobile || !cfg.staticViewportHeight) return;
+    const nextHeight = window.innerHeight;
+    if (refs.staticViewportHeightRef.current !== nextHeight) {
+      refs.staticViewportHeightRef.current = nextHeight;
+      ScrollTrigger.refresh();
+    }
+  };
+
+  if (mobile) {
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+  }
+
   const tl = gsap.timeline({
     scrollTrigger: {
       id: "master-scrolly",
@@ -128,10 +142,10 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
       pin: refs.sceneRef.current,
       pinType: mobile ? "fixed" : "transform",
       anticipatePin: 1,
-      invalidateOnRefresh: !mobile,
+      invalidateOnRefresh: true,
       onUpdate: (self) => {
         updateCounts(self.progress);
-        refreshCursorTheme();
+        if (!mobile) refreshCursorTheme();
       },
     },
   });
@@ -161,6 +175,8 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   return () => {
     cancelled = true;
     if (mobile) {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
       ScrollTrigger.scrollerProxy(document.documentElement, {});
     }
     if (lenis) {
