@@ -8,9 +8,9 @@ import { ScrollytellingScene } from "@/components/scrollytelling/ScrollytellingS
 import { useSceneRefs } from "@/components/scrollytelling/useSceneRefs";
 import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
 
-const SCROLL_DISTANCE_DESKTOP = 14500;
-const SCROLL_DISTANCE_TABLET = 11500;
-const SCROLL_DISTANCE_MOBILE = 9000;
+const SCROLL_DISTANCE_DESKTOP = 17200;
+const SCROLL_DISTANCE_TABLET = 13600;
+const SCROLL_DISTANCE_MOBILE = 10600;
 
 const NAV_ITEMS = [
   "ГЛАВНАЯ",
@@ -147,9 +147,9 @@ export function Scrollytelling() {
         ScrollTrigger.config({ ignoreMobileResize: true });
         return runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_TABLET,
-          scrub: 0.5,
+          scrub: 1.5,
           mobile: false,
-          cinematic: false,
+          cinematic: true,
         });
       });
 
@@ -157,7 +157,7 @@ export function Scrollytelling() {
         ScrollTrigger.config({ ignoreMobileResize: false });
         return runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_DESKTOP,
-          scrub: 1,
+          scrub: 1.25,
           mobile: false,
           cinematic: true,
         });

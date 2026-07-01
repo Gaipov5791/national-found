@@ -32,13 +32,14 @@ export function computeTimelineMarkers() {
   const decreeEnterT = decreeCloudsT + 0.052;
   const decreeExitT = decreeEnterT + enterDur + holdDur;
 
-  const aboutEnterT = gapAfterExit(decreeExitT, 0.012);
+  /** Peak zoom-in/out share the same scrub duration for symmetric camera motion. */
+  const peakZoomDur = decreeExitT;
+  const peakZoomOutEndT = decreeExitT + peakZoomDur;
+
+  const aboutEnterT = peakZoomOutEndT + 0.012;
   const aboutExitT = aboutEnterT + enterDur + holdDur;
 
-  const financeCloudsT = breatheAfter(aboutExitT);
-  const financeBgSwapT = financeCloudsT + 0.008;
-  const financeRevealT = financeCloudsT + 0.026;
-  const financeEnterT = financeRevealT;
+  const financeEnterT = gapAfterExit(aboutExitT, 0.012);
   const financeExitT = financeEnterT + enterDur + holdDur;
 
   const sunsetAtmoT = breatheAfter(financeExitT);
@@ -90,11 +91,10 @@ export function computeTimelineMarkers() {
     decreeCloudsT,
     decreeEnterT,
     decreeExitT,
+    peakZoomDur,
+    peakZoomOutEndT,
     aboutEnterT,
     aboutExitT,
-    financeCloudsT,
-    financeBgSwapT,
-    financeRevealT,
     financeEnterT,
     financeExitT,
     sunsetAtmoT,

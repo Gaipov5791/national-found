@@ -6,24 +6,12 @@ export function useSceneRefs() {
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollTrackRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
-  const cinematicCanvasRef = useRef<HTMLCanvasElement>(null);
+  const panoramaBgRef = useRef<HTMLDivElement>(null);
+  const panoramaImgRef = useRef<HTMLImageElement>(null);
+  const permanentCloudRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const decreeRef = useRef<HTMLDivElement>(null);
-  const cloudDriftRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
-  const amberBurnRef = useRef<HTMLDivElement>(null);
-  const amberGlowRef = useRef<HTMLDivElement>(null);
-  const twilightBlueRef = useRef<HTMLDivElement>(null);
-  const twilightRoseRef = useRef<HTMLDivElement>(null);
-  const msbHazeRef = useRef<HTMLDivElement>(null);
-  const handshakeRimRef = useRef<HTMLDivElement>(null);
-  const sunsetAtmoBackRef = useRef<HTMLDivElement>(null);
-  const sunsetAtmoMidRef = useRef<HTMLDivElement>(null);
-  const sunsetAtmoFrontRef = useRef<HTMLDivElement>(null);
-  const twilightAtmoBackRef = useRef<HTMLDivElement>(null);
-  const twilightAtmoMidRef = useRef<HTMLDivElement>(null);
-  const twilightAtmoFrontRef = useRef<HTMLDivElement>(null);
-  const partnerFlareRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
@@ -31,15 +19,6 @@ export function useSceneRefs() {
   const partnersRef = useRef<HTMLDivElement>(null);
   const partnersTextRef = useRef<HTMLDivElement>(null);
   const partnerLogosRef = useRef<HTMLDivElement>(null);
-  const wipe1BackRef = useRef<HTMLDivElement>(null);
-  const wipe1MidRef = useRef<HTMLDivElement>(null);
-  const wipe1FrontRef = useRef<HTMLDivElement>(null);
-  const wipe1HazeRef = useRef<HTMLDivElement>(null);
-  const wipe2BackRef = useRef<HTMLDivElement>(null);
-  const wipe2MidRef = useRef<HTMLDivElement>(null);
-  const wipe2FrontRef = useRef<HTMLDivElement>(null);
-  const wipe2HazeRef = useRef<HTMLDivElement>(null);
-  const ambientFogRef = useRef<HTMLDivElement>(null);
   const count200Ref = useRef<HTMLSpanElement>(null);
   const count8000Ref = useRef<HTMLSpanElement>(null);
   const newsTitleRef = useRef<HTMLDivElement>(null);
@@ -56,24 +35,12 @@ export function useSceneRefs() {
     rootRef,
     scrollTrackRef,
     sceneRef,
-    cinematicCanvasRef,
+    panoramaBgRef,
+    panoramaImgRef,
+    permanentCloudRef,
     statsRef,
     decreeRef,
-    cloudDriftRef,
     brandRef,
-    amberBurnRef,
-    amberGlowRef,
-    twilightBlueRef,
-    twilightRoseRef,
-    msbHazeRef,
-    handshakeRimRef,
-    sunsetAtmoBackRef,
-    sunsetAtmoMidRef,
-    sunsetAtmoFrontRef,
-    twilightAtmoBackRef,
-    twilightAtmoMidRef,
-    twilightAtmoFrontRef,
-    partnerFlareRef,
     aboutRef,
     financeRef,
     directionsRef,
@@ -81,15 +48,6 @@ export function useSceneRefs() {
     partnersRef,
     partnersTextRef,
     partnerLogosRef,
-    wipe1BackRef,
-    wipe1MidRef,
-    wipe1FrontRef,
-    wipe1HazeRef,
-    wipe2BackRef,
-    wipe2MidRef,
-    wipe2FrontRef,
-    wipe2HazeRef,
-    ambientFogRef,
     count200Ref,
     count8000Ref,
     newsTitleRef,

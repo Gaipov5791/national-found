@@ -1,4 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  CURSOR_ON_DARK_BG,
+  CURSOR_ON_LIGHT_BG,
+  refreshCursorTheme,
+  setLastPointer,
+  updateCursorThemeAtPoint,
+} from "@/lib/cursorTheme";
 
 export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -10,9 +17,14 @@ export function CustomCursor() {
     const ring = { x: pos.x, y: pos.y };
     let raf = 0;
 
+    setLastPointer(pos.x, pos.y);
+    updateCursorThemeAtPoint(pos.x, pos.y);
+
     const onMove = (e: MouseEvent) => {
       pos.x = e.clientX;
       pos.y = e.clientY;
+      setLastPointer(pos.x, pos.y);
+      updateCursorThemeAtPoint(pos.x, pos.y);
       if (dotRef.current) {
         dotRef.current.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`;
       }
@@ -37,35 +49,40 @@ export function CustomCursor() {
       if (t.closest("[data-cursor-hover], a, button")) setHovering(false);
     };
 
+    const onScroll = () => refreshCursorTheme();
+
     window.addEventListener("mousemove", onMove);
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("mouseover", onOver);
     document.addEventListener("mouseout", onOut);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOut);
     };
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[200] hidden md:block">
+    <div data-custom-cursor className="pointer-events-none fixed inset-0 z-[200] hidden md:block">
       <div
         ref={ringRef}
         id="custom-cursor-ring"
-        data-cursor-theme="dark"
-        className="absolute left-0 top-0 rounded-full border border-neutral-800 bg-transparent transition-[width,height] duration-300 transition-colors duration-500 ease-out"
+        data-cursor-theme="on-light"
+        className="absolute left-0 top-0 rounded-full border bg-transparent transition-[width,height] duration-300 transition-colors duration-500 ease-out"
         style={{
           width: hovering ? 56 : 32,
           height: hovering ? 56 : 32,
+          borderColor: CURSOR_ON_LIGHT_BG,
           willChange: "transform",
         }}
       />
       <div
         ref={dotRef}
         id="custom-cursor-dot"
-        className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-neutral-800 transition-colors duration-500 ease-out"
-        style={{ willChange: "transform" }}
+        className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full transition-colors duration-500 ease-out"
+        style={{ backgroundColor: CURSOR_ON_LIGHT_BG, willChange: "transform" }}
       />
     </div>
   );

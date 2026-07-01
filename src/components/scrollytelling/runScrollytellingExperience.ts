@@ -9,9 +9,13 @@ import { animateFinanceScene, prepareFinanceScene } from "@/components/sections/
 import { animateFooterScene, prepareFooterScene } from "@/components/sections/FooterSection";
 import { animateHeroScene, prepareHeroScene } from "@/components/sections/HeroSection";
 import { animateMsbScene, prepareMsbScene } from "@/components/sections/MsbSection";
+import {
+  animatePanoramaScrollScene,
+  preparePanoramaScrollScene,
+} from "@/components/sections/PanoramaScrollSection";
 import { animateSpaceTrilogyScene, prepareSpaceTrilogyScene } from "@/components/sections/SpaceTrilogyContainer";
-import { buildSceneContext, CURSOR_BORDER_DARK, type ExperienceConfig } from "@/components/sections/sceneAnimationShared";
-import { animateCinematicCanvasScene, initCinematicCanvas } from "./cinematicCanvas";
+import { buildSceneContext, type ExperienceConfig } from "@/components/sections/sceneAnimationShared";
+import { refreshCursorTheme } from "@/lib/cursorTheme";
 import type { SceneRefs } from "./useSceneRefs";
 
 export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConfig) {
@@ -49,8 +53,8 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
       smoothWheel: true,
       syncTouch: false,
       touchMultiplier: 1,
-      wheelMultiplier: 1,
-      lerp: 0.1,
+      wheelMultiplier: 0.85,
+      lerp: 0.085,
     });
     refs.lenisRef.current = lenis;
     const raf = (time: number) => {
@@ -69,51 +73,18 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     });
   }
 
-  const cinematicCanvas = refs.cinematicCanvasRef.current
-    ? initCinematicCanvas(refs.cinematicCanvasRef.current, staticViewportHeight)
-    : null;
-
-  const heroRefs = { cloudDriftRef: refs.cloudDriftRef, brandRef: refs.brandRef };
-  const countersRefs = { statsRef: refs.statsRef, count200Ref: refs.count200Ref, count8000Ref: refs.count8000Ref };
-  const decreeRefs = {
-    decreeRef: refs.decreeRef,
-    ambientFogRef: refs.ambientFogRef,
-    wipe1HazeRef: refs.wipe1HazeRef,
-    wipe1BackRef: refs.wipe1BackRef,
-    wipe1MidRef: refs.wipe1MidRef,
-    wipe1FrontRef: refs.wipe1FrontRef,
+  const heroRefs = { brandRef: refs.brandRef };
+  const countersRefs = {
+    statsRef: refs.statsRef,
+    count200Ref: refs.count200Ref,
+    count8000Ref: refs.count8000Ref,
   };
+  const decreeRefs = { decreeRef: refs.decreeRef };
   const aboutRefs = { aboutRef: refs.aboutRef };
-  const financeRefs = {
-    financeRef: refs.financeRef,
-    wipe2HazeRef: refs.wipe2HazeRef,
-    wipe2BackRef: refs.wipe2BackRef,
-    wipe2MidRef: refs.wipe2MidRef,
-    wipe2FrontRef: refs.wipe2FrontRef,
-  };
-  const directionsRefs = {
-    amberBurnRef: refs.amberBurnRef,
-    amberGlowRef: refs.amberGlowRef,
-    sunsetAtmoBackRef: refs.sunsetAtmoBackRef,
-    sunsetAtmoMidRef: refs.sunsetAtmoMidRef,
-    sunsetAtmoFrontRef: refs.sunsetAtmoFrontRef,
-    directionsRef: refs.directionsRef,
-  };
-  const msbRefs = {
-    twilightBlueRef: refs.twilightBlueRef,
-    twilightRoseRef: refs.twilightRoseRef,
-    msbHazeRef: refs.msbHazeRef,
-    twilightAtmoBackRef: refs.twilightAtmoBackRef,
-    twilightAtmoMidRef: refs.twilightAtmoMidRef,
-    twilightAtmoFrontRef: refs.twilightAtmoFrontRef,
-    msbRef: refs.msbRef,
-  };
+  const financeRefs = { financeRef: refs.financeRef };
+  const directionsRefs = { directionsRef: refs.directionsRef };
+  const msbRefs = { msbRef: refs.msbRef };
   const spaceRefs = {
-    twilightBlueRef: refs.twilightBlueRef,
-    twilightRoseRef: refs.twilightRoseRef,
-    msbHazeRef: refs.msbHazeRef,
-    handshakeRimRef: refs.handshakeRimRef,
-    partnerFlareRef: refs.partnerFlareRef,
     partnersTextRef: refs.partnersTextRef,
     partnerLogosRef: refs.partnerLogosRef,
     newsTitleRef: refs.newsTitleRef,
@@ -121,8 +92,14 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     contactsTitleRef: refs.contactsTitleRef,
     contactsContentRef: refs.contactsContentRef,
   };
+  const panoramaRefs = {
+    panoramaBgRef: refs.panoramaBgRef,
+    panoramaImgRef: refs.panoramaImgRef,
+    permanentCloudRef: refs.permanentCloudRef,
+  };
   const footerRefs = { footerContentZoneRef: refs.footerContentZoneRef };
 
+  preparePanoramaScrollScene(panoramaRefs);
   prepareHeroScene(heroRefs, ctx);
   prepareCountersScene(countersRefs, ctx);
   prepareDecreeScene(decreeRefs, ctx);
@@ -133,20 +110,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   prepareSpaceTrilogyScene(spaceRefs, ctx);
   prepareFooterScene(footerRefs, ctx);
 
-  const cursorRing = document.getElementById("custom-cursor-ring");
-  const cursorDot = document.getElementById("custom-cursor-dot");
-  if (cursorRing) {
-    gsap.set(cursorRing, { borderColor: CURSOR_BORDER_DARK });
-    cursorRing.setAttribute("data-cursor-theme", "dark");
-  }
-  if (cursorDot) {
-    gsap.set(cursorDot, { backgroundColor: CURSOR_BORDER_DARK });
-  }
-
   const updateCounts = createCountUpdater(countersRefs, ctx);
-  const renderCinematicCanvas = () => {
-    cinematicCanvas?.render();
-  };
 
   const triggerEl = refs.scrollTrackRef.current;
   const masterEnd =
@@ -167,10 +131,9 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
       invalidateOnRefresh: !mobile,
       onUpdate: (self) => {
         updateCounts(self.progress);
-        renderCinematicCanvas();
+        refreshCursorTheme();
       },
     },
-    onUpdate: renderCinematicCanvas,
   });
 
   refs.masterTimelineRef.current = tl;
@@ -184,11 +147,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   tl.addLabel("sc_news", newsEnterT + enterDur);
   tl.addLabel("sc_contacts", contactsEnterT + enterDur);
 
-  if (cinematicCanvas) {
-    animateCinematicCanvasScene(tl, cinematicCanvas.camera, timings, ctx.sz);
-    renderCinematicCanvas();
-  }
-
+  animatePanoramaScrollScene(tl, panoramaRefs, ctx);
   animateHeroScene(tl, heroRefs, ctx);
   animateCountersScene(tl, countersRefs, ctx);
   animateDecreeScene(tl, decreeRefs, ctx);
@@ -209,15 +168,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
       lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
     }
-    cinematicCanvas?.destroy();
     refs.masterTimelineRef.current = null;
     refs.lenisRef.current = null;
-    if (cursorRing) {
-      gsap.set(cursorRing, { borderColor: CURSOR_BORDER_DARK });
-      cursorRing.setAttribute("data-cursor-theme", "dark");
-    }
-    if (cursorDot) {
-      gsap.set(cursorDot, { backgroundColor: CURSOR_BORDER_DARK });
-    }
   };
 }

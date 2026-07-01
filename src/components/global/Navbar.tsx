@@ -28,15 +28,18 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
 
   return (
     <div ref={ref} className="fixed top-0 left-0 w-full z-[100] bg-transparent">
-      <header className="px-6 pt-4 md:px-12 md:pt-5">
-        <div className="mx-auto w-full max-w-7xl">
-          <nav className="flex w-full items-center justify-between gap-3 rounded-full border border-white/40 bg-white/40 px-4 py-2.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] md:gap-4 md:px-6">
+      <header className="px-3 pt-5 sm:px-4 md:px-5 md:pt-6 lg:px-6 xl:px-8">
+        <div className="mx-auto w-full max-w-[min(100%,94rem)]">
+          <nav
+            data-cursor-surface="light"
+            className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-full border border-white/40 bg-white/40 px-4 py-3.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] md:gap-4 md:px-6 md:py-4 lg:gap-5 lg:px-7 xl:px-9"
+          >
             <div className="flex shrink-0 items-center">
-              <img src={fundLogo.url} alt="НИФ КР" className="block h-9 w-auto md:hidden" />
-              <div className="hidden md:block h-[44px] w-[52px]" aria-hidden />
+              <img src={fundLogo.url} alt="НИФ КР" className="block h-11 w-auto md:hidden" />
+              <div className="hidden md:block h-[52px] w-[52px] shrink-0" aria-hidden />
             </div>
 
-            <ul className="hidden min-w-0 flex-1 items-center justify-center gap-x-4 text-[9.5px] font-semibold tracking-[0.14em] text-[color:var(--ink)] lg:flex xl:gap-x-6 xl:text-[10.5px] xl:tracking-[0.16em]">
+            <ul className="hidden min-w-0 items-center justify-center gap-x-3 text-[10px] font-semibold tracking-[0.12em] text-[color:var(--ink)] lg:flex xl:gap-x-5 xl:text-[10.5px] xl:tracking-[0.14em] 2xl:gap-x-6 2xl:text-xs 2xl:tracking-[0.15em]">
               {navItems.map((label) => (
                 <li key={label} className="shrink-0">
                   <a
@@ -51,7 +54,7 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
               ))}
             </ul>
 
-            <div className="hidden shrink-0 items-center gap-2 text-[11px] font-semibold tracking-[0.16em] text-[color:var(--ink)] md:flex">
+            <div className="hidden min-w-[5.5rem] shrink-0 items-center justify-end gap-2.5 pl-2 text-xs font-semibold tracking-[0.18em] text-[color:var(--ink)] md:flex">
               <span className="whitespace-nowrap">{lang}</span>
               <div className="flex gap-1.5">
                 {langs.map((l) => (
@@ -75,13 +78,14 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
               type="button"
               onClick={() => setNavOpen((v) => !v)}
               aria-label="Меню"
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/60 text-[color:var(--ink)] shadow-sm transition hover:bg-white lg:hidden"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/60 text-[color:var(--ink)] shadow-sm transition hover:bg-white lg:hidden"
             >
               {navOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </nav>
 
           <div
+            data-cursor-surface="light"
             className={`mt-3 w-full overflow-hidden rounded-3xl border border-white/40 bg-white/80 font-display backdrop-blur-2xl shadow-[0_20px_60px_rgba(20,40,90,0.18)] transition-all duration-500 ease-out lg:hidden ${
               navOpen ? "max-h-[720px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
             }`}
@@ -130,11 +134,11 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
 
       <div
         ref={brandRef}
-        className="pointer-events-none fixed left-1/2 top-[5.75rem] z-[65] w-full max-w-[min(100%,920px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:top-[6rem] sm:px-6 md:top-[7rem]"
+        className="pointer-events-none fixed left-1/2 top-[6.25rem] z-[65] w-full max-w-[min(100%,980px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:top-[6.75rem] sm:px-6 md:top-[7.75rem]"
         style={{ mixBlendMode: "normal", isolation: "isolate" }}
       >
         <h1
-          className="text-center font-display text-[clamp(0.5rem,2.6vw,0.68rem)] font-bold leading-[1.15] tracking-[0.06em] text-white opacity-100 sm:text-[clamp(0.62rem,1.9vw,0.88rem)] sm:tracking-[0.1em] md:text-[clamp(0.72rem,1.55vw,1.08rem)] md:leading-[1.2] md:tracking-[0.14em]"
+          className="text-center font-display text-[clamp(0.58rem,2.8vw,0.78rem)] font-bold leading-[1.15] tracking-[0.07em] text-white opacity-100 sm:text-[clamp(0.72rem,2.1vw,1rem)] sm:tracking-[0.11em] md:text-[clamp(0.88rem,1.75vw,1.28rem)] md:leading-[1.2] md:tracking-[0.16em]"
           style={{
             mixBlendMode: "normal",
             color: "#ffffff",

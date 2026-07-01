@@ -59,7 +59,7 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
       aria-label="Footer content zone"
       className="pointer-events-none absolute inset-0 z-[35] overflow-hidden opacity-0 will-change-[transform,opacity]"
     >
-      <div className="pointer-events-none absolute inset-0 bg-black/80" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-black/80" data-cursor-surface="dark" aria-hidden />
 
       <footer className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 flex flex-col px-5 pb-6 pt-10 font-display text-white sm:px-8 sm:pb-8 md:px-12 lg:px-16">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
