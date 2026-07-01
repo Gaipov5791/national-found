@@ -32,10 +32,10 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
         <div className="mx-auto w-full max-w-[min(100%,94rem)]">
           <nav
             data-cursor-surface="light"
-            className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 rounded-full border border-white/40 bg-white/40 px-3.5 py-3 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] sm:gap-3 sm:px-4 md:gap-4 md:px-6 md:py-4 lg:gap-5 lg:px-7 xl:px-9"
+            className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 rounded-full border border-white/40 bg-white/40 px-4 py-2.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] sm:gap-3 sm:px-4 sm:py-3 md:gap-4 md:px-6 md:py-4 lg:gap-5 lg:px-7 xl:px-9"
           >
-            <div className="flex shrink-0 items-center">
-              <img src={fundLogo.url} alt="НИФ КР" className="block h-10 w-auto sm:h-11 md:hidden" />
+            <div className="flex shrink-0 items-center pr-1 sm:pr-0">
+              <img src={fundLogo.url} alt="НИФ КР" className="block h-8 w-auto sm:h-9 md:hidden" />
               <div className="hidden md:block h-[52px] w-[52px] shrink-0" aria-hidden />
             </div>
 
@@ -78,9 +78,13 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
               type="button"
               onClick={() => setNavOpen((v) => !v)}
               aria-label="Меню"
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/60 text-[color:var(--ink)] shadow-sm transition hover:bg-white lg:hidden"
+              className="col-start-3 row-start-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/60 pl-0.5 text-[color:var(--ink)] shadow-sm transition hover:bg-white sm:h-10 sm:w-10 lg:col-start-auto lg:h-11 lg:w-11 lg:hidden"
             >
-              {navOpen ? <X size={20} /> : <Menu size={20} />}
+              {navOpen ? (
+                <X className="h-[18px] w-[18px] lg:h-5 lg:w-5" />
+              ) : (
+                <Menu className="h-[18px] w-[18px] lg:h-5 lg:w-5" />
+              )}
             </button>
           </nav>
 
