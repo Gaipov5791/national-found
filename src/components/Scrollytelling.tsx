@@ -128,7 +128,7 @@ export function Scrollytelling() {
         refs.staticViewportHeightRef.current = staticViewportHeight;
         const cleanup = runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_MOBILE,
-          scrub: 1.25,
+          scrub: 1,
           mobile: true,
           cinematic: true,
           staticViewportHeight,

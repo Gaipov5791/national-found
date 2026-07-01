@@ -1,5 +1,6 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { cn } from "@/lib/utils";
 import {
   type SceneAnimationContext,
   type SceneTimeline,
@@ -36,14 +37,21 @@ const PANORAMA_STOPS_DESKTOP = {
   bottom: 100,
 } as const;
 
-/** Portrait webp — five ~20% vertical bands (mountains → lake → steppe → fields → underground). */
+/**
+ * Portrait webp — five vertical storytelling bands.
+ * Calibrated so each section locks one frame into the mobile viewport
+ * (peaks → Son-Kul → pastures/yurts → greenhouse → underground).
+ */
 const PANORAMA_STOPS_MOBILE = {
   peaks: 0,
-  sonKul: 20,
-  pastures: 40,
-  fields: 60,
-  bottom: 82,
+  sonKul: 22,
+  pastures: 46,
+  fields: 70,
+  bottom: 100,
 } as const;
+
+/** Tall pan track — one 100svh zone visible at a time (5 frames × 100vh). */
+export const MOBILE_PAN_TRACK_VH = 500;
 
 export const PANORAMA_STOPS = PANORAMA_STOPS_DESKTOP;
 
@@ -51,8 +59,22 @@ function getPanoramaStops(mobile: boolean) {
   return mobile ? PANORAMA_STOPS_MOBILE : PANORAMA_STOPS_DESKTOP;
 }
 
-function applyPanoramaPosition(img: HTMLImageElement | null, percentY: number) {
+function mobilePanTranslateY(percentY: number): string {
+  const maxPanVh = MOBILE_PAN_TRACK_VH - 100;
+  return `${-(percentY / 100) * maxPanVh}vh`;
+}
+
+function applyPanoramaPosition(
+  img: HTMLImageElement | null,
+  percentY: number,
+  mobile: boolean
+) {
   if (!img) return;
+  if (mobile) {
+    gsap.set(img, { y: mobilePanTranslateY(percentY) });
+    return;
+  }
+  gsap.set(img, { y: 0 });
   img.style.objectPosition = `center ${percentY}%`;
 }
 
@@ -62,7 +84,8 @@ function tweenPanoramaPan(
   pan: { y: number },
   targetY: number,
   duration: number,
-  position: number
+  position: number,
+  mobile: boolean
 ) {
   tl.to(
     pan,
@@ -70,7 +93,7 @@ function tweenPanoramaPan(
       y: targetY,
       duration,
       ease: "none",
-      onUpdate: () => applyPanoramaPosition(img, pan.y),
+      onUpdate: () => applyPanoramaPosition(img, pan.y, mobile),
     },
     position
   );
@@ -86,7 +109,10 @@ export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs, ctx: S
     scale: 1,
     transformOrigin: origin,
   });
-  applyPanoramaPosition(refs.panoramaImgRef.current, stops.peaks);
+  if (mobile && refs.panoramaImgRef.current) {
+    refs.panoramaImgRef.current.style.objectPosition = "center top";
+  }
+  applyPanoramaPosition(refs.panoramaImgRef.current, stops.peaks, mobile);
   gsap.set(refs.permanentCloudRef.current, { opacity: 0, yPercent: -40 });
 }
 
@@ -134,7 +160,8 @@ export function animatePanoramaScrollScene(
     pan,
     stops.sonKul,
     Math.max(0.001, directionsEnterT - financeEnterT),
-    financeEnterT
+    financeEnterT,
+    mobile
   );
   tweenPanoramaPan(
     tl,
@@ -142,7 +169,8 @@ export function animatePanoramaScrollScene(
     pan,
     stops.pastures,
     Math.max(0.001, msbEnterT - directionsEnterT),
-    directionsEnterT
+    directionsEnterT,
+    mobile
   );
   tweenPanoramaPan(
     tl,
@@ -150,7 +178,8 @@ export function animatePanoramaScrollScene(
     pan,
     stops.fields,
     Math.max(0.001, partnersEnterT - msbEnterT),
-    msbEnterT
+    msbEnterT,
+    mobile
   );
   tweenPanoramaPan(
     tl,
@@ -158,7 +187,8 @@ export function animatePanoramaScrollScene(
     pan,
     stops.bottom,
     Math.max(0.001, newsEnterT - partnersEnterT),
-    partnersEnterT
+    partnersEnterT,
+    mobile
   );
 
   // Footer — fade mountains to darkness as premium footer arrives
@@ -184,10 +214,6 @@ export type PanoramaScrollSectionProps = {
 
 export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSectionProps>(
   function PanoramaScrollSection({ panoramaBgRef, panoramaImgRef, permanentCloudRef }, _ref) {
-    const panoramaOrigin = getPanoramaOrigin(
-      typeof window !== "undefined" ? window.innerWidth < 768 : false
-    );
-
     return (
       <>
         <div
@@ -196,7 +222,7 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
           className="pointer-events-none fixed inset-0 z-0 h-[100svh] w-full overflow-hidden md:h-screen"
           aria-hidden
         >
-          <picture className="absolute inset-0 block h-full w-full">
+          <picture className="absolute inset-0 block h-full w-full overflow-hidden">
             <source
               media="(max-width: 767px)"
               srcSet={SCENE_IMAGES.panoramaMobile}
@@ -206,8 +232,12 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
               ref={panoramaImgRef}
               src={SCENE_IMAGES.panorama}
               alt=""
-              className="h-full w-full object-cover will-change-[transform,object-position]"
-              style={{ objectPosition: "center 0%", transformOrigin: panoramaOrigin }}
+              className={cn(
+                "h-full w-full object-cover will-change-[transform,object-position]",
+                "max-md:absolute max-md:left-0 max-md:top-0 max-md:h-[500vh] max-md:w-full max-md:max-w-none",
+                "max-md:[transform-origin:center_10%] md:[transform-origin:center_28%]"
+              )}
+              style={{ objectPosition: "center 0%" }}
             />
           </picture>
           <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
@@ -217,11 +247,12 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
           ref={permanentCloudRef}
           data-permanent-cloud
           data-cursor-surface="light"
-          className="pointer-events-none fixed top-0 left-0 z-[8] h-[44svh] w-full opacity-0 will-change-[transform,opacity] md:h-[38vh]"
+          className="pointer-events-none fixed top-0 left-0 z-[8] h-[18svh] w-full opacity-0 will-change-[transform,opacity] md:h-[38vh]"
           style={{
-            maskImage: "linear-gradient(to bottom, #000 0%, #000 38%, rgba(0,0,0,0.55) 62%, transparent 100%)",
+            maskImage:
+              "linear-gradient(to bottom, #000 0%, #000 42%, rgba(0,0,0,0.5) 68%, transparent 100%)",
             WebkitMaskImage:
-              "linear-gradient(to bottom, #000 0%, #000 38%, rgba(0,0,0,0.55) 62%, transparent 100%)",
+              "linear-gradient(to bottom, #000 0%, #000 42%, rgba(0,0,0,0.5) 68%, transparent 100%)",
           }}
           aria-hidden
         >
@@ -232,9 +263,9 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
                 "linear-gradient(to bottom, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.82) 22%, rgba(255,255,255,0.48) 52%, rgba(255,255,255,0.18) 72%, rgba(255,255,255,0) 100%)",
             }}
           />
-          <div className="absolute -left-[14%] top-[-28%] h-[52vh] w-[72vw] rounded-full bg-white/80 blur-[96px]" />
-          <div className="absolute -right-[12%] top-[-18%] h-[48vh] w-[64vw] rounded-full bg-white/70 blur-[104px]" />
-          <div className="absolute left-[18%] top-[8%] h-[36vh] w-[48vw] rounded-full bg-white/55 blur-[88px]" />
+          <div className="absolute -left-[14%] top-[-28%] h-[22svh] w-[72vw] rounded-full bg-white/80 blur-[56px] max-md:h-[18svh] max-md:blur-[48px] md:h-[52vh] md:blur-[96px]" />
+          <div className="absolute -right-[12%] top-[-18%] h-[20svh] w-[64vw] rounded-full bg-white/70 blur-[60px] max-md:h-[16svh] max-md:blur-[52px] md:h-[48vh] md:blur-[104px]" />
+          <div className="absolute left-[18%] top-[8%] h-[14svh] w-[48vw] rounded-full bg-white/55 blur-[48px] max-md:h-[12svh] max-md:blur-[40px] md:h-[36vh] md:blur-[88px]" />
           <div
             className="absolute inset-x-0 top-0 h-[55%]"
             style={{
@@ -243,7 +274,7 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
             }}
           />
           <div
-            className="absolute inset-x-[-8%] bottom-[-8vh] h-[22vh] blur-[48px]"
+            className="absolute inset-x-[-8%] bottom-[-4svh] h-[10svh] blur-[28px] max-md:bottom-[-3svh] max-md:h-[8svh] md:bottom-[-8vh] md:h-[22vh] md:blur-[48px]"
             style={{
               background:
                 "linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.22) 45%, transparent 100%)",
