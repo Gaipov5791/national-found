@@ -14,9 +14,10 @@ export type PanoramaScrollSceneRefs = {
 
 /** Act 1 peak zoom — scale applied to the panoramic image. */
 const ACT1_PEAK_ZOOM_DESKTOP = 1.5;
-const ACT1_PEAK_ZOOM_MOBILE = 1.42;
+const ACT1_PEAK_ZOOM_MOBILE = 1.55;
 const PANORAMA_ORIGIN_DESKTOP = "center 28%";
-const PANORAMA_ORIGIN_MOBILE = "center 26%";
+/** Vertical webp — peaks sit in the top ~20% band. */
+const PANORAMA_ORIGIN_MOBILE = "center 10%";
 
 function getPeakZoom(mobile: boolean) {
   return mobile ? ACT1_PEAK_ZOOM_MOBILE : ACT1_PEAK_ZOOM_DESKTOP;
@@ -26,14 +27,29 @@ function getPanoramaOrigin(mobile: boolean) {
   return mobile ? PANORAMA_ORIGIN_MOBILE : PANORAMA_ORIGIN_DESKTOP;
 }
 
-/** Vertical pan stops for Sections 3–7. */
-export const PANORAMA_STOPS = {
+/** Landscape jpeg — pan stops aligned to desktop composition. */
+const PANORAMA_STOPS_DESKTOP = {
   peaks: 0,
   sonKul: 22,
   pastures: 48,
   fields: 72,
   bottom: 100,
 } as const;
+
+/** Portrait webp — five ~20% vertical bands (mountains → lake → steppe → fields → underground). */
+const PANORAMA_STOPS_MOBILE = {
+  peaks: 0,
+  sonKul: 20,
+  pastures: 40,
+  fields: 60,
+  bottom: 82,
+} as const;
+
+export const PANORAMA_STOPS = PANORAMA_STOPS_DESKTOP;
+
+function getPanoramaStops(mobile: boolean) {
+  return mobile ? PANORAMA_STOPS_MOBILE : PANORAMA_STOPS_DESKTOP;
+}
 
 function applyPanoramaPosition(img: HTMLImageElement | null, percentY: number) {
   if (!img) return;
@@ -63,13 +79,14 @@ function tweenPanoramaPan(
 export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs, ctx: SceneAnimationContext) {
   const { mobile } = ctx;
   const origin = getPanoramaOrigin(mobile);
+  const stops = getPanoramaStops(mobile);
 
   gsap.set(refs.panoramaBgRef.current, { opacity: 1, visibility: "visible" });
   gsap.set(refs.panoramaImgRef.current, {
     scale: 1,
     transformOrigin: origin,
   });
-  applyPanoramaPosition(refs.panoramaImgRef.current, PANORAMA_STOPS.peaks);
+  applyPanoramaPosition(refs.panoramaImgRef.current, stops.peaks);
   gsap.set(refs.permanentCloudRef.current, { opacity: 0, yPercent: -40 });
 }
 
@@ -93,7 +110,8 @@ export function animatePanoramaScrollScene(
   } = timings;
 
   const img = refs.panoramaImgRef.current;
-  const pan = { y: PANORAMA_STOPS.peaks };
+  const stops = getPanoramaStops(mobile);
+  const pan = { y: stops.peaks };
   const cloudRollDur = enterDur + 0.032;
   const peakZoom = getPeakZoom(mobile);
 
@@ -114,7 +132,7 @@ export function animatePanoramaScrollScene(
     tl,
     img,
     pan,
-    PANORAMA_STOPS.sonKul,
+    stops.sonKul,
     Math.max(0.001, directionsEnterT - financeEnterT),
     financeEnterT
   );
@@ -122,7 +140,7 @@ export function animatePanoramaScrollScene(
     tl,
     img,
     pan,
-    PANORAMA_STOPS.pastures,
+    stops.pastures,
     Math.max(0.001, msbEnterT - directionsEnterT),
     directionsEnterT
   );
@@ -130,7 +148,7 @@ export function animatePanoramaScrollScene(
     tl,
     img,
     pan,
-    PANORAMA_STOPS.fields,
+    stops.fields,
     Math.max(0.001, partnersEnterT - msbEnterT),
     msbEnterT
   );
@@ -138,7 +156,7 @@ export function animatePanoramaScrollScene(
     tl,
     img,
     pan,
-    PANORAMA_STOPS.bottom,
+    stops.bottom,
     Math.max(0.001, newsEnterT - partnersEnterT),
     partnersEnterT
   );
@@ -178,13 +196,20 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
           className="pointer-events-none fixed inset-0 z-0 h-[100svh] w-full overflow-hidden md:h-screen"
           aria-hidden
         >
-          <img
-            ref={panoramaImgRef}
-            src={SCENE_IMAGES.panorama}
-            alt=""
-            className="fixed inset-0 h-[100svh] w-full object-cover will-change-transform md:h-screen"
-            style={{ objectPosition: "center 0%", transformOrigin: panoramaOrigin }}
-          />
+          <picture className="absolute inset-0 block h-full w-full">
+            <source
+              media="(max-width: 767px)"
+              srcSet={SCENE_IMAGES.panoramaMobile}
+              type="image/webp"
+            />
+            <img
+              ref={panoramaImgRef}
+              src={SCENE_IMAGES.panorama}
+              alt=""
+              className="h-full w-full object-cover will-change-[transform,object-position]"
+              style={{ objectPosition: "center 0%", transformOrigin: panoramaOrigin }}
+            />
+          </picture>
           <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
         </div>
 
