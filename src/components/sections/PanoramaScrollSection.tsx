@@ -28,26 +28,36 @@ function getPanoramaOrigin(mobile: boolean) {
   return mobile ? PANORAMA_ORIGIN_MOBILE : PANORAMA_ORIGIN_DESKTOP;
 }
 
-/** Landscape jpeg — pan stops aligned to desktop composition. */
+/**
+ * Vertical panorama strip — objectPosition Y% waypoints (desktop).
+ * Recalibrated after the client added the Industrial band between the lake
+ * and the pastures, which lengthened the canvas and pushed every lower zone
+ * down. Values follow the image's true top→bottom order so the camera pans
+ * monotonically and locks exactly one zone at a time:
+ *   peaks → Son-Kul lake → industrial complex → pastures → fields/greenhouses.
+ * peaks is offset from 0 so the summit band sits in the upper third of the
+ * viewport (not the empty sky above the peaks on the lengthened strip).
+ */
 const PANORAMA_STOPS_DESKTOP = {
-  peaks: 0,
-  sonKul: 22,
-  pastures: 48,
-  fields: 72,
-  bottom: 100,
+  peaks: 14,
+  sonKul: 35,
+  industrial: 50,
+  pastures: 62,
+  fields: 76,
 } as const;
 
 /**
- * Portrait webp — five vertical storytelling bands.
- * Calibrated so each section locks one frame into the mobile viewport
- * (peaks → Son-Kul → pastures/yurts → greenhouse → underground).
+ * Same five storytelling bands mapped for the mobile pan track. Because the
+ * mobile image is forced to MOBILE_PAN_TRACK_VH and stepped with translateY,
+ * the linear percent→viewport-centre mapping matches the desktop objectPosition
+ * mapping almost exactly, so the two tables stay in sync.
  */
 const PANORAMA_STOPS_MOBILE = {
-  peaks: 0,
-  sonKul: 22,
-  pastures: 46,
-  fields: 70,
-  bottom: 100,
+  peaks: 14,
+  sonKul: 35,
+  industrial: 50,
+  pastures: 62,
+  fields: 76,
 } as const;
 
 /** Tall pan track — one 100svh zone visible at a time (5 frames × 100vh). */
@@ -153,7 +163,8 @@ export function animatePanoramaScrollScene(
   );
   tl.to(img, { scale: 1, duration: peakZoomDur, ease: "none" }, decreeExitT);
 
-  // Act 3 — smooth vertical pan upward (Sections 3–7); cloud stays visible
+  // Act 3 — smooth vertical descent through the strip (Sections 3–7); cloud stays visible.
+  // Physical top→bottom order: sonKul → industrial → pastures → fields.
   tweenPanoramaPan(
     tl,
     img,
@@ -167,7 +178,7 @@ export function animatePanoramaScrollScene(
     tl,
     img,
     pan,
-    stops.pastures,
+    stops.industrial,
     Math.max(0.001, msbEnterT - directionsEnterT),
     directionsEnterT,
     mobile
@@ -176,7 +187,7 @@ export function animatePanoramaScrollScene(
     tl,
     img,
     pan,
-    stops.fields,
+    stops.pastures,
     Math.max(0.001, partnersEnterT - msbEnterT),
     msbEnterT,
     mobile
@@ -185,7 +196,7 @@ export function animatePanoramaScrollScene(
     tl,
     img,
     pan,
-    stops.bottom,
+    stops.fields,
     Math.max(0.001, newsEnterT - partnersEnterT),
     partnersEnterT,
     mobile
@@ -237,7 +248,7 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
                 "max-md:absolute max-md:left-0 max-md:top-0 max-md:h-[500vh] max-md:w-full max-md:max-w-none",
                 "max-md:[transform-origin:center_10%] md:[transform-origin:center_28%]"
               )}
-              style={{ objectPosition: "center 0%" }}
+              style={{ objectPosition: `center ${PANORAMA_STOPS.peaks}%` }}
             />
           </picture>
           <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />

@@ -28,7 +28,12 @@ export function computeTimelineMarkers() {
   const statsEnterT = 0.06;
   const statsExitT = statsEnterT + enterDur + holdDur;
 
-  const decreeCloudsT = breatheAfter(statsExitT);
+  /**
+   * Decree waits for the counters to fully evaporate before entering.
+   * Using a positive gap (instead of breatheAfter's negative overlap) avoids
+   * both texts sharing the same centre point mid-transition.
+   */
+  const decreeCloudsT = gapAfterExit(statsExitT, 0.006);
   const decreeEnterT = decreeCloudsT + 0.052;
   const decreeExitT = decreeEnterT + enterDur + holdDur;
 
