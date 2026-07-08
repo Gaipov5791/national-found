@@ -6,12 +6,19 @@ const DIGIT_HEIGHT_EM = 1.1;
 type RollingDigitProps = {
   digit: string;
   animate: boolean;
-  compact?: boolean;
+  size?: "default" | "large";
   idleRoll?: boolean;
   idlePhase?: number;
 };
 
-function RollingDigit({ digit, animate, compact, idleRoll, idlePhase = 0 }: RollingDigitProps) {
+function digitWidth(digit: string, size: "default" | "large") {
+  if (!/\d/.test(digit)) {
+    return size === "large" ? "0.3em" : "0.22em";
+  }
+  return size === "large" ? "0.62em" : "0.54em";
+}
+
+function RollingDigit({ digit, animate, size = "default", idleRoll, idlePhase = 0 }: RollingDigitProps) {
   const isDigit = /\d/.test(digit);
   const target = isDigit ? Number(digit) : 0;
   const [idleDigit, setIdleDigit] = useState(target);
@@ -33,8 +40,8 @@ function RollingDigit({ digit, animate, compact, idleRoll, idlePhase = 0 }: Roll
   if (!isDigit) {
     return (
       <span
-        className={cn("inline-block", compact ? "px-[0.02em]" : "px-[0.05em]")}
-        style={{ height: `${DIGIT_HEIGHT_EM}em` }}
+        className="inline-block text-center"
+        style={{ height: `${DIGIT_HEIGHT_EM}em`, width: digitWidth(digit, size) }}
       >
         {digit}
       </span>
@@ -49,7 +56,7 @@ function RollingDigit({ digit, animate, compact, idleRoll, idlePhase = 0 }: Roll
       className="relative inline-block overflow-hidden align-top tabular-nums"
       style={{
         height: `${DIGIT_HEIGHT_EM}em`,
-        width: compact ? "0.46em" : "0.54em",
+        width: digitWidth(digit, size),
       }}
     >
       <span
@@ -78,14 +85,15 @@ type RollingSumCounterProps = {
   value: number;
   progress: number;
   suffix?: string;
-  compact?: boolean;
+  size?: "default" | "large";
 };
 
-export function RollingSumCounter({ value, progress, suffix = " с", compact = false }: RollingSumCounterProps) {
+export function RollingSumCounter({ value, progress, suffix = " с", size = "default" }: RollingSumCounterProps) {
   const prevProgress = useRef(0);
   const formatted = formatSum(value, progress);
   const shouldAnimate = progress > prevProgress.current;
   const isComplete = progress >= 0.99;
+  const isLarge = size === "large";
 
   useEffect(() => {
     prevProgress.current = progress;
@@ -97,9 +105,9 @@ export function RollingSumCounter({ value, progress, suffix = " с", compact = f
   return (
     <span
       className={cn(
-        "inline-flex items-center justify-center whitespace-nowrap font-display font-semibold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
-        compact
-          ? "text-[clamp(0.58rem,2.4vw,1.2rem)] leading-none"
+        "mx-auto flex w-full items-center justify-center whitespace-nowrap font-display font-semibold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
+        isLarge
+          ? "text-[clamp(1.05rem,2.2vw+0.55rem,2.75rem)] leading-none"
           : "text-[clamp(0.62rem,1.05vw+0.42rem,1.65rem)] leading-none sm:text-[clamp(0.7rem,0.9vw+0.5rem,1.85rem)]"
       )}
     >
@@ -113,7 +121,7 @@ export function RollingSumCounter({ value, progress, suffix = " с", compact = f
             key={`${i}-${isComplete ? "done" : char}`}
             digit={char}
             animate={shouldAnimate && progress > 0.1}
-            compact={compact}
+            size={size}
             idleRoll={rollIdle}
             idlePhase={i - idleRollStart}
           />
@@ -122,8 +130,8 @@ export function RollingSumCounter({ value, progress, suffix = " с", compact = f
       {suffix && (
         <span
           className={cn(
-            "ml-0.5 font-semibold tracking-[0.08em] text-white/90 sm:ml-1",
-            compact ? "text-[0.5em]" : "text-[0.55em]"
+            "ml-1 shrink-0 font-semibold tracking-[0.06em] text-white/90 sm:ml-1.5",
+            isLarge ? "text-[0.45em]" : "text-[0.55em]"
           )}
         >
           {suffix.trim()}

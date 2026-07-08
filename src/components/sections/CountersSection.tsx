@@ -21,7 +21,6 @@ export function prepareCountersScene(refs: CountersSceneRefs, ctx: SceneAnimatio
 export function createCountUpdater(refs: CountersSceneRefs, ctx: SceneAnimationContext) {
   const { timings } = ctx;
   const { statsEnterT, enterDur } = timings;
-  /** Counter reaches target early — remaining scroll time is the hold/pause. */
   const counterCompleteT = statsEnterT + enterDur + 0.012;
 
   return (progress: number) => {
@@ -46,6 +45,12 @@ export type CountersSectionProps = {
   counterProgress: number;
 };
 
+const COUNTER_CARD =
+  "rounded-2xl border border-white/30 bg-white/10 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:rounded-3xl";
+
+const COUNTER_LABEL =
+  "mt-1.5 text-[8px] font-semibold uppercase tracking-[0.14em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.22em]";
+
 export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(function CountersSection(
   { statsRef, countProjectsRef, counterProgress },
   _ref
@@ -55,9 +60,9 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
       ref={statsRef}
       className="pointer-events-none absolute inset-x-0 top-1/2 z-20 -translate-y-1/2 px-3 opacity-0 will-change-[transform,opacity] sm:px-6"
     >
-      <div className="relative mx-auto max-w-4xl text-center">
+      <div className="relative mx-auto w-full max-w-5xl text-center">
         <div
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[140%] w-[120%] -translate-x-1/2 -translate-y-1/2"
+          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[160%] w-[130%] -translate-x-1/2 -translate-y-1/2"
           style={{
             background:
               "radial-gradient(ellipse at center, rgba(10,20,45,0.55) 0%, rgba(10,20,45,0.32) 40%, rgba(10,20,45,0) 70%)",
@@ -67,23 +72,18 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
         <p className="font-display text-base tracking-tighter text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] sm:text-2xl sm:tracking-tight md:text-4xl">
           Инвестиции в проекты будущего
         </p>
-        <div className="mx-auto mt-3 w-full max-w-[min(100%,22rem)] rounded-2xl border border-white/30 bg-white/10 px-4 py-4 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-6 sm:max-w-[min(100%,28rem)] sm:rounded-3xl sm:px-6 sm:py-5 md:max-w-[min(100%,32rem)] md:px-8 md:py-6">
-          <div className="text-center">
+
+        <div className="mx-auto mt-3 flex w-full flex-col items-center gap-3 sm:mt-6 sm:gap-4">
+          <div className={`${COUNTER_CARD} w-fit px-8 py-4 sm:px-10 sm:py-5`}>
             <div className="font-display text-3xl font-semibold tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl md:text-5xl">
               <span ref={countProjectsRef}>0</span>
             </div>
-            <div className="mt-1.5 text-[8px] font-semibold uppercase tracking-[0.14em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.22em]">
-              Проектов в реализации
-            </div>
+            <div className={COUNTER_LABEL}>Проектов в реализации</div>
           </div>
 
-          <div className="my-3 h-px w-full bg-white/25 sm:my-4" />
-
-          <div className="text-center">
-            <RollingSumCounter value={COUNTER_TOTAL_SUM} progress={counterProgress} suffix="с" />
-            <div className="mt-1.5 text-[8px] font-semibold uppercase tracking-[0.14em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.22em]">
-              Общая сумма проектов
-            </div>
+          <div className={`${COUNTER_CARD} w-full max-w-[min(100%,52rem)] px-3 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6`}>
+            <RollingSumCounter value={COUNTER_TOTAL_SUM} progress={counterProgress} suffix="с" size="large" />
+            <div className={COUNTER_LABEL}>Общая сумма проектов</div>
           </div>
         </div>
       </div>
