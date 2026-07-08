@@ -11,6 +11,17 @@ export const CINEMATIC_MOTION_EASE = "power2.inOut";
 export const COUNTER_PROJECTS = 12;
 export const COUNTER_TOTAL_SUM = 122_968_875_174;
 
+/** Map absolute master-timeline time (seconds) to 0–1 counter roll progress. */
+export function mapCounterProgress(
+  timelineTime: number,
+  timings: Pick<SceneTimings, "statsEnterT" | "counterCompleteT">
+): number {
+  const { statsEnterT, counterCompleteT } = timings;
+  const span = counterCompleteT - statsEnterT;
+  if (span <= 0) return timelineTime >= counterCompleteT ? 1 : 0;
+  return Math.max(0, Math.min(1, (timelineTime - statsEnterT) / span));
+}
+
 export function formatCount(value: number, progress: number, suffix = "") {
   const p = Math.max(0, Math.min(1, progress));
   const eased = 1 - Math.pow(1 - p, 2);
@@ -22,8 +33,10 @@ export function computeTimelineMarkers() {
   const enterDur = 0.028;
   const exitDur = 0.028;
   const holdDur = 0.014;
-  /** Extra pause after counters finish — user must scroll again to leave the scene. */
-  const statsHoldDur = 0.055;
+  /** Scroll window while counters roll to final values (TZ: full sum must finish before hold). */
+  const counterRollDur = 0.052;
+  /** Pause with final values fixed — then exit upward on next scroll. */
+  const statsHoldDur = 0.058;
   const aboutHoldDur = 0.038;
   const financeHoldDur = 0.052;
   const directionsHoldDur = 0.058;
@@ -37,7 +50,8 @@ export function computeTimelineMarkers() {
   const gapAfterExit = (exitStart: number, gap: number) => exitStart + exitDur + gap;
 
   const statsEnterT = 0.06;
-  const statsExitT = statsEnterT + enterDur + holdDur + statsHoldDur;
+  const counterCompleteT = statsEnterT + enterDur + counterRollDur;
+  const statsExitT = counterCompleteT + statsHoldDur;
 
   /**
    * Decree waits for the counters to fully evaporate before entering.
@@ -101,6 +115,8 @@ export function computeTimelineMarkers() {
     bgCrossfadeDur: 0.020,
     statsEnterT,
     statsExitT,
+    counterRollDur,
+    counterCompleteT,
     decreeCloudsT,
     decreeEnterT,
     decreeExitT,
@@ -156,9 +172,9 @@ export type ExperienceConfig = {
 };
 
 export type TextPresets = {
-  idle: { opacity: number; yPercent: number; scale: number };
-  arrived: { opacity: number; yPercent: number; scale: number };
-  evaporated: { yPercent: number; opacity: number; scale: number };
+  idle: { autoAlpha: number; yPercent: number; scale: number };
+  arrived: { autoAlpha: number; yPercent: number; scale: number };
+  evaporated: { yPercent: number; autoAlpha: number; scale: number };
   enterEase: string;
   exitEase: string;
 };
@@ -179,9 +195,9 @@ export function createScaleFn(vw?: number) {
 export function createTextPresets(timings: SceneTimings): TextPresets {
   const { textEnterY, textExitY, textExitScale } = timings;
   return {
-    idle: { opacity: 0, yPercent: textEnterY, scale: 1 },
-    arrived: { opacity: 1, yPercent: 0, scale: 1 },
-    evaporated: { yPercent: textExitY, opacity: 0, scale: textExitScale },
+    idle: { autoAlpha: 0, yPercent: textEnterY, scale: 1 },
+    arrived: { autoAlpha: 1, yPercent: 0, scale: 1 },
+    evaporated: { yPercent: textExitY, autoAlpha: 0, scale: textExitScale },
     enterEase: CINEMATIC_ENTER_EASE,
     exitEase: CINEMATIC_EXIT_EASE,
   };

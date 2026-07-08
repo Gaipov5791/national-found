@@ -12,7 +12,7 @@ export type DirectionsSceneRefs = {
 
 export function prepareDirectionsScene(refs: DirectionsSceneRefs, ctx: SceneAnimationContext) {
   const { text } = ctx;
-  gsap.set(refs.directionsRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.directionsRef.current, { ...text.idle, xPercent: 0, x: 0 });
 }
 
 export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneRefs, ctx: SceneAnimationContext) {
@@ -45,10 +45,15 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
         Национальный инвестиционный фонд работает с ключевыми отраслями, которые имеют высокий потенциал роста и
         важны для развития экономики Кыргызстана.
       </p>
-      <div className="pointer-events-auto mt-4 sm:mt-6">
-        <SectionCardsScroller columns={3}>
-          {DIRECTION_CARDS.map((card) => (
-            <SectionCardSlide key={card.title} wide>
+      <div className="mt-4 sm:mt-6">
+        <SectionCardsScroller layout="four-two" className="pointer-events-auto touch-pan-x md:pointer-events-none">
+          {DIRECTION_CARDS.map((card, index) => (
+            <SectionCardSlide
+              key={card.title}
+              wide
+              layout="four-two"
+              gridSlot={index === 4 ? "bottom-left" : index === 5 ? "bottom-right" : "default"}
+            >
               <SectionCard compact title={card.title} description={card.description} iconKey={card.iconKey} />
             </SectionCardSlide>
           ))}

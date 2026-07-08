@@ -1,6 +1,7 @@
 import { forwardRef, useMemo, useState, type MouseEvent, type RefObject } from "react";
 import { Menu, X } from "lucide-react";
 import fundLogo from "@/assets/fund-logo.png.asset.json";
+import { BRAND_TOP_CLASS } from "@/components/sections/sectionLayout";
 
 type NavbarProps = {
   navItems: readonly string[];
@@ -140,7 +141,7 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
 
       <div
         ref={brandRef}
-        className="pointer-events-none fixed left-1/2 top-[5.5rem] z-[65] w-full max-w-[min(100%,980px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:top-[6rem] sm:px-6 md:top-[7.75rem]"
+        className={`pointer-events-none fixed left-1/2 ${BRAND_TOP_CLASS} z-[65] w-full max-w-[min(100%,980px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:px-6`}
         style={{ mixBlendMode: "normal", isolation: "isolate" }}
       >
         <h1

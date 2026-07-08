@@ -13,7 +13,7 @@ export type FinanceSceneRefs = {
 
 export function prepareFinanceScene(refs: FinanceSceneRefs, ctx: SceneAnimationContext) {
   const { text } = ctx;
-  gsap.set(refs.financeRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.financeRef.current, { ...text.idle, xPercent: 0, x: 0 });
 }
 
 export function animateFinanceScene(tl: SceneTimeline, refs: FinanceSceneRefs, ctx: SceneAnimationContext) {
@@ -46,16 +46,16 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
         Мы предлагаем современные инструменты финансирования, которые помогают привлекать капитал и успешно
         реализовывать стратегические проекты в Кыргызстане.
       </p>
-      <div className="pointer-events-auto mt-4 sm:mt-6">
-        <SectionCardsScroller>
+      <div className="mt-4 sm:mt-6">
+        <SectionCardsScroller layout="four-row" className="pointer-events-auto touch-pan-x md:pointer-events-none">
           {FINANCE_CARDS.map((card) => (
-            <SectionCardSlide key={card.title}>
+            <SectionCardSlide key={card.title} layout="four-row">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
             </SectionCardSlide>
           ))}
         </SectionCardsScroller>
       </div>
-      <DetailLinkButton to="/finance" className="mt-4 sm:mt-6" />
+      <DetailLinkButton to="/finance" />
     </div>
   );
 });

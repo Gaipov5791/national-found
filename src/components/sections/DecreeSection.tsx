@@ -8,7 +8,7 @@ export type DecreeSceneRefs = {
 
 export function prepareDecreeScene(refs: DecreeSceneRefs, ctx: SceneAnimationContext) {
   const { text } = ctx;
-  gsap.set(refs.decreeRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.decreeRef.current, { ...text.idle, xPercent: 0, x: 0 });
 }
 
 export function animateDecreeScene(tl: SceneTimeline, refs: DecreeSceneRefs, ctx: SceneAnimationContext) {

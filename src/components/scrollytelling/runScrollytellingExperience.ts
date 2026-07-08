@@ -14,7 +14,11 @@ import {
   preparePanoramaScrollScene,
 } from "@/components/sections/PanoramaScrollSection";
 import { animateSpaceTrilogyScene, prepareSpaceTrilogyScene } from "@/components/sections/SpaceTrilogyContainer";
-import { buildSceneContext, type ExperienceConfig } from "@/components/sections/sceneAnimationShared";
+import {
+  buildSceneContext,
+  mapCounterProgress,
+  type ExperienceConfig,
+} from "@/components/sections/sceneAnimationShared";
 import { refreshCursorTheme } from "@/lib/cursorTheme";
 import type { SceneRefs } from "./useSceneRefs";
 
@@ -35,9 +39,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     partnersEnterT,
     newsEnterT,
     footerEnterT,
-    statsEnterT,
-    statsExitT,
-    exitDur,
+    totalDuration,
   } = timings;
 
   if (refs.scrollTrackRef.current) {
@@ -140,16 +142,14 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
       end: masterEnd,
       scrub,
       pin: refs.sceneRef.current,
-      pinType: mobile ? "fixed" : "transform",
+      // Fixed pinning plays nicer with Lenis + overflow-x clipping on the root wrapper.
+      pinType: "fixed",
       anticipatePin: 1,
       invalidateOnRefresh: true,
       onUpdate: (self) => {
-        updateCounts(self.progress);
-        const counterCompleteT = statsEnterT + enterDur + 0.012;
-        const counterP = Math.max(
-          0,
-          Math.min(1, (self.progress - statsEnterT) / (counterCompleteT - statsEnterT))
-        );
+        const timelineTime = self.progress * tl.duration();
+        updateCounts(timelineTime);
+        const counterP = mapCounterProgress(timelineTime, timings);
         refs.counterProgressRef.current = counterP;
         cfg.onCounterProgress?.(counterP);
         if (!mobile) refreshCursorTheme();
@@ -178,6 +178,11 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   animateMsbScene(tl, msbRefs, ctx);
   animateSpaceTrilogyScene(tl, spaceRefs, ctx);
   animateFooterScene(tl, footerRefs, ctx);
+
+  // Anchor timeline length so ScrollTrigger progress maps to scene markers.
+  if (refs.sceneRef.current) {
+    tl.set(refs.sceneRef.current, {}, totalDuration);
+  }
 
   return () => {
     cancelled = true;

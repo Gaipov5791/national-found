@@ -9,24 +9,24 @@ export type FooterSceneRefs = {
 };
 
 export function prepareFooterScene(refs: FooterSceneRefs, _ctx: SceneAnimationContext) {
-  gsap.set(refs.footerContentZoneRef.current, { opacity: 0 });
+  gsap.set(refs.footerContentZoneRef.current, { autoAlpha: 0 });
 }
 
 export function animateFooterScene(tl: SceneTimeline, refs: FooterSceneRefs, ctx: SceneAnimationContext) {
   const { timings } = ctx;
   const { enterDur, footerEnterT, footerHoldDur } = timings;
+  const footerEl = refs.footerContentZoneRef.current;
+  if (!footerEl) return;
+
+  tl.set(footerEl, { autoAlpha: 0 }, 0);
 
   tl.fromTo(
-    refs.footerContentZoneRef.current,
-    { opacity: 0 },
-    { opacity: 1, duration: enterDur, ease: "power2.out" },
+    footerEl,
+    { autoAlpha: 0 },
+    { autoAlpha: 1, duration: enterDur, ease: "power2.out", immediateRender: false },
     footerEnterT
   );
-  tl.to(
-    refs.footerContentZoneRef.current,
-    { opacity: 1, duration: footerHoldDur, ease: "none" },
-    footerEnterT + enterDur
-  );
+  tl.to(footerEl, { autoAlpha: 1, duration: footerHoldDur, ease: "none" }, footerEnterT + enterDur);
 }
 
 export type FooterSectionProps = {

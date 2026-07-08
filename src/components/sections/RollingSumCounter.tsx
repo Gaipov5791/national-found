@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 const DIGIT_HEIGHT_EM = 1.1;
@@ -7,41 +7,27 @@ type RollingDigitProps = {
   digit: string;
   animate: boolean;
   size?: "default" | "large";
-  idleRoll?: boolean;
-  idlePhase?: number;
+  wide?: boolean;
 };
 
-function digitWidth(digit: string, size: "default" | "large") {
+function digitWidth(digit: string, size: "default" | "large", wide?: boolean) {
   if (!/\d/.test(digit)) {
-    return size === "large" ? "0.3em" : "0.22em";
+    if (wide) return "0.34em";
+    return size === "large" ? "0.34em" : "0.22em";
   }
-  return size === "large" ? "0.62em" : "0.54em";
+  if (wide) return "0.68em";
+  return size === "large" ? "0.58em" : "0.54em";
 }
 
-function RollingDigit({ digit, animate, size = "default", idleRoll, idlePhase = 0 }: RollingDigitProps) {
+function RollingDigit({ digit, animate, size = "default", wide }: RollingDigitProps) {
   const isDigit = /\d/.test(digit);
   const target = isDigit ? Number(digit) : 0;
-  const [idleDigit, setIdleDigit] = useState(target);
-
-  useEffect(() => {
-    setIdleDigit(target);
-  }, [target]);
-
-  useEffect(() => {
-    if (!idleRoll || !isDigit) return;
-
-    const interval = window.setInterval(() => {
-      setIdleDigit((prev) => (prev + 1 + (idlePhase % 3)) % 10);
-    }, 140 + idlePhase * 35);
-
-    return () => window.clearInterval(interval);
-  }, [idleRoll, isDigit, idlePhase]);
 
   if (!isDigit) {
     return (
       <span
         className="inline-block text-center"
-        style={{ height: `${DIGIT_HEIGHT_EM}em`, width: digitWidth(digit, size) }}
+        style={{ height: `${DIGIT_HEIGHT_EM}em`, width: digitWidth(digit, size, wide) }}
       >
         {digit}
       </span>
@@ -49,22 +35,20 @@ function RollingDigit({ digit, animate, size = "default", idleRoll, idlePhase = 
   }
 
   const digits = Array.from({ length: 10 }, (_, i) => i);
-  const displayTarget = idleRoll ? idleDigit : target;
 
   return (
     <span
       className="relative inline-block overflow-hidden align-top tabular-nums"
       style={{
         height: `${DIGIT_HEIGHT_EM}em`,
-        width: digitWidth(digit, size),
+        width: digitWidth(digit, size, wide),
       }}
     >
       <span
         className="inline-flex flex-col will-change-transform"
         style={{
-          transform: `translateY(-${displayTarget * DIGIT_HEIGHT_EM}em)`,
-          transition:
-            animate || idleRoll ? "transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)" : "none",
+          transform: `translateY(-${target * DIGIT_HEIGHT_EM}em)`,
+          transition: animate ? "transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)" : "none",
         }}
       >
         {digits.map((d) => (
@@ -86,47 +70,50 @@ type RollingSumCounterProps = {
   progress: number;
   suffix?: string;
   size?: "default" | "large";
+  className?: string;
+  wideDigits?: boolean;
 };
 
-export function RollingSumCounter({ value, progress, suffix = " с", size = "default" }: RollingSumCounterProps) {
+export function RollingSumCounter({
+  value,
+  progress,
+  suffix = " с",
+  size = "default",
+  className,
+  wideDigits = false,
+}: RollingSumCounterProps) {
   const prevProgress = useRef(0);
+  const isComplete = progress >= 1;
   const formatted = formatSum(value, progress);
-  const shouldAnimate = progress > prevProgress.current;
-  const isComplete = progress >= 0.99;
+  const shouldAnimate = !isComplete && progress > prevProgress.current;
   const isLarge = size === "large";
 
   useEffect(() => {
     prevProgress.current = progress;
   }, [progress]);
 
-  const digitChars = formatted.split("");
-  const idleRollStart = Math.max(0, digitChars.findIndex((c) => /\d/.test(c)));
-
   return (
     <span
       className={cn(
-        "mx-auto flex w-full items-center justify-center whitespace-nowrap font-display font-semibold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
-        isLarge
-          ? "text-[clamp(1.05rem,2.2vw+0.55rem,2.75rem)] leading-none"
-          : "text-[clamp(0.62rem,1.05vw+0.42rem,1.65rem)] leading-none sm:text-[clamp(0.7rem,0.9vw+0.5rem,1.85rem)]"
+        "mx-auto inline-flex w-max min-w-0 items-center justify-center whitespace-nowrap leading-none",
+        className ??
+          cn(
+            "font-display font-semibold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
+            isLarge
+              ? "text-[clamp(1.15rem,1.35vw+0.7rem,2.35rem)]"
+              : "text-[clamp(0.62rem,1.05vw+0.42rem,1.65rem)] sm:text-[clamp(0.7rem,0.9vw+0.5rem,1.85rem)]"
+          )
       )}
     >
-      {digitChars.map((char, i) => {
-        const numericIndex = digitChars.slice(0, i + 1).filter((c) => /\d/.test(c)).length;
-        const totalDigits = digitChars.filter((c) => /\d/.test(c)).length;
-        const rollIdle = isComplete && /\d/.test(char) && numericIndex > totalDigits - 4;
-
-        return (
-          <RollingDigit
-            key={`${i}-${isComplete ? "done" : char}`}
-            digit={char}
-            animate={shouldAnimate && progress > 0.1}
-            size={size}
-            idleRoll={rollIdle}
-            idlePhase={i - idleRollStart}
-          />
-        );
-      })}
+      {formatted.split("").map((char, i) => (
+        <RollingDigit
+          key={`${i}-${char}`}
+          digit={char}
+          animate={shouldAnimate && progress > 0.05}
+          size={size}
+          wide={wideDigits}
+        />
+      ))}
       {suffix && (
         <span
           className={cn(
@@ -143,6 +130,9 @@ export function RollingSumCounter({ value, progress, suffix = " с", size = "def
 
 function formatSum(value: number, progress: number): string {
   const p = Math.max(0, Math.min(1, progress));
+  if (p >= 1) {
+    return value.toLocaleString("ru-RU").replace(/\u00a0/g, " ");
+  }
   const eased = 1 - Math.pow(1 - p, 2.2);
   const current = Math.round(eased * value);
   return current.toLocaleString("ru-RU").replace(/\u00a0/g, " ");
@@ -150,6 +140,7 @@ function formatSum(value: number, progress: number): string {
 
 export function formatProjectCount(value: number, progress: number): string {
   const p = Math.max(0, Math.min(1, progress));
+  if (p >= 1) return String(value);
   const eased = 1 - Math.pow(1 - p, 2);
   return String(Math.round(eased * value));
 }

@@ -9,7 +9,7 @@ export type MsbSceneRefs = {
 
 export function prepareMsbScene(refs: MsbSceneRefs, ctx: SceneAnimationContext) {
   const { text } = ctx;
-  gsap.set(refs.msbRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.msbRef.current, { ...text.idle, xPercent: 0, x: 0 });
 }
 
 export function animateMsbScene(tl: SceneTimeline, refs: MsbSceneRefs, ctx: SceneAnimationContext) {

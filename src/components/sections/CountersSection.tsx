@@ -4,6 +4,7 @@ import { RollingSumCounter, formatProjectCount } from "./RollingSumCounter";
 import {
   COUNTER_PROJECTS,
   COUNTER_TOTAL_SUM,
+  mapCounterProgress,
   type SceneAnimationContext,
   type SceneTimeline,
 } from "./sceneAnimationShared";
@@ -15,16 +16,14 @@ export type CountersSceneRefs = {
 
 export function prepareCountersScene(refs: CountersSceneRefs, ctx: SceneAnimationContext) {
   const { text } = ctx;
-  gsap.set(refs.statsRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.statsRef.current, { ...text.idle, xPercent: 0, x: 0 });
 }
 
 export function createCountUpdater(refs: CountersSceneRefs, ctx: SceneAnimationContext) {
   const { timings } = ctx;
-  const { statsEnterT, enterDur } = timings;
-  const counterCompleteT = statsEnterT + enterDur + 0.012;
 
-  return (progress: number) => {
-    const p = Math.max(0, Math.min(1, (progress - statsEnterT) / (counterCompleteT - statsEnterT)));
+  return (timelineTime: number) => {
+    const p = mapCounterProgress(timelineTime, timings);
     if (refs.countProjectsRef.current) {
       refs.countProjectsRef.current.textContent = formatProjectCount(COUNTER_PROJECTS, p);
     }
@@ -45,11 +44,11 @@ export type CountersSectionProps = {
   counterProgress: number;
 };
 
-const COUNTER_CARD =
-  "rounded-2xl border border-white/30 bg-white/10 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:rounded-3xl";
-
 const COUNTER_LABEL =
   "mt-1.5 text-[8px] font-semibold uppercase tracking-[0.14em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.22em]";
+
+const COUNTER_VALUE =
+  "font-display text-3xl font-semibold tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl md:text-5xl";
 
 export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(function CountersSection(
   { statsRef, countProjectsRef, counterProgress },
@@ -60,7 +59,7 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
       ref={statsRef}
       className="pointer-events-none absolute inset-x-0 top-1/2 z-20 -translate-y-1/2 px-3 opacity-0 will-change-[transform,opacity] sm:px-6"
     >
-      <div className="relative mx-auto w-full max-w-5xl text-center">
+      <div className="relative mx-auto w-full max-w-7xl text-center">
         <div
           className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[160%] w-[130%] -translate-x-1/2 -translate-y-1/2"
           style={{
@@ -73,16 +72,24 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
           Инвестиции в проекты будущего
         </p>
 
-        <div className="mx-auto mt-3 flex w-full flex-col items-center gap-3 sm:mt-6 sm:gap-4">
-          <div className={`${COUNTER_CARD} w-fit px-8 py-4 sm:px-10 sm:py-5`}>
-            <div className="font-display text-3xl font-semibold tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl md:text-5xl">
+        <div className="mx-auto mt-3 w-full max-w-[min(100%,96rem)] rounded-2xl border border-white/30 bg-white/10 px-5 py-4 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-6 sm:grid sm:grid-cols-[max-content_1px_minmax(36rem,1fr)] sm:items-center sm:gap-x-8 sm:rounded-3xl sm:px-10 sm:py-6 md:gap-x-12 md:px-16 lg:px-20">
+          <div className="shrink-0 text-center">
+            <div className={COUNTER_VALUE}>
               <span ref={countProjectsRef}>0</span>
             </div>
             <div className={COUNTER_LABEL}>Проектов в реализации</div>
           </div>
 
-          <div className={`${COUNTER_CARD} w-full max-w-[min(100%,52rem)] px-3 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6`}>
-            <RollingSumCounter value={COUNTER_TOTAL_SUM} progress={counterProgress} suffix="с" size="large" />
+          <div className="my-4 h-px w-full bg-white/25 sm:my-0 sm:h-auto sm:w-px sm:justify-self-center sm:self-stretch" />
+
+          <div className="overflow-visible text-center sm:min-w-[min(100%,58rem)] sm:px-4">
+            <RollingSumCounter
+              value={COUNTER_TOTAL_SUM}
+              progress={counterProgress}
+              suffix="с"
+              className={COUNTER_VALUE}
+              wideDigits
+            />
             <div className={COUNTER_LABEL}>Общая сумма проектов</div>
           </div>
         </div>

@@ -14,9 +14,9 @@ export type SpaceTrilogySceneRefs = {
 export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: SceneAnimationContext) {
   const { text } = ctx;
 
-  gsap.set(refs.partnersTextRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
-  gsap.set(refs.newsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
-  gsap.set(refs.newsContentRef.current, { opacity: 0, visibility: "hidden" });
+  gsap.set(refs.partnersTextRef.current, { ...text.idle, xPercent: 0, x: 0 });
+  gsap.set(refs.newsTitleRef.current, { ...text.idle, xPercent: 0, x: 0 });
+  gsap.set(refs.newsContentRef.current, { autoAlpha: 0 });
 
   const partnerLogoEls = refs.partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
   if (partnerLogoEls?.length) {
@@ -97,7 +97,7 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
               Национальный инвестиционный фонд развивает партнёрства с ведущими международными финансовыми
               институтами и организациями для реализации стратегических проектов в Кыргызстане.
             </p>
-            <DetailLinkButton to="/partners" className="mt-4 sm:mt-6" />
+            <DetailLinkButton to="/partners" />
           </div>
           <div
             ref={partnerLogosRef}
@@ -128,7 +128,7 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
           >
             НОВОСТИ
           </h2>
-          <DetailLinkButton to="/news" className="mt-4 sm:mt-6" />
+          <DetailLinkButton to="/news" />
         </div>
         <div
           ref={newsContentRef}

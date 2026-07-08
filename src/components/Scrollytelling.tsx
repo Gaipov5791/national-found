@@ -175,7 +175,7 @@ export function Scrollytelling() {
   );
 
   return (
-    <div ref={refs.rootRef} className="relative overflow-hidden">
+    <div ref={refs.rootRef} className="relative overflow-x-hidden">
       <Navbar
         ref={refs.navHeaderRef}
         brandRef={refs.brandRef}

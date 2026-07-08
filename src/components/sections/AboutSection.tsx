@@ -10,7 +10,7 @@ export type AboutSceneRefs = {
 
 export function prepareAboutScene(refs: AboutSceneRefs, ctx: SceneAnimationContext) {
   const { text } = ctx;
-  gsap.set(refs.aboutRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
+  gsap.set(refs.aboutRef.current, { ...text.idle, xPercent: 0, x: 0 });
 }
 
 export function animateAboutScene(tl: SceneTimeline, refs: AboutSceneRefs, ctx: SceneAnimationContext) {
@@ -46,7 +46,7 @@ export const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(functi
       </p>
       <DetailLinkButton
         to="/about"
-        className="mt-4 border-[color:var(--ink)]/25 bg-[color:var(--ink)]/5 text-[color:var(--ink)] hover:border-[color:var(--ink)]/45 hover:bg-[color:var(--ink)]/10 sm:mt-6"
+        className="border-[color:var(--ink)]/25 bg-[color:var(--ink)]/5 text-[color:var(--ink)] hover:border-[color:var(--ink)]/45 hover:bg-[color:var(--ink)]/10"
       />
     </div>
   );
