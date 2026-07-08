@@ -1,5 +1,7 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { DetailLinkButton } from "./DetailLinkButton";
+import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_DEFAULT } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type SpaceTrilogySceneRefs = {
@@ -7,8 +9,6 @@ export type SpaceTrilogySceneRefs = {
   partnerLogosRef: RefObject<HTMLDivElement | null>;
   newsTitleRef: RefObject<HTMLDivElement | null>;
   newsContentRef: RefObject<HTMLDivElement | null>;
-  contactsTitleRef: RefObject<HTMLDivElement | null>;
-  contactsContentRef: RefObject<HTMLDivElement | null>;
 };
 
 export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: SceneAnimationContext) {
@@ -16,8 +16,7 @@ export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: Scene
 
   gsap.set(refs.partnersTextRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
   gsap.set(refs.newsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
-  gsap.set(refs.contactsTitleRef.current, { opacity: 0, yPercent: text.idle.yPercent, scale: 1, xPercent: 0, x: 0 });
-  gsap.set([refs.newsContentRef.current, refs.contactsContentRef.current], { opacity: 0, visibility: "hidden" });
+  gsap.set(refs.newsContentRef.current, { opacity: 0, visibility: "hidden" });
 
   const partnerLogoEls = refs.partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
   if (partnerLogoEls?.length) {
@@ -35,8 +34,6 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
     partnersTextExitT,
     newsEnterT,
     newsExitT,
-    contactsEnterT,
-    contactsExitT,
   } = timings;
 
   const partnerLogoEls = refs.partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
@@ -61,9 +58,6 @@ export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySc
 
   tl.fromTo(refs.newsTitleRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, newsEnterT);
   tl.to(refs.newsTitleRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, newsExitT);
-
-  tl.fromTo(refs.contactsTitleRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, contactsEnterT);
-  tl.to(refs.contactsTitleRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, contactsExitT);
 }
 
 export type SpaceTrilogyContainerProps = {
@@ -72,8 +66,6 @@ export type SpaceTrilogyContainerProps = {
   partnerLogosRef: RefObject<HTMLDivElement | null>;
   newsTitleRef: RefObject<HTMLDivElement | null>;
   newsContentRef: RefObject<HTMLDivElement | null>;
-  contactsTitleRef: RefObject<HTMLDivElement | null>;
-  contactsContentRef: RefObject<HTMLDivElement | null>;
 };
 
 const PARTNER_NAMES = ["EBRD", "IFC", "ADB", "AIIB", "KfW"] as const;
@@ -86,8 +78,6 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
       partnerLogosRef,
       newsTitleRef,
       newsContentRef,
-      contactsTitleRef,
-      contactsContentRef,
     },
     _ref
   ) {
@@ -95,24 +85,31 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
       <>
         <div
           ref={partnersRef}
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-6 text-center"
+          className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_DEFAULT} z-30 px-3 text-center sm:px-6`}
         >
           <div ref={partnersTextRef} className="opacity-0 will-change-[transform,opacity]">
-            <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(0,0,0,0.45)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
+            <h2
+              className={`${SECTION_HEADING} text-xl text-white sm:text-4xl md:text-6xl md:tracking-[0.18em] lg:text-7xl`}
+            >
               ПАРТНЁРЫ
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-white/85 drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
-              Поля и теплицы — партнёры фонда зажигают новые точки роста по всей республике.
+            <p className={`${SECTION_SUBTEXT} mt-3 text-white/85 drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] sm:mt-5`}>
+              Национальный инвестиционный фонд развивает партнёрства с ведущими международными финансовыми
+              институтами и организациями для реализации стратегических проектов в Кыргызстане.
             </p>
+            <DetailLinkButton to="/partners" className="mt-4 sm:mt-6" />
           </div>
-          <div ref={partnerLogosRef} className="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-6 md:gap-10">
+          <div
+            ref={partnerLogosRef}
+            className="mx-auto mt-5 flex max-w-3xl snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mt-8 sm:flex-wrap sm:justify-center sm:gap-6 sm:overflow-visible sm:snap-none md:gap-10 [&::-webkit-scrollbar]:hidden"
+          >
             {PARTNER_NAMES.map((name) => (
               <div
                 key={name}
                 data-partner-logo
-                className="flex h-12 w-24 items-center justify-center rounded-lg border border-white/15 bg-white/[0.06] px-3 backdrop-blur-sm will-change-[transform,opacity] md:h-14 md:w-28"
+                className="flex h-10 w-20 shrink-0 snap-start items-center justify-center rounded-lg border border-white/15 bg-white/[0.06] px-2 backdrop-blur-sm will-change-[transform,opacity] sm:h-12 sm:w-24 sm:shrink md:h-14 md:w-28"
               >
-                <span className="font-display text-[10px] font-semibold tracking-[0.18em] text-white/70 md:text-xs">
+                <span className="font-display text-[9px] font-semibold tracking-[0.16em] text-white/70 sm:text-[10px] md:text-xs">
                   {name}
                 </span>
               </div>
@@ -124,11 +121,14 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
           ref={newsTitleRef}
           id="novosti"
           aria-label="Новости"
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
+          className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_DEFAULT} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
         >
-          <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(0,0,0,0.45)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
+          <h2
+            className={`${SECTION_HEADING} text-xl text-white sm:text-4xl md:text-6xl md:tracking-[0.18em] lg:text-7xl`}
+          >
             НОВОСТИ
           </h2>
+          <DetailLinkButton to="/news" className="mt-4 sm:mt-6" />
         </div>
         <div
           ref={newsContentRef}
@@ -139,29 +139,6 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
           <div className="grid gap-5 md:grid-cols-3">
             {[0, 1, 2].map((i) => (
               <div key={i} className="h-48 rounded-2xl border border-transparent" />
-            ))}
-          </div>
-        </div>
-
-        <div
-          ref={contactsTitleRef}
-          id="kontakty"
-          aria-label="Контакты"
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
-        >
-          <h2 className="font-display text-2xl font-bold tracking-tighter text-white drop-shadow-[0_8px_40px_rgba(0,0,0,0.45)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.18em] lg:text-7xl">
-            КОНТАКТЫ
-          </h2>
-        </div>
-        <div
-          ref={contactsContentRef}
-          data-lovable-slot="contacts-content"
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-[58%] z-30 mx-auto max-w-3xl px-6 font-display opacity-0 invisible"
-        >
-          <div className="grid gap-6 md:grid-cols-2">
-            {[0, 1].map((i) => (
-              <div key={i} className="h-40 rounded-2xl border border-transparent" />
             ))}
           </div>
         </div>

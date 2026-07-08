@@ -106,9 +106,11 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
                   <a
                     href="#"
                     onClick={handleNavAnchorClick(label)}
-                    className="flex items-center justify-between rounded-2xl px-4 py-3.5 whitespace-nowrap transition hover:bg-[color:var(--ink)]/5 hover:text-[color:var(--gold)]"
+                    className="flex items-center justify-between rounded-2xl px-4 py-3 transition hover:bg-[color:var(--ink)]/5 hover:text-[color:var(--gold)]"
                   >
-                    <span>{label}</span>
+                    <span className="pr-3 text-left text-[11px] leading-snug tracking-[0.12em] sm:text-[12px] sm:tracking-[0.16em]">
+                      {label}
+                    </span>
                     <span className="text-[color:var(--gold)] opacity-60">→</span>
                   </a>
                 </li>

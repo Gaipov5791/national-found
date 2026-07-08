@@ -1,5 +1,10 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { DetailLinkButton } from "./DetailLinkButton";
+import { SectionCard } from "./SectionCard";
+import { SectionCardSlide, SectionCardsScroller } from "./SectionCardsScroller";
+import { FINANCE_CARDS } from "./sectionContent";
+import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_WITH_CARDS } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type FinanceSceneRefs = {
@@ -30,14 +35,27 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
   return (
     <div
       ref={financeRef}
-      className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
+      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_WITH_CARDS} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
     >
-      <h2 className="font-display text-xl font-bold tracking-tighter text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.7)] sm:text-3xl sm:tracking-tight md:text-5xl md:tracking-[0.18em] lg:text-6xl">
+      <h2
+        className={`${SECTION_HEADING} text-lg text-white sm:text-3xl md:text-5xl md:tracking-[0.18em] lg:text-6xl`}
+      >
         ФИНАНСИРОВАНИЕ ПРОЕКТОВ
       </h2>
-      <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)] sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
-        Вершины гор — стратегические инвестиции на высоте национальных приоритетов.
+      <p className={`${SECTION_SUBTEXT} mt-2 text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)] sm:mt-3`}>
+        Мы предлагаем современные инструменты финансирования, которые помогают привлекать капитал и успешно
+        реализовывать стратегические проекты в Кыргызстане.
       </p>
+      <div className="pointer-events-auto mt-4 sm:mt-6">
+        <SectionCardsScroller>
+          {FINANCE_CARDS.map((card) => (
+            <SectionCardSlide key={card.title}>
+              <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
+            </SectionCardSlide>
+          ))}
+        </SectionCardsScroller>
+      </div>
+      <DetailLinkButton to="/finance" className="mt-4 sm:mt-6" />
     </div>
   );
 });

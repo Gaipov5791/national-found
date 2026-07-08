@@ -19,12 +19,10 @@ export function useSceneRefs() {
   const partnersRef = useRef<HTMLDivElement>(null);
   const partnersTextRef = useRef<HTMLDivElement>(null);
   const partnerLogosRef = useRef<HTMLDivElement>(null);
-  const count200Ref = useRef<HTMLSpanElement>(null);
-  const count8000Ref = useRef<HTMLSpanElement>(null);
+  const countProjectsRef = useRef<HTMLSpanElement>(null);
+  const counterProgressRef = useRef(0);
   const newsTitleRef = useRef<HTMLDivElement>(null);
   const newsContentRef = useRef<HTMLDivElement>(null);
-  const contactsTitleRef = useRef<HTMLDivElement>(null);
-  const contactsContentRef = useRef<HTMLDivElement>(null);
   const footerContentZoneRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const masterTimelineRef = useRef<gsap.core.Timeline | null>(null);
@@ -48,12 +46,10 @@ export function useSceneRefs() {
     partnersRef,
     partnersTextRef,
     partnerLogosRef,
-    count200Ref,
-    count8000Ref,
+    countProjectsRef,
+    counterProgressRef,
     newsTitleRef,
     newsContentRef,
-    contactsTitleRef,
-    contactsContentRef,
     footerContentZoneRef,
     lenisRef,
     masterTimelineRef,

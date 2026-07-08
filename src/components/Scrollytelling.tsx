@@ -8,9 +8,9 @@ import { ScrollytellingScene } from "@/components/scrollytelling/ScrollytellingS
 import { useSceneRefs } from "@/components/scrollytelling/useSceneRefs";
 import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
 
-const SCROLL_DISTANCE_DESKTOP = 17200;
-const SCROLL_DISTANCE_TABLET = 13600;
-const SCROLL_DISTANCE_MOBILE = 12800;
+const SCROLL_DISTANCE_DESKTOP = 15800;
+const SCROLL_DISTANCE_TABLET = 12600;
+const SCROLL_DISTANCE_MOBILE = 11800;
 
 const NAV_ITEMS = [
   "ГЛАВНАЯ",
@@ -35,14 +35,14 @@ const NAV_SCENE_LABELS: Record<NavItem, string> = {
   "ПРОЕКТЫ МСБ": "sc_msb",
   ПАРТНЁРЫ: "sc_partners",
   НОВОСТИ: "sc_news",
-  КОНТАКТЫ: "sc_contacts",
+  КОНТАКТЫ: "sc_footer",
 };
 
 const NAV_SCROLL_NAV_BUFFER = 8;
 const NAV_SCROLL_MOBILE_PADDING = 16;
 const MOBILE_CLOSED_NAVBAR_HEIGHT = 80;
-const NAV_SCROLL_DESKTOP_DURATION = 2;
-const NAV_SCROLL_MOBILE_DURATION = 1.4;
+const NAV_SCROLL_DESKTOP_DURATION = 1.6;
+const NAV_SCROLL_MOBILE_DURATION = 1.1;
 
 type SceneLabel = (typeof NAV_SCENE_LABELS)[NavItem];
 
@@ -54,11 +54,12 @@ const MOBILE_SCENE_NUDGE: Partial<Record<SceneLabel, number>> = {
   sc_msb: 85,
   sc_partners: 130,
   sc_news: 115,
-  sc_contacts: 105,
+  sc_footer: 0,
 };
 
 export function Scrollytelling() {
   const [lang, setLang] = useState("RU");
+  const [counterProgress, setCounterProgress] = useState(0);
   const refs = useSceneRefs();
 
   const scrollToSection = useCallback(
@@ -116,6 +117,7 @@ export function Scrollytelling() {
       ensureGsapPlugins();
 
       const mm = gsap.matchMedia();
+      const counterHandler = (p: number) => setCounterProgress(p);
 
       mm.add("(max-width: 767px)", () => {
         try {
@@ -128,10 +130,11 @@ export function Scrollytelling() {
         refs.staticViewportHeightRef.current = staticViewportHeight;
         const cleanup = runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_MOBILE,
-          scrub: 1,
+          scrub: 0.75,
           mobile: true,
           cinematic: true,
           staticViewportHeight,
+          onCounterProgress: counterHandler,
         });
         return () => {
           try {
@@ -148,9 +151,10 @@ export function Scrollytelling() {
         ScrollTrigger.config({ ignoreMobileResize: true });
         return runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_TABLET,
-          scrub: 1.5,
+          scrub: 1.1,
           mobile: false,
           cinematic: true,
+          onCounterProgress: counterHandler,
         });
       });
 
@@ -158,9 +162,10 @@ export function Scrollytelling() {
         ScrollTrigger.config({ ignoreMobileResize: false });
         return runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_DESKTOP,
-          scrub: 1.25,
+          scrub: 0.95,
           mobile: false,
           cinematic: true,
+          onCounterProgress: counterHandler,
         });
       });
 
@@ -181,7 +186,7 @@ export function Scrollytelling() {
         onNavClick={handleNavClick}
       />
       <div ref={refs.scrollTrackRef}>
-        <ScrollytellingScene refs={refs} onScrollToTop={scrollToTop} />
+        <ScrollytellingScene refs={refs} counterProgress={counterProgress} onScrollToTop={scrollToTop} />
       </div>
     </div>
   );

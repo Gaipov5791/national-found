@@ -1,5 +1,9 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { SectionCard } from "./SectionCard";
+import { SectionCardSlide, SectionCardsScroller } from "./SectionCardsScroller";
+import { DIRECTION_CARDS } from "./sectionContent";
+import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_WITH_CARDS } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type DirectionsSceneRefs = {
@@ -30,14 +34,26 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
   return (
     <div
       ref={directionsRef}
-      className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
+      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_WITH_CARDS} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
     >
-      <h2 className="font-display text-lg font-bold tracking-tighter text-white drop-shadow-[0_6px_36px_rgba(0,0,0,0.55)] sm:text-3xl sm:tracking-tight md:text-5xl md:tracking-[0.18em] lg:text-6xl">
+      <h2
+        className={`${SECTION_HEADING} text-base text-white sm:text-3xl md:text-5xl md:tracking-[0.18em] lg:text-6xl`}
+      >
         ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ
       </h2>
-      <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)] sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
-        Озеро Сон-Коль — стратегические отрасли, где капитал фонда раскрывает потенциал экономики.
+      <p className={`${SECTION_SUBTEXT} mt-2 text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)] sm:mt-3`}>
+        Национальный инвестиционный фонд работает с ключевыми отраслями, которые имеют высокий потенциал роста и
+        важны для развития экономики Кыргызстана.
       </p>
+      <div className="pointer-events-auto mt-4 sm:mt-6">
+        <SectionCardsScroller columns={3}>
+          {DIRECTION_CARDS.map((card) => (
+            <SectionCardSlide key={card.title} wide>
+              <SectionCard compact title={card.title} description={card.description} iconKey={card.iconKey} />
+            </SectionCardSlide>
+          ))}
+        </SectionCardsScroller>
+      </div>
     </div>
   );
 });

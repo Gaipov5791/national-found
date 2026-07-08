@@ -54,21 +54,21 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
   return (
     <div
       ref={footerContentZoneRef}
-      id="footer-content-zone"
+      id="kontakty"
       data-lovable-slot="footer-content"
       aria-label="Footer content zone"
       className="pointer-events-none absolute inset-0 z-[35] overflow-hidden opacity-0 will-change-[transform,opacity]"
     >
       <div className="pointer-events-none absolute inset-0 bg-black/80" data-cursor-surface="dark" aria-hidden />
 
-      <footer className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 flex flex-col px-5 pb-6 pt-10 font-display text-white sm:px-8 sm:pb-8 md:px-12 lg:px-16">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
-          <div className="flex flex-col gap-6 lg:max-w-sm">
-            <div className="flex items-start gap-4">
+      <footer className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 flex max-h-[92svh] flex-col overflow-y-auto px-4 pb-20 pt-8 font-display text-white sm:max-h-none sm:overflow-visible sm:px-8 sm:pb-8 sm:pt-10 md:px-12 lg:px-16">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 sm:gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+          <div className="flex flex-col gap-4 sm:gap-6 lg:max-w-sm">
+            <div className="flex items-start gap-3 sm:gap-4">
               <img
                 src={fundLogo.url}
                 alt="НИФ КР"
-                className="h-14 w-auto shrink-0 sm:h-16"
+                className="h-12 w-auto shrink-0 sm:h-14 md:h-16"
               />
               <p className="text-[10px] font-bold leading-[1.25] tracking-[0.08em] text-white/90 sm:text-[11px] sm:tracking-[0.1em] md:text-xs">
                 НАЦИОНАЛЬНЫЙ
@@ -103,7 +103,7 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
             </div>
           </div>
 
-          <div className="text-sm leading-relaxed text-white/85 sm:text-[15px] lg:max-w-md lg:text-right">
+          <div className="text-xs leading-relaxed text-white/85 sm:text-sm sm:text-[15px] lg:max-w-md lg:text-right">
             <p className="mb-1 text-xs font-semibold tracking-[0.12em] text-white/60">Адрес</p>
             <p className="mb-5">
               Кыргызская Республика, 720001
@@ -154,15 +154,13 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
         </div>
       </footer>
 
-      <div
-        className="pointer-events-auto absolute bottom-10 right-5 z-20 will-change-transform sm:bottom-12 sm:right-8 md:right-12 lg:right-16"
-      >
+      <div className="pointer-events-auto absolute bottom-4 right-4 z-20 will-change-transform sm:bottom-12 sm:right-8 md:right-12 lg:right-16">
         <button
           type="button"
           onClick={onScrollToTop}
           data-cursor-hover
           aria-label="Вернуться наверх"
-          className="flex h-14 w-14 items-center justify-center rounded-full border border-white/40 bg-transparent font-display text-[9px] font-semibold tracking-[0.28em] text-white transition-all duration-300 will-change-transform hover:scale-110 hover:border-white sm:h-16 sm:w-16 sm:text-[10px]"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-black/30 font-display text-[9px] font-semibold tracking-[0.28em] text-white backdrop-blur-sm transition-all duration-300 will-change-transform hover:scale-110 hover:border-white sm:h-16 sm:w-16 sm:bg-transparent sm:text-[10px]"
         >
           <span className="sr-only">Вернуться наверх</span>
           <span aria-hidden className="text-base leading-none sm:text-lg">

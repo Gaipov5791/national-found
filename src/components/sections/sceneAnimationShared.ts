@@ -8,6 +8,9 @@ export const CINEMATIC_ENTER_EASE = "power2.out";
 export const CINEMATIC_EXIT_EASE = "power2.in";
 export const CINEMATIC_MOTION_EASE = "power2.inOut";
 
+export const COUNTER_PROJECTS = 12;
+export const COUNTER_TOTAL_SUM = 122_968_875_174;
+
 export function formatCount(value: number, progress: number, suffix = "") {
   const p = Math.max(0, Math.min(1, progress));
   const eased = 1 - Math.pow(1 - p, 2);
@@ -19,6 +22,14 @@ export function computeTimelineMarkers() {
   const enterDur = 0.028;
   const exitDur = 0.028;
   const holdDur = 0.014;
+  /** Extra pause after counters finish — user must scroll again to leave the scene. */
+  const statsHoldDur = 0.055;
+  const aboutHoldDur = 0.038;
+  const financeHoldDur = 0.052;
+  const directionsHoldDur = 0.058;
+  const msbHoldDur = 0.038;
+  const partnersHoldDur = 0.048;
+  const newsHoldDur = 0.032;
   const textOverlap = 0.016;
   const atmoWipeDur = 0.032;
 
@@ -26,7 +37,7 @@ export function computeTimelineMarkers() {
   const gapAfterExit = (exitStart: number, gap: number) => exitStart + exitDur + gap;
 
   const statsEnterT = 0.06;
-  const statsExitT = statsEnterT + enterDur + holdDur;
+  const statsExitT = statsEnterT + enterDur + holdDur + statsHoldDur;
 
   /**
    * Decree waits for the counters to fully evaporate before entering.
@@ -42,38 +53,35 @@ export function computeTimelineMarkers() {
   const peakZoomOutEndT = decreeExitT + peakZoomDur;
 
   const aboutEnterT = peakZoomOutEndT + 0.012;
-  const aboutExitT = aboutEnterT + enterDur + holdDur;
+  const aboutExitT = aboutEnterT + enterDur + holdDur + aboutHoldDur;
 
   const financeEnterT = gapAfterExit(aboutExitT, 0.012);
-  const financeExitT = financeEnterT + enterDur + holdDur;
+  const financeExitT = financeEnterT + enterDur + holdDur + financeHoldDur;
 
   const sunsetAtmoT = breatheAfter(financeExitT);
   const sunsetBgSwapT = sunsetAtmoT + 0.010;
   const sunsetRevealT = sunsetAtmoT + atmoWipeDur;
   const directionsEnterT = sunsetRevealT;
-  const directionsExitT = directionsEnterT + enterDur + holdDur;
+  const directionsExitT = directionsEnterT + enterDur + holdDur + directionsHoldDur;
 
   const twilightAtmoT = breatheAfter(directionsExitT);
   const twilightBgSwapT = twilightAtmoT + 0.010;
   const twilightRevealT = twilightAtmoT + atmoWipeDur;
   const msbEnterT = twilightRevealT;
-  const msbExitT = msbEnterT + enterDur + holdDur;
+  const msbExitT = msbEnterT + enterDur + holdDur + msbHoldDur;
 
   const midnightAtmoT = breatheAfter(msbExitT);
   const midnightBgSwapT = midnightAtmoT + 0.010;
   const midnightRevealT = midnightAtmoT + atmoWipeDur * 0.85;
   const partnersEnterT = midnightRevealT;
-  const partnersHoldT = partnersEnterT + enterDur + holdDur;
+  const partnersHoldT = partnersEnterT + enterDur + holdDur + partnersHoldDur;
   const partnerLogoExitT = partnersHoldT + 0.008;
   const partnersTextExitT = gapAfterExit(partnerLogoExitT, 0.006);
 
   const newsEnterT = breatheAfter(partnersTextExitT);
-  const newsExitT = newsEnterT + enterDur + holdDur;
+  const newsExitT = newsEnterT + enterDur + holdDur + newsHoldDur;
 
-  const contactsEnterT = breatheAfter(newsExitT);
-  const contactsExitT = contactsEnterT + enterDur + holdDur;
-
-  const footerEnterT = gapAfterExit(contactsExitT, 0.008);
+  const footerEnterT = gapAfterExit(newsExitT, 0.008);
   const footerHoldDur = 0.072;
   const totalDuration = footerEnterT + enterDur + footerHoldDur;
 
@@ -121,8 +129,13 @@ export function computeTimelineMarkers() {
     partnersTextExitT,
     newsEnterT,
     newsExitT,
-    contactsEnterT,
-    contactsExitT,
+    statsHoldDur,
+    aboutHoldDur,
+    financeHoldDur,
+    directionsHoldDur,
+    msbHoldDur,
+    partnersHoldDur,
+    newsHoldDur,
     footerEnterT,
     footerHoldDur,
     totalDuration,
@@ -139,6 +152,7 @@ export type ExperienceConfig = {
   mobile: boolean;
   cinematic: boolean;
   staticViewportHeight?: number;
+  onCounterProgress?: (progress: number) => void;
 };
 
 export type TextPresets = {

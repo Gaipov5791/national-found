@@ -34,7 +34,10 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     msbEnterT,
     partnersEnterT,
     newsEnterT,
-    contactsEnterT,
+    footerEnterT,
+    statsEnterT,
+    statsExitT,
+    exitDur,
   } = timings;
 
   if (refs.scrollTrackRef.current) {
@@ -48,13 +51,13 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
 
   if (!useNativeScroll) {
     lenis = new Lenis({
-      duration: 1.6,
+      duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       syncTouch: false,
       touchMultiplier: 1,
-      wheelMultiplier: 0.85,
-      lerp: 0.085,
+      wheelMultiplier: 1.1,
+      lerp: 0.12,
     });
     refs.lenisRef.current = lenis;
     const raf = (time: number) => {
@@ -76,8 +79,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   const heroRefs = { brandRef: refs.brandRef };
   const countersRefs = {
     statsRef: refs.statsRef,
-    count200Ref: refs.count200Ref,
-    count8000Ref: refs.count8000Ref,
+    countProjectsRef: refs.countProjectsRef,
   };
   const decreeRefs = { decreeRef: refs.decreeRef };
   const aboutRefs = { aboutRef: refs.aboutRef };
@@ -89,8 +91,6 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     partnerLogosRef: refs.partnerLogosRef,
     newsTitleRef: refs.newsTitleRef,
     newsContentRef: refs.newsContentRef,
-    contactsTitleRef: refs.contactsTitleRef,
-    contactsContentRef: refs.contactsContentRef,
   };
   const panoramaRefs = {
     panoramaBgRef: refs.panoramaBgRef,
@@ -145,6 +145,13 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
       invalidateOnRefresh: true,
       onUpdate: (self) => {
         updateCounts(self.progress);
+        const counterCompleteT = statsEnterT + enterDur + 0.012;
+        const counterP = Math.max(
+          0,
+          Math.min(1, (self.progress - statsEnterT) / (counterCompleteT - statsEnterT))
+        );
+        refs.counterProgressRef.current = counterP;
+        cfg.onCounterProgress?.(counterP);
         if (!mobile) refreshCursorTheme();
       },
     },
@@ -159,7 +166,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   tl.addLabel("sc_msb", msbEnterT + enterDur);
   tl.addLabel("sc_partners", partnersEnterT + enterDur);
   tl.addLabel("sc_news", newsEnterT + enterDur);
-  tl.addLabel("sc_contacts", contactsEnterT + enterDur);
+  tl.addLabel("sc_footer", footerEnterT);
 
   animatePanoramaScrollScene(tl, panoramaRefs, ctx);
   animateHeroScene(tl, heroRefs, ctx);

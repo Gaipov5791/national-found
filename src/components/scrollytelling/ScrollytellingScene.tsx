@@ -11,10 +11,11 @@ import type { SceneRefs } from "./useSceneRefs";
 
 type ScrollytellingSceneProps = {
   refs: SceneRefs;
+  counterProgress: number;
   onScrollToTop: () => void;
 };
 
-export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingSceneProps) {
+export function ScrollytellingScene({ refs, counterProgress, onScrollToTop }: ScrollytellingSceneProps) {
   return (
     <div
       ref={refs.sceneRef}
@@ -27,8 +28,8 @@ export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingScene
       />
       <CountersSection
         statsRef={refs.statsRef}
-        count200Ref={refs.count200Ref}
-        count8000Ref={refs.count8000Ref}
+        countProjectsRef={refs.countProjectsRef}
+        counterProgress={counterProgress}
       />
       <DecreeSection decreeRef={refs.decreeRef} />
       <AboutSection aboutRef={refs.aboutRef} />
@@ -41,8 +42,6 @@ export function ScrollytellingScene({ refs, onScrollToTop }: ScrollytellingScene
         partnerLogosRef={refs.partnerLogosRef}
         newsTitleRef={refs.newsTitleRef}
         newsContentRef={refs.newsContentRef}
-        contactsTitleRef={refs.contactsTitleRef}
-        contactsContentRef={refs.contactsContentRef}
       />
       <FooterSection footerContentZoneRef={refs.footerContentZoneRef} onScrollToTop={onScrollToTop} />
     </div>

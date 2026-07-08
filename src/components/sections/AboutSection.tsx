@@ -1,5 +1,7 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { DetailLinkButton } from "./DetailLinkButton";
+import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_DEFAULT } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type AboutSceneRefs = {
@@ -30,15 +32,22 @@ export const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(functi
   return (
     <div
       ref={aboutRef}
-      className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
+      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_DEFAULT} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
     >
-      <h2 className="font-display text-2xl font-bold tracking-tighter text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.8)] sm:text-4xl sm:tracking-tight md:text-6xl md:tracking-[0.2em] lg:text-7xl">
+      <h2
+        className={`${SECTION_HEADING} text-xl text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.8)] sm:text-4xl md:text-6xl md:tracking-[0.2em] lg:text-7xl`}
+      >
         О ФОНДЕ
       </h2>
-      <p className="mx-auto mt-4 max-w-2xl px-1 text-xs leading-relaxed tracking-tight text-[color:var(--ink)]/85 sm:mt-6 sm:px-0 sm:text-sm md:text-base md:tracking-normal">
-        Национальный инвестиционный фонд — стратегический институт развития, направляющий капитал в проекты,
-        формирующие будущее Кыргызской Республики.
+      <p className={`${SECTION_SUBTEXT} mt-3 text-[color:var(--ink)]/85 sm:mt-5`}>
+        Национальный инвестиционный фонд выступает связующим звеном между государством, бизнесом и инвесторами.
+        Мы применяем современные инструменты прямого инвестирования, направляя капитал в проекты, которые создают
+        реальный экономический эффект и ускоряют развитие Кыргызстана.
       </p>
+      <DetailLinkButton
+        to="/about"
+        className="mt-4 border-[color:var(--ink)]/25 bg-[color:var(--ink)]/5 text-[color:var(--ink)] hover:border-[color:var(--ink)]/45 hover:bg-[color:var(--ink)]/10 sm:mt-6"
+      />
     </div>
   );
 });
