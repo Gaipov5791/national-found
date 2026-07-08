@@ -33,10 +33,10 @@ export function computeTimelineMarkers() {
   const enterDur = 0.028;
   const exitDur = 0.028;
   const holdDur = 0.014;
-  /** Scroll window while counters roll to final values (TZ: full sum must finish before hold). */
-  const counterRollDur = 0.052;
-  /** Pause with final values fixed — then exit upward on next scroll. */
-  const statsHoldDur = 0.058;
+  /** Scroll window while counters roll (scrub-linked). */
+  const counterRollDur = 0.065;
+  /** Minimal hold to avoid feeling like a pause. */
+  const statsHoldDur = 0.012;
   const aboutHoldDur = 0.038;
   const financeHoldDur = 0.052;
   const directionsHoldDur = 0.058;
@@ -62,11 +62,14 @@ export function computeTimelineMarkers() {
   const decreeEnterT = decreeCloudsT + 0.052;
   const decreeExitT = decreeEnterT + enterDur + holdDur;
 
-  /** Peak zoom-in/out share the same scrub duration for symmetric camera motion. */
-  const peakZoomDur = decreeExitT;
+  /**
+   * Short peak zoom-out; "О Фонде" waits until decree is fully gone
+   * (no overlap with "Постановление").
+   */
+  const peakZoomDur = 0.045;
   const peakZoomOutEndT = decreeExitT + peakZoomDur;
 
-  const aboutEnterT = peakZoomOutEndT + 0.012;
+  const aboutEnterT = gapAfterExit(decreeExitT, 0.004);
   const aboutExitT = aboutEnterT + enterDur + holdDur + aboutHoldDur;
 
   const financeEnterT = gapAfterExit(aboutExitT, 0.012);

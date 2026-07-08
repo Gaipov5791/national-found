@@ -46,7 +46,7 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
         Мы предлагаем современные инструменты финансирования, которые помогают привлекать капитал и успешно
         реализовывать стратегические проекты в Кыргызстане.
       </p>
-      <div className="mt-4 sm:mt-6">
+      <div className="mt-6 sm:mt-9">
         <SectionCardsScroller layout="four-row" className="pointer-events-auto touch-pan-x md:pointer-events-none">
           {FINANCE_CARDS.map((card) => (
             <SectionCardSlide key={card.title} layout="four-row">

@@ -48,7 +48,7 @@ function RollingDigit({ digit, animate, size = "default", wide }: RollingDigitPr
         className="inline-flex flex-col will-change-transform"
         style={{
           transform: `translateY(-${target * DIGIT_HEIGHT_EM}em)`,
-          transition: animate ? "transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)" : "none",
+          transition: animate ? "transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)" : "none",
         }}
       >
         {digits.map((d) => (
@@ -83,9 +83,8 @@ export function RollingSumCounter({
   wideDigits = false,
 }: RollingSumCounterProps) {
   const prevProgress = useRef(0);
-  const isComplete = progress >= 1;
   const formatted = formatSum(value, progress);
-  const shouldAnimate = !isComplete && progress > prevProgress.current;
+  const shouldAnimate = Math.abs(progress - prevProgress.current) > 0.0005;
   const isLarge = size === "large";
 
   useEffect(() => {
@@ -107,9 +106,9 @@ export function RollingSumCounter({
     >
       {formatted.split("").map((char, i) => (
         <RollingDigit
-          key={`${i}-${char}`}
+          key={`${i}-${/\d/.test(char) ? "d" : char}`}
           digit={char}
-          animate={shouldAnimate && progress > 0.05}
+          animate={shouldAnimate}
           size={size}
           wide={wideDigits}
         />

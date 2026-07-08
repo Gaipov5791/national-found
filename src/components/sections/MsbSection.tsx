@@ -38,7 +38,7 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
       >
         ПРОЕКТЫ МСБ
       </h2>
-      <p className={`${SECTION_SUBTEXT} mt-3 text-white/88 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:mt-5`}>
+      <p className={`${SECTION_SUBTEXT} mt-5 text-white/88 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:mt-7`}>
         Малый и средний бизнес играет ключевую роль в развитии регионов Кыргызстана. Национальный инвестиционный
         фонд поддерживает проекты МСБ, с особым акцентом на агропромышленный комплекс и переработку местного сырья,
         помогая создавать устойчивые бизнес-модели и повышать уровень жизни в регионах страны.

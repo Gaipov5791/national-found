@@ -1,7 +1,7 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { DetailLinkButton } from "./DetailLinkButton";
-import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_DEFAULT } from "./sectionLayout";
+import { SECTION_HEADING, SECTION_SUBTEXT } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type AboutSceneRefs = {
@@ -32,7 +32,7 @@ export const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(functi
   return (
     <div
       ref={aboutRef}
-      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_DEFAULT} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
+      className="pointer-events-none absolute inset-x-0 top-1/2 z-30 -translate-y-1/2 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6"
     >
       <h2
         className={`${SECTION_HEADING} text-xl text-[color:var(--primary)] drop-shadow-[0_4px_30px_rgba(255,255,255,0.8)] sm:text-4xl md:text-6xl md:tracking-[0.2em] lg:text-7xl`}

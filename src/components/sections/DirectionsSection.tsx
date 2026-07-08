@@ -45,8 +45,11 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
         Национальный инвестиционный фонд работает с ключевыми отраслями, которые имеют высокий потенциал роста и
         важны для развития экономики Кыргызстана.
       </p>
-      <div className="mt-4 sm:mt-6">
-        <SectionCardsScroller layout="four-two" className="pointer-events-auto touch-pan-x md:pointer-events-none">
+      <div className="mt-6 sm:mt-9">
+        <SectionCardsScroller
+          layout="four-two"
+          className="pointer-events-auto touch-pan-x md:pointer-events-none md:gap-y-12 lg:gap-y-14"
+        >
           {DIRECTION_CARDS.map((card, index) => (
             <SectionCardSlide
               key={card.title}

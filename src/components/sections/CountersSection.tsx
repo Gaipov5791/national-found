@@ -72,7 +72,7 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
           Инвестиции в проекты будущего
         </p>
 
-        <div className="mx-auto mt-3 w-full max-w-[min(100%,96rem)] rounded-2xl border border-white/30 bg-white/10 px-5 py-4 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-6 sm:grid sm:grid-cols-[max-content_1px_minmax(36rem,1fr)] sm:items-center sm:gap-x-8 sm:rounded-3xl sm:px-10 sm:py-6 md:gap-x-12 md:px-16 lg:px-20">
+        <div className="mx-auto mt-3 flex w-full max-w-[min(100%,96rem)] flex-col items-center rounded-2xl border border-white/30 bg-white/10 px-5 py-4 text-center backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-6 sm:rounded-3xl sm:px-10 sm:py-6 md:px-16 lg:px-20">
           <div className="shrink-0 text-center">
             <div className={COUNTER_VALUE}>
               <span ref={countProjectsRef}>0</span>
@@ -80,9 +80,9 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
             <div className={COUNTER_LABEL}>Проектов в реализации</div>
           </div>
 
-          <div className="my-4 h-px w-full bg-white/25 sm:my-0 sm:h-auto sm:w-px sm:justify-self-center sm:self-stretch" />
+          <div className="my-5 h-px w-full max-w-4xl bg-white/25 sm:my-7" />
 
-          <div className="overflow-visible text-center sm:min-w-[min(100%,58rem)] sm:px-4">
+          <div className="overflow-visible text-center">
             <RollingSumCounter
               value={COUNTER_TOTAL_SUM}
               progress={counterProgress}

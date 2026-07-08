@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export type SectionCardsLayout = "two-col" | "four-row" | "four-two";
@@ -26,8 +26,89 @@ export function SectionCardsScroller({
   layout = "two-col",
   className,
 }: SectionCardsScrollerProps) {
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+
+  const childCount = useMemo(() => {
+    // Works for both arrays and single child.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const anyChildren = children as any;
+    return Array.isArray(anyChildren) ? anyChildren.length : 1;
+  }, [children]);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    if (typeof window === "undefined") return;
+    if (window.innerWidth >= 768) return;
+    if (childCount <= 1) return;
+
+    const reduceMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    let intervalId: number | null = null;
+    let resumeTimeoutId: number | null = null;
+    let pausedUntil = 0;
+
+    const pause = (ms: number) => {
+      pausedUntil = Date.now() + ms;
+      if (resumeTimeoutId) window.clearTimeout(resumeTimeoutId);
+      resumeTimeoutId = window.setTimeout(() => {
+        // no-op: interval loop checks pausedUntil
+      }, ms);
+    };
+
+    const stepOnce = () => {
+      if (!el) return;
+      if (Date.now() < pausedUntil) return;
+
+      const first = el.firstElementChild as HTMLElement | null;
+      const step = (first?.offsetWidth ?? 240) + 12;
+      const max = el.scrollWidth - el.clientWidth;
+      const next = el.scrollLeft + step;
+
+      el.scrollTo({
+        left: next >= max - 4 ? 0 : next,
+        behavior: "smooth",
+      });
+    };
+
+    const start = () => {
+      if (intervalId) return;
+      intervalId = window.setInterval(stepOnce, 2600);
+    };
+
+    const stop = () => {
+      if (intervalId) window.clearInterval(intervalId);
+      intervalId = null;
+    };
+
+    // Pause auto-swipe after any manual interaction.
+    const onPointerDown = () => pause(5000);
+    const onTouchStart = () => pause(5000);
+    const onWheel = () => pause(5000);
+    const onScroll = () => pause(2200);
+
+    el.addEventListener("pointerdown", onPointerDown, { passive: true });
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("wheel", onWheel, { passive: true });
+    el.addEventListener("scroll", onScroll, { passive: true });
+
+    start();
+    return () => {
+      stop();
+      if (resumeTimeoutId) window.clearTimeout(resumeTimeoutId);
+      el.removeEventListener("pointerdown", onPointerDown);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("scroll", onScroll);
+    };
+  }, [childCount]);
+
   return (
     <div
+      ref={scrollerRef}
       className={cn(
         "mx-auto w-full",
         LAYOUT_MAX_WIDTH[layout],
@@ -35,6 +116,7 @@ export function SectionCardsScroller({
         "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         "-mx-1 px-3 sm:px-1",
         "md:mx-auto md:grid md:w-fit md:max-w-full md:justify-items-stretch md:overflow-visible md:snap-none md:px-0 md:gap-4 lg:gap-5",
+        layout === "four-two" ? "md:gap-y-10 lg:gap-y-12" : "",
         LAYOUT_GRID[layout],
         className
       )}

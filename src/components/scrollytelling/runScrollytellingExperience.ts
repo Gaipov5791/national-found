@@ -166,7 +166,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   tl.addLabel("sc_msb", msbEnterT + enterDur);
   tl.addLabel("sc_partners", partnersEnterT + enterDur);
   tl.addLabel("sc_news", newsEnterT + enterDur);
-  tl.addLabel("sc_footer", footerEnterT);
+  tl.addLabel("sc_footer", footerEnterT + enterDur);
 
   animatePanoramaScrollScene(tl, panoramaRefs, ctx);
   animateHeroScene(tl, heroRefs, ctx);

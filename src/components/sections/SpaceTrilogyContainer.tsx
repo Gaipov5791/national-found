@@ -101,7 +101,7 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
           </div>
           <div
             ref={partnerLogosRef}
-            className="mx-auto mt-5 flex max-w-3xl snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mt-8 sm:flex-wrap sm:justify-center sm:gap-6 sm:overflow-visible sm:snap-none md:gap-10 [&::-webkit-scrollbar]:hidden"
+            className="mx-auto mt-7 flex max-w-3xl snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mt-10 sm:flex-wrap sm:justify-center sm:gap-6 sm:overflow-visible sm:snap-none md:gap-10 [&::-webkit-scrollbar]:hidden"
           >
             {PARTNER_NAMES.map((name) => (
               <div
