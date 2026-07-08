@@ -9,7 +9,7 @@ type DetailLinkButtonProps = {
 };
 
 const buttonClassName =
-  "inline-block whitespace-nowrap rounded-full border border-white/40 bg-white/10 px-4 py-2 font-display text-[9px] font-semibold tracking-[0.18em] text-white backdrop-blur-sm hover:border-white/70 hover:bg-white/20 sm:px-6 sm:py-3 sm:text-[11px] sm:tracking-[0.2em]";
+  "inline-block whitespace-nowrap rounded-full border border-white/70 bg-white/15 px-5 py-2 font-display text-[10px] font-semibold tracking-[0.18em] text-white backdrop-blur-sm transition hover:border-white/90 hover:bg-white/30 sm:px-6 sm:py-3 sm:text-[12px] sm:tracking-[0.2em]";
 
 export function DetailLinkButton({ to, label = "Подробнее", className }: DetailLinkButtonProps) {
   const [hovered, setHovered] = useState(false);

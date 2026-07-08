@@ -12,9 +12,10 @@ type SectionCardProps = {
 
 const variants = {
   dark: {
-    card: "border-white/25 bg-white/[0.08] hover:bg-white/[0.12]",
-    title: "text-white",
-    description: "text-white/80",
+    // Landing cards: white semi-transparent border + brand-blue text
+    card: "border-white/30 bg-white/[0.07] hover:bg-white/[0.12]",
+    title: "text-[color:var(--ink)]",
+    description: "text-[color:var(--ink)]/75",
   },
   light: {
     card: "border-[color:var(--ink)]/10 bg-white/70 hover:bg-white/90 shadow-sm",
@@ -36,8 +37,8 @@ export function SectionCard({
   return (
     <div
       className={cn(
-        "group relative flex h-full flex-col rounded-2xl border text-left backdrop-blur-md transition-colors sm:rounded-3xl",
-        compact ? "px-4 pb-4 pt-9 sm:px-5 sm:pb-5 sm:pt-11" : "px-5 pb-5 pt-10 sm:px-6 sm:pb-6 sm:pt-12",
+        "group relative flex h-full flex-col rounded-2xl border backdrop-blur-md transition-colors sm:rounded-3xl",
+        compact ? "text-center px-4 pb-4 pt-16 sm:px-5 sm:pb-5 sm:pt-20" : "text-left px-5 pb-5 pt-10 sm:px-6 sm:pb-6 sm:pt-12",
         styles.card
       )}
     >

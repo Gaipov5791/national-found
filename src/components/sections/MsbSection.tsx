@@ -1,4 +1,4 @@
-import { forwardRef, type RefObject } from "react";
+import { forwardRef, type RefObject, useState } from "react";
 import gsap from "gsap";
 import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_COMPACT } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
@@ -28,6 +28,8 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
   { msbRef },
   _ref
 ) {
+  const [mapMissing, setMapMissing] = useState(false);
+
   return (
     <div
       ref={msbRef}
@@ -38,11 +40,39 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
       >
         ПРОЕКТЫ МСБ
       </h2>
-      <p className={`${SECTION_SUBTEXT} mt-5 text-white/88 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:mt-7`}>
+      <p
+        className={`${SECTION_SUBTEXT} mt-4 text-white/88 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] md:hidden`}
+      >
+        Интерактивная карта проектов малого и среднего бизнеса по регионам Кыргызстана.
+      </p>
+      <p
+        className={`${SECTION_SUBTEXT} mt-5 hidden max-w-2xl text-white/88 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] md:block lg:mt-4 lg:max-h-[72px] lg:overflow-hidden`}
+      >
         Малый и средний бизнес играет ключевую роль в развитии регионов Кыргызстана. Национальный инвестиционный
         фонд поддерживает проекты МСБ, с особым акцентом на агропромышленный комплекс и переработку местного сырья,
         помогая создавать устойчивые бизнес-модели и повышать уровень жизни в регионах страны.
       </p>
+
+      <div className="pointer-events-auto mx-auto mt-3 w-full max-w-5xl -translate-y-6 sm:mt-4 sm:-translate-y-10 lg:-translate-y-14">
+        {mapMissing ? (
+          <div className="mt-3 text-center text-sm text-white/70">
+            Карта пока не найдена. Положите распакованные файлы в <code>public/maps/msb/</code> и назовите главный файл{" "}
+            <code>map.png</code>.
+          </div>
+        ) : (
+          <img
+            src="/maps/msb/map.png"
+            alt="Карта проектов МСБ"
+            className="mx-auto w-full max-w-5xl select-none drop-shadow-[0_18px_60px_rgba(0,0,0,0.55)]"
+            loading="lazy"
+            onError={(e) => {
+              const img = e.currentTarget;
+              img.style.display = "none";
+              setMapMissing(true);
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 });
