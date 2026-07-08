@@ -112,7 +112,7 @@ export function SectionCardsScroller({
       className={cn(
         "mx-auto w-full",
         LAYOUT_MAX_WIDTH[layout],
-        "flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-1",
+        "flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-visible overscroll-x-contain pb-1 pt-8 md:pt-0",
         "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         "-mx-1 px-3 sm:px-1",
         "md:mx-auto md:grid md:w-fit md:max-w-full md:justify-items-stretch md:overflow-visible md:snap-none md:px-0 md:gap-4 lg:gap-5",
