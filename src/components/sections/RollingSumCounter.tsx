@@ -49,7 +49,7 @@ function RollingDigit({ digit, animate, compact, idleRoll, idlePhase = 0 }: Roll
       className="relative inline-block overflow-hidden align-top tabular-nums"
       style={{
         height: `${DIGIT_HEIGHT_EM}em`,
-        width: compact ? "0.48em" : "0.62em",
+        width: compact ? "0.46em" : "0.54em",
       }}
     >
       <span
@@ -97,10 +97,10 @@ export function RollingSumCounter({ value, progress, suffix = " с", compact = f
   return (
     <span
       className={cn(
-        "inline-flex max-w-full flex-wrap items-center justify-center gap-0 font-display font-semibold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
+        "inline-flex items-center justify-center whitespace-nowrap font-display font-semibold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]",
         compact
-          ? "text-[clamp(0.62rem,2.6vw,1.35rem)] leading-tight"
-          : "text-[clamp(0.75rem,3vw,3rem)]"
+          ? "text-[clamp(0.58rem,2.4vw,1.2rem)] leading-none"
+          : "text-[clamp(0.62rem,1.05vw+0.42rem,1.65rem)] leading-none sm:text-[clamp(0.7rem,0.9vw+0.5rem,1.85rem)]"
       )}
     >
       {digitChars.map((char, i) => {

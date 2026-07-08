@@ -67,19 +67,21 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
         <p className="font-display text-base tracking-tighter text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] sm:text-2xl sm:tracking-tight md:text-4xl">
           Инвестиции в проекты будущего
         </p>
-        <div className="mt-3 flex flex-col items-stretch gap-3 rounded-2xl border border-white/30 bg-white/10 px-4 py-3 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-6 sm:gap-4 sm:rounded-3xl sm:px-8 sm:py-6 md:inline-flex md:flex-row md:gap-10">
-          <div className="min-w-0 text-center">
-            <div className="font-display text-2xl font-semibold tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl sm:tracking-tight md:text-5xl lg:text-6xl">
+        <div className="mx-auto mt-3 w-full max-w-[min(100%,22rem)] rounded-2xl border border-white/30 bg-white/10 px-4 py-4 backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-6 sm:max-w-[min(100%,28rem)] sm:rounded-3xl sm:px-6 sm:py-5 md:max-w-[min(100%,32rem)] md:px-8 md:py-6">
+          <div className="text-center">
+            <div className="font-display text-3xl font-semibold tracking-tighter text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:text-4xl md:text-5xl">
               <span ref={countProjectsRef}>0</span>
             </div>
-            <div className="mt-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.25em]">
+            <div className="mt-1.5 text-[8px] font-semibold uppercase tracking-[0.14em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.22em]">
               Проектов в реализации
             </div>
           </div>
-          <div className="hidden h-px w-full bg-white/25 md:block md:h-auto md:w-px" />
-          <div className="min-w-0 text-center">
-            <RollingSumCounter value={COUNTER_TOTAL_SUM} progress={counterProgress} suffix="с" compact />
-            <div className="mt-1 text-[8px] font-semibold uppercase tracking-[0.14em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.25em]">
+
+          <div className="my-3 h-px w-full bg-white/25 sm:my-4" />
+
+          <div className="text-center">
+            <RollingSumCounter value={COUNTER_TOTAL_SUM} progress={counterProgress} suffix="с" />
+            <div className="mt-1.5 text-[8px] font-semibold uppercase tracking-[0.14em] text-white/85 sm:mt-2 sm:text-[10px] sm:tracking-[0.22em]">
               Общая сумма проектов
             </div>
           </div>
