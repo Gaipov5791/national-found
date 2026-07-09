@@ -20,6 +20,7 @@ export function animateDirectionsScene(tl: SceneTimeline, refs: DirectionsSceneR
   const { directionsEnterT, directionsExitT, enterDur, exitDur } = timings;
 
   tl.fromTo(refs.directionsRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, directionsEnterT);
+
   tl.to(refs.directionsRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, directionsExitT);
 }
 
@@ -48,7 +49,7 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
       <div className="mt-6 sm:mt-9">
         <SectionCardsScroller
           layout="four-two"
-          className="pointer-events-auto touch-pan-x md:pointer-events-none md:gap-y-12 lg:gap-y-14"
+          className="pointer-events-auto touch-pan-x md:gap-y-12 lg:gap-y-14"
         >
           {DIRECTION_CARDS.map((card, index) => (
             <SectionCardSlide
@@ -57,7 +58,7 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
               layout="four-two"
               gridSlot={index === 4 ? "bottom-left" : index === 5 ? "bottom-right" : "default"}
             >
-              <SectionCard compact title={card.title} description={card.description} iconKey={card.iconKey} />
+              <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
             </SectionCardSlide>
           ))}
         </SectionCardsScroller>

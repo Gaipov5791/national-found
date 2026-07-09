@@ -21,6 +21,7 @@ export function animateFinanceScene(tl: SceneTimeline, refs: FinanceSceneRefs, c
   const { enterDur, exitDur, financeEnterT, financeExitT } = timings;
 
   tl.fromTo(refs.financeRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, financeEnterT);
+
   tl.to(refs.financeRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, financeExitT);
 }
 
@@ -47,7 +48,7 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
         реализовывать стратегические проекты в Кыргызстане.
       </p>
       <div className="mt-6 sm:mt-9">
-        <SectionCardsScroller layout="four-row" className="pointer-events-auto touch-pan-x md:pointer-events-none">
+        <SectionCardsScroller layout="four-row" className="pointer-events-auto touch-pan-x">
           {FINANCE_CARDS.map((card) => (
             <SectionCardSlide key={card.title} layout="four-row">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />

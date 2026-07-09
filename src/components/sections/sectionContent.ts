@@ -21,36 +21,38 @@ export const FINANCE_CARDS = [
   },
 ] as const;
 
+const publicAsset = (path: string) => encodeURI(path);
+
 export const DIRECTION_CARDS = [
   {
     title: "Промышленность и переработка",
     description: "Развитие производственных мощностей и глубокой переработки сырья.",
-    iconKey: "factory" as const,
+    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Промышленность и переработка.png"),
   },
   {
     title: "Транспорт и логистика",
     description: "Инфраструктурные проекты, связывающие регионы и рынки.",
-    iconKey: "truck" as const,
+    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Транспорт и логистика.png"),
   },
   {
     title: "Энергетика и инфраструктура",
     description: "Энергетические объекты и базовая инфраструктура страны.",
-    iconKey: "energy" as const,
+    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Энергетика и инфраструктура.png"),
   },
   {
     title: "Туризм",
     description: "Инвестиции в туристический потенциал Кыргызстана.",
-    iconKey: "tourism" as const,
+    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Туризм.png"),
   },
   {
     title: "Образование",
     description: "Проекты, формирующие кадровый и интеллектуальный потенциал.",
-    iconKey: "education" as const,
+    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Образование.png"),
   },
   {
     title: "Здравоохранение",
     description: "Развитие медицинской инфраструктуры и сервисов.",
-    iconKey: "health" as const,
+    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Здравоохранение.png"),
   },
 ] as const;
 

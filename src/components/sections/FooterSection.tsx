@@ -1,7 +1,6 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { Instagram } from "lucide-react";
-import fundLogo from "@/assets/fund-logo.png.asset.json";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type FooterSceneRefs = {
@@ -66,17 +65,10 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
           <div className="flex flex-col gap-4 sm:gap-6 lg:max-w-sm">
             <div className="flex items-start gap-3 sm:gap-4">
               <img
-                src={fundLogo.url}
+                src="/logo/logo-white.png"
                 alt="НИФ КР"
                 className="h-12 w-auto shrink-0 sm:h-14 md:h-16"
               />
-              <p className="text-[10px] font-bold leading-[1.25] tracking-[0.08em] text-white/90 sm:text-[11px] sm:tracking-[0.1em] md:text-xs">
-                НАЦИОНАЛЬНЫЙ
-                <br />
-                ИНВЕСТИЦИОННЫЙ ФОНД
-                <br />
-                КЫРГЫЗСКОЙ РЕСПУБЛИКИ
-              </p>
             </div>
 
             <div className="flex items-center gap-3">

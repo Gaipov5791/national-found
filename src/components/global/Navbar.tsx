@@ -1,7 +1,7 @@
 import { forwardRef, useMemo, useState, type MouseEvent, type RefObject } from "react";
 import { Menu, X } from "lucide-react";
-import fundLogo from "@/assets/fund-logo.png.asset.json";
 import { BRAND_TOP_CLASS } from "@/components/sections/sectionLayout";
+import { getBrandName } from "@/lib/brand";
 
 type NavbarProps = {
   navItems: readonly string[];
@@ -17,6 +17,8 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
   ref
 ) {
   const [navOpen, setNavOpen] = useState(false);
+
+  const brandName = useMemo(() => getBrandName(lang as never), [lang]);
 
   const handleNavAnchorClick = useMemo(
     () => (label: string) => (e: MouseEvent<HTMLAnchorElement>) => {
@@ -36,7 +38,7 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
             className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 rounded-full border border-white/40 bg-white/40 px-4 py-2.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] sm:gap-3 sm:px-4 sm:py-3 md:gap-4 md:px-6 md:py-4 lg:gap-5 lg:px-7 xl:px-9"
           >
             <div className="flex shrink-0 items-center pr-1 sm:pr-0">
-              <img src={fundLogo.url} alt="НИФ КР" className="block h-8 w-auto sm:h-9 md:hidden" />
+              <img src="/logo/logo-blue.png" alt="НИФ КР" className="block h-8 w-auto sm:h-9 md:hidden" />
               <div className="hidden md:block h-[52px] w-[52px] shrink-0" aria-hidden />
             </div>
 
@@ -141,21 +143,21 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
 
       <div
         ref={brandRef}
-        className={`pointer-events-none fixed left-1/2 ${BRAND_TOP_CLASS} z-[65] w-full max-w-[min(100%,980px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:px-6`}
+        className={`pointer-events-none fixed left-1/2 ${BRAND_TOP_CLASS} z-[65] w-full max-w-[min(100%,980px)] -translate-x-1/2 px-4 will-change-[transform,opacity] sm:px-6 2xl:max-w-[min(100%,1200px)]`}
         style={{ mixBlendMode: "normal", isolation: "isolate" }}
       >
-        <h1
-          className="text-center font-display text-[clamp(0.62rem,3.4vw,0.82rem)] font-bold leading-[1.15] tracking-[0.06em] text-white opacity-100 sm:text-[clamp(0.72rem,2.1vw,1rem)] sm:tracking-[0.11em] md:text-[clamp(0.88rem,1.75vw,1.28rem)] md:leading-[1.2] md:tracking-[0.16em]"
-          style={{
-            mixBlendMode: "normal",
-            color: "#ffffff",
-            textShadow: "0 4px 24px rgba(8,16,36,0.72)",
-          }}
+        <div
+          className="mx-auto flex w-full flex-col items-center justify-center gap-2 text-center"
+          style={{ mixBlendMode: "normal", textShadow: "0 4px 24px rgba(8,16,36,0.72)" }}
         >
-          НАЦИОНАЛЬНЫЙ<br />
-          ИНВЕСТИЦИОННЫЙ ФОНД<br />
-          КЫРГЫЗСКОЙ РЕСПУБЛИКИ
-        </h1>
+          <img
+            src="/logo/logo-blue.png"
+            alt={brandName}
+            className="h-10 w-auto opacity-100 sm:h-12 md:h-14 2xl:h-16"
+            loading="eager"
+          />
+          <h1 className="sr-only">{brandName}</h1>
+        </div>
       </div>
     </div>
   );

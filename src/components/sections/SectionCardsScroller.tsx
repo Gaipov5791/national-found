@@ -11,8 +11,8 @@ type SectionCardsScrollerProps = {
 
 const LAYOUT_MAX_WIDTH: Record<SectionCardsLayout, string> = {
   "two-col": "max-w-5xl",
-  "four-row": "max-w-[min(100%,72rem)]",
-  "four-two": "max-w-[min(100%,72rem)]",
+  "four-row": "max-w-[min(100%,72rem)] xl:max-w-[min(100%,80rem)] 2xl:max-w-[min(100%,88rem)]",
+  "four-two": "max-w-[min(100%,72rem)] xl:max-w-[min(100%,80rem)] 2xl:max-w-[min(100%,88rem)]",
 };
 
 const LAYOUT_GRID: Record<SectionCardsLayout, string> = {
@@ -142,16 +142,16 @@ const MOBILE_WIDTH = {
 
 const DESKTOP_WIDTH: Record<SectionCardsLayout, { default: string; wide: string }> = {
   "two-col": {
-    default: "md:w-[280px] lg:w-[300px]",
-    wide: "md:w-[240px] lg:w-[260px]",
+    default: "md:w-[280px] lg:w-[300px] xl:w-[320px] 2xl:w-[340px]",
+    wide: "md:w-[240px] lg:w-[260px] xl:w-[280px] 2xl:w-[300px]",
   },
   "four-row": {
-    default: "md:w-[220px] lg:w-[240px]",
-    wide: "md:w-[220px] lg:w-[240px]",
+    default: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
+    wide: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
   },
   "four-two": {
-    default: "md:w-[220px] lg:w-[240px]",
-    wide: "md:w-[220px] lg:w-[240px]",
+    default: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
+    wide: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
   },
 };
 

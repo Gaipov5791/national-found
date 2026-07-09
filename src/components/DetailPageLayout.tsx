@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import fundLogo from "@/assets/fund-logo.png.asset.json";
+import { getBrandName } from "@/lib/brand";
+import { useLang } from "@/lib/lang";
 
 type DetailPageLayoutProps = {
   title: string;
@@ -8,12 +9,18 @@ type DetailPageLayoutProps = {
 };
 
 export function DetailPageLayout({ title, children }: DetailPageLayoutProps) {
+  const { lang } = useLang();
+  const brandName = getBrandName(lang);
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8] px-4 py-10 font-display text-[color:var(--ink)] sm:px-6 sm:py-16">
       <div className="mx-auto max-w-3xl">
         <header className="flex items-center justify-between gap-4 border-b border-[color:var(--ink)]/10 pb-6">
-          <Link to="/" className="inline-flex items-center gap-2">
-            <img src={fundLogo.url} alt="НИФ КР" className="h-9 w-auto sm:h-10" />
+          <Link to="/" className="inline-flex items-center gap-3">
+            <img src="/logo/logo-blue.png" alt="НИФ КР" className="h-9 w-auto sm:h-10" />
+            <span className="hidden text-[11px] font-semibold leading-tight tracking-[0.12em] text-[color:var(--ink)]/70 sm:block">
+              {brandName}
+            </span>
           </Link>
           <Link
             to="/"

@@ -28,7 +28,7 @@ function DirectionsPage() {
             variant="light"
             title={card.title}
             description={card.description}
-            iconKey={card.iconKey}
+            icon={card.icon}
           />
         ))}
       </div>

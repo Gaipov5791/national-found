@@ -7,6 +7,7 @@ import { runScrollytellingExperience } from "@/components/scrollytelling/runScro
 import { ScrollytellingScene } from "@/components/scrollytelling/ScrollytellingScene";
 import { useSceneRefs } from "@/components/scrollytelling/useSceneRefs";
 import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
+import { LANGS, useLang } from "@/lib/lang";
 
 const SCROLL_DISTANCE_DESKTOP = 15800;
 const SCROLL_DISTANCE_TABLET = 12600;
@@ -22,8 +23,6 @@ const NAV_ITEMS = [
   "НОВОСТИ",
   "КОНТАКТЫ",
 ] as const;
-
-const LANGS = ["RU", "KG", "EN"];
 
 type NavItem = (typeof NAV_ITEMS)[number];
 
@@ -58,7 +57,7 @@ const MOBILE_SCENE_NUDGE: Partial<Record<SceneLabel, number>> = {
 };
 
 export function Scrollytelling() {
-  const [lang, setLang] = useState("RU");
+  const { lang, setLang } = useLang();
   const [counterProgress, setCounterProgress] = useState(0);
   const refs = useSceneRefs();
 
