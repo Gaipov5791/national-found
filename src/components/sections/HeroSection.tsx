@@ -8,7 +8,7 @@ export type HeroSceneRefs = {
 
 export function prepareHeroScene(refs: HeroSceneRefs, ctx: SceneAnimationContext) {
   const { brandStartY } = ctx;
-  gsap.set(refs.brandRef.current, { opacity: 0, y: brandStartY, scale: 0.97 });
+  gsap.set(refs.brandRef.current, { autoAlpha: 0, y: brandStartY, scale: 0.97 });
 }
 
 export function animateHeroScene(tl: SceneTimeline, refs: HeroSceneRefs, ctx: SceneAnimationContext) {
@@ -17,8 +17,8 @@ export function animateHeroScene(tl: SceneTimeline, refs: HeroSceneRefs, ctx: Sc
 
   tl.fromTo(
     refs.brandRef.current,
-    { opacity: 0, y: brandStartY, scale: 0.97 },
-    { opacity: 1, y: 0, scale: 1, duration: brandDockDur, ease: text.enterEase },
+    { autoAlpha: 0, y: brandStartY, scale: 0.97 },
+    { autoAlpha: 1, y: 0, scale: 1, duration: brandDockDur, ease: text.enterEase },
     0
   );
 }

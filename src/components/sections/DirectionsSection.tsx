@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { SectionCard } from "./SectionCard";
 import { SectionCardSlide, SectionCardsScroller } from "./SectionCardsScroller";
 import { DIRECTION_CARDS } from "./sectionContent";
-import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_WITH_CARDS } from "./sectionLayout";
+import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_WITH_CARDS, SECTION_CARDS_GRID_MARGIN, SECTION_HEADING_HERO } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type DirectionsSceneRefs = {
@@ -37,19 +37,17 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
       ref={directionsRef}
       className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_WITH_CARDS} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
     >
-      <h2
-        className={`${SECTION_HEADING} text-base text-white sm:text-3xl md:text-5xl md:tracking-[0.18em] lg:text-6xl`}
-      >
+      <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
         ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ
       </h2>
       <p className={`${SECTION_SUBTEXT} mt-2 text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)] sm:mt-3`}>
         Национальный инвестиционный фонд работает с ключевыми отраслями, которые имеют высокий потенциал роста и
         важны для развития экономики Кыргызстана.
       </p>
-      <div className="mt-6 sm:mt-9">
+      <div className={SECTION_CARDS_GRID_MARGIN}>
         <SectionCardsScroller
           layout="four-two"
-          className="pointer-events-auto touch-pan-x md:gap-y-12 lg:gap-y-14"
+          className="pointer-events-auto origin-top touch-pan-x max-md:scale-[0.9] md:scale-[0.93] md:gap-y-6 lg:scale-[0.96] lg:gap-y-8"
         >
           {DIRECTION_CARDS.map((card, index) => (
             <SectionCardSlide

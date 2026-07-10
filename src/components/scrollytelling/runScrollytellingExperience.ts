@@ -99,7 +99,11 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     panoramaImgRef: refs.panoramaImgRef,
     permanentCloudRef: refs.permanentCloudRef,
   };
-  const footerRefs = { footerContentZoneRef: refs.footerContentZoneRef };
+  const footerRefs = {
+    footerContentZoneRef: refs.footerContentZoneRef,
+    brandRef: refs.brandRef,
+    navBrandLogoRef: refs.navBrandLogoRef,
+  };
 
   preparePanoramaScrollScene(panoramaRefs, ctx);
   prepareHeroScene(heroRefs, ctx);

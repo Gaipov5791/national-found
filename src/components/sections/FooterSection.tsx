@@ -5,10 +5,26 @@ import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShare
 
 export type FooterSceneRefs = {
   footerContentZoneRef: RefObject<HTMLDivElement | null>;
+  brandRef?: RefObject<HTMLDivElement | null>;
+  navBrandLogoRef?: RefObject<HTMLImageElement | null>;
 };
 
 export function prepareFooterScene(refs: FooterSceneRefs, _ctx: SceneAnimationContext) {
   gsap.set(refs.footerContentZoneRef.current, { autoAlpha: 0 });
+}
+
+function hideBlueBrandLogos(
+  tl: SceneTimeline,
+  refs: FooterSceneRefs,
+  startAt: number,
+  duration: number
+) {
+  if (refs.brandRef?.current) {
+    tl.to(refs.brandRef.current, { autoAlpha: 0, duration, ease: "power2.out" }, startAt);
+  }
+  if (refs.navBrandLogoRef?.current) {
+    tl.to(refs.navBrandLogoRef.current, { autoAlpha: 0, duration, ease: "power2.out" }, startAt);
+  }
 }
 
 export function animateFooterScene(tl: SceneTimeline, refs: FooterSceneRefs, ctx: SceneAnimationContext) {
@@ -18,6 +34,8 @@ export function animateFooterScene(tl: SceneTimeline, refs: FooterSceneRefs, ctx
   if (!footerEl) return;
 
   tl.set(footerEl, { autoAlpha: 0 }, 0);
+
+  hideBlueBrandLogos(tl, refs, footerEnterT, enterDur);
 
   tl.fromTo(
     footerEl,

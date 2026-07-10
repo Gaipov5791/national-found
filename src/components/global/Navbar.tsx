@@ -8,12 +8,13 @@ type NavbarProps = {
   langs: readonly string[];
   lang: string;
   brandRef?: RefObject<HTMLDivElement | null>;
+  navBrandLogoRef?: RefObject<HTMLImageElement | null>;
   onLangChange: (lang: string) => void;
   onNavClick: (label: string) => void;
 };
 
 export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
-  { navItems, langs, lang, brandRef, onLangChange, onNavClick },
+  { navItems, langs, lang, brandRef, navBrandLogoRef, onLangChange, onNavClick },
   ref
 ) {
   const [navOpen, setNavOpen] = useState(false);
@@ -38,7 +39,12 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
             className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 rounded-full border border-white/40 bg-white/40 px-4 py-2.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] sm:gap-3 sm:px-4 sm:py-3 md:gap-4 md:px-6 md:py-4 lg:gap-5 lg:px-7 xl:px-9"
           >
             <div className="flex shrink-0 items-center pr-1 sm:pr-0">
-              <img src="/logo/logo-blue.png" alt="НИФ КР" className="block h-8 w-auto sm:h-9 md:hidden" />
+              <img
+                ref={navBrandLogoRef}
+                src="/logo/logo-blue.png"
+                alt="НИФ КР"
+                className="block h-8 w-auto sm:h-9 md:hidden"
+              />
               <div className="hidden md:block h-[52px] w-[52px] shrink-0" aria-hidden />
             </div>
 

@@ -1,7 +1,7 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { DetailLinkButton } from "./DetailLinkButton";
-import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_DEFAULT } from "./sectionLayout";
+import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_AFTER_BRAND, SECTION_HEADING_HERO, SECTION_PARTNERS_LOGOS_MARGIN } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type SpaceTrilogySceneRefs = {
@@ -85,23 +85,21 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
       <>
         <div
           ref={partnersRef}
-          className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_DEFAULT} z-30 px-3 text-center sm:px-6`}
+          className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_AFTER_BRAND} z-30 px-3 text-center sm:px-6`}
         >
           <div ref={partnersTextRef} className="opacity-0 will-change-[transform,opacity]">
-            <h2
-              className={`${SECTION_HEADING} text-xl text-white sm:text-4xl md:text-6xl md:tracking-[0.18em] lg:text-7xl`}
-            >
+            <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
               ПАРТНЁРЫ
             </h2>
-            <p className={`${SECTION_SUBTEXT} mt-3 text-white/85 drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] sm:mt-5`}>
+            <p className={`${SECTION_SUBTEXT} mt-2 text-white/85 drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] sm:mt-3`}>
               Национальный инвестиционный фонд развивает партнёрства с ведущими международными финансовыми
               институтами и организациями для реализации стратегических проектов в Кыргызстане.
             </p>
-            <DetailLinkButton to="/partners" />
+            <DetailLinkButton to="/partners" containerClassName="mt-3 sm:mt-4" />
           </div>
           <div
             ref={partnerLogosRef}
-            className="mx-auto mt-7 flex max-w-3xl snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:mt-10 sm:flex-wrap sm:justify-center sm:gap-6 sm:overflow-visible sm:snap-none md:gap-10 [&::-webkit-scrollbar]:hidden"
+            className={`mx-auto flex max-w-3xl snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:flex-wrap sm:justify-center sm:gap-6 sm:overflow-visible sm:snap-none md:gap-10 [&::-webkit-scrollbar]:hidden ${SECTION_PARTNERS_LOGOS_MARGIN}`}
           >
             {PARTNER_NAMES.map((name) => (
               <div
@@ -121,14 +119,12 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
           ref={newsTitleRef}
           id="novosti"
           aria-label="Новости"
-          className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_DEFAULT} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
+          className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_AFTER_BRAND} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
         >
-          <h2
-            className={`${SECTION_HEADING} text-xl text-white sm:text-4xl md:text-6xl md:tracking-[0.18em] lg:text-7xl`}
-          >
+          <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
             НОВОСТИ
           </h2>
-          <DetailLinkButton to="/news" />
+          <DetailLinkButton to="/news" containerClassName="mt-3 sm:mt-4" />
         </div>
         <div
           ref={newsContentRef}
