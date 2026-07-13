@@ -104,7 +104,7 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
               Национальный инвестиционный фонд развивает партнёрства с ведущими международными финансовыми
               институтами и организациями для реализации стратегических проектов в Кыргызстане.
             </p>
-            <div className="pointer-events-auto mx-auto mt-3 grid w-full max-w-6xl grid-cols-1 gap-3 px-1 sm:mt-4 sm:gap-4 md:grid-cols-3 md:items-stretch md:gap-5 lg:gap-6">
+            <div className="pointer-events-auto mx-auto mt-3 grid w-full max-w-6xl grid-cols-1 gap-2 px-1 sm:mt-4 sm:gap-3 md:grid-cols-3 md:items-stretch md:gap-5 lg:gap-6">
               {PARTNER_ACTIONS.map((action) => (
                 <DetailLinkButton
                   key={action.to}
@@ -143,12 +143,12 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
           <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
             НОВОСТИ
           </h2>
-          <div className="pointer-events-auto mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-4 px-1 sm:mt-4 sm:grid-cols-2 sm:gap-5 md:gap-6">
+          <div className="pointer-events-auto mx-auto mt-3 grid max-w-2xl grid-cols-1 gap-3 px-1 sm:mt-4 sm:grid-cols-2 sm:gap-5 md:gap-6">
             {[0, 1].map((index) => (
               <NewsPreviewCard key={index} />
             ))}
           </div>
-          <DetailLinkButton to="/news" label="Читать ещё" containerClassName="mt-5 sm:mt-6 md:mt-7" />
+          <DetailLinkButton to="/news" label="Читать ещё" containerClassName="mt-4 sm:mt-6 md:mt-7" />
         </div>
       </>
     );

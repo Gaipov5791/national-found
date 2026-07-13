@@ -30,10 +30,10 @@ export function NewsPreviewCard({ className }: NewsPreviewCardProps) {
         className
       )}
     >
-      <div className="flex aspect-[4/3] min-h-[7.5rem] items-center justify-center bg-white/15 font-display text-xs tracking-wide text-white/60 sm:min-h-[8.5rem] sm:text-sm">
+      <div className="flex aspect-[4/3] min-h-[5.75rem] items-center justify-center bg-white/15 font-display text-[11px] tracking-wide text-white/60 sm:min-h-[7rem] sm:text-xs md:min-h-[8.5rem] md:text-sm">
         изображение
       </div>
-      <p className="px-3 py-3 text-[11px] leading-relaxed text-white/85 sm:px-4 sm:py-3.5 sm:text-xs">
+      <p className="px-3 py-2.5 text-[11px] leading-relaxed text-white/85 sm:px-4 sm:py-3 sm:text-xs md:py-3.5">
         Описание новости
       </p>
     </article>

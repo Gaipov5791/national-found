@@ -29,7 +29,7 @@ export function formatCount(value: number, progress: number, suffix = "") {
   return `${val.toLocaleString("ru-RU").replace(",", " ")}${suffix}`;
 }
 
-export function computeTimelineMarkers() {
+export function computeTimelineMarkers(mobile = false) {
   const enterDur = 0.028;
   const exitDur = 0.028;
   const holdDur = 0.014;
@@ -41,8 +41,8 @@ export function computeTimelineMarkers() {
   const financeHoldDur = 0.052;
   const directionsHoldDur = 0.058;
   const msbHoldDur = 0.038;
-  const partnersHoldDur = 0.048;
-  const newsHoldDur = 0.032;
+  const partnersHoldDur = mobile ? 0.042 : 0.048;
+  const newsHoldDur = mobile ? 0.072 : 0.032;
   const textOverlap = 0.016;
   const atmoWipeDur = 0.032;
 
@@ -207,7 +207,7 @@ export function createTextPresets(timings: SceneTimings): TextPresets {
 }
 
 export function buildSceneContext(cfg: ExperienceConfig): SceneAnimationContext {
-  const timings = computeTimelineMarkers();
+  const timings = computeTimelineMarkers(cfg.mobile);
   const vw = typeof window !== "undefined" ? window.innerWidth : 1280;
   const brandStartY =
     typeof window !== "undefined"
