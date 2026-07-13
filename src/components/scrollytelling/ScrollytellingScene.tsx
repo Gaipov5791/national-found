@@ -41,7 +41,6 @@ export function ScrollytellingScene({ refs, counterProgress, onScrollToTop }: Sc
         partnersTextRef={refs.partnersTextRef}
         partnerLogosRef={refs.partnerLogosRef}
         newsTitleRef={refs.newsTitleRef}
-        newsContentRef={refs.newsContentRef}
       />
       <FooterSection footerContentZoneRef={refs.footerContentZoneRef} onScrollToTop={onScrollToTop} />
     </div>

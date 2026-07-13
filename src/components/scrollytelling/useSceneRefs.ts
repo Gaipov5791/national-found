@@ -23,7 +23,6 @@ export function useSceneRefs() {
   const countProjectsRef = useRef<HTMLSpanElement>(null);
   const counterProgressRef = useRef(0);
   const newsTitleRef = useRef<HTMLDivElement>(null);
-  const newsContentRef = useRef<HTMLDivElement>(null);
   const footerContentZoneRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const masterTimelineRef = useRef<gsap.core.Timeline | null>(null);
@@ -51,7 +50,6 @@ export function useSceneRefs() {
     countProjectsRef,
     counterProgressRef,
     newsTitleRef,
-    newsContentRef,
     footerContentZoneRef,
     lenisRef,
     masterTimelineRef,

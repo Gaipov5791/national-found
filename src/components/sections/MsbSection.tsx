@@ -1,5 +1,6 @@
-import { forwardRef, type RefObject, useState } from "react";
+import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { DetailLinkButton } from "./DetailLinkButton";
 import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_COMPACT, SECTION_HEADING_HERO } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
@@ -28,8 +29,6 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
   { msbRef },
   _ref
 ) {
-  const [mapMissing, setMapMissing] = useState(false);
-
   return (
     <div
       ref={msbRef}
@@ -39,38 +38,13 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
         ПРОЕКТЫ МСБ
       </h2>
       <p
-        className={`${SECTION_SUBTEXT} mt-2 text-white/88 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:mt-3 md:hidden`}
-      >
-        Интерактивная карта проектов малого и среднего бизнеса по регионам Кыргызстана.
-      </p>
-      <p
-        className={`${SECTION_SUBTEXT} mt-2 hidden max-w-2xl text-white/88 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:mt-3 md:block lg:max-h-[4.5rem] lg:overflow-hidden`}
+        className={`${SECTION_SUBTEXT} mt-2 text-white/88 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:mt-3`}
       >
         Малый и средний бизнес играет ключевую роль в развитии регионов Кыргызстана. Национальный инвестиционный
         фонд поддерживает проекты МСБ, с особым акцентом на агропромышленный комплекс и переработку местного сырья,
         помогая создавать устойчивые бизнес-модели и повышать уровень жизни в регионах страны.
       </p>
-
-      <div className="pointer-events-auto mx-auto mt-2 w-full max-w-5xl sm:mt-3 md:mt-4">
-        {mapMissing ? (
-          <div className="mt-3 text-center text-sm text-white/70">
-            Карта пока не найдена. Положите распакованные файлы в <code>public/maps/msb/</code> и назовите главный файл{" "}
-            <code>map.png</code>.
-          </div>
-        ) : (
-          <img
-            src="/maps/msb/map.png"
-            alt="Карта проектов МСБ"
-            className="mx-auto w-full max-w-5xl max-h-[34svh] object-contain object-top select-none drop-shadow-[0_18px_60px_rgba(0,0,0,0.55)] sm:max-h-[38svh] md:max-h-[44svh]"
-            loading="lazy"
-            onError={(e) => {
-              const img = e.currentTarget;
-              img.style.display = "none";
-              setMapMissing(true);
-            }}
-          />
-        )}
-      </div>
+      <DetailLinkButton to="/msb" containerClassName="mt-3 sm:mt-4" />
     </div>
   );
 });

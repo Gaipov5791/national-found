@@ -1,14 +1,19 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { DetailLinkButton } from "./DetailLinkButton";
-import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_AFTER_BRAND, SECTION_HEADING_HERO, SECTION_PARTNERS_LOGOS_MARGIN } from "./sectionLayout";
+import {
+  SECTION_HEADING,
+  SECTION_SUBTEXT,
+  SECTION_TOP_AFTER_BRAND,
+  SECTION_HEADING_HERO,
+  SECTION_PARTNERS_LOGOS_MARGIN,
+} from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type SpaceTrilogySceneRefs = {
   partnersTextRef: RefObject<HTMLDivElement | null>;
   partnerLogosRef: RefObject<HTMLDivElement | null>;
   newsTitleRef: RefObject<HTMLDivElement | null>;
-  newsContentRef: RefObject<HTMLDivElement | null>;
 };
 
 export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: SceneAnimationContext) {
@@ -16,7 +21,6 @@ export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: Scene
 
   gsap.set(refs.partnersTextRef.current, { ...text.idle, xPercent: 0, x: 0 });
   gsap.set(refs.newsTitleRef.current, { ...text.idle, xPercent: 0, x: 0 });
-  gsap.set(refs.newsContentRef.current, { autoAlpha: 0 });
 
   const partnerLogoEls = refs.partnerLogosRef.current?.querySelectorAll("[data-partner-logo]");
   if (partnerLogoEls?.length) {
@@ -65,10 +69,15 @@ export type SpaceTrilogyContainerProps = {
   partnersTextRef: RefObject<HTMLDivElement | null>;
   partnerLogosRef: RefObject<HTMLDivElement | null>;
   newsTitleRef: RefObject<HTMLDivElement | null>;
-  newsContentRef: RefObject<HTMLDivElement | null>;
 };
 
 const PARTNER_NAMES = ["EBRD", "IFC", "ADB", "AIIB", "KfW"] as const;
+
+const PARTNER_ACTIONS = [
+  { to: "/partners-registry", label: "Реестр партнёров" },
+  { to: "/partners-cooperation", label: "Международное и региональное сотрудничество" },
+  { to: "/partners-join", label: "Стать партнёром" },
+] as const;
 
 export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyContainerProps>(
   function SpaceTrilogyContainer(
@@ -77,7 +86,6 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
       partnersTextRef,
       partnerLogosRef,
       newsTitleRef,
-      newsContentRef,
     },
     _ref
   ) {
@@ -95,7 +103,21 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
               Национальный инвестиционный фонд развивает партнёрства с ведущими международными финансовыми
               институтами и организациями для реализации стратегических проектов в Кыргызстане.
             </p>
-            <DetailLinkButton to="/partners" containerClassName="mt-3 sm:mt-4" />
+            <div className="pointer-events-auto mx-auto mt-3 flex max-w-md flex-col items-center gap-2 sm:mt-4 sm:gap-2.5">
+              {PARTNER_ACTIONS.map((action) => (
+                <DetailLinkButton
+                  key={action.to}
+                  to={action.to}
+                  label={action.label}
+                  containerClassName="mt-0"
+                  className={
+                    action.label.length > 24
+                      ? "max-w-[18rem] whitespace-normal text-center sm:max-w-sm"
+                      : undefined
+                  }
+                />
+              ))}
+            </div>
           </div>
           <div
             ref={partnerLogosRef}
@@ -124,19 +146,22 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
           <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
             НОВОСТИ
           </h2>
-          <DetailLinkButton to="/news" containerClassName="mt-3 sm:mt-4" />
-        </div>
-        <div
-          ref={newsContentRef}
-          data-lovable-slot="news-content"
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-[58%] z-30 mx-auto max-w-5xl px-6 font-display opacity-0 invisible"
-        >
-          <div className="grid gap-5 md:grid-cols-3">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="h-48 rounded-2xl border border-transparent" />
+          <div className="pointer-events-auto mx-auto mt-3 grid max-w-3xl grid-cols-1 gap-3 sm:mt-4 sm:grid-cols-2 sm:gap-4">
+            {[0, 1].map((index) => (
+              <article
+                key={index}
+                className="overflow-hidden rounded-2xl border border-white/25 bg-white/10 text-left shadow-[0_8px_32px_rgba(0,0,0,0.2)] backdrop-blur-sm"
+              >
+                <div className="flex aspect-[4/3] items-center justify-center bg-white/15 font-display text-xs tracking-wide text-white/60">
+                  изображение
+                </div>
+                <p className="px-3 py-2.5 text-[11px] leading-relaxed text-white/85 sm:px-4 sm:py-3 sm:text-xs">
+                  Описание новости
+                </p>
+              </article>
             ))}
           </div>
+          <DetailLinkButton to="/news" label="Читать ещё" containerClassName="mt-3 sm:mt-4" />
         </div>
       </>
     );

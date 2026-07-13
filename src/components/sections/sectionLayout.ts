@@ -7,23 +7,25 @@
 export const BRAND_TOP_CLASS = "top-[5.5rem] sm:top-[6rem] md:top-[7.75rem]";
 
 /**
- * Logo-to-heading anchor — starts just below logo-blue.png (h-10 … 2xl:h-16).
- * Calibrated against the News section rhythm.
+ * Vertically center section content on the viewport with extra clearance below the fixed logo.
  */
-export const SECTION_TOP_AFTER_BRAND =
-  "top-[8.75rem] sm:top-[9.75rem] md:top-[12rem] lg:top-[12.5rem]";
+export const SECTION_CENTER_VIEWPORT =
+  "top-[54%] sm:top-[55%] md:top-[56%] -translate-y-1/2";
 
-/** Default section block top (matches News rhythm). */
-export const SECTION_TOP_DEFAULT = SECTION_TOP_AFTER_BRAND;
+/** Logo-to-heading anchor — vertically centered with logo clearance. */
+export const SECTION_TOP_AFTER_BRAND = SECTION_CENTER_VIEWPORT;
+
+/** Default section block position. */
+export const SECTION_TOP_DEFAULT = SECTION_CENTER_VIEWPORT;
 
 /** Sections with card grids below the heading. */
-export const SECTION_TOP_WITH_CARDS = SECTION_TOP_AFTER_BRAND;
+export const SECTION_TOP_WITH_CARDS = SECTION_CENTER_VIEWPORT;
 
-/** Sections with compact content below the heading (e.g. map). */
-export const SECTION_TOP_COMPACT = SECTION_TOP_AFTER_BRAND;
+/** Sections with compact content below the heading. */
+export const SECTION_TOP_COMPACT = SECTION_CENTER_VIEWPORT;
 
-/** News section heading — reference rhythm for logo-to-title gap. */
-export const SECTION_TOP_NEWS = SECTION_TOP_AFTER_BRAND;
+/** News section block position. */
+export const SECTION_TOP_NEWS = SECTION_CENTER_VIEWPORT;
 
 /** Heading scale shared with News for consistent logo-to-title spacing. */
 export const SECTION_HEADING_HERO =

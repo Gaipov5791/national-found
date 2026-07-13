@@ -9,13 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PartnersRegistryRouteImport } from './routes/partners-registry'
+import { Route as PartnersJoinRouteImport } from './routes/partners-join'
+import { Route as PartnersCooperationRouteImport } from './routes/partners-cooperation'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as NewsRouteImport } from './routes/news'
+import { Route as MsbRouteImport } from './routes/msb'
 import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as DirectionsRouteImport } from './routes/directions'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const PartnersRegistryRoute = PartnersRegistryRouteImport.update({
+  id: '/partners-registry',
+  path: '/partners-registry',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersJoinRoute = PartnersJoinRouteImport.update({
+  id: '/partners-join',
+  path: '/partners-join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersCooperationRoute = PartnersCooperationRouteImport.update({
+  id: '/partners-cooperation',
+  path: '/partners-cooperation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PartnersRoute = PartnersRouteImport.update({
   id: '/partners',
   path: '/partners',
@@ -24,6 +43,11 @@ const PartnersRoute = PartnersRouteImport.update({
 const NewsRoute = NewsRouteImport.update({
   id: '/news',
   path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MsbRoute = MsbRouteImport.update({
+  id: '/msb',
+  path: '/msb',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FinanceRoute = FinanceRouteImport.update({
@@ -52,16 +76,24 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/directions': typeof DirectionsRoute
   '/finance': typeof FinanceRoute
+  '/msb': typeof MsbRoute
   '/news': typeof NewsRoute
   '/partners': typeof PartnersRoute
+  '/partners-cooperation': typeof PartnersCooperationRoute
+  '/partners-join': typeof PartnersJoinRoute
+  '/partners-registry': typeof PartnersRegistryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/directions': typeof DirectionsRoute
   '/finance': typeof FinanceRoute
+  '/msb': typeof MsbRoute
   '/news': typeof NewsRoute
   '/partners': typeof PartnersRoute
+  '/partners-cooperation': typeof PartnersCooperationRoute
+  '/partners-join': typeof PartnersJoinRoute
+  '/partners-registry': typeof PartnersRegistryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,22 +101,50 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/directions': typeof DirectionsRoute
   '/finance': typeof FinanceRoute
+  '/msb': typeof MsbRoute
   '/news': typeof NewsRoute
   '/partners': typeof PartnersRoute
+  '/partners-cooperation': typeof PartnersCooperationRoute
+  '/partners-join': typeof PartnersJoinRoute
+  '/partners-registry': typeof PartnersRegistryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/directions' | '/finance' | '/news' | '/partners'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/directions'
+    | '/finance'
+    | '/msb'
+    | '/news'
+    | '/partners'
+    | '/partners-cooperation'
+    | '/partners-join'
+    | '/partners-registry'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/directions' | '/finance' | '/news' | '/partners'
+  to:
+    | '/'
+    | '/about'
+    | '/directions'
+    | '/finance'
+    | '/msb'
+    | '/news'
+    | '/partners'
+    | '/partners-cooperation'
+    | '/partners-join'
+    | '/partners-registry'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/directions'
     | '/finance'
+    | '/msb'
     | '/news'
     | '/partners'
+    | '/partners-cooperation'
+    | '/partners-join'
+    | '/partners-registry'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -92,12 +152,37 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   DirectionsRoute: typeof DirectionsRoute
   FinanceRoute: typeof FinanceRoute
+  MsbRoute: typeof MsbRoute
   NewsRoute: typeof NewsRoute
   PartnersRoute: typeof PartnersRoute
+  PartnersCooperationRoute: typeof PartnersCooperationRoute
+  PartnersJoinRoute: typeof PartnersJoinRoute
+  PartnersRegistryRoute: typeof PartnersRegistryRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/partners-registry': {
+      id: '/partners-registry'
+      path: '/partners-registry'
+      fullPath: '/partners-registry'
+      preLoaderRoute: typeof PartnersRegistryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners-join': {
+      id: '/partners-join'
+      path: '/partners-join'
+      fullPath: '/partners-join'
+      preLoaderRoute: typeof PartnersJoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners-cooperation': {
+      id: '/partners-cooperation'
+      path: '/partners-cooperation'
+      fullPath: '/partners-cooperation'
+      preLoaderRoute: typeof PartnersCooperationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partners': {
       id: '/partners'
       path: '/partners'
@@ -110,6 +195,13 @@ declare module '@tanstack/react-router' {
       path: '/news'
       fullPath: '/news'
       preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/msb': {
+      id: '/msb'
+      path: '/msb'
+      fullPath: '/msb'
+      preLoaderRoute: typeof MsbRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/finance': {
@@ -148,8 +240,12 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   DirectionsRoute: DirectionsRoute,
   FinanceRoute: FinanceRoute,
+  MsbRoute: MsbRoute,
   NewsRoute: NewsRoute,
   PartnersRoute: PartnersRoute,
+  PartnersCooperationRoute: PartnersCooperationRoute,
+  PartnersJoinRoute: PartnersJoinRoute,
+  PartnersRegistryRoute: PartnersRegistryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

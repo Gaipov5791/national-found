@@ -92,7 +92,6 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     partnersTextRef: refs.partnersTextRef,
     partnerLogosRef: refs.partnerLogosRef,
     newsTitleRef: refs.newsTitleRef,
-    newsContentRef: refs.newsContentRef,
   };
   const panoramaRefs = {
     panoramaBgRef: refs.panoramaBgRef,
