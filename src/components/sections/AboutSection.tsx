@@ -1,7 +1,12 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { DetailLinkButton } from "./DetailLinkButton";
-import { SECTION_CENTER_VIEWPORT, SECTION_HEADING, SECTION_HEADING_HERO, SECTION_SUBTEXT } from "./sectionLayout";
+import {
+  SECTION_HEADING,
+  SECTION_HEADING_HERO,
+  SECTION_SUBTEXT_ON_IMAGE,
+  SECTION_TOP_SIMPLE_CENTER,
+} from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type AboutSceneRefs = {
@@ -32,12 +37,12 @@ export const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(functi
   return (
     <div
       ref={aboutRef}
-      className={`pointer-events-none absolute inset-x-0 ${SECTION_CENTER_VIEWPORT} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
+      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_SIMPLE_CENTER} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
     >
       <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
         О ФОНДЕ
       </h2>
-      <p className={`${SECTION_SUBTEXT} mt-3 text-white/85 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:mt-5`}>
+      <p className={`${SECTION_SUBTEXT_ON_IMAGE} mt-3 text-white/90 sm:mt-5`}>
         Национальный инвестиционный фонд выступает связующим звеном между государством, бизнесом и инвесторами.
         Мы применяем современные инструменты прямого инвестирования, направляя капитал в проекты, которые создают
         реальный экономический эффект и ускоряют развитие Кыргызстана.

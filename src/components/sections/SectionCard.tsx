@@ -62,7 +62,7 @@ export function SectionCard({
         <h3
           className={cn(
             "font-display font-bold tracking-tight",
-            compact ? "text-[13px] sm:text-sm md:text-base" : "text-sm sm:text-base md:text-lg",
+            compact ? "text-sm sm:text-base md:text-lg" : "text-sm sm:text-base md:text-lg",
             styles.title
           )}
         >
@@ -71,7 +71,7 @@ export function SectionCard({
         <p
           className={cn(
             "mt-1.5 leading-relaxed sm:mt-2",
-            compact ? "text-[11px] sm:text-[11px] md:text-xs" : "text-[11px] sm:text-xs md:text-sm",
+            compact ? "text-xs sm:text-sm md:text-base" : "text-xs sm:text-sm md:text-base",
             styles.description
           )}
         >

@@ -1,0 +1,41 @@
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { useCanHover } from "@/hooks/use-can-hover";
+
+const HOVER_TRANSITION =
+  "transform 0.3s ease-out, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease";
+
+type NewsPreviewCardProps = {
+  className?: string;
+};
+
+export function NewsPreviewCard({ className }: NewsPreviewCardProps) {
+  const [hovered, setHovered] = useState(false);
+  const canHover = useCanHover();
+
+  return (
+    <article
+      data-cursor-hover
+      onMouseEnter={() => canHover && setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+      tabIndex={0}
+      style={{
+        transform: canHover && hovered ? "scale(1.05)" : "scale(1)",
+        transition: HOVER_TRANSITION,
+      }}
+      className={cn(
+        "overflow-hidden rounded-2xl border border-white/25 bg-white/10 text-left shadow-[0_8px_32px_rgba(0,0,0,0.2)] backdrop-blur-sm transition-colors hover:border-white/40 hover:bg-white/15 hover:shadow-[0_12px_40px_rgba(0,0,0,0.28)]",
+        className
+      )}
+    >
+      <div className="flex aspect-[4/3] min-h-[7.5rem] items-center justify-center bg-white/15 font-display text-xs tracking-wide text-white/60 sm:min-h-[8.5rem] sm:text-sm">
+        изображение
+      </div>
+      <p className="px-3 py-3 text-[11px] leading-relaxed text-white/85 sm:px-4 sm:py-3.5 sm:text-xs">
+        Описание новости
+      </p>
+    </article>
+  );
+}

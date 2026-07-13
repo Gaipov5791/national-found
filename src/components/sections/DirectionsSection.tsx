@@ -3,7 +3,14 @@ import gsap from "gsap";
 import { SectionCard } from "./SectionCard";
 import { SectionCardSlide, SectionCardsScroller } from "./SectionCardsScroller";
 import { DIRECTION_CARDS } from "./sectionContent";
-import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_WITH_CARDS, SECTION_CARDS_GRID_MARGIN, SECTION_HEADING_HERO } from "./sectionLayout";
+import {
+  SECTION_HEADING,
+  SECTION_SUBTEXT,
+  SECTION_HEADING_SINGLE_LINE,
+  SECTION_HEADING_HERO,
+  SECTION_TOP_WITH_CARDS,
+  SECTION_CARDS_GRID_MARGIN,
+} from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type DirectionsSceneRefs = {
@@ -28,16 +35,22 @@ export type DirectionsSectionProps = {
   directionsRef: RefObject<HTMLDivElement | null>;
 };
 
+const CARD_SCROLLER_CLASS =
+  "pointer-events-auto origin-top touch-pan-x max-md:scale-[0.88] md:scale-[0.9] lg:scale-[0.93]";
+
 export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionProps>(function DirectionsSection(
   { directionsRef },
   _ref
 ) {
+  const topRow = DIRECTION_CARDS.slice(0, 4);
+  const bottomRow = DIRECTION_CARDS.slice(4);
+
   return (
     <div
       ref={directionsRef}
       className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_WITH_CARDS} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
     >
-      <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
+      <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO} ${SECTION_HEADING_SINGLE_LINE}`}>
         ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ
       </h2>
       <p className={`${SECTION_SUBTEXT} mt-2 text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)] sm:mt-3`}>
@@ -45,17 +58,19 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
         важны для развития экономики Кыргызстана.
       </p>
       <div className={SECTION_CARDS_GRID_MARGIN}>
+        <SectionCardsScroller layout="four-row" className={CARD_SCROLLER_CLASS}>
+          {topRow.map((card) => (
+            <SectionCardSlide key={card.title} wide layout="four-row">
+              <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
+            </SectionCardSlide>
+          ))}
+        </SectionCardsScroller>
         <SectionCardsScroller
-          layout="four-two"
-          className="pointer-events-auto origin-top touch-pan-x max-md:scale-[0.9] md:scale-[0.93] md:gap-y-6 lg:scale-[0.96] lg:gap-y-8"
+          layout="two-col"
+          className={`${CARD_SCROLLER_CLASS} mt-2 md:mx-auto md:mt-3 md:w-fit md:justify-items-stretch`}
         >
-          {DIRECTION_CARDS.map((card, index) => (
-            <SectionCardSlide
-              key={card.title}
-              wide
-              layout="four-two"
-              gridSlot={index === 4 ? "bottom-left" : index === 5 ? "bottom-right" : "default"}
-            >
+          {bottomRow.map((card) => (
+            <SectionCardSlide key={card.title} wide layout="two-col">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
             </SectionCardSlide>
           ))}

@@ -158,8 +158,8 @@ const DESKTOP_WIDTH: Record<SectionCardsLayout, { default: string; wide: string 
 
 const GRID_SLOT_CLASS: Record<SectionCardGridSlot, string> = {
   default: "",
-  "bottom-left": "md:col-start-2",
-  "bottom-right": "md:col-start-3",
+  "bottom-left": "md:col-start-2 md:row-start-2",
+  "bottom-right": "md:col-start-3 md:row-start-2",
 };
 
 export function SectionCardSlide({

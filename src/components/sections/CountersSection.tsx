@@ -57,7 +57,7 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
   return (
     <div
       ref={statsRef}
-      className="pointer-events-none absolute inset-x-0 top-1/2 z-20 -translate-y-1/2 px-3 opacity-0 will-change-[transform,opacity] sm:px-6"
+      className="pointer-events-none absolute inset-x-0 top-[44%] z-20 -translate-y-1/2 px-3 opacity-0 will-change-[transform,opacity] sm:top-[45%] sm:px-6 md:top-[46%]"
     >
       <div className="relative mx-auto w-full max-w-7xl text-center">
         <div
@@ -72,7 +72,7 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
           Инвестиции в проекты будущего
         </p>
 
-        <div className="mx-auto mt-3 flex w-full max-w-[min(100%,96rem)] flex-col items-center rounded-2xl border border-white/30 bg-white/10 px-5 py-4 text-center backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-6 sm:rounded-3xl sm:px-10 sm:py-6 md:px-16 lg:px-20">
+        <div className="mx-auto mt-3 flex w-full max-w-3xl flex-col items-center rounded-2xl border border-white/30 bg-white/10 px-5 py-4 text-center backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-5 sm:rounded-3xl sm:px-8 sm:py-6 md:px-12">
           <div className="shrink-0 text-center">
             <div className={COUNTER_VALUE}>
               <span ref={countProjectsRef}>0</span>
