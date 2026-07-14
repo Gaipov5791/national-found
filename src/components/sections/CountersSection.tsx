@@ -8,6 +8,7 @@ import {
   type SceneAnimationContext,
   type SceneTimeline,
 } from "./sceneAnimationShared";
+import { SECTION_PAD_X, SECTION_TOP_SIMPLE_CENTER } from "./sectionLayout";
 
 export type CountersSceneRefs = {
   statsRef: RefObject<HTMLDivElement | null>;
@@ -57,7 +58,7 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
   return (
     <div
       ref={statsRef}
-      className="pointer-events-none absolute inset-x-0 top-[44%] z-20 -translate-y-1/2 px-3 opacity-0 will-change-[transform,opacity] sm:top-[45%] sm:px-6 md:top-[46%]"
+      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_SIMPLE_CENTER} z-20 ${SECTION_PAD_X} opacity-0 will-change-[transform,opacity]`}
     >
       <div className="relative mx-auto w-full max-w-7xl text-center">
         <div

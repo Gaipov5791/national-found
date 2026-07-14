@@ -39,7 +39,6 @@ export function ScrollytellingScene({ refs, counterProgress, onScrollToTop }: Sc
       <SpaceTrilogyContainer
         partnersRef={refs.partnersRef}
         partnersTextRef={refs.partnersTextRef}
-        partnerLogosRef={refs.partnerLogosRef}
         newsTitleRef={refs.newsTitleRef}
       />
       <FooterSection footerContentZoneRef={refs.footerContentZoneRef} onScrollToTop={onScrollToTop} />

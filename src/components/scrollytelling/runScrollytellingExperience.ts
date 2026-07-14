@@ -90,7 +90,6 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   const msbRefs = { msbRef: refs.msbRef };
   const spaceRefs = {
     partnersTextRef: refs.partnersTextRef,
-    partnerLogosRef: refs.partnerLogosRef,
     newsTitleRef: refs.newsTitleRef,
   };
   const panoramaRefs = {
@@ -101,7 +100,6 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   const footerRefs = {
     footerContentZoneRef: refs.footerContentZoneRef,
     brandRef: refs.brandRef,
-    navBrandLogoRef: refs.navBrandLogoRef,
   };
 
   preparePanoramaScrollScene(panoramaRefs, ctx);

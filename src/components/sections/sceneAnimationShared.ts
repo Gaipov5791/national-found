@@ -92,8 +92,7 @@ export function computeTimelineMarkers(mobile = false) {
   const midnightRevealT = midnightAtmoT + atmoWipeDur * 0.85;
   const partnersEnterT = midnightRevealT;
   const partnersHoldT = partnersEnterT + enterDur + holdDur + partnersHoldDur;
-  const partnerLogoExitT = partnersHoldT + 0.008;
-  const partnersTextExitT = gapAfterExit(partnerLogoExitT, 0.006);
+  const partnersTextExitT = gapAfterExit(partnersHoldT, 0.006);
 
   const newsEnterT = breatheAfter(partnersTextExitT);
   const newsExitT = newsEnterT + enterDur + holdDur + newsHoldDur;
@@ -144,7 +143,6 @@ export function computeTimelineMarkers(mobile = false) {
     midnightRevealT,
     partnersEnterT,
     partnersHoldT,
-    partnerLogoExitT,
     partnersTextExitT,
     newsEnterT,
     newsExitT,

@@ -2,32 +2,38 @@ import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { SECTION_CARDS_SCROLLER_PT } from "./sectionLayout";
 
-export type SectionCardsLayout = "two-col" | "four-row" | "four-two";
+export type SectionCardsLayout = "two-col" | "four-row" | "four-two" | "six-row";
 
 type SectionCardsScrollerProps = {
   children: ReactNode;
   layout?: SectionCardsLayout;
   className?: string;
+  /** Auto-advance whenever content overflows (any breakpoint). Default: mobile-only. */
+  autoSwipeOnOverflow?: boolean;
 };
 
 const LAYOUT_MAX_WIDTH: Record<SectionCardsLayout, string> = {
   "two-col": "max-w-5xl",
   "four-row": "max-w-[min(100%,72rem)] xl:max-w-[min(100%,80rem)] 2xl:max-w-[min(100%,88rem)]",
   "four-two": "max-w-[min(100%,72rem)] xl:max-w-[min(100%,80rem)] 2xl:max-w-[min(100%,88rem)]",
+  "six-row": "max-w-[min(100%,96rem)]",
 };
 
 const LAYOUT_GRID: Record<SectionCardsLayout, string> = {
   "two-col": "md:grid-cols-2",
   "four-row": "md:grid-cols-4",
   "four-two": "md:grid-cols-4",
+  "six-row": "",
 };
 
 export function SectionCardsScroller({
   children,
   layout = "two-col",
   className,
+  autoSwipeOnOverflow = false,
 }: SectionCardsScrollerProps) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const scrollRow = layout === "six-row";
 
   const childCount = useMemo(() => {
     // Works for both arrays and single child.
@@ -40,7 +46,6 @@ export function SectionCardsScroller({
     const el = scrollerRef.current;
     if (!el) return;
     if (typeof window === "undefined") return;
-    if (window.innerWidth >= 768) return;
     if (childCount <= 1) return;
 
     const reduceMotion =
@@ -51,6 +56,13 @@ export function SectionCardsScroller({
     let intervalId: number | null = null;
     let resumeTimeoutId: number | null = null;
     let pausedUntil = 0;
+
+    const canAutoSwipe = () => {
+      if (autoSwipeOnOverflow || scrollRow) {
+        return el.scrollWidth > el.clientWidth + 8;
+      }
+      return window.innerWidth < 768;
+    };
 
     const pause = (ms: number) => {
       pausedUntil = Date.now() + ms;
@@ -63,6 +75,7 @@ export function SectionCardsScroller({
     const stepOnce = () => {
       if (!el) return;
       if (Date.now() < pausedUntil) return;
+      if (!canAutoSwipe()) return;
 
       const first = el.firstElementChild as HTMLElement | null;
       const step = (first?.offsetWidth ?? 240) + 12;
@@ -96,16 +109,25 @@ export function SectionCardsScroller({
     el.addEventListener("wheel", onWheel, { passive: true });
     el.addEventListener("scroll", onScroll, { passive: true });
 
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => {
+            // Keep interval running; stepOnce re-checks overflow each tick.
+          })
+        : null;
+    resizeObserver?.observe(el);
+
     start();
     return () => {
       stop();
       if (resumeTimeoutId) window.clearTimeout(resumeTimeoutId);
+      resizeObserver?.disconnect();
       el.removeEventListener("pointerdown", onPointerDown);
       el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("wheel", onWheel);
       el.removeEventListener("scroll", onScroll);
     };
-  }, [childCount]);
+  }, [childCount, autoSwipeOnOverflow, scrollRow]);
 
   return (
     <div
@@ -116,9 +138,13 @@ export function SectionCardsScroller({
         `flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-visible overscroll-x-contain pb-1 ${SECTION_CARDS_SCROLLER_PT}`,
         "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         "-mx-1 px-3 sm:px-1",
-        "md:mx-auto md:grid md:w-fit md:max-w-full md:justify-items-stretch md:overflow-visible md:snap-none md:px-0 md:gap-4 lg:gap-5",
-        layout === "four-two" ? "md:gap-y-10 lg:gap-y-12" : "",
-        LAYOUT_GRID[layout],
+        scrollRow
+          ? "md:mx-auto md:w-full md:max-w-full md:justify-center md:gap-3 lg:gap-4 md:px-0"
+          : cn(
+              "md:mx-auto md:grid md:w-fit md:max-w-full md:justify-items-stretch md:overflow-visible md:snap-none md:px-0 md:gap-4 lg:gap-5",
+              layout === "four-two" ? "md:gap-y-10 lg:gap-y-12" : "",
+              LAYOUT_GRID[layout]
+            ),
         className
       )}
     >
@@ -153,6 +179,10 @@ const DESKTOP_WIDTH: Record<SectionCardsLayout, { default: string; wide: string 
   "four-two": {
     default: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
     wide: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
+  },
+  "six-row": {
+    default: "md:w-[min(15.5vw,200px)] lg:w-[min(14.5vw,210px)] xl:w-[min(13.5vw,220px)] 2xl:w-[200px]",
+    wide: "md:w-[min(15.5vw,200px)] lg:w-[min(14.5vw,210px)] xl:w-[min(13.5vw,220px)] 2xl:w-[200px]",
   },
 };
 

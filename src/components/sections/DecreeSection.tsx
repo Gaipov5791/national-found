@@ -1,6 +1,6 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
-import { SECTION_TOP_SIMPLE_CENTER } from "./sectionLayout";
+import { SECTION_PAD_X, SECTION_SUBTEXT_ON_IMAGE, SECTION_TOP_SIMPLE_CENTER } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type DecreeSceneRefs = {
@@ -31,7 +31,7 @@ export const DecreeSection = forwardRef<HTMLDivElement, DecreeSectionProps>(func
   return (
     <div
       ref={decreeRef}
-      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_SIMPLE_CENTER} z-[25] px-4 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
+      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_SIMPLE_CENTER} z-[25] ${SECTION_PAD_X} text-center opacity-0 will-change-[transform,opacity]`}
     >
       <p className="font-display text-sm tracking-tight text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] sm:text-base md:text-lg">
         Фонд учрежден постановлением
@@ -39,7 +39,7 @@ export const DecreeSection = forwardRef<HTMLDivElement, DecreeSectionProps>(func
       <h2 className="mt-2 font-display text-xl font-bold leading-snug tracking-tighter text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.75)] sm:text-2xl sm:tracking-tight md:text-4xl lg:text-5xl">
         Кабинета Министров Кыргызской Республики
       </h2>
-      <p className="mx-auto mt-4 max-w-3xl text-[11px] leading-relaxed tracking-tight text-white/85 drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] sm:mt-5 sm:text-xs md:text-sm">
+      <p className={`${SECTION_SUBTEXT_ON_IMAGE} mt-2 text-white/90 sm:mt-3`}>
         от 5 ноября 2024 года № 666 во исполнение Закона Кыргызской Республики «О Национальном инвестиционном
         фонде Кыргызской Республики» и Указа Президента Кыргызской Республики № 155 от 14 июня 2024 года.
       </p>

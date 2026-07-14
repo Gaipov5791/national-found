@@ -19,7 +19,6 @@ export function useSceneRefs() {
   const msbRef = useRef<HTMLDivElement>(null);
   const partnersRef = useRef<HTMLDivElement>(null);
   const partnersTextRef = useRef<HTMLDivElement>(null);
-  const partnerLogosRef = useRef<HTMLDivElement>(null);
   const countProjectsRef = useRef<HTMLSpanElement>(null);
   const counterProgressRef = useRef(0);
   const newsTitleRef = useRef<HTMLDivElement>(null);
@@ -46,7 +45,6 @@ export function useSceneRefs() {
     msbRef,
     partnersRef,
     partnersTextRef,
-    partnerLogosRef,
     countProjectsRef,
     counterProgressRef,
     newsTitleRef,

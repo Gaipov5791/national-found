@@ -33,6 +33,16 @@
   --color-gold: var(--gold);
   --font-sans: "Gotham", "Montserrat", "Geometria", system-ui, sans-serif;
   --font-display: "Gotham", "Montserrat", "Geometria", system-ui, sans-serif;
+  --animate-news-marquee: news-marquee 36s linear infinite;
+
+  @keyframes news-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 :root {

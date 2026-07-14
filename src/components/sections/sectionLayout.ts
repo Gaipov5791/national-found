@@ -1,23 +1,42 @@
 /**
  * Shared layout for scrollytelling section blocks.
  * Section headings sit below the fixed fund name with a small gap (per TZ).
+ *
+ * Mobile: every content section shares one vertical anchor near mid-viewport
+ * (no CSS translate — GSAP owns transform via yPercent).
  */
 
 /** Matches Navbar brandRef vertical anchor. */
 export const BRAND_TOP_CLASS = "top-[5.5rem] sm:top-[6rem] md:top-[7.75rem]";
 
 /**
- * Tall sections (cards, multiple buttons): anchor below the logo without vertical centering
- * so headings never slide under the brand mark.
+ * Unified mobile section top — visually mid-screen so content isn't stuck
+ * under the nav with a large empty gap below.
  */
-export const SECTION_TOP_AFTER_BRAND =
-  "top-[10rem] sm:top-[11.25rem] md:top-[13.75rem] lg:top-[14.25rem]";
+export const SECTION_TOP_MOBILE = "top-[42%] sm:top-[44%]";
+
+/** Shared horizontal padding for section shells. */
+export const SECTION_PAD_X = "px-3 sm:px-6";
+
+/** Gap below heading before subtext. */
+export const SECTION_SUBTEXT_MARGIN = "mt-2 sm:mt-3";
+
+/** Gap below section copy before CTA. */
+export const SECTION_CTA_MARGIN = "mt-3 sm:mt-4";
 
 /**
- * Compact text sections: visually centered on screen, shifted upward from geometric center.
+ * Tall sections (cards, multiple buttons): same mobile center as others;
+ * from md+ anchored below the logo.
+ */
+export const SECTION_TOP_AFTER_BRAND =
+  `${SECTION_TOP_MOBILE} md:top-[13.75rem] lg:top-[14.25rem]`;
+
+/**
+ * Compact text sections: same mobile center;
+ * from md+ keep a mild CSS center offset under the brand.
  */
 export const SECTION_TOP_SIMPLE_CENTER =
-  "top-[44%] sm:top-[45%] md:top-[46%] -translate-y-1/2";
+  `${SECTION_TOP_MOBILE} md:top-[46%] md:-translate-y-1/2`;
 
 /** Default section block top. */
 export const SECTION_TOP_DEFAULT = SECTION_TOP_AFTER_BRAND;
@@ -30,6 +49,10 @@ export const SECTION_TOP_COMPACT = SECTION_TOP_SIMPLE_CENTER;
 
 /** News section block position. */
 export const SECTION_TOP_NEWS = SECTION_TOP_AFTER_BRAND;
+
+/** Shell classes shared by most scrollytelling sections. */
+export const SECTION_SHELL =
+  `pointer-events-none absolute inset-x-0 z-30 text-center opacity-0 will-change-[transform,opacity] ${SECTION_PAD_X}`;
 
 /** Keeps long hero titles on one line without changing the shared heading scale. */
 export const SECTION_HEADING_SINGLE_LINE =
@@ -44,9 +67,6 @@ export const SECTION_CARDS_GRID_MARGIN = "mt-3 sm:mt-4";
 
 /** Top padding on card scroller — room for icons above card edge without pushing the heading. */
 export const SECTION_CARDS_SCROLLER_PT = "pt-7 md:pt-10 lg:pt-10";
-
-/** Gap below partners copy before logo strip. */
-export const SECTION_PARTNERS_LOGOS_MARGIN = "mt-5 sm:mt-6 md:mt-8";
 
 export const SECTION_HEADING =
   "font-display font-bold tracking-tighter drop-shadow-[0_6px_30px_rgba(0,0,0,0.55)]";

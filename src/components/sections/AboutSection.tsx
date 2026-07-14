@@ -2,8 +2,11 @@ import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { DetailLinkButton } from "./DetailLinkButton";
 import {
+  SECTION_CTA_MARGIN,
   SECTION_HEADING,
   SECTION_HEADING_HERO,
+  SECTION_SHELL,
+  SECTION_SUBTEXT_MARGIN,
   SECTION_SUBTEXT_ON_IMAGE,
   SECTION_TOP_SIMPLE_CENTER,
 } from "./sectionLayout";
@@ -37,17 +40,17 @@ export const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(functi
   return (
     <div
       ref={aboutRef}
-      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_SIMPLE_CENTER} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
+      className={`${SECTION_SHELL} ${SECTION_TOP_SIMPLE_CENTER}`}
     >
       <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
         О ФОНДЕ
       </h2>
-      <p className={`${SECTION_SUBTEXT_ON_IMAGE} mt-3 text-white/90 sm:mt-5`}>
+      <p className={`${SECTION_SUBTEXT_ON_IMAGE} ${SECTION_SUBTEXT_MARGIN} text-white/90`}>
         Национальный инвестиционный фонд выступает связующим звеном между государством, бизнесом и инвесторами.
         Мы применяем современные инструменты прямого инвестирования, направляя капитал в проекты, которые создают
         реальный экономический эффект и ускоряют развитие Кыргызстана.
       </p>
-      <DetailLinkButton to="/about" containerClassName="mt-3 sm:mt-4" />
+      <DetailLinkButton to="/about" containerClassName={SECTION_CTA_MARGIN} />
     </div>
   );
 });

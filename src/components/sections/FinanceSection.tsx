@@ -4,7 +4,16 @@ import { DetailLinkButton } from "./DetailLinkButton";
 import { SectionCard } from "./SectionCard";
 import { SectionCardSlide, SectionCardsScroller } from "./SectionCardsScroller";
 import { FINANCE_CARDS } from "./sectionContent";
-import { SECTION_HEADING, SECTION_SUBTEXT, SECTION_TOP_WITH_CARDS, SECTION_CARDS_GRID_MARGIN, SECTION_HEADING_HERO } from "./sectionLayout";
+import {
+  SECTION_CARDS_GRID_MARGIN,
+  SECTION_CTA_MARGIN,
+  SECTION_HEADING,
+  SECTION_HEADING_HERO,
+  SECTION_SHELL,
+  SECTION_SUBTEXT,
+  SECTION_SUBTEXT_MARGIN,
+  SECTION_TOP_WITH_CARDS,
+} from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type FinanceSceneRefs = {
@@ -36,12 +45,12 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
   return (
     <div
       ref={financeRef}
-      className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_WITH_CARDS} z-30 px-3 text-center opacity-0 will-change-[transform,opacity] sm:px-6`}
+      className={`${SECTION_SHELL} ${SECTION_TOP_WITH_CARDS}`}
     >
       <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
         ФИНАНСИРОВАНИЕ ПРОЕКТОВ
       </h2>
-      <p className={`${SECTION_SUBTEXT} mt-2 text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)] sm:mt-3`}>
+      <p className={`${SECTION_SUBTEXT} ${SECTION_SUBTEXT_MARGIN} text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)]`}>
         Мы предлагаем современные инструменты финансирования, которые помогают привлекать капитал и успешно
         реализовывать стратегические проекты в Кыргызстане.
       </p>
@@ -57,7 +66,7 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
           ))}
         </SectionCardsScroller>
       </div>
-      <DetailLinkButton to="/finance" containerClassName="mt-3 sm:mt-4" />
+      <DetailLinkButton to="/finance" containerClassName={SECTION_CTA_MARGIN} />
     </div>
   );
 });

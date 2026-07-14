@@ -56,6 +56,30 @@ export const DIRECTION_CARDS = [
   },
 ] as const;
 
+/** Preview cards on the landing «Новости» block. Add items to enable the marquee (3+). */
+export const NEWS_PREVIEW_ITEMS = [
+  {
+    id: "news-1",
+    description: "Описание новости",
+    imageLabel: "изображение",
+  },
+  {
+    id: "news-2",
+    description: "Описание новости",
+    imageLabel: "изображение",
+  },
+  {
+    id: "news-3",
+    description: "Описание новости",
+    imageLabel: "изображение",
+  },
+  {
+    id: "news-4",
+    description: "Описание новости",
+    imageLabel: "изображение",
+  },
+] as const;
+
 export const ABOUT_DETAIL_BLOCKS = [
   {
     title: "Миссия",
