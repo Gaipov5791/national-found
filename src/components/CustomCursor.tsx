@@ -13,6 +13,8 @@ export function CustomCursor() {
   const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
+    document.documentElement.classList.add("custom-cursor-active");
+
     const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     const ring = { x: pos.x, y: pos.y };
     let raf = 0;
@@ -61,6 +63,7 @@ export function CustomCursor() {
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", onOut);
+      document.documentElement.classList.remove("custom-cursor-active");
     };
   }, []);
 

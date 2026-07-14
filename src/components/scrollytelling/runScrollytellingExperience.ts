@@ -190,14 +190,41 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     if (mobile) {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("orientationchange", onResize);
-      ScrollTrigger.scrollerProxy(document.documentElement, {});
     }
+
+    // Kill pin / scrub first so body overflow and wheel handlers are restored
+    // before Lenis is destroyed (otherwise wheel can stay swallowed).
+    const master = ScrollTrigger.getById("master-scrolly");
+    master?.kill();
+    tl.kill();
+    refs.masterTimelineRef.current = null;
+
+    try {
+      ScrollTrigger.normalizeScroll(false);
+    } catch {
+      /* ignore */
+    }
+    ScrollTrigger.scrollerProxy(document.documentElement, {});
+
     if (lenis) {
       cancelAnimationFrame(rafId);
       lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
     }
-    refs.masterTimelineRef.current = null;
     refs.lenisRef.current = null;
+
+    const html = document.documentElement;
+    const body = document.body;
+    for (const className of Array.from(html.classList)) {
+      if (className === "lenis" || className.startsWith("lenis-")) {
+        html.classList.remove(className);
+      }
+    }
+    html.style.removeProperty("overflow");
+    html.style.removeProperty("height");
+    html.style.removeProperty("touch-action");
+    body.style.removeProperty("overflow");
+    body.style.removeProperty("height");
+    body.style.removeProperty("touch-action");
   };
 }

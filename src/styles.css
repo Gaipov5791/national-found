@@ -81,13 +81,18 @@
   * {
     border-color: var(--color-border);
   }
-  html, body {
+  html {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    overflow-x: hidden;
+    /* clip avoids the html+body overflow-x:hidden scroll lock quirk */
+    overflow-x: clip;
   }
   body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    overflow-x: clip;
     overscroll-behavior-y: none;
   }
 }
@@ -99,7 +104,12 @@
   }
 }
 
-/* hide default cursor for premium feel on pointer devices */
+/* hide default cursor only on the landing (CustomCursor mounts and sets this class) */
 @media (pointer: fine) {
-  html, body, a, button { cursor: none; }
+  html.custom-cursor-active,
+  html.custom-cursor-active body,
+  html.custom-cursor-active a,
+  html.custom-cursor-active button {
+    cursor: none;
+  }
 }

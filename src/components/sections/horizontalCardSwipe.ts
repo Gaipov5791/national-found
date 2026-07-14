@@ -1,6 +1,7 @@
 /**
  * Horizontal card strip helpers — ensure first/last cards land fully in view.
  */
+import gsap from "gsap";
 
 export function getScrollMax(scroller: HTMLElement) {
   return Math.max(0, scroller.scrollWidth - scroller.clientWidth);
@@ -9,7 +10,7 @@ export function getScrollMax(scroller: HTMLElement) {
 /** Children to scroll between (skips empty text nodes). */
 export function getScrollCards(track: HTMLElement) {
   return Array.from(track.children).filter(
-    (node): node is HTMLElement => node instanceof HTMLElement
+    (node): node is HTMLElement => node instanceof HTMLElement,
   );
 }
 
@@ -17,11 +18,7 @@ export function getScrollCards(track: HTMLElement) {
  * Target scrollLeft so card at `index` is fully visible.
  * First/last indices lock to 0 / max so edge cards aren't clipped.
  */
-export function getCardScrollLeft(
-  scroller: HTMLElement,
-  track: HTMLElement,
-  index: number
-) {
+export function getCardScrollLeft(scroller: HTMLElement, track: HTMLElement, index: number) {
   const cards = getScrollCards(track);
   if (!cards.length) return 0;
 
@@ -56,6 +53,10 @@ type AttachAutoSwipeOptions = {
   /** Element that owns the card children (may equal scroller). */
   track: HTMLElement;
   intervalMs?: number;
+  /** Duration of one automatic transition in seconds. */
+  duration?: number;
+  /** GSAP ease used for automatic transitions. */
+  ease?: string;
   /** Ping-pong left/right. When false, loops from start. */
   pingPong?: boolean;
 };
@@ -68,6 +69,8 @@ export function attachHorizontalAutoSwipe({
   scroller,
   track,
   intervalMs = 2400,
+  duration = 0.95,
+  ease = "power2.inOut",
   pingPong = true,
 }: AttachAutoSwipeOptions): AutoSwipeController | null {
   if (typeof window === "undefined") return null;
@@ -87,6 +90,7 @@ export function attachHorizontalAutoSwipe({
   let direction = 1;
   let index = 0;
   let isProgrammatic = false;
+  let transition: gsap.core.Tween | null = null;
 
   const overflows = () => scroller.scrollWidth > scroller.clientWidth + 4;
 
@@ -144,15 +148,33 @@ export function attachHorizontalAutoSwipe({
 
     const left = getCardScrollLeft(scroller, track, index);
     isProgrammatic = true;
-    scroller.scrollTo({ left, behavior: "smooth" });
-    window.setTimeout(() => {
-      isProgrammatic = false;
-    }, 750);
+    transition?.kill();
+    transition = gsap.to(scroller, {
+      scrollLeft: left,
+      duration,
+      ease,
+      overwrite: "auto",
+      onComplete: () => {
+        isProgrammatic = false;
+        transition = null;
+      },
+      onInterrupt: () => {
+        isProgrammatic = false;
+        transition = null;
+      },
+    });
   };
 
-  const onPointerDown = () => pause(5000);
-  const onTouchStart = () => pause(5000);
-  const onWheel = () => pause(5000);
+  const stopTransitionForInteraction = () => {
+    transition?.kill();
+    transition = null;
+    isProgrammatic = false;
+    syncIndexFromScroll();
+    pause(5000);
+  };
+  const onPointerDown = () => stopTransitionForInteraction();
+  const onTouchStart = () => stopTransitionForInteraction();
+  const onWheel = () => stopTransitionForInteraction();
   const onScroll = () => {
     if (isProgrammatic) return;
     pause(2200);
@@ -172,6 +194,8 @@ export function attachHorizontalAutoSwipe({
       if (intervalId) window.clearInterval(intervalId);
       if (bootId) window.clearTimeout(bootId);
       if (resumeTimeoutId) window.clearTimeout(resumeTimeoutId);
+      transition?.kill();
+      transition = null;
       scroller.removeEventListener("pointerdown", onPointerDown);
       scroller.removeEventListener("touchstart", onTouchStart);
       scroller.removeEventListener("wheel", onWheel);
