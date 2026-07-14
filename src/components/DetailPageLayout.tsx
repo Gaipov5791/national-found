@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ensureGsapPlugins } from "@/lib/gsap-client";
 import type { AboutPerson } from "@/components/sections/sectionContent";
-import { attachHorizontalAutoSwipe } from "@/components/sections/horizontalCardSwipe";
 
 /** Clear leftover Lenis / ScrollTrigger scroll locks after leaving the landing. */
 function restoreDocumentScroll() {
@@ -143,7 +142,6 @@ export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
     if (people.length <= 1 || typeof window === "undefined") return;
 
     const media = window.matchMedia("(max-width: 639px)");
-    let stopAutoSwipe: (() => void) | undefined;
 
     const updateEdgePadding = () => {
       const scroller = scrollerRef.current;
@@ -165,32 +163,12 @@ export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
       track.style.paddingInline = `${edgePadding}px`;
     };
 
-    const updateMode = () => {
-      stopAutoSwipe?.();
-      stopAutoSwipe = undefined;
-      updateEdgePadding();
-
-      if (!media.matches || !scrollerRef.current || !trackRef.current) return;
-
-      const controller = attachHorizontalAutoSwipe({
-        scroller: scrollerRef.current,
-        track: trackRef.current,
-        intervalMs: 3400,
-        duration: 1.15,
-        ease: "power2.inOut",
-        pingPong: true,
-        align: "center",
-      });
-      stopAutoSwipe = controller?.stop;
-    };
-
-    updateMode();
-    media.addEventListener("change", updateMode);
+    updateEdgePadding();
+    media.addEventListener("change", updateEdgePadding);
     window.addEventListener("resize", updateEdgePadding);
 
     return () => {
-      stopAutoSwipe?.();
-      media.removeEventListener("change", updateMode);
+      media.removeEventListener("change", updateEdgePadding);
       window.removeEventListener("resize", updateEdgePadding);
     };
   }, [people.length]);
@@ -198,17 +176,17 @@ export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
   return (
     <div
       ref={scrollerRef}
-      className="-mx-5 mt-5 overflow-x-auto overscroll-x-contain pb-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:mt-6 sm:overflow-visible sm:pb-0"
+      className="-mx-5 mt-5 snap-x snap-mandatory overflow-x-auto overscroll-x-contain pb-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:mt-6 sm:snap-none sm:overflow-visible sm:pb-0"
       aria-label="Карточки сотрудников"
     >
       <div
         ref={trackRef}
-        className={`flex w-max snap-x snap-proximity gap-4 sm:grid sm:w-full sm:snap-none ${cols} sm:gap-8`}
+        className={`flex w-max gap-4 sm:grid sm:w-full ${cols} sm:gap-8`}
       >
         {people.map((person) => (
           <div
             key={person.name}
-            className="w-[min(76vw,280px)] shrink-0 snap-center sm:w-auto sm:shrink"
+            className="w-[min(76vw,280px)] shrink-0 snap-center sm:w-auto sm:shrink sm:snap-align-none"
           >
             <PersonCard person={person} />
           </div>
