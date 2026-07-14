@@ -59,7 +59,7 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
       <div className={SECTION_CARDS_GRID_MARGIN}>
         <SectionCardsScroller layout="six-row" autoSwipeOnOverflow className={CARD_SCROLLER_CLASS}>
           {DIRECTION_CARDS.map((card) => (
-            <SectionCardSlide key={card.title} wide layout="six-row">
+            <SectionCardSlide key={card.title} layout="six-row">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
             </SectionCardSlide>
           ))}

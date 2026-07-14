@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { attachHorizontalAutoSwipe } from "./horizontalCardSwipe";
 import { SECTION_CARDS_SCROLLER_PT } from "./sectionLayout";
 
 export type SectionCardsLayout = "two-col" | "four-row" | "four-two" | "six-row";
@@ -16,7 +17,8 @@ const LAYOUT_MAX_WIDTH: Record<SectionCardsLayout, string> = {
   "two-col": "max-w-5xl",
   "four-row": "max-w-[min(100%,72rem)] xl:max-w-[min(100%,80rem)] 2xl:max-w-[min(100%,88rem)]",
   "four-two": "max-w-[min(100%,72rem)] xl:max-w-[min(100%,80rem)] 2xl:max-w-[min(100%,88rem)]",
-  "six-row": "max-w-[min(100%,96rem)]",
+  // Cap width so 6 finance-sized cards always overflow and can auto-swipe.
+  "six-row": "max-w-[min(100%,68rem)] xl:max-w-[min(100%,72rem)] 2xl:max-w-[min(100%,78rem)]",
 };
 
 const LAYOUT_GRID: Record<SectionCardsLayout, string> = {
@@ -33,6 +35,7 @@ export function SectionCardsScroller({
   autoSwipeOnOverflow = false,
 }: SectionCardsScrollerProps) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
   const scrollRow = layout === "six-row";
 
   const childCount = useMemo(() => {
@@ -43,91 +46,30 @@ export function SectionCardsScroller({
   }, [children]);
 
   useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
+    const scroller = scrollerRef.current;
+    const track = trackRef.current;
+    if (!scroller || !track) return;
     if (typeof window === "undefined") return;
     if (childCount <= 1) return;
 
-    const reduceMotion =
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return;
-
-    let intervalId: number | null = null;
-    let resumeTimeoutId: number | null = null;
-    let pausedUntil = 0;
-
-    const canAutoSwipe = () => {
-      if (autoSwipeOnOverflow || scrollRow) {
-        return el.scrollWidth > el.clientWidth + 8;
-      }
+    const shouldAttach = () => {
+      if (autoSwipeOnOverflow || scrollRow) return true;
       return window.innerWidth < 768;
     };
 
-    const pause = (ms: number) => {
-      pausedUntil = Date.now() + ms;
-      if (resumeTimeoutId) window.clearTimeout(resumeTimeoutId);
-      resumeTimeoutId = window.setTimeout(() => {
-        // no-op: interval loop checks pausedUntil
-      }, ms);
-    };
+    if (!shouldAttach()) return;
 
-    const stepOnce = () => {
-      if (!el) return;
-      if (Date.now() < pausedUntil) return;
-      if (!canAutoSwipe()) return;
+    const controller = attachHorizontalAutoSwipe({
+      scroller,
+      track,
+      pingPong: true,
+      intervalMs: 2400,
+    });
 
-      const first = el.firstElementChild as HTMLElement | null;
-      const step = (first?.offsetWidth ?? 240) + 12;
-      const max = el.scrollWidth - el.clientWidth;
-      const next = el.scrollLeft + step;
-
-      el.scrollTo({
-        left: next >= max - 4 ? 0 : next,
-        behavior: "smooth",
-      });
-    };
-
-    const start = () => {
-      if (intervalId) return;
-      intervalId = window.setInterval(stepOnce, 2600);
-    };
-
-    const stop = () => {
-      if (intervalId) window.clearInterval(intervalId);
-      intervalId = null;
-    };
-
-    // Pause auto-swipe after any manual interaction.
-    const onPointerDown = () => pause(5000);
-    const onTouchStart = () => pause(5000);
-    const onWheel = () => pause(5000);
-    const onScroll = () => pause(2200);
-
-    el.addEventListener("pointerdown", onPointerDown, { passive: true });
-    el.addEventListener("touchstart", onTouchStart, { passive: true });
-    el.addEventListener("wheel", onWheel, { passive: true });
-    el.addEventListener("scroll", onScroll, { passive: true });
-
-    const resizeObserver =
-      typeof ResizeObserver !== "undefined"
-        ? new ResizeObserver(() => {
-            // Keep interval running; stepOnce re-checks overflow each tick.
-          })
-        : null;
-    resizeObserver?.observe(el);
-
-    start();
-    return () => {
-      stop();
-      if (resumeTimeoutId) window.clearTimeout(resumeTimeoutId);
-      resizeObserver?.disconnect();
-      el.removeEventListener("pointerdown", onPointerDown);
-      el.removeEventListener("touchstart", onTouchStart);
-      el.removeEventListener("wheel", onWheel);
-      el.removeEventListener("scroll", onScroll);
-    };
+    return () => controller?.stop();
   }, [childCount, autoSwipeOnOverflow, scrollRow]);
+
+  const desktopGrid = !scrollRow;
 
   return (
     <div
@@ -135,20 +77,27 @@ export function SectionCardsScroller({
       className={cn(
         "mx-auto w-full",
         LAYOUT_MAX_WIDTH[layout],
-        `flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-visible overscroll-x-contain pb-1 ${SECTION_CARDS_SCROLLER_PT}`,
-        "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-        "-mx-1 px-3 sm:px-1",
-        scrollRow
-          ? "md:mx-auto md:w-full md:max-w-full md:justify-center md:gap-3 lg:gap-4 md:px-0"
-          : cn(
-              "md:mx-auto md:grid md:w-fit md:max-w-full md:justify-items-stretch md:overflow-visible md:snap-none md:px-0 md:gap-4 lg:gap-5",
-              layout === "four-two" ? "md:gap-y-10 lg:gap-y-12" : "",
-              LAYOUT_GRID[layout]
-            ),
+        // Outer viewport only — padding lives on the track so edge cards can scroll fully in.
+        "overflow-x-auto overflow-y-visible overscroll-x-contain scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        desktopGrid && "md:overflow-visible",
         className
       )}
     >
-      {children}
+      <div
+        ref={trackRef}
+        className={cn(
+          `flex w-max min-w-full snap-x snap-proximity gap-3 px-3 pb-1 sm:px-4 ${SECTION_CARDS_SCROLLER_PT}`,
+          scrollRow
+            ? "justify-start md:gap-4 md:px-2 lg:gap-5"
+            : cn(
+                "md:mx-auto md:grid md:w-fit md:max-w-full md:snap-none md:justify-items-stretch md:gap-4 md:px-0 lg:gap-5",
+                layout === "four-two" ? "md:gap-y-10 lg:gap-y-12" : "",
+                LAYOUT_GRID[layout]
+              )
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 }
@@ -181,8 +130,8 @@ const DESKTOP_WIDTH: Record<SectionCardsLayout, { default: string; wide: string 
     wide: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
   },
   "six-row": {
-    default: "md:w-[min(15.5vw,200px)] lg:w-[min(14.5vw,210px)] xl:w-[min(13.5vw,220px)] 2xl:w-[200px]",
-    wide: "md:w-[min(15.5vw,200px)] lg:w-[min(14.5vw,210px)] xl:w-[min(13.5vw,220px)] 2xl:w-[200px]",
+    default: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
+    wide: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
   },
 };
 
