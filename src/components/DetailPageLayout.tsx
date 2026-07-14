@@ -145,9 +145,30 @@ export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
     const media = window.matchMedia("(max-width: 639px)");
     let stopAutoSwipe: (() => void) | undefined;
 
+    const updateEdgePadding = () => {
+      const scroller = scrollerRef.current;
+      const track = trackRef.current;
+      if (!scroller || !track) return;
+
+      if (!media.matches) {
+        track.style.removeProperty("padding-inline");
+        return;
+      }
+
+      const firstCard = track.firstElementChild;
+      if (!(firstCard instanceof HTMLElement)) return;
+
+      const edgePadding = Math.max(
+        0,
+        (scroller.clientWidth - firstCard.offsetWidth) / 2,
+      );
+      track.style.paddingInline = `${edgePadding}px`;
+    };
+
     const updateMode = () => {
       stopAutoSwipe?.();
       stopAutoSwipe = undefined;
+      updateEdgePadding();
 
       if (!media.matches || !scrollerRef.current || !trackRef.current) return;
 
@@ -158,33 +179,36 @@ export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
         duration: 1.15,
         ease: "power2.inOut",
         pingPong: true,
+        align: "center",
       });
       stopAutoSwipe = controller?.stop;
     };
 
     updateMode();
     media.addEventListener("change", updateMode);
+    window.addEventListener("resize", updateEdgePadding);
 
     return () => {
       stopAutoSwipe?.();
       media.removeEventListener("change", updateMode);
+      window.removeEventListener("resize", updateEdgePadding);
     };
   }, [people.length]);
 
   return (
     <div
       ref={scrollerRef}
-      className="-mx-5 mt-5 overflow-x-auto overscroll-x-contain scroll-smooth px-5 pb-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:mt-6 sm:overflow-visible sm:px-0 sm:pb-0"
+      className="-mx-5 mt-5 overflow-x-auto overscroll-x-contain pb-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:mt-6 sm:overflow-visible sm:pb-0"
       aria-label="Карточки сотрудников"
     >
       <div
         ref={trackRef}
-        className={`flex w-max snap-x snap-proximity gap-4 pr-5 sm:grid sm:w-full sm:snap-none sm:pr-0 ${cols} sm:gap-8`}
+        className={`flex w-max snap-x snap-proximity gap-4 sm:grid sm:w-full sm:snap-none ${cols} sm:gap-8`}
       >
         {people.map((person) => (
           <div
             key={person.name}
-            className="w-[min(76vw,280px)] shrink-0 snap-start sm:w-auto sm:shrink"
+            className="w-[min(76vw,280px)] shrink-0 snap-center sm:w-auto sm:shrink"
           >
             <PersonCard person={person} />
           </div>

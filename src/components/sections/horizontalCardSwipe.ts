@@ -14,24 +14,36 @@ export function getScrollCards(track: HTMLElement) {
   );
 }
 
+export type CardScrollAlign = "start" | "center";
+
 /**
- * Target scrollLeft so card at `index` is fully visible.
- * First/last indices lock to 0 / max so edge cards aren't clipped.
+ * Target scrollLeft for a card. Start alignment keeps edge cards fully visible;
+ * center alignment uses the exact midpoint of the card and viewport.
  */
-export function getCardScrollLeft(scroller: HTMLElement, track: HTMLElement, index: number) {
+export function getCardScrollLeft(
+  scroller: HTMLElement,
+  track: HTMLElement,
+  index: number,
+  align: CardScrollAlign = "start",
+) {
   const cards = getScrollCards(track);
   if (!cards.length) return 0;
 
   const clamped = Math.max(0, Math.min(index, cards.length - 1));
   const max = getScrollMax(scroller);
 
-  if (clamped === 0) return 0;
-  if (clamped === cards.length - 1) return max;
-
   const card = cards[clamped];
   const cardLeft = card.offsetLeft;
   const cardRight = cardLeft + card.offsetWidth;
   const view = scroller.clientWidth;
+
+  if (align === "center") {
+    const left = cardLeft + card.offsetWidth / 2 - view / 2;
+    return Math.max(0, Math.min(left, max));
+  }
+
+  if (clamped === 0) return 0;
+  if (clamped === cards.length - 1) return max;
 
   // Prefer start-align; if that would clip the right edge, shift left enough.
   let left = cardLeft;
@@ -59,6 +71,8 @@ type AttachAutoSwipeOptions = {
   ease?: string;
   /** Ping-pong left/right. When false, loops from start. */
   pingPong?: boolean;
+  /** How the active card should settle in the viewport. */
+  align?: CardScrollAlign;
 };
 
 /**
@@ -72,6 +86,7 @@ export function attachHorizontalAutoSwipe({
   duration = 0.95,
   ease = "power2.inOut",
   pingPong = true,
+  align = "start",
 }: AttachAutoSwipeOptions): AutoSwipeController | null {
   if (typeof window === "undefined") return null;
 
@@ -100,6 +115,20 @@ export function attachHorizontalAutoSwipe({
     resumeTimeoutId = window.setTimeout(() => {}, ms);
   };
 
+  /** CSS scroll-snap / scroll-smooth fight GSAP mid-tween and cause a micro-jerk. */
+  const setProgrammaticScroll = (active: boolean) => {
+    isProgrammatic = active;
+    if (active) {
+      scroller.style.scrollSnapType = "none";
+      track.style.scrollSnapType = "none";
+      scroller.style.scrollBehavior = "auto";
+    } else {
+      scroller.style.removeProperty("scroll-snap-type");
+      track.style.removeProperty("scroll-snap-type");
+      scroller.style.removeProperty("scroll-behavior");
+    }
+  };
+
   const syncIndexFromScroll = () => {
     const list = cards();
     if (!list.length) return;
@@ -112,11 +141,16 @@ export function attachHorizontalAutoSwipe({
       index = 0;
       return;
     }
-    // Nearest card start.
+    const viewportAnchor =
+      align === "center"
+        ? scroller.scrollLeft + scroller.clientWidth / 2
+        : scroller.scrollLeft;
     let best = 0;
     let bestDist = Infinity;
     list.forEach((card, i) => {
-      const d = Math.abs(card.offsetLeft - scroller.scrollLeft);
+      const cardAnchor =
+        align === "center" ? card.offsetLeft + card.offsetWidth / 2 : card.offsetLeft;
+      const d = Math.abs(cardAnchor - viewportAnchor);
       if (d < bestDist) {
         bestDist = d;
         best = i;
@@ -146,21 +180,23 @@ export function attachHorizontalAutoSwipe({
       index = index >= list.length - 1 ? 0 : index + 1;
     }
 
-    const left = getCardScrollLeft(scroller, track, index);
-    isProgrammatic = true;
+    const left = getCardScrollLeft(scroller, track, index, align);
     transition?.kill();
+    setProgrammaticScroll(true);
     transition = gsap.to(scroller, {
       scrollLeft: left,
       duration,
       ease,
       overwrite: "auto",
       onComplete: () => {
-        isProgrammatic = false;
+        // Snap to the exact target once, then re-enable CSS snap without a second jump.
+        scroller.scrollLeft = left;
         transition = null;
+        setProgrammaticScroll(false);
       },
       onInterrupt: () => {
-        isProgrammatic = false;
         transition = null;
+        setProgrammaticScroll(false);
       },
     });
   };
@@ -168,7 +204,7 @@ export function attachHorizontalAutoSwipe({
   const stopTransitionForInteraction = () => {
     transition?.kill();
     transition = null;
-    isProgrammatic = false;
+    setProgrammaticScroll(false);
     syncIndexFromScroll();
     pause(5000);
   };
@@ -196,6 +232,7 @@ export function attachHorizontalAutoSwipe({
       if (resumeTimeoutId) window.clearTimeout(resumeTimeoutId);
       transition?.kill();
       transition = null;
+      setProgrammaticScroll(false);
       scroller.removeEventListener("pointerdown", onPointerDown);
       scroller.removeEventListener("touchstart", onTouchStart);
       scroller.removeEventListener("wheel", onWheel);
