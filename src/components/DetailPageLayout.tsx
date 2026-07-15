@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ensureGsapPlugins } from "@/lib/gsap-client";
@@ -47,15 +47,25 @@ export function DetailPageLayout({ title, children, wide = false }: DetailPageLa
   }, []);
 
   return (
-    <main className="min-h-screen w-full bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8] px-4 py-10 font-display text-[color:var(--ink)] sm:px-8 sm:py-16 lg:px-12">
+    <main className="relative isolate min-h-screen w-full overflow-hidden bg-[#0b2138] px-4 py-10 font-display text-white sm:px-8 sm:py-16 lg:px-12">
+      <div
+        className="pointer-events-none fixed inset-[-32px] -z-20 scale-105 bg-cover bg-center blur-[16px]"
+        style={{ backgroundImage: "url('/images/mountains.jpg')" }}
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,20,38,0.68),rgba(8,28,49,0.78))]"
+        aria-hidden
+      />
+
       <div className={`mx-auto w-full ${wide ? "max-w-none" : "max-w-3xl"}`}>
-        <header className="flex items-center justify-between gap-4 border-b border-[color:var(--ink)]/10 pb-6">
+        <header className="flex items-center justify-between gap-4 border-b border-white/20 pb-6">
           <Link to="/" className="inline-flex items-center">
-            <img src="/logo/logo-blue.png" alt="НИФ КР" className="h-9 w-auto sm:h-10" />
+            <img src="/logo/logo-white.png" alt="НИФ КР" className="h-9 w-auto sm:h-10" />
           </Link>
           <Link
             to="/"
-            className="text-xs font-semibold tracking-[0.12em] text-[color:var(--ink)]/60 transition hover:text-[color:var(--gold)] sm:text-sm"
+            className="text-xs font-semibold tracking-[0.12em] text-white/70 transition hover:text-[color:var(--gold)] sm:text-sm"
           >
             ← На главную
           </Link>
@@ -78,9 +88,9 @@ type DetailInfoBlockProps = {
 
 export function DetailInfoBlock({ title, children }: DetailInfoBlockProps) {
   return (
-    <section className="rounded-2xl border border-[color:var(--ink)]/10 bg-white/60 p-5 shadow-sm sm:p-7 md:p-8">
+    <section className="rounded-2xl border border-white/20 bg-white/10 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.16)] backdrop-blur-md sm:p-7 md:p-8">
       <h2 className="font-display text-xl font-bold tracking-tight sm:text-2xl">{title}</h2>
-      <div className="mt-3 text-base leading-relaxed text-[color:var(--ink)]/80 sm:mt-4 sm:text-lg">
+      <div className="mt-3 text-base leading-relaxed text-white/[0.82] sm:mt-4 sm:text-lg">
         {children}
       </div>
     </section>
@@ -92,29 +102,60 @@ type PersonCardProps = {
 };
 
 export function PersonCard({ person }: PersonCardProps) {
+  const [isPhotoOpen, setIsPhotoOpen] = useState(false);
+
   return (
-    <article className="flex flex-col items-center text-center">
-      <div className="aspect-[3/4] w-full overflow-hidden rounded-xl bg-[color:var(--ink)]/5">
+    <article
+      className="flex h-full min-h-[360px] flex-col items-center rounded-2xl border border-white/15 bg-white/[0.07] p-4 text-center backdrop-blur-sm sm:min-h-[420px] sm:p-5 lg:min-h-[480px]"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setIsPhotoOpen(false);
+      }}
+    >
+      <div
+        className={`pointer-events-none flex h-56 w-full flex-none items-end justify-center overflow-hidden transition duration-500 ease-out sm:h-64 lg:h-72 motion-reduce:transition-none ${
+          isPhotoOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+        }`}
+      >
         {person.photo ? (
           <img
             src={person.photo}
             alt={person.name}
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-contain object-bottom brightness-110 drop-shadow-[0_12px_18px_rgba(0,0,0,0.3)]"
             loading="lazy"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-sm font-semibold tracking-[0.14em] text-[color:var(--ink)]/35 sm:text-base">
+          <span className="pb-8 text-xs font-semibold tracking-[0.14em] text-white/35">
             Фото скоро
-          </div>
+          </span>
         )}
       </div>
-      <h3 className="mt-3 text-base font-bold leading-snug tracking-tight sm:mt-4 sm:text-lg">
-        {person.name}
+      <h3 className="mt-auto pt-4 text-base font-bold leading-snug tracking-tight sm:text-lg">
+        {person.photo ? (
+          <button
+            type="button"
+            className="rounded-sm underline decoration-white/25 decoration-1 underline-offset-4 transition hover:decoration-[color:var(--gold)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            aria-expanded={isPhotoOpen}
+            onMouseEnter={() => setIsPhotoOpen(true)}
+            onMouseLeave={() => setIsPhotoOpen(false)}
+            onPointerDown={(event) => {
+              if (event.pointerType !== "mouse") {
+                setIsPhotoOpen((open) => !open);
+              }
+            }}
+            onClick={(event) => {
+              if (event.detail === 0) {
+                setIsPhotoOpen((open) => !open);
+              }
+            }}
+          >
+            {person.name}
+          </button>
+        ) : (
+          <span>{person.name}</span>
+        )}
       </h3>
       {person.title ? (
-        <p className="mt-1.5 text-sm leading-snug text-[color:var(--ink)]/60 sm:text-base">
-          {person.title}
-        </p>
+        <p className="mt-1.5 text-sm leading-snug text-white/65 sm:text-base">{person.title}</p>
       ) : null}
       <p className="mt-1.5 text-sm font-semibold tracking-wide text-[color:var(--gold)] sm:text-base">
         {person.role}
@@ -139,7 +180,7 @@ export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
         : "sm:grid-cols-2 lg:grid-cols-3";
 
   useEffect(() => {
-    if (people.length <= 1 || typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
 
     const media = window.matchMedia("(max-width: 639px)");
 
@@ -156,11 +197,10 @@ export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
       const firstCard = track.firstElementChild;
       if (!(firstCard instanceof HTMLElement)) return;
 
-      const edgePadding = Math.max(
+      track.style.paddingInline = `${Math.max(
         0,
         (scroller.clientWidth - firstCard.offsetWidth) / 2,
-      );
-      track.style.paddingInline = `${edgePadding}px`;
+      )}px`;
     };
 
     updateEdgePadding();
@@ -181,12 +221,12 @@ export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
     >
       <div
         ref={trackRef}
-        className={`flex w-max gap-4 sm:grid sm:w-full ${cols} sm:gap-8`}
+        className={`flex w-max items-stretch gap-4 sm:grid sm:w-full ${cols} sm:gap-6`}
       >
         {people.map((person) => (
           <div
             key={person.name}
-            className="w-[min(76vw,280px)] shrink-0 snap-center sm:w-auto sm:shrink sm:snap-align-none"
+            className="w-[min(76vw,280px)] shrink-0 snap-center sm:w-auto sm:shrink"
           >
             <PersonCard person={person} />
           </div>

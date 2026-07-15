@@ -32,7 +32,7 @@ function AboutPage() {
 
       <DetailInfoBlock title="Цель и задачи">
         <p>{ABOUT_GOAL_TEXT}</p>
-        <p className="mt-3 font-semibold text-[color:var(--ink)]">Основные задачи</p>
+        <p className="mt-3 font-semibold text-white">Основные задачи</p>
         <ul className="mt-2 list-disc space-y-1.5 pl-5">
           {ABOUT_TASKS.map((task) => (
             <li key={task}>{task}</li>
@@ -67,7 +67,7 @@ function AboutPage() {
       </DetailInfoBlock>
 
       <DetailInfoBlock title="Документы и отчётность">
-        <p className="font-semibold text-[color:var(--ink)]">Регулирующие документы</p>
+        <p className="font-semibold text-white">Регулирующие документы</p>
         <ul className="mt-2 space-y-2">
           {ABOUT_REGULATORY_DOCS.map((doc) => (
             <li key={doc.href}>
@@ -75,32 +75,30 @@ function AboutPage() {
                 href={doc.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[color:var(--ink)] underline decoration-[color:var(--ink)]/25 underline-offset-2 transition hover:text-[color:var(--gold)] hover:decoration-[color:var(--gold)]"
+                className="text-white underline decoration-white/30 underline-offset-2 transition hover:text-[color:var(--gold)] hover:decoration-[color:var(--gold)]"
               >
                 {doc.title}
               </a>
             </li>
           ))}
         </ul>
-        <p className="mt-4 font-semibold text-[color:var(--ink)]">Финансовая отчётность</p>
+        <p className="mt-4 font-semibold text-white">Финансовая отчётность</p>
         <ul className="mt-2 space-y-2">
           {ABOUT_FINANCIAL_REPORTS.map((doc) => (
-            <li key={doc.title} className="text-[color:var(--ink)]/70">
+            <li key={doc.title} className="text-white/70">
               {doc.href ? (
                 <a
                   href={doc.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[color:var(--ink)] underline decoration-[color:var(--ink)]/25 underline-offset-2 transition hover:text-[color:var(--gold)] hover:decoration-[color:var(--gold)]"
+                  className="text-white underline decoration-white/30 underline-offset-2 transition hover:text-[color:var(--gold)] hover:decoration-[color:var(--gold)]"
                 >
                   {doc.title}
                 </a>
               ) : (
                 <>
                   {doc.title}
-                  <span className="ml-2 text-sm tracking-wide text-[color:var(--ink)]/40">
-                    — скоро
-                  </span>
+                  <span className="ml-2 text-sm tracking-wide text-white/40">— скоро</span>
                 </>
               )}
             </li>
