@@ -88,6 +88,7 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
                 <DetailLinkButton
                   key={action.to}
                   to={action.to}
+                  originSection="sc_partners"
                   label={action.label}
                   block
                   containerClassName="mt-0"
@@ -107,7 +108,12 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
             НОВОСТИ
           </h2>
           <NewsCardsMarquee items={NEWS_PREVIEW_ITEMS} />
-          <DetailLinkButton to="/news" label="Читать ещё" containerClassName="mt-4 sm:mt-6 md:mt-7" />
+          <DetailLinkButton
+            to="/news"
+            originSection="sc_news"
+            label="Читать ещё"
+            containerClassName="mt-4 sm:mt-6 md:mt-7"
+          />
         </div>
       </>
     );

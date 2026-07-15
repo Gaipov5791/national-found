@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,6 +8,10 @@ import { ScrollytellingScene } from "@/components/scrollytelling/ScrollytellingS
 import { useSceneRefs } from "@/components/scrollytelling/useSceneRefs";
 import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
 import { LANGS, useLang } from "@/lib/lang";
+import {
+  getSectionSceneLabel,
+  type SectionSceneLabel,
+} from "@/lib/sectionNavigation";
 
 const SCROLL_DISTANCE_DESKTOP = 15800;
 const SCROLL_DISTANCE_TABLET = 12600;
@@ -26,7 +30,7 @@ const NAV_ITEMS = [
 
 type NavItem = (typeof NAV_ITEMS)[number];
 
-const NAV_SCENE_LABELS: Record<NavItem, string> = {
+const NAV_SCENE_LABELS: Record<NavItem, SectionSceneLabel> = {
   ГЛАВНАЯ: "sc_hero",
   "О ФОНДЕ": "sc_about",
   "ФИНАНСИРОВАНИЕ ПРОЕКТОВ": "sc_finance",
@@ -59,6 +63,7 @@ const MOBILE_SCENE_NUDGE: Partial<Record<SceneLabel, number>> = {
 export function Scrollytelling() {
   const { lang, setLang } = useLang();
   const [counterProgress, setCounterProgress] = useState(0);
+  const returnSectionHandledRef = useRef(false);
   const refs = useSceneRefs();
 
   const scrollToSection = useCallback(
@@ -172,6 +177,38 @@ export function Scrollytelling() {
     },
     { scope: refs.rootRef }
   );
+
+  useEffect(() => {
+    if (returnSectionHandledRef.current) return;
+
+    const returnSection = getSectionSceneLabel(window.location.hash);
+    const navItem = NAV_ITEMS.find(
+      (item) => NAV_SCENE_LABELS[item] === returnSection
+    );
+    if (!navItem) return;
+
+    let frameId = 0;
+    let attempts = 0;
+
+    const restoreSection = () => {
+      const scrollTrigger = ScrollTrigger.getById("master-scrolly");
+
+      if (scrollTrigger?.labelToScroll) {
+        returnSectionHandledRef.current = true;
+        scrollToSection(navItem);
+        return;
+      }
+
+      attempts += 1;
+      if (attempts < 120) {
+        frameId = window.requestAnimationFrame(restoreSection);
+      }
+    };
+
+    frameId = window.requestAnimationFrame(restoreSection);
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [scrollToSection]);
 
   return (
     <div ref={refs.rootRef} className="relative overflow-x-hidden">

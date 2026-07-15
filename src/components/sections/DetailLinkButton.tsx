@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { useCanHover } from "@/hooks/use-can-hover";
+import type { SectionSceneLabel } from "@/lib/sectionNavigation";
 
 type DetailLinkButtonProps = {
   to: string;
+  originSection: SectionSceneLabel;
   label?: string;
   className?: string;
   containerClassName?: string;
@@ -20,6 +22,7 @@ const blockButtonClassName =
 
 export function DetailLinkButton({
   to,
+  originSection,
   label = "Подробнее",
   className,
   containerClassName,
@@ -38,6 +41,7 @@ export function DetailLinkButton({
     >
       <Link
         to={to}
+        hash={originSection}
         data-cursor-hover
         data-detail-link
         onMouseEnter={() => canHover && setHovered(true)}

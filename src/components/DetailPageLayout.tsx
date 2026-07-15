@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ensureGsapPlugins } from "@/lib/gsap-client";
+import { getSectionSceneLabel } from "@/lib/sectionNavigation";
 import type { AboutPerson } from "@/components/sections/sectionContent";
 
 /** Clear leftover Lenis / ScrollTrigger scroll locks after leaving the landing. */
@@ -42,6 +43,11 @@ type DetailPageLayoutProps = {
 };
 
 export function DetailPageLayout({ title, children, wide = false }: DetailPageLayoutProps) {
+  const locationHash = useRouterState({
+    select: (state) => state.location.hash,
+  });
+  const returnSection = getSectionSceneLabel(locationHash);
+
   useEffect(() => {
     restoreDocumentScroll();
   }, []);
@@ -60,11 +66,12 @@ export function DetailPageLayout({ title, children, wide = false }: DetailPageLa
 
       <div className={`mx-auto w-full ${wide ? "max-w-none" : "max-w-3xl"}`}>
         <header className="flex items-center justify-between gap-4 border-b border-white/20 pb-6">
-          <Link to="/" className="inline-flex items-center">
+          <Link to="/" hash={returnSection ?? undefined} className="inline-flex items-center">
             <img src="/logo/logo-white.png" alt="НИФ КР" className="h-9 w-auto sm:h-10" />
           </Link>
           <Link
             to="/"
+            hash={returnSection ?? undefined}
             className="text-xs font-semibold tracking-[0.12em] text-white/70 transition hover:text-[color:var(--gold)] sm:text-sm"
           >
             ← На главную

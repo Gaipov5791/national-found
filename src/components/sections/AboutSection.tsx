@@ -50,7 +50,11 @@ export const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(functi
         Мы применяем современные инструменты прямого инвестирования, направляя капитал в проекты, которые создают
         реальный экономический эффект и ускоряют развитие Кыргызстана.
       </p>
-      <DetailLinkButton to="/about" containerClassName={SECTION_CTA_MARGIN} />
+      <DetailLinkButton
+        to="/about"
+        originSection="sc_about"
+        containerClassName={SECTION_CTA_MARGIN}
+      />
     </div>
   );
 });

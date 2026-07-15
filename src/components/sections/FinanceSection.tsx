@@ -66,7 +66,11 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
           ))}
         </SectionCardsScroller>
       </div>
-      <DetailLinkButton to="/finance" containerClassName={SECTION_CTA_MARGIN} />
+      <DetailLinkButton
+        to="/finance"
+        originSection="sc_finance"
+        containerClassName={SECTION_CTA_MARGIN}
+      />
     </div>
   );
 });

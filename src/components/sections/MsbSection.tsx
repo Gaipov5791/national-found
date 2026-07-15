@@ -50,7 +50,11 @@ export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function M
         фонд поддерживает проекты МСБ, с особым акцентом на агропромышленный комплекс и переработку местного сырья,
         помогая создавать устойчивые бизнес-модели и повышать уровень жизни в регионах страны.
       </p>
-      <DetailLinkButton to="/msb" containerClassName={SECTION_CTA_MARGIN} />
+      <DetailLinkButton
+        to="/msb"
+        originSection="sc_msb"
+        containerClassName={SECTION_CTA_MARGIN}
+      />
     </div>
   );
 });
