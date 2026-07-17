@@ -1,8 +1,9 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { getNewsPreviewItems } from "@/lib/i18n/content";
+import { useT } from "@/lib/lang";
 import { DetailLinkButton } from "./DetailLinkButton";
 import { NewsCardsMarquee } from "./NewsCardsMarquee";
-import { NEWS_PREVIEW_ITEMS } from "./sectionContent";
 import {
   SECTION_CTA_MARGIN,
   SECTION_HEADING,
@@ -30,16 +31,14 @@ export function prepareSpaceTrilogyScene(refs: SpaceTrilogySceneRefs, ctx: Scene
 
 export function animateSpaceTrilogyScene(tl: SceneTimeline, refs: SpaceTrilogySceneRefs, ctx: SceneAnimationContext) {
   const { timings, text } = ctx;
-  const {
-    enterDur,
-    exitDur,
-    partnersEnterT,
-    partnersTextExitT,
-    newsEnterT,
-    newsExitT,
-  } = timings;
+  const { enterDur, exitDur, partnersEnterT, partnersTextExitT, newsEnterT, newsExitT } = timings;
 
-  tl.fromTo(refs.partnersTextRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, partnersEnterT);
+  tl.fromTo(
+    refs.partnersTextRef.current,
+    text.idle,
+    { ...text.arrived, duration: enterDur, ease: text.enterEase },
+    partnersEnterT
+  );
   tl.to(refs.partnersTextRef.current, { ...text.evaporated, duration: exitDur, ease: text.exitEase }, partnersTextExitT);
 
   tl.fromTo(refs.newsTitleRef.current, text.idle, { ...text.arrived, duration: enterDur, ease: text.enterEase }, newsEnterT);
@@ -52,21 +51,17 @@ export type SpaceTrilogyContainerProps = {
   newsTitleRef: RefObject<HTMLDivElement | null>;
 };
 
-const PARTNER_ACTIONS = [
-  { to: "/partners-registry", label: "Реестр партнёров" },
-  { to: "/partners-cooperation", label: "Международное и региональное сотрудничество" },
-  { to: "/partners-join", label: "Стать партнёром" },
-] as const;
-
 export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyContainerProps>(
-  function SpaceTrilogyContainer(
-    {
-      partnersRef,
-      partnersTextRef,
-      newsTitleRef,
-    },
-    _ref
-  ) {
+  function SpaceTrilogyContainer({ partnersRef, partnersTextRef, newsTitleRef }, _ref) {
+    const t = useT();
+    const newsItems = getNewsPreviewItems(t);
+
+    const partnerActions = [
+      { to: "/partners-registry", label: t.partners.actions.registry },
+      { to: "/partners-cooperation", label: t.partners.actions.cooperation },
+      { to: "/partners-join", label: t.partners.actions.join },
+    ] as const;
+
     return (
       <>
         <div
@@ -74,17 +69,16 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
           className={`pointer-events-none absolute inset-x-0 ${SECTION_TOP_AFTER_BRAND} z-30 ${SECTION_PAD_X} text-center`}
         >
           <div ref={partnersTextRef} className="opacity-0 will-change-[transform,opacity]">
-            <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
-              ПАРТНЁРЫ
-            </h2>
-            <p className={`${SECTION_SUBTEXT} ${SECTION_SUBTEXT_MARGIN} text-white/85 drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)]`}>
-              Национальный инвестиционный фонд развивает партнёрства с ведущими международными финансовыми
-              институтами и организациями для реализации стратегических проектов в Кыргызстане.
+            <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>{t.partners.heading}</h2>
+            <p
+              className={`${SECTION_SUBTEXT} ${SECTION_SUBTEXT_MARGIN} text-white/85 drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)]`}
+            >
+              {t.partners.blurb}
             </p>
             <div
               className={`pointer-events-auto mx-auto grid w-full max-w-6xl grid-cols-1 gap-2 px-1 sm:gap-3 md:grid-cols-3 md:items-stretch md:gap-5 lg:gap-6 ${SECTION_CTA_MARGIN}`}
             >
-              {PARTNER_ACTIONS.map((action) => (
+              {partnerActions.map((action) => (
                 <DetailLinkButton
                   key={action.to}
                   to={action.to}
@@ -101,17 +95,15 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
         <div
           ref={newsTitleRef}
           id="novosti"
-          aria-label="Новости"
+          aria-label={t.news.heading}
           className={`${SECTION_SHELL} ${SECTION_TOP_NEWS}`}
         >
-          <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
-            НОВОСТИ
-          </h2>
-          <NewsCardsMarquee items={NEWS_PREVIEW_ITEMS} />
+          <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>{t.news.heading}</h2>
+          <NewsCardsMarquee items={newsItems} />
           <DetailLinkButton
             to="/news"
             originSection="sc_news"
-            label="Читать ещё"
+            label={t.news.readMore}
             containerClassName="mt-4 sm:mt-6 md:mt-7"
           />
         </div>

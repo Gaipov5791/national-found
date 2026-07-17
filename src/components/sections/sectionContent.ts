@@ -1,84 +1,23 @@
-export const FINANCE_CARDS = [
-  {
-    title: "Соинвестирование",
-    description: "Совместное финансирование проектов с банками и международными партнёрами.",
-    icon: "/icons/finance/coinvest.png",
-  },
-  {
-    title: "Совместные предприятия",
-    description: "Создание новых компаний совместно с инвесторами и государством.",
-    icon: "/icons/finance/joint-venture.png",
-  },
-  {
-    title: "Инвестиции в капитал",
-    description: "Прямое вхождение в капитал перспективных компаний.",
-    icon: "/icons/finance/equity.png",
-  },
-  {
-    title: "Инструменты поддержки",
-    description: "Целевые займы и гарантии под конкретные нужды проекта.",
-    icon: "/icons/finance/support.png",
-  },
+export const FINANCE_CARD_ICONS = [
+  "/icons/finance/coinvest.png",
+  "/icons/finance/joint-venture.png",
+  "/icons/finance/equity.png",
+  "/icons/finance/support.png",
 ] as const;
 
 const publicAsset = (path: string) => encodeURI(path);
 
-export const DIRECTION_CARDS = [
-  {
-    title: "Промышленность и переработка",
-    description: "Развитие производственных мощностей и глубокой переработки сырья.",
-    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Промышленность и переработка.png"),
-  },
-  {
-    title: "Транспорт и логистика",
-    description: "Инфраструктурные проекты, связывающие регионы и рынки.",
-    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Транспорт и логистика.png"),
-  },
-  {
-    title: "Энергетика и инфраструктура",
-    description: "Энергетические объекты и базовая инфраструктура страны.",
-    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Энергетика и инфраструктура.png"),
-  },
-  {
-    title: "Туризм",
-    description: "Инвестиции в туристический потенциал Кыргызстана.",
-    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Туризм.png"),
-  },
-  {
-    title: "Образование",
-    description: "Проекты, формирующие кадровый и интеллектуальный потенциал.",
-    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Образование.png"),
-  },
-  {
-    title: "Здравоохранение",
-    description: "Развитие медицинской инфраструктуры и сервисов.",
-    icon: publicAsset("/icons/perspective/Иконки Перпективные направления/Здравоохранение.png"),
-  },
+export const DIRECTION_CARD_ICONS = [
+  publicAsset("/icons/perspective/Иконки Перпективные направления/Промышленность и переработка.png"),
+  publicAsset("/icons/perspective/Иконки Перпективные направления/Транспорт и логистика.png"),
+  publicAsset("/icons/perspective/Иконки Перпективные направления/Энергетика и инфраструктура.png"),
+  publicAsset("/icons/perspective/Иконки Перпективные направления/Туризм.png"),
+  publicAsset("/icons/perspective/Иконки Перпективные направления/Образование.png"),
+  publicAsset("/icons/perspective/Иконки Перпективные направления/Здравоохранение.png"),
 ] as const;
 
-/** Preview cards on the landing «Новости» block. Add items to enable the marquee (3+). */
-export const NEWS_PREVIEW_ITEMS = [
-  {
-    id: "news-1",
-    description: "Описание новости",
-    imageLabel: "изображение",
-  },
-  {
-    id: "news-2",
-    description: "Описание новости",
-    imageLabel: "изображение",
-  },
-  {
-    id: "news-3",
-    description: "Описание новости",
-    imageLabel: "изображение",
-  },
-  {
-    id: "news-4",
-    description: "Описание новости",
-    imageLabel: "изображение",
-  },
-] as const;
+/** Preview card ids on the landing news block. Add items to enable the marquee (3+). */
+export const NEWS_PREVIEW_IDS = ["news-1", "news-2", "news-3", "news-4"] as const;
 
 export type AboutPerson = {
   name: string;
@@ -88,127 +27,41 @@ export type AboutPerson = {
   photo?: string;
 };
 
-export const ABOUT_FOUNDING_TEXT =
-  "Фонд учреждён постановлением Кабинета Министров Кыргызской Республики от 5 ноября 2024 года № 666 во исполнение Закона Кыргызской Республики «О Национальном инвестиционном фонде Кыргызской Республики» и Указа Президента Кыргызской Республики № 155 от 14 июня 2024 года.";
+export type AboutPersonMeta = {
+  name: string;
+  photo?: string;
+};
 
-export const ABOUT_GOAL_TEXT =
-  "Цель Фонда — повышать эффективность управления компаниями группы и обеспечивать долгосрочный рост их стоимости за счёт привлечения долгосрочных инвестиций и выхода на местный и международный рынок капитала.";
-
-export const ABOUT_TASKS = [
-  "Выполнение функций акционера (участника) в компаниях группы Фонда и управление имуществом, переданным в его собственность или доверительное управление.",
-  "Повышение эффективности финансово-хозяйственной деятельности Фонда и компаний группы.",
-  "Привлечение дополнительных инвестиций в Фонд и компании группы.",
-  "Обеспечение выхода Фонда и компаний группы на местные и международные фондовые рынки.",
-  "Формирование и реализация стратегий развития дочерних компаний.",
-  "Содействие государственным органам в реализации отраслевых программ через компании группы.",
-  "Формирование, развитие и управление кадровым потенциалом компаний группы.",
-] as const;
-
-export const ABOUT_LEGAL_STATUS = [
-  "Фонд создан в форме открытого акционерного общества.",
-  "Единственный акционер — Кабинет Министров Кыргызской Республики (в лице Министерства экономики и коммерции).",
-  "Акции Фонда являются государственной собственностью и могут быть отчуждены только путём публичного предложения на фондовой бирже (не более 20 % акций).",
-  "Кыргызская Республика не несёт ответственности по обязательствам Фонда, и Фонд не несёт ответственности по обязательствам Республики.",
-] as const;
-
-export const ABOUT_BOARD: AboutPerson[] = [
-  {
-    name: "Касымалиев Адылбек Алешович",
-    role: "Председатель Совета директоров",
-    title:
-      "Председатель Кабинета Министров Кыргызской Республики — Руководитель Администрации Президента Кыргызской Республики",
-    photo: "/images/about/photo_3.png",
-  },
-  {
-    name: "Торобаев Бакыт Эргешевич",
-    role: "Член Совета директоров",
-    title: "Специальный представитель Президента Кыргызской Республики по особым поручениям",
-    photo: "/images/about/photo_16.png",
-  },
-  {
-    name: "Суйналиев Руслан Мырзабекович",
-    role: "Член Совета директоров",
-    title: "Министр финансов Кыргызской Республики",
-    photo: "/images/about/photo_15.png",
-  },
-  {
-    name: "Исаматова Гульзат Тыныбековна",
-    role: "Член Совета директоров",
-    title: "Министр науки, высшего образования и инноваций Кыргызской Республики",
-    photo: "/images/about/photo_14.png",
-  },
-  {
-    name: "Сариев Темир Аргембаевич",
-    role: "Член Совета директоров",
-    photo: "/images/about/photo_7.png",
-  },
-  {
-    name: "Акматалиев Адилет Искендербекович",
-    role: "Член Совета директоров",
-  },
-  {
-    name: "Темиркулов Азамат Азатбекович",
-    role: "Член Совета директоров",
-    photo: "/images/about/photo_11.png",
-  },
+export const ABOUT_BOARD_META: readonly AboutPersonMeta[] = [
+  { name: "Касымалиев Адылбек Алешович", photo: "/images/about/photo_3.png" },
+  { name: "Торобаев Бакыт Эргешевич", photo: "/images/about/photo_16.png" },
+  { name: "Суйналиев Руслан Мырзабекович", photo: "/images/about/photo_15.png" },
+  { name: "Исаматова Гульзат Тыныбековна", photo: "/images/about/photo_14.png" },
+  { name: "Сариев Темир Аргембаевич", photo: "/images/about/photo_7.png" },
+  { name: "Акматалиев Адилет Искендербекович" },
+  { name: "Темиркулов Азамат Азатбекович", photo: "/images/about/photo_11.png" },
 ];
 
-export const ABOUT_LEADERSHIP: AboutPerson[] = [
-  {
-    name: "Темирбеков Уран Темирбекович",
-    role: "Генеральный директор",
-    photo: "/images/about/photo_12.png",
-  },
-  {
-    name: "Мадумаров Аскат Эркинович",
-    role: "Заместитель генерального директора",
-    photo: "/images/about/photo_4.png",
-  },
+export const ABOUT_LEADERSHIP_META: readonly AboutPersonMeta[] = [
+  { name: "Темирбеков Уран Темирбекович", photo: "/images/about/photo_12.png" },
+  { name: "Мадумаров Аскат Эркинович", photo: "/images/about/photo_4.png" },
 ];
 
-export const ABOUT_DEPARTMENT_HEADS: AboutPerson[] = [
-  {
-    name: "Бекташов Талант Изатиллаевич",
-    role: "Руководитель Юридического департамента",
-    photo: "/images/about/photo_10.png",
-  },
-  {
-    name: "Абдымамбетов Нурбек Абыдкапарович",
-    role: "Руководитель Инвестиционного департамента",
-    photo: "/images/about/photo_2.png",
-  },
-  {
-    name: "Марлисов Анвар Болотбекович",
-    role: "Руководитель Департамента IT-безопасности и комплаенс-контроля",
-    photo: "/images/about/photo_5.png",
-  },
-  {
-    name: "Эрса Расул Тахирович",
-    role: "Руководитель департамента стратегического партнерства и организационных работ",
-    photo: "/images/about/photo_13.png",
-  },
+export const ABOUT_DEPARTMENT_HEADS_META: readonly AboutPersonMeta[] = [
+  { name: "Бекташов Талант Изатиллаевич", photo: "/images/about/photo_10.png" },
+  { name: "Абдымамбетов Нурбек Абыдкапарович", photo: "/images/about/photo_2.png" },
+  { name: "Марлисов Анвар Болотбекович", photo: "/images/about/photo_5.png" },
+  { name: "Эрса Расул Тахирович", photo: "/images/about/photo_13.png" },
 ];
 
-export const ABOUT_CORPORATE_SECRETARY: AboutPerson = {
+export const ABOUT_CORPORATE_SECRETARY_META: AboutPersonMeta = {
   name: "Турдугулов Абай Тагайбекович",
-  role: "Корпоративный секретарь",
   photo: "/images/about/photo_6.png",
 };
 
-export const ABOUT_REGULATORY_DOCS = [
-  {
-    title: "Закон Кыргызской Республики «О Национальном инвестиционном фонде Кыргызской Республики» (№ 143 от 24 июля 2024 года)",
-    href: "/docs/about/zakon-143.pdf",
-  },
-  {
-    title: "Устав ОАО «Национальный инвестиционный фонд Кыргызской Республики»",
-    href: "/docs/about/ustav.pdf",
-  },
+export const ABOUT_REGULATORY_DOC_HREFS = [
+  "/docs/about/zakon-143.pdf",
+  "/docs/about/ustav.pdf",
 ] as const;
 
-export const ABOUT_FINANCIAL_REPORTS = [
-  {
-    title: "Отчёт о финансовых результатах за 2025 год",
-    href: null,
-  },
-] as const;
+export const ABOUT_FINANCIAL_REPORT_HREFS = [null] as const;

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout";
-import { ACCREDITATION_DOCUMENTS } from "@/data/partners";
+import { getAccreditationDocuments } from "@/lib/i18n/content";
+import { useT } from "@/lib/lang";
 
 export const Route = createFileRoute("/partners-join")({
   head: () => ({
@@ -10,17 +11,17 @@ export const Route = createFileRoute("/partners-join")({
 });
 
 function PartnersJoinPage() {
-  return (
-    <DetailPageLayout title="Стать партнёром">
-      <p>
-        Ознакомьтесь с критериями аккредитации для компаний, желающих стать
-        партнёрами Национального инвестиционного фонда Кыргызской Республики.
-      </p>
+  const t = useT();
+  const docs = getAccreditationDocuments(t);
 
-      <DetailInfoBlock title="Документы">
-        <p className="font-semibold text-white">Критерии аккредитации</p>
+  return (
+    <DetailPageLayout title={t.partners.joinTitle}>
+      <p>{t.partners.joinIntro}</p>
+
+      <DetailInfoBlock title={t.partners.docsTitle}>
+        <p className="font-semibold text-white">{t.partners.accreditationTitle}</p>
         <ul className="mt-2 space-y-2">
-          {ACCREDITATION_DOCUMENTS.map((doc) => (
+          {docs.map((doc) => (
             <li key={doc.href}>
               <a
                 href={doc.href}

@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout";
 import { SectionCard } from "@/components/sections/SectionCard";
-import { DIRECTION_CARDS } from "@/components/sections/sectionContent";
+import { getDirectionCards } from "@/lib/i18n/content";
+import { useT } from "@/lib/lang";
 
 export const Route = createFileRoute("/directions")({
   head: () => ({
@@ -11,18 +12,15 @@ export const Route = createFileRoute("/directions")({
 });
 
 function DirectionsPage() {
+  const t = useT();
+  const cards = getDirectionCards(t);
+
   return (
-    <DetailPageLayout title="Перспективные направления">
-      <p>
-        Национальный инвестиционный фонд работает с ключевыми отраслями, которые имеют высокий потенциал роста и
-        важны для развития экономики Кыргызстана.
-      </p>
-      <DetailInfoBlock title="Отраслевой фокус">
-        Приоритет отдаётся проектам, которые формируют долгосрочный экономический эффект, создают рабочие места и
-        развивают инфраструктуру регионов.
-      </DetailInfoBlock>
+    <DetailPageLayout title={t.directions.pageTitle}>
+      <p>{t.directions.blurb}</p>
+      <DetailInfoBlock title={t.directions.focusTitle}>{t.directions.focusBody}</DetailInfoBlock>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-        {DIRECTION_CARDS.map((card) => (
+        {cards.map((card) => (
           <SectionCard
             key={card.title}
             variant="light"

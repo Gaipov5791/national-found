@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ensureGsapPlugins } from "@/lib/gsap-client";
-import { getSectionSceneLabel } from "@/lib/sectionNavigation";
+import { BrandLockup } from "@/components/BrandLockup";
 import type { AboutPerson } from "@/components/sections/sectionContent";
+import { ensureGsapPlugins } from "@/lib/gsap-client";
+import { LANGS, useLang, useT } from "@/lib/lang";
+import { getSectionSceneLabel } from "@/lib/sectionNavigation";
 
 /** Clear leftover Lenis / ScrollTrigger scroll locks after leaving the landing. */
 function restoreDocumentScroll() {
@@ -43,6 +45,8 @@ type DetailPageLayoutProps = {
 };
 
 export function DetailPageLayout({ title, children, wide = false }: DetailPageLayoutProps) {
+  const t = useT();
+  const { lang, setLang } = useLang();
   const locationHash = useRouterState({
     select: (state) => state.location.hash,
   });
@@ -65,17 +69,36 @@ export function DetailPageLayout({ title, children, wide = false }: DetailPageLa
       />
 
       <div className={`mx-auto w-full ${wide ? "max-w-none" : "max-w-3xl"}`}>
-        <header className="flex items-center justify-between gap-4 border-b border-white/20 pb-6">
-          <Link to="/" hash={returnSection ?? undefined} className="inline-flex items-center">
-            <img src="/logo/logo-white.png" alt="НИФ КР" className="h-9 w-auto sm:h-10" />
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/20 pb-6 sm:gap-4">
+          <Link to="/" hash={returnSection ?? undefined} className="inline-flex max-w-[min(100%,20rem)] items-center sm:max-w-[24rem]">
+            <BrandLockup lang={lang} tone="white" size="sm" />
           </Link>
-          <Link
-            to="/"
-            hash={returnSection ?? undefined}
-            className="text-xs font-semibold tracking-[0.12em] text-white/70 transition hover:text-[color:var(--gold)] sm:text-sm"
-          >
-            ← На главную
-          </Link>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-1.5" aria-label={t.common.language}>
+              {LANGS.map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setLang(l)}
+                  aria-pressed={lang === l}
+                  className={`rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[0.14em] transition sm:px-3 sm:text-[11px] ${
+                    lang === l
+                      ? "bg-white text-[#0b2138]"
+                      : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+                  }`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+            <Link
+              to="/"
+              hash={returnSection ?? undefined}
+              className="text-xs font-semibold tracking-[0.12em] text-white/70 transition hover:text-[color:var(--gold)] sm:text-sm"
+            >
+              {t.common.backHome}
+            </Link>
+          </div>
         </header>
         <h1 className="mt-8 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
           {title}
@@ -109,6 +132,7 @@ type PersonCardProps = {
 };
 
 export function PersonCard({ person }: PersonCardProps) {
+  const t = useT();
   const [isPhotoOpen, setIsPhotoOpen] = useState(false);
 
   return (
@@ -132,7 +156,7 @@ export function PersonCard({ person }: PersonCardProps) {
           />
         ) : (
           <span className="pb-8 text-xs font-semibold tracking-[0.14em] text-white/35">
-            Фото скоро
+            {t.common.photoSoon}
           </span>
         )}
       </div>
@@ -177,6 +201,7 @@ type PersonGridProps = {
 };
 
 export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
+  const t = useT();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const cols =
@@ -224,7 +249,7 @@ export function PersonGrid({ people, columns = 3 }: PersonGridProps) {
     <div
       ref={scrollerRef}
       className="-mx-5 mt-5 snap-x snap-mandatory overflow-x-auto overscroll-x-contain pb-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:mt-6 sm:snap-none sm:overflow-visible sm:pb-0"
-      aria-label="Карточки сотрудников"
+      aria-label={t.common.staffCards}
     >
       <div
         ref={trackRef}

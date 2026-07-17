@@ -1,5 +1,6 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { useT } from "@/lib/lang";
 import { DetailLinkButton } from "./DetailLinkButton";
 import {
   SECTION_CTA_MARGIN,
@@ -33,28 +34,14 @@ export type MsbSectionProps = {
   msbRef: RefObject<HTMLDivElement | null>;
 };
 
-export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function MsbSection(
-  { msbRef },
-  _ref
-) {
+export const MsbSection = forwardRef<HTMLDivElement, MsbSectionProps>(function MsbSection({ msbRef }, _ref) {
+  const t = useT();
+
   return (
-    <div
-      ref={msbRef}
-      className={`${SECTION_SHELL} ${SECTION_TOP_COMPACT}`}
-    >
-      <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
-        ПРОЕКТЫ МСБ
-      </h2>
-      <p className={`${SECTION_SUBTEXT_ON_IMAGE} ${SECTION_SUBTEXT_MARGIN} text-white/90`}>
-        Малый и средний бизнес играет ключевую роль в развитии регионов Кыргызстана. Национальный инвестиционный
-        фонд поддерживает проекты МСБ, с особым акцентом на агропромышленный комплекс и переработку местного сырья,
-        помогая создавать устойчивые бизнес-модели и повышать уровень жизни в регионах страны.
-      </p>
-      <DetailLinkButton
-        to="/msb"
-        originSection="sc_msb"
-        containerClassName={SECTION_CTA_MARGIN}
-      />
+    <div ref={msbRef} className={`${SECTION_SHELL} ${SECTION_TOP_COMPACT}`}>
+      <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>{t.msb.heading}</h2>
+      <p className={`${SECTION_SUBTEXT_ON_IMAGE} ${SECTION_SUBTEXT_MARGIN} text-white/90`}>{t.msb.blurb}</p>
+      <DetailLinkButton to="/msb" originSection="sc_msb" containerClassName={SECTION_CTA_MARGIN} />
     </div>
   );
 });

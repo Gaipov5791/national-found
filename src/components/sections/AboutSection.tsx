@@ -1,5 +1,6 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { useT } from "@/lib/lang";
 import { DetailLinkButton } from "./DetailLinkButton";
 import {
   SECTION_CTA_MARGIN,
@@ -37,24 +38,13 @@ export const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(functi
   { aboutRef },
   _ref
 ) {
+  const t = useT();
+
   return (
-    <div
-      ref={aboutRef}
-      className={`${SECTION_SHELL} ${SECTION_TOP_SIMPLE_CENTER}`}
-    >
-      <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
-        О ФОНДЕ
-      </h2>
-      <p className={`${SECTION_SUBTEXT_ON_IMAGE} ${SECTION_SUBTEXT_MARGIN} text-white/90`}>
-        Национальный инвестиционный фонд выступает связующим звеном между государством, бизнесом и инвесторами.
-        Мы применяем современные инструменты прямого инвестирования, направляя капитал в проекты, которые создают
-        реальный экономический эффект и ускоряют развитие Кыргызстана.
-      </p>
-      <DetailLinkButton
-        to="/about"
-        originSection="sc_about"
-        containerClassName={SECTION_CTA_MARGIN}
-      />
+    <div ref={aboutRef} className={`${SECTION_SHELL} ${SECTION_TOP_SIMPLE_CENTER}`}>
+      <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>{t.about.heading}</h2>
+      <p className={`${SECTION_SUBTEXT_ON_IMAGE} ${SECTION_SUBTEXT_MARGIN} text-white/90`}>{t.about.blurb}</p>
+      <DetailLinkButton to="/about" originSection="sc_about" containerClassName={SECTION_CTA_MARGIN} />
     </div>
   );
 });

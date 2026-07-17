@@ -1,8 +1,9 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { getDirectionCards } from "@/lib/i18n/content";
+import { useT } from "@/lib/lang";
 import { SectionCard } from "./SectionCard";
 import { SectionCardSlide, SectionCardsScroller } from "./SectionCardsScroller";
-import { DIRECTION_CARDS } from "./sectionContent";
 import {
   SECTION_CARDS_GRID_MARGIN,
   SECTION_HEADING,
@@ -44,21 +45,20 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
   { directionsRef },
   _ref
 ) {
+  const t = useT();
+  const cards = getDirectionCards(t);
+
   return (
-    <div
-      ref={directionsRef}
-      className={`${SECTION_SHELL} ${SECTION_TOP_WITH_CARDS}`}
-    >
+    <div ref={directionsRef} className={`${SECTION_SHELL} ${SECTION_TOP_WITH_CARDS}`}>
       <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO} ${SECTION_HEADING_SINGLE_LINE}`}>
-        ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ
+        {t.directions.heading}
       </h2>
       <p className={`${SECTION_SUBTEXT} ${SECTION_SUBTEXT_MARGIN} text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)]`}>
-        Национальный инвестиционный фонд работает с ключевыми отраслями, которые имеют высокий потенциал роста и
-        важны для развития экономики Кыргызстана.
+        {t.directions.blurb}
       </p>
       <div className={SECTION_CARDS_GRID_MARGIN}>
         <SectionCardsScroller layout="six-row" autoSwipeOnOverflow className={CARD_SCROLLER_CLASS}>
-          {DIRECTION_CARDS.map((card) => (
+          {cards.map((card) => (
             <SectionCardSlide key={card.title} layout="six-row">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
             </SectionCardSlide>

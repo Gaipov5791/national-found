@@ -1,6 +1,8 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { Instagram } from "lucide-react";
+import { BrandLockup } from "@/components/BrandLockup";
+import { useLang, useT } from "@/lib/lang";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
 export type FooterSceneRefs = {
@@ -65,6 +67,9 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
   { footerContentZoneRef, onScrollToTop },
   _ref
 ) {
+  const t = useT();
+  const { lang } = useLang();
+
   return (
     <div
       ref={footerContentZoneRef}
@@ -79,11 +84,7 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 sm:gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
           <div className="flex flex-col gap-4 sm:gap-6 lg:max-w-sm">
             <div className="flex items-start gap-3 sm:gap-4">
-              <img
-                src="/logo/logo-white.png"
-                alt="НИФ КР"
-                className="h-12 w-auto shrink-0 sm:h-14 md:h-16"
-              />
+              <BrandLockup lang={lang} tone="white" size="lg" />
             </div>
 
             <div className="flex items-center gap-3">
@@ -111,17 +112,17 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
           </div>
 
           <div className="text-xs leading-relaxed text-white/85 sm:text-sm sm:text-[15px] lg:max-w-md lg:text-right">
-            <p className="mb-1 text-xs font-semibold tracking-[0.12em] text-white/60">Адрес</p>
+            <p className="mb-1 text-xs font-semibold tracking-[0.12em] text-white/60">{t.footer.addressLabel}</p>
             <p className="mb-5">
-              Кыргызская Республика, 720001
+              {t.footer.addressLines[0]}
               <br />
-              г. Бишкек, ул. Токтогула, 125/1, БЦ «Авангард»,
+              {t.footer.addressLines[1]}
               <br />
-              <strong className="font-semibold text-white">Башня &quot;А&quot;</strong>, 8 этаж,{" "}
-              <strong className="font-semibold text-white">правое крыло</strong>
+              <strong className="font-semibold text-white">{t.footer.towerA}</strong>, {t.footer.addressLines[2]}{" "}
+              <strong className="font-semibold text-white">{t.footer.rightWing}</strong>
             </p>
 
-            <p className="mb-1 text-xs font-semibold tracking-[0.12em] text-white/60">Телефон:</p>
+            <p className="mb-1 text-xs font-semibold tracking-[0.12em] text-white/60">{t.footer.phoneLabel}</p>
             <p className="mb-5">
               <a
                 href="tel:+996312886668"
@@ -140,7 +141,7 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
               </a>
             </p>
 
-            <p className="mb-1 text-xs font-semibold tracking-[0.12em] text-white/60">Телефон доверия:</p>
+            <p className="mb-1 text-xs font-semibold tracking-[0.12em] text-white/60">{t.footer.hotlineLabel}</p>
             <p>
               <a
                 href="tel:+996990003055"
@@ -154,10 +155,8 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
         </div>
 
         <div className="mx-auto mt-8 flex w-full max-w-7xl flex-col gap-3 border-t border-white/15 pt-5 text-[10px] leading-relaxed text-white/55 sm:flex-row sm:items-center sm:justify-between sm:text-[11px]">
-          <p>
-            © 2026 Общественный фонд «Фонд социального партнёрства по развитию регионов»
-          </p>
-          <p className="shrink-0 text-white/45 sm:text-right">Разработчик Гаипов Бакыт</p>
+          <p>{t.footer.copyright}</p>
+          <p className="shrink-0 text-white/45 sm:text-right">{t.footer.developer}</p>
         </div>
       </footer>
 
@@ -166,10 +165,10 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
           type="button"
           onClick={onScrollToTop}
           data-cursor-hover
-          aria-label="Вернуться наверх"
+          aria-label={t.footer.backToTop}
           className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-black/30 font-display text-[9px] font-semibold tracking-[0.28em] text-white backdrop-blur-sm transition-all duration-300 will-change-transform hover:scale-110 hover:border-white sm:h-16 sm:w-16 sm:bg-transparent sm:text-[10px]"
         >
-          <span className="sr-only">Вернуться наверх</span>
+          <span className="sr-only">{t.footer.backToTop}</span>
           <span aria-hidden className="text-base leading-none sm:text-lg">
             ↑
           </span>

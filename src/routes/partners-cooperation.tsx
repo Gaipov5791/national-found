@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout";
 import { PartnerLogoGrid } from "@/components/PartnerLogoGrid";
 import { COOPERATION_PARTNERS } from "@/data/partners";
+import { useT } from "@/lib/lang";
 
 export const Route = createFileRoute("/partners-cooperation")({
   head: () => ({
@@ -11,15 +12,13 @@ export const Route = createFileRoute("/partners-cooperation")({
 });
 
 function PartnersCooperationPage() {
-  return (
-    <DetailPageLayout title="Международное и региональное сотрудничество" wide>
-      <p>
-        Национальный инвестиционный фонд развивает сотрудничество с
-        международными и региональными организациями для реализации
-        стратегических проектов в Кыргызской Республике.
-      </p>
+  const t = useT();
 
-      <DetailInfoBlock title="Партнёры">
+  return (
+    <DetailPageLayout title={t.partners.cooperationTitle} wide>
+      <p>{t.partners.cooperationIntro}</p>
+
+      <DetailInfoBlock title={t.partners.cooperationPartnersTitle}>
         <PartnerLogoGrid partners={COOPERATION_PARTNERS} />
       </DetailInfoBlock>
     </DetailPageLayout>

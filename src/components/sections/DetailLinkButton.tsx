@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { cn } from "@/lib/utils";
 import { useCanHover } from "@/hooks/use-can-hover";
+import { useT } from "@/lib/lang";
 import type { SectionSceneLabel } from "@/lib/sectionNavigation";
+import { cn } from "@/lib/utils";
 
 type DetailLinkButtonProps = {
   to: string;
@@ -23,13 +24,15 @@ const blockButtonClassName =
 export function DetailLinkButton({
   to,
   originSection,
-  label = "Подробнее",
+  label,
   className,
   containerClassName,
   block = false,
 }: DetailLinkButtonProps) {
+  const t = useT();
   const [hovered, setHovered] = useState(false);
   const canHover = useCanHover();
+  const resolvedLabel = label ?? t.common.more;
 
   return (
     <span
@@ -54,7 +57,7 @@ export function DetailLinkButton({
         }}
         className={cn("pointer-events-auto", block ? blockButtonClassName : buttonClassName, className)}
       >
-        {label}
+        {resolvedLabel}
         <span aria-hidden className="ml-2 opacity-80 sm:ml-2.5">
           →
         </span>

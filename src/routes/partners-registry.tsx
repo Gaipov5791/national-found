@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout";
 import { PartnerLogoGrid } from "@/components/PartnerLogoGrid";
-import { PARTNER_REGISTRY } from "@/data/partners";
+import { getPartnerRegistry } from "@/lib/i18n/content";
+import { useT } from "@/lib/lang";
 
 export const Route = createFileRoute("/partners-registry")({
   head: () => ({
@@ -11,14 +12,14 @@ export const Route = createFileRoute("/partners-registry")({
 });
 
 function PartnersRegistryPage() {
-  return (
-    <DetailPageLayout title="Реестр партнёров" wide>
-      <p>
-        В реестре представлены организации, оказывающие профессиональные услуги
-        Национальному инвестиционному фонду Кыргызской Республики.
-      </p>
+  const t = useT();
+  const registry = getPartnerRegistry(t);
 
-      {PARTNER_REGISTRY.map((category) => (
+  return (
+    <DetailPageLayout title={t.partners.registryTitle} wide>
+      <p>{t.partners.registryIntro}</p>
+
+      {registry.map((category) => (
         <DetailInfoBlock key={category.title} title={category.title}>
           <PartnerLogoGrid partners={category.partners} />
         </DetailInfoBlock>

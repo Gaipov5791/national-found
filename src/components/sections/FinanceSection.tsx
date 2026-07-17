@@ -1,9 +1,10 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { getFinanceCards } from "@/lib/i18n/content";
+import { useT } from "@/lib/lang";
 import { DetailLinkButton } from "./DetailLinkButton";
 import { SectionCard } from "./SectionCard";
 import { SectionCardSlide, SectionCardsScroller } from "./SectionCardsScroller";
-import { FINANCE_CARDS } from "./sectionContent";
 import {
   SECTION_CARDS_GRID_MARGIN,
   SECTION_CTA_MARGIN,
@@ -42,35 +43,28 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
   { financeRef },
   _ref
 ) {
+  const t = useT();
+  const cards = getFinanceCards(t);
+
   return (
-    <div
-      ref={financeRef}
-      className={`${SECTION_SHELL} ${SECTION_TOP_WITH_CARDS}`}
-    >
-      <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>
-        ФИНАНСИРОВАНИЕ ПРОЕКТОВ
-      </h2>
+    <div ref={financeRef} className={`${SECTION_SHELL} ${SECTION_TOP_WITH_CARDS}`}>
+      <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>{t.finance.heading}</h2>
       <p className={`${SECTION_SUBTEXT} ${SECTION_SUBTEXT_MARGIN} text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)]`}>
-        Мы предлагаем современные инструменты финансирования, которые помогают привлекать капитал и успешно
-        реализовывать стратегические проекты в Кыргызстане.
+        {t.finance.blurb}
       </p>
       <div className={SECTION_CARDS_GRID_MARGIN}>
         <SectionCardsScroller
           layout="four-row"
           className="pointer-events-auto origin-top touch-pan-x max-md:scale-[0.92] md:scale-[0.94] lg:scale-[0.97]"
         >
-          {FINANCE_CARDS.map((card) => (
+          {cards.map((card) => (
             <SectionCardSlide key={card.title} layout="four-row">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
             </SectionCardSlide>
           ))}
         </SectionCardsScroller>
       </div>
-      <DetailLinkButton
-        to="/finance"
-        originSection="sc_finance"
-        containerClassName={SECTION_CTA_MARGIN}
-      />
+      <DetailLinkButton to="/finance" originSection="sc_finance" containerClassName={SECTION_CTA_MARGIN} />
     </div>
   );
 });

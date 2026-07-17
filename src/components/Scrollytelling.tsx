@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,6 +8,7 @@ import { ScrollytellingScene } from "@/components/scrollytelling/ScrollytellingS
 import { useSceneRefs } from "@/components/scrollytelling/useSceneRefs";
 import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
 import { LANGS, useLang } from "@/lib/lang";
+import { NAV_CONFIG, NAV_SCENE_BY_ID, type NavId } from "@/lib/navConfig";
 import {
   getSectionSceneLabel,
   type SectionSceneLabel,
@@ -17,40 +18,14 @@ const SCROLL_DISTANCE_DESKTOP = 15800;
 const SCROLL_DISTANCE_TABLET = 12600;
 const SCROLL_DISTANCE_MOBILE = 11800;
 
-const NAV_ITEMS = [
-  "ГЛАВНАЯ",
-  "О ФОНДЕ",
-  "ФИНАНСИРОВАНИЕ ПРОЕКТОВ",
-  "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ",
-  "ПРОЕКТЫ МСБ",
-  "ПАРТНЁРЫ",
-  "НОВОСТИ",
-  "КОНТАКТЫ",
-] as const;
-
-type NavItem = (typeof NAV_ITEMS)[number];
-
-const NAV_SCENE_LABELS: Record<NavItem, SectionSceneLabel> = {
-  ГЛАВНАЯ: "sc_hero",
-  "О ФОНДЕ": "sc_about",
-  "ФИНАНСИРОВАНИЕ ПРОЕКТОВ": "sc_finance",
-  "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ": "sc_directions",
-  "ПРОЕКТЫ МСБ": "sc_msb",
-  ПАРТНЁРЫ: "sc_partners",
-  НОВОСТИ: "sc_news",
-  КОНТАКТЫ: "sc_footer",
-};
-
 const NAV_SCROLL_NAV_BUFFER = 8;
 const NAV_SCROLL_MOBILE_PADDING = 16;
 const MOBILE_CLOSED_NAVBAR_HEIGHT = 80;
 const NAV_SCROLL_DESKTOP_DURATION = 1.6;
 const NAV_SCROLL_MOBILE_DURATION = 1.1;
 
-type SceneLabel = (typeof NAV_SCENE_LABELS)[NavItem];
-
 /** Forward pixel nudges on mobile — compensates pinned-scene drift after panorama timeline. */
-const MOBILE_SCENE_NUDGE: Partial<Record<SceneLabel, number>> = {
+const MOBILE_SCENE_NUDGE: Partial<Record<SectionSceneLabel, number>> = {
   sc_about: 60,
   sc_finance: 160,
   sc_directions: 110,
@@ -61,13 +36,22 @@ const MOBILE_SCENE_NUDGE: Partial<Record<SceneLabel, number>> = {
 };
 
 export function Scrollytelling() {
-  const { lang, setLang } = useLang();
+  const { lang, setLang, t } = useLang();
   const [counterProgress, setCounterProgress] = useState(0);
   const returnSectionHandledRef = useRef(false);
   const refs = useSceneRefs();
 
+  const navItems = useMemo(
+    () =>
+      NAV_CONFIG.map((item) => ({
+        id: item.id,
+        label: t.nav[item.id],
+      })),
+    [t]
+  );
+
   const scrollToSection = useCallback(
-    (label: NavItem) => {
+    (id: NavId) => {
       ensureGsapPlugins();
       const mobile = window.innerWidth < 768;
       ScrollTrigger.update();
@@ -83,7 +67,7 @@ export function Scrollytelling() {
 
       let target = 0;
       if (scrollTrigger?.labelToScroll) {
-        const sceneLabel = NAV_SCENE_LABELS[label];
+        const sceneLabel = NAV_SCENE_BY_ID[id];
         let targetScrollPos = scrollTrigger.labelToScroll(sceneLabel);
 
         if (mobile) {
@@ -113,8 +97,8 @@ export function Scrollytelling() {
     [refs]
   );
 
-  const handleNavClick = useCallback((label: string) => scrollToSection(label as NavItem), [scrollToSection]);
-  const scrollToTop = useCallback(() => scrollToSection("ГЛАВНАЯ"), [scrollToSection]);
+  const handleNavClick = useCallback((id: NavId) => scrollToSection(id), [scrollToSection]);
+  const scrollToTop = useCallback(() => scrollToSection("home"), [scrollToSection]);
 
   useGSAP(
     () => {
@@ -182,9 +166,7 @@ export function Scrollytelling() {
     if (returnSectionHandledRef.current) return;
 
     const returnSection = getSectionSceneLabel(window.location.hash);
-    const navItem = NAV_ITEMS.find(
-      (item) => NAV_SCENE_LABELS[item] === returnSection
-    );
+    const navItem = NAV_CONFIG.find((item) => item.scene === returnSection);
     if (!navItem) return;
 
     let frameId = 0;
@@ -195,7 +177,7 @@ export function Scrollytelling() {
 
       if (scrollTrigger?.labelToScroll) {
         returnSectionHandledRef.current = true;
-        scrollToSection(navItem);
+        scrollToSection(navItem.id);
         return;
       }
 
@@ -216,9 +198,11 @@ export function Scrollytelling() {
         ref={refs.navHeaderRef}
         brandRef={refs.brandRef}
         navBrandLogoRef={refs.navBrandLogoRef}
-        navItems={[...NAV_ITEMS]}
+        navItems={navItems}
         langs={LANGS}
         lang={lang}
+        languageLabel={t.common.language}
+        menuLabel={t.common.menu}
         onLangChange={setLang}
         onNavClick={handleNavClick}
       />

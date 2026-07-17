@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout";
+import { useT } from "@/lib/lang";
 
 export const Route = createFileRoute("/partners")({
   head: () => ({
@@ -11,16 +12,12 @@ export const Route = createFileRoute("/partners")({
 const PARTNER_NAMES = ["EBRD", "IFC", "ADB", "AIIB", "KfW"] as const;
 
 function PartnersPage() {
+  const t = useT();
+
   return (
-    <DetailPageLayout title="Партнёры">
-      <p>
-        Национальный инвестиционный фонд развивает партнёрства с ведущими международными финансовыми институтами
-        и организациями для реализации стратегических проектов в Кыргызстане.
-      </p>
-      <DetailInfoBlock title="Стратегическое сотрудничество">
-        Партнёрства позволяют привлекать международный опыт, расширять источники финансирования и реализовывать
-        масштабные инвестиционные инициативы в приоритетных отраслях экономики.
-      </DetailInfoBlock>
+    <DetailPageLayout title={t.partners.pageTitle}>
+      <p>{t.partners.blurb}</p>
+      <DetailInfoBlock title={t.partners.strategyTitle}>{t.partners.strategyBody}</DetailInfoBlock>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-5">
         {PARTNER_NAMES.map((name) => (
           <div

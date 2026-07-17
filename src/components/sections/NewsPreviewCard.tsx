@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { useCanHover } from "@/hooks/use-can-hover";
+import { useT } from "@/lib/lang";
+import { cn } from "@/lib/utils";
 
 const HOVER_TRANSITION =
   "transform 0.3s ease-out, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease";
@@ -15,11 +16,14 @@ type NewsPreviewCardProps = {
 export function NewsPreviewCard({
   className,
   title,
-  description = "Описание новости",
-  imageLabel = "изображение",
+  description,
+  imageLabel,
 }: NewsPreviewCardProps) {
+  const t = useT();
   const [hovered, setHovered] = useState(false);
   const canHover = useCanHover();
+  const resolvedDescription = description ?? t.news.previewDescription;
+  const resolvedImageLabel = imageLabel ?? t.news.previewImage;
 
   return (
     <article
@@ -39,7 +43,7 @@ export function NewsPreviewCard({
       )}
     >
       <div className="flex aspect-[4/3] min-h-[5.75rem] items-center justify-center bg-white/15 font-display text-[11px] tracking-wide text-white/60 sm:min-h-[7rem] sm:text-xs md:min-h-[8.5rem] md:text-sm">
-        {imageLabel}
+        {resolvedImageLabel}
       </div>
       {title ? (
         <h3 className="px-3 pt-2.5 font-display text-xs font-semibold tracking-tight text-white sm:px-4 sm:pt-3 sm:text-sm">
@@ -52,7 +56,7 @@ export function NewsPreviewCard({
           title ? "pb-2.5 pt-1 sm:pb-3 sm:pt-1.5" : "py-2.5 sm:py-3 md:py-3.5"
         )}
       >
-        {description}
+        {resolvedDescription}
       </p>
     </article>
   );

@@ -1,5 +1,6 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
+import { useT } from "@/lib/lang";
 import { RollingSumCounter, formatProjectCount } from "./RollingSumCounter";
 import {
   COUNTER_PROJECTS,
@@ -55,6 +56,8 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
   { statsRef, countProjectsRef, counterProgress },
   _ref
 ) {
+  const t = useT();
+
   return (
     <div
       ref={statsRef}
@@ -70,7 +73,7 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
           }}
         />
         <p className="font-display text-base tracking-tighter text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] sm:text-2xl sm:tracking-tight md:text-4xl">
-          Инвестиции в проекты будущего
+          {t.counters.tagline}
         </p>
 
         <div className="mx-auto mt-3 flex w-full max-w-3xl flex-col items-center rounded-2xl border border-white/30 bg-white/10 px-5 py-4 text-center backdrop-blur-md shadow-[0_10px_40px_rgba(0,0,0,0.35)] sm:mt-5 sm:rounded-3xl sm:px-8 sm:py-6 md:px-12">
@@ -78,7 +81,7 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
             <div className={COUNTER_VALUE}>
               <span ref={countProjectsRef}>0</span>
             </div>
-            <div className={COUNTER_LABEL}>Проектов в реализации</div>
+            <div className={COUNTER_LABEL}>{t.counters.projects}</div>
           </div>
 
           <div className="my-5 h-px w-full max-w-4xl bg-white/25 sm:my-7" />
@@ -87,11 +90,11 @@ export const CountersSection = forwardRef<HTMLDivElement, CountersSectionProps>(
             <RollingSumCounter
               value={COUNTER_TOTAL_SUM}
               progress={counterProgress}
-              suffix="с"
+              suffix={t.counters.currencySuffix}
               className={COUNTER_VALUE}
               wideDigits
             />
-            <div className={COUNTER_LABEL}>Общая сумма проектов</div>
+            <div className={COUNTER_LABEL}>{t.counters.totalSum}</div>
           </div>
         </div>
       </div>

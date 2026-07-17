@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout";
+import { useT } from "@/lib/lang";
 
 export const Route = createFileRoute("/msb")({
   head: () => ({
@@ -9,15 +10,12 @@ export const Route = createFileRoute("/msb")({
 });
 
 function MsbPage() {
+  const t = useT();
+
   return (
-    <DetailPageLayout title="Проекты МСБ">
-      <p>
-        Раздел находится в разработке. Скоро здесь появится информация о проектах малого и среднего бизнеса,
-        поддерживаемых Национальным инвестиционным фондом.
-      </p>
-      <DetailInfoBlock title="Скоро">
-        Контент для этой страницы будет добавлен позже.
-      </DetailInfoBlock>
+    <DetailPageLayout title={t.msb.pageTitle}>
+      <p>{t.msb.pageIntro}</p>
+      <DetailInfoBlock title={t.msb.soonTitle}>{t.msb.soonBody}</DetailInfoBlock>
     </DetailPageLayout>
   );
 }
