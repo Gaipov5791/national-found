@@ -197,7 +197,6 @@ export function Scrollytelling() {
       <Navbar
         ref={refs.navHeaderRef}
         brandRef={refs.brandRef}
-        navBrandLogoRef={refs.navBrandLogoRef}
         navItems={navItems}
         langs={LANGS}
         lang={lang}

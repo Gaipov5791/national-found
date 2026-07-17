@@ -12,7 +12,6 @@ export function useSceneRefs() {
   const statsRef = useRef<HTMLDivElement>(null);
   const decreeRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
-  const navBrandLogoRef = useRef<HTMLImageElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const financeRef = useRef<HTMLDivElement>(null);
   const directionsRef = useRef<HTMLDivElement>(null);
@@ -38,7 +37,6 @@ export function useSceneRefs() {
     statsRef,
     decreeRef,
     brandRef,
-    navBrandLogoRef,
     aboutRef,
     financeRef,
     directionsRef,

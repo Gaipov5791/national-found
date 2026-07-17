@@ -1,7 +1,7 @@
 import { forwardRef, useMemo, useState, type MouseEvent, type RefObject } from "react";
 import { Menu, X } from "lucide-react";
 import { BRAND_TOP_CLASS } from "@/components/sections/sectionLayout";
-import { getBrandName, getBrandNameLines, getBrandShort } from "@/lib/brand";
+import { getBrandName, getBrandNameLines } from "@/lib/brand";
 import type { Lang } from "@/lib/lang";
 import type { NavId } from "@/lib/navConfig";
 
@@ -17,7 +17,6 @@ type NavbarProps = {
   languageLabel: string;
   menuLabel: string;
   brandRef?: RefObject<HTMLDivElement | null>;
-  navBrandLogoRef?: RefObject<HTMLImageElement | null>;
   onLangChange: (lang: Lang) => void;
   onNavClick: (id: NavId) => void;
 };
@@ -33,7 +32,6 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
     languageLabel,
     menuLabel,
     brandRef,
-    navBrandLogoRef,
     onLangChange,
     onNavClick,
   },
@@ -43,7 +41,6 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
 
   const brandName = useMemo(() => getBrandName(lang), [lang]);
   const brandLines = useMemo(() => getBrandNameLines(lang), [lang]);
-  const brandShort = useMemo(() => getBrandShort(lang), [lang]);
 
   const handleNavAnchorClick = useMemo(
     () => (id: NavId) => (e: MouseEvent<HTMLAnchorElement>) => {
@@ -62,14 +59,8 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
             data-cursor-surface="light"
             className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 rounded-full border border-white/40 bg-white/40 px-4 py-2.5 font-display backdrop-blur-xl shadow-[0_8px_30px_rgba(20,40,90,0.08)] sm:gap-3 sm:px-4 sm:py-3 md:gap-4 md:px-6 md:py-4 lg:gap-5 lg:px-7 xl:px-9"
           >
-            <div className="flex shrink-0 items-center pr-1 sm:pr-0">
-              <img
-                ref={navBrandLogoRef}
-                src="/logo/logo-blue.png"
-                alt={brandShort}
-                className={`block h-8 w-8 sm:h-9 sm:w-9 md:hidden ${MARK_IMG_CLASS}`}
-              />
-              <div className="hidden md:block h-[52px] w-[52px] shrink-0" aria-hidden />
+            <div className="hidden shrink-0 items-center pr-1 sm:pr-0 md:flex">
+              <div className="h-[52px] w-[52px] shrink-0" aria-hidden />
             </div>
 
             <ul className="hidden min-w-0 items-center justify-center gap-x-3 text-[10px] font-semibold tracking-[0.12em] text-[color:var(--ink)] lg:flex xl:gap-x-5 xl:text-[10.5px] xl:tracking-[0.14em] 2xl:gap-x-6 2xl:text-xs 2xl:tracking-[0.15em]">
