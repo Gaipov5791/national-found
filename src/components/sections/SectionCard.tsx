@@ -54,7 +54,9 @@ export function SectionCard({
         }}
         className={cn(
           "relative flex h-full cursor-pointer flex-col rounded-2xl border backdrop-blur-md sm:rounded-3xl",
-          compact ? "text-center px-4 pb-4 pt-16 sm:px-5 sm:pb-5 sm:pt-20" : "text-left px-5 pb-5 pt-10 sm:px-6 sm:pb-6 sm:pt-12",
+          compact
+            ? "text-center px-4 pb-4 pt-14 sm:px-5 sm:pb-5 sm:pt-16"
+            : "text-left px-5 pb-5 pt-12 sm:px-6 sm:pb-6 sm:pt-14",
           styles.card
         )}
       >

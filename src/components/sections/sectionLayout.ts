@@ -65,8 +65,19 @@ export const SECTION_HEADING_HERO =
 /** Gap below section subtext before card grid. */
 export const SECTION_CARDS_GRID_MARGIN = "mt-3 sm:mt-4";
 
-/** Top padding on card scroller — room for icons above card edge without pushing the heading. */
-export const SECTION_CARDS_SCROLLER_PT = "pt-7 md:pt-10 lg:pt-10";
+/**
+ * Top padding on card scroller — room for icons above card edge without pushing the heading.
+ * Must cover SectionCardIcon compact offsets (-top-14 / sm:-top-20); overflow-x on the
+ * scroller forces vertical clipping, so insufficient pt cuts icons at the top.
+ */
+export const SECTION_CARDS_SCROLLER_PT = "pt-16 sm:pt-20";
+
+/**
+ * Detail-page grids with overhanging card icons: keep column gap modest, but give
+ * rows enough space so icons from the next row don't cover the card above.
+ */
+export const DETAIL_CARDS_GRID =
+  "grid grid-cols-1 gap-x-5 gap-y-28 pt-24 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-32 sm:pt-28";
 
 export const SECTION_HEADING =
   "font-display font-bold tracking-tighter drop-shadow-[0_6px_30px_rgba(0,0,0,0.55)]";

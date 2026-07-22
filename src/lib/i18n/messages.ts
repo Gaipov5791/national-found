@@ -64,6 +64,22 @@ export type Messages = {
     pageTitle: string;
     toolsTitle: string;
     toolsBody: string;
+    applyCta: string;
+    applyTitle: string;
+    applyIntro: string;
+    form: {
+      organizationName: string;
+      organizationActivity: string;
+      phone: string;
+      email: string;
+      submit: string;
+      submitting: string;
+      successTitle: string;
+      success: string;
+      errorTitle: string;
+      error: string;
+      required: string;
+    };
     cards: readonly { title: string; description: string }[];
   };
   directions: {
@@ -79,8 +95,17 @@ export type Messages = {
     blurb: string;
     pageTitle: string;
     pageIntro: string;
-    soonTitle: string;
-    soonBody: string;
+    mapTitle: string;
+    mapHint: string;
+    mapPanelIdle: string;
+    mapPanelHint: string;
+    selectRegion: string;
+    projectsInRegion: string;
+    statusActive: string;
+    statusCompleted: string;
+    noProjects: string;
+    closePanel: string;
+    demoNote: string;
   };
   partners: {
     heading: string;
@@ -234,6 +259,22 @@ const ru: Messages = {
     toolsTitle: "Инструменты фонда",
     toolsBody:
       "Фонд использует гибкие модели участия — от соинвестирования с банками и международными партнёрами до прямого вхождения в капитал компаний и целевых инструментов поддержки проектов.",
+    applyCta: "Подать заявку",
+    applyTitle: "Заявка на финансирование",
+    applyIntro: "Заполните анкету — мы свяжемся с вами после рассмотрения заявки.",
+    form: {
+      organizationName: "Наименование организации",
+      organizationActivity: "Чем занимается организация (коротко)",
+      phone: "Телефон",
+      email: "E-mail",
+      submit: "Отправить",
+      submitting: "Отправка…",
+      successTitle: "Заявка отправлена",
+      success: "Спасибо! Мы свяжемся с вами по указанным контактам.",
+      errorTitle: "Не удалось отправить",
+      error: "Попробуйте ещё раз или напишите на office@nif.kg.",
+      required: "Заполните это поле",
+    },
     cards: [
       {
         title: "Соинвестирование",
@@ -294,9 +335,20 @@ const ru: Messages = {
       "Малый и средний бизнес играет ключевую роль в развитии регионов Кыргызстана. Национальный инвестиционный фонд поддерживает проекты МСБ, с особым акцентом на агропромышленный комплекс и переработку местного сырья, помогая создавать устойчивые бизнес-модели и повышать уровень жизни в регионах страны.",
     pageTitle: "Проекты МСБ",
     pageIntro:
-      "Раздел находится в разработке. Скоро здесь появится информация о проектах малого и среднего бизнеса, поддерживаемых Национальным инвестиционным фондом.",
-    soonTitle: "Скоро",
-    soonBody: "Контент для этой страницы будет добавлен позже.",
+      "На карте отмечены районы, где реализуются или уже реализованы проекты малого и среднего бизнеса при поддержке фонда. Нажмите на точку, чтобы увидеть список проектов.",
+    mapTitle: "Карта проектов МСБ",
+    mapHint: "Контур Кыргызстана выделен на фоне соседних стран. Точки — районы с проектами.",
+    mapPanelIdle: "Выберите район",
+    mapPanelHint:
+      "Кликните по точке на карте, чтобы открыть проекты, которые реализуются или уже реализованы в этом районе.",
+    selectRegion: "Регион",
+    projectsInRegion: "Проекты района",
+    statusActive: "В реализации",
+    statusCompleted: "Реализован",
+    noProjects: "В этом районе пока нет опубликованных проектов.",
+    closePanel: "Закрыть",
+    demoNote:
+      "Сейчас на карте показаны демонстрационные проекты. Актуальные данные фонда будут подключены позже.",
   },
   partners: {
     heading: "ПАРТНЁРЫ",
@@ -488,6 +540,22 @@ const kg: Messages = {
     toolsTitle: "Фонддун инструменттери",
     toolsBody:
       "Фонд ийкемдүү катышуу моделдерин колдонот — банктар жана эл аралык өнөктөштөр менен биргелешкен инвестициялоодон тартып компаниялардын капиталына түз кирүүгө жана долбоорлорду колдоонун максаттуу инструменттерине чейин.",
+    applyCta: "Арыз берүү",
+    applyTitle: "Каржылоого арыз",
+    applyIntro: "Анкетаны толтуруңуз — арызды карап чыккандан кийин сиз менен байланышабыз.",
+    form: {
+      organizationName: "Уюмдун аталышы",
+      organizationActivity: "Уюм эмне менен алектенет (кыскача)",
+      phone: "Телефон",
+      email: "E-mail",
+      submit: "Жөнөтүү",
+      submitting: "Жөнөтүлүүдө…",
+      successTitle: "Арыз жөнөтүлдү",
+      success: "Рахмат! Көрсөтүлгөн байланыштар боюнча сиз менен байланышабыз.",
+      errorTitle: "Жөнөтүлбөй калды",
+      error: "Кайра аракет кылыңыз же office@nif.kg дарегине жазыңыз.",
+      required: "Бул талааны толтуруңуз",
+    },
     cards: [
       {
         title: "Биргелешкен инвестициялоо",
@@ -548,9 +616,20 @@ const kg: Messages = {
       "Чакан жана орто бизнес Кыргызстандын аймактарын өнүктүрүүдө негизги ролду ойнойт. Улуттук инвестициялык фонд ЧОЖ долбоорлорун колдойт, айрыкча агроөнөр жай комплексине жана жергиликтүү чийки затты кайра иштетүүгө басым жасап, туруктуу бизнес-моделдерди түзүүгө жана өлкөнүн аймактарында жашоо деңгээлин жогорулатууга жардам берет.",
     pageTitle: "ЧОЖ долбоорлору",
     pageIntro:
-      "Бөлүм иштелип жатат. Жакында бул жерде Улуттук инвестициялык фонд колдогон чакан жана орто бизнес долбоорлору жөнүндө маалымат пайда болот.",
-    soonTitle: "Жакында",
-    soonBody: "Бул беттин мазмуну кийинчерээк кошулат.",
+      "Картада фонддун колдоосу менен ишке ашырылып жаткан же ишке ашырылган чакан жана орто бизнес долбоорлору бар райондор белгиленген. Долбоорлор тизмесин көрүү үчүн чекитке басыңыз.",
+    mapTitle: "ЧОЖ долбоорлорунун картасы",
+    mapHint: "Кыргызстандын контуру коңшу өлкөлөрдүн фонунда бөлүнүп турат. Чекиттер — долбоорлору бар райондор.",
+    mapPanelIdle: "Районду тандаңыз",
+    mapPanelHint:
+      "Картадагы чекитке басып, ошол райондо ишке ашырылып жаткан же ишке ашырылган долбоорлорду ачыңыз.",
+    selectRegion: "Аймак",
+    projectsInRegion: "Райондун долбоорлору",
+    statusActive: "Ишке ашырылууда",
+    statusCompleted: "Ишке ашырылган",
+    noProjects: "Бул райондо азырынча жарыяланган долбоорлор жок.",
+    closePanel: "Жабуу",
+    demoNote:
+      "Азыр картада демонстрациялык долбоорлор көрсөтүлгөн. Фонддун актуалдуу маалыматы кийинчерээк кошулат.",
   },
   partners: {
     heading: "ӨНӨКТӨШТӨР",
@@ -742,6 +821,22 @@ const en: Messages = {
     toolsTitle: "Fund instruments",
     toolsBody:
       "The Fund uses flexible participation models — from co-investment with banks and international partners to direct equity stakes and targeted project support instruments.",
+    applyCta: "Apply",
+    applyTitle: "Financing application",
+    applyIntro: "Fill in the form — we will contact you after reviewing your application.",
+    form: {
+      organizationName: "Organization name",
+      organizationActivity: "What the organization does (briefly)",
+      phone: "Phone",
+      email: "E-mail",
+      submit: "Submit",
+      submitting: "Sending…",
+      successTitle: "Application sent",
+      success: "Thank you! We will contact you using the details provided.",
+      errorTitle: "Could not send",
+      error: "Please try again or email office@nif.kg.",
+      required: "This field is required",
+    },
     cards: [
       {
         title: "Co-investment",
@@ -802,9 +897,19 @@ const en: Messages = {
       "Small and medium-sized enterprises play a key role in regional development across Kyrgyzstan. The National Investment Fund supports SME projects, with a special focus on agribusiness and processing of local raw materials, helping build sustainable business models and raise living standards in the country’s regions.",
     pageTitle: "SME projects",
     pageIntro:
-      "This section is under development. Information on SME projects supported by the National Investment Fund will appear here soon.",
-    soonTitle: "Coming soon",
-    soonBody: "Content for this page will be added later.",
+      "The map highlights districts where SME projects supported by the Fund are underway or already completed. Click a point to view the project list.",
+    mapTitle: "SME projects map",
+    mapHint: "Kyrgyzstan’s outline is highlighted against neighbouring countries. Points mark districts with projects.",
+    mapPanelIdle: "Select a district",
+    mapPanelHint:
+      "Click a point on the map to open projects that are being implemented or already completed in that district.",
+    selectRegion: "Region",
+    projectsInRegion: "District projects",
+    statusActive: "In progress",
+    statusCompleted: "Completed",
+    noProjects: "No published projects in this district yet.",
+    closePanel: "Close",
+    demoNote: "The map currently shows demo projects. Live Fund data will be connected later.",
   },
   partners: {
     heading: "PARTNERS",

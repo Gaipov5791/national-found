@@ -52,11 +52,8 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
       <p className={`${SECTION_SUBTEXT} ${SECTION_SUBTEXT_MARGIN} text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)]`}>
         {t.finance.blurb}
       </p>
-      <div className={SECTION_CARDS_GRID_MARGIN}>
-        <SectionCardsScroller
-          layout="four-row"
-          className="pointer-events-auto origin-top touch-pan-x max-md:scale-[0.92] md:scale-[0.94] lg:scale-[0.97]"
-        >
+      <div className={`${SECTION_CARDS_GRID_MARGIN} origin-top max-md:scale-[0.92] md:scale-[0.94] lg:scale-[0.97]`}>
+        <SectionCardsScroller layout="four-row" className="pointer-events-auto touch-pan-x">
           {cards.map((card) => (
             <SectionCardSlide key={card.title} layout="four-row">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
@@ -64,7 +61,12 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
           ))}
         </SectionCardsScroller>
       </div>
-      <DetailLinkButton to="/finance" originSection="sc_finance" containerClassName={SECTION_CTA_MARGIN} />
+      <DetailLinkButton
+        to="/finance"
+        originSection="sc_finance"
+        label={t.finance.applyCta}
+        containerClassName={SECTION_CTA_MARGIN}
+      />
     </div>
   );
 });

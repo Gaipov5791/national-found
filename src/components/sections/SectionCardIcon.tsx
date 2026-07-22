@@ -29,8 +29,9 @@ type SectionCardIconProps = {
 
 export function SectionCardIcon({ src, iconKey, compact = false, variant = "dark" }: SectionCardIconProps) {
   // PDF требование: иконки по центру и в ~2 раза крупнее.
+  // Offset keeps icons mostly above the card so they don't sit on titles.
   const sizeClass = compact ? "h-24 w-24 sm:h-32 sm:w-32" : "h-32 w-32 sm:h-40 sm:w-40";
-  const offsetClass = compact ? "-top-12 sm:-top-16" : "-top-16 sm:-top-20";
+  const offsetClass = compact ? "-top-14 sm:-top-20" : "-top-24 sm:-top-28";
 
   if (src) {
     return (

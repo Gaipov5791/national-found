@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout";
 import { SectionCard } from "@/components/sections/SectionCard";
+import { DETAIL_CARDS_GRID } from "@/components/sections/sectionLayout";
 import { getDirectionCards } from "@/lib/i18n/content";
 import { useT } from "@/lib/lang";
 
@@ -19,7 +20,7 @@ function DirectionsPage() {
     <DetailPageLayout title={t.directions.pageTitle}>
       <p>{t.directions.blurb}</p>
       <DetailInfoBlock title={t.directions.focusTitle}>{t.directions.focusBody}</DetailInfoBlock>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+      <div className={`${DETAIL_CARDS_GRID} lg:grid-cols-3`}>
         {cards.map((card) => (
           <SectionCard
             key={card.title}

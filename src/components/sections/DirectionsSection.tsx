@@ -38,8 +38,8 @@ export type DirectionsSectionProps = {
   directionsRef: RefObject<HTMLDivElement | null>;
 };
 
-const CARD_SCROLLER_CLASS =
-  "pointer-events-auto origin-top touch-pan-x max-md:scale-[0.88] md:scale-[0.9] lg:scale-[0.93]";
+const CARD_SCROLLER_SCALE =
+  "origin-top max-md:scale-[0.88] md:scale-[0.9] lg:scale-[0.93]";
 
 export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionProps>(function DirectionsSection(
   { directionsRef },
@@ -56,8 +56,8 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
       <p className={`${SECTION_SUBTEXT} ${SECTION_SUBTEXT_MARGIN} text-white/90 drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)]`}>
         {t.directions.blurb}
       </p>
-      <div className={SECTION_CARDS_GRID_MARGIN}>
-        <SectionCardsScroller layout="six-row" autoSwipeOnOverflow className={CARD_SCROLLER_CLASS}>
+      <div className={`${SECTION_CARDS_GRID_MARGIN} ${CARD_SCROLLER_SCALE}`}>
+        <SectionCardsScroller layout="six-row" autoSwipeOnOverflow className="pointer-events-auto touch-pan-x">
           {cards.map((card) => (
             <SectionCardSlide key={card.title} layout="six-row">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />
