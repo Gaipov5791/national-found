@@ -19,7 +19,7 @@ export function FinanceApplicationForm({ className }: { className?: string }) {
   const f = t.finance.form;
 
   const [organizationName, setOrganizationName] = useState("");
-  const [organizationActivity, setOrganizationActivity] = useState("");
+  const [projectGoal, setProjectGoal] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -31,7 +31,7 @@ export function FinanceApplicationForm({ className }: { className?: string }) {
     setStatus("submitting");
     const result = await submitFinanceApplication({
       organizationName,
-      organizationActivity,
+      projectGoal,
       phone,
       email,
     });
@@ -39,7 +39,7 @@ export function FinanceApplicationForm({ className }: { className?: string }) {
     if (result.ok) {
       setStatus("success");
       setOrganizationName("");
-      setOrganizationActivity("");
+      setProjectGoal("");
       setPhone("");
       setEmail("");
       toast.success(f.successTitle, {
@@ -102,16 +102,16 @@ export function FinanceApplicationForm({ className }: { className?: string }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="finance-org-activity" className={labelClassName}>
-            {f.organizationActivity}
+          <Label htmlFor="finance-project-goal" className={labelClassName}>
+            {f.projectGoal}
           </Label>
           <Textarea
-            id="finance-org-activity"
-            name="organizationActivity"
+            id="finance-project-goal"
+            name="projectGoal"
             required
             rows={3}
-            value={organizationActivity}
-            onChange={(e) => setOrganizationActivity(e.target.value)}
+            value={projectGoal}
+            onChange={(e) => setProjectGoal(e.target.value)}
             className={cn(fieldClassName, "min-h-[5.5rem] py-2.5")}
             disabled={status === "submitting"}
           />

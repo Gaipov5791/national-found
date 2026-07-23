@@ -69,7 +69,7 @@ export type Messages = {
     applyIntro: string;
     form: {
       organizationName: string;
-      organizationActivity: string;
+      projectGoal: string;
       phone: string;
       email: string;
       submit: string;
@@ -95,6 +95,14 @@ export type Messages = {
     blurb: string;
     pageTitle: string;
     pageIntro: string;
+    overviewTitle: string;
+    overviewBody: string;
+    overviewInstruments: string;
+    statProjects: string;
+    statLocations: string;
+    statTotal: string;
+    statGrants: string;
+    statSplit: string;
     mapTitle: string;
     mapHint: string;
     mapPanelIdle: string;
@@ -105,7 +113,10 @@ export type Messages = {
     statusCompleted: string;
     noProjects: string;
     closePanel: string;
-    demoNote: string;
+    financedLabel: string;
+    districtTotal: string;
+    ofPortfolio: string;
+    grantBadge: string;
   };
   partners: {
     heading: string;
@@ -264,7 +275,7 @@ const ru: Messages = {
     applyIntro: "Заполните анкету — мы свяжемся с вами после рассмотрения заявки.",
     form: {
       organizationName: "Наименование организации",
-      organizationActivity: "Чем занимается организация (коротко)",
+      projectGoal: "Цель проекта",
       phone: "Телефон",
       email: "E-mail",
       submit: "Отправить",
@@ -335,20 +346,33 @@ const ru: Messages = {
       "Малый и средний бизнес играет ключевую роль в развитии регионов Кыргызстана. Национальный инвестиционный фонд поддерживает проекты МСБ, с особым акцентом на агропромышленный комплекс и переработку местного сырья, помогая создавать устойчивые бизнес-модели и повышать уровень жизни в регионах страны.",
     pageTitle: "Проекты МСБ",
     pageIntro:
-      "На карте отмечены районы, где реализуются или уже реализованы проекты малого и среднего бизнеса при поддержке фонда. Нажмите на точку, чтобы увидеть список проектов.",
+      "Фонд финансирует проекты малого и среднего бизнеса по всей стране — от переработки шерсти и сафлора до птицеводства, сыроварения и гостиничной инфраструктуры. На карте отмечены районы и города, где реализуются или уже реализованы проекты при поддержке фонда.",
+    overviewTitle: "Портфель поддержки МСБ",
+    overviewBody:
+      "Программа охватывает все области Кыргызстана и сочетает целевые займы с грантовой поддержкой. Основной объём средств направляется на покупку оборудования, пополнение оборотных средств и развитие производственных площадок в регионах.",
+    overviewInstruments:
+      "Наряду с займами фонд выделяет гранты на социально значимые инициативы — например, мобильные птичники и доильное оборудование для небольших хозяйств. Доля грантов в текущем портфеле невелика, но они важны для запуска локальных проектов с ограниченным доступом к капиталу.",
+    statProjects: "Проектов",
+    statLocations: "Точек на карте",
+    statTotal: "Объём финансирования",
+    statGrants: "Гранты",
+    statSplit:
+      "Структура портфеля: займы и инвестиции — {loans}, гранты — {grants} ({grantCount} проекта). Нажмите на точку на карте, чтобы увидеть сумму по району и долю в общем портфеле.",
     mapTitle: "Карта проектов МСБ",
-    mapHint: "Контур Кыргызстана выделен на фоне соседних стран. Точки — районы с проектами.",
+    mapHint: "Контур Кыргызстана выделен на фоне соседних стран. Точки — районы и города с проектами; цифра на точке — число проектов.",
     mapPanelIdle: "Выберите район",
     mapPanelHint:
-      "Кликните по точке на карте, чтобы открыть проекты, которые реализуются или уже реализованы в этом районе.",
+      "Кликните по точке на карте, чтобы открыть проекты района, суммы финансирования и статус реализации.",
     selectRegion: "Регион",
     projectsInRegion: "Проекты района",
     statusActive: "В реализации",
     statusCompleted: "Реализован",
     noProjects: "В этом районе пока нет опубликованных проектов.",
     closePanel: "Закрыть",
-    demoNote:
-      "Сейчас на карте показаны демонстрационные проекты. Актуальные данные фонда будут подключены позже.",
+    financedLabel: "Финансирование",
+    districtTotal: "Всего по точке",
+    ofPortfolio: "от портфеля",
+    grantBadge: "Грант",
   },
   partners: {
     heading: "ПАРТНЁРЫ",
@@ -545,7 +569,7 @@ const kg: Messages = {
     applyIntro: "Анкетаны толтуруңуз — арызды карап чыккандан кийин сиз менен байланышабыз.",
     form: {
       organizationName: "Уюмдун аталышы",
-      organizationActivity: "Уюм эмне менен алектенет (кыскача)",
+      projectGoal: "Долбоордун максаты",
       phone: "Телефон",
       email: "E-mail",
       submit: "Жөнөтүү",
@@ -616,20 +640,33 @@ const kg: Messages = {
       "Чакан жана орто бизнес Кыргызстандын аймактарын өнүктүрүүдө негизги ролду ойнойт. Улуттук инвестициялык фонд ЧОЖ долбоорлорун колдойт, айрыкча агроөнөр жай комплексине жана жергиликтүү чийки затты кайра иштетүүгө басым жасап, туруктуу бизнес-моделдерди түзүүгө жана өлкөнүн аймактарында жашоо деңгээлин жогорулатууга жардам берет.",
     pageTitle: "ЧОЖ долбоорлору",
     pageIntro:
-      "Картада фонддун колдоосу менен ишке ашырылып жаткан же ишке ашырылган чакан жана орто бизнес долбоорлору бар райондор белгиленген. Долбоорлор тизмесин көрүү үчүн чекитке басыңыз.",
+      "Фонд өлкө боюнча чакан жана орто бизнес долбоорлорун каржылайт — жүн жана сафлорду кайра иштетүүдөн тартып тоокчулук, сыр жасоо жана мейманкана инфраструктурасына чейин. Картада фонддун колдоосу менен ишке ашырылып жаткан же ишке ашырылган долбоорлор бар райондор жана шаарлар белгиленген.",
+    overviewTitle: "ЧОЖду колдоо портфели",
+    overviewBody:
+      "Программа Кыргызстандын бардык облустарын камтыйт жана максаттуу займдарды гранттык колдоо менен айкалыштырат. Каражаттардын негизги бөлүгү жабдуу сатып алууга, жүгүртүү каражаттарын толуктоого жана аймактардагы өндүрүштүк аянттарды өнүктүрүүгө багытталат.",
+    overviewInstruments:
+      "Займдар менен катар фонд социалдык маанидеги демилгелерге гранттар берет — мисалы, чакан чарбалар үчүн мобилдүү тоокканалар жана саан жабдуулары. Гранттардын үлүшү азыркы портфелде кичине, бирок капиталга чектелген жеткиликтүүлүгү бар жергиликтүү долбоорлорду баштоо үчүн маанилүү.",
+    statProjects: "Долбоорлор",
+    statLocations: "Картадагы чекиттер",
+    statTotal: "Каржылоо көлөмү",
+    statGrants: "Гранттар",
+    statSplit:
+      "Портфелдин түзүмү: займдар жана инвестициялар — {loans}, гранттар — {grants} ({grantCount} долбоор). Район боюнча сумманы жана жалпы портфелдеги үлүштү көрүү үчүн картадагы чекитке басыңыз.",
     mapTitle: "ЧОЖ долбоорлорунун картасы",
-    mapHint: "Кыргызстандын контуру коңшу өлкөлөрдүн фонунда бөлүнүп турат. Чекиттер — долбоорлору бар райондор.",
+    mapHint: "Кыргызстандын контуру коңшу өлкөлөрдүн фонунда бөлүнүп турат. Чекиттер — долбоорлору бар райондор жана шаарлар; чекиттеги сан — долбоорлордун саны.",
     mapPanelIdle: "Районду тандаңыз",
     mapPanelHint:
-      "Картадагы чекитке басып, ошол райондо ишке ашырылып жаткан же ишке ашырылган долбоорлорду ачыңыз.",
+      "Картадагы чекитке басып, райондун долбоорлорун, каржылоо суммаларын жана ишке ашыруу статусун ачыңыз.",
     selectRegion: "Аймак",
     projectsInRegion: "Райондун долбоорлору",
     statusActive: "Ишке ашырылууда",
     statusCompleted: "Ишке ашырылган",
     noProjects: "Бул райондо азырынча жарыяланган долбоорлор жок.",
     closePanel: "Жабуу",
-    demoNote:
-      "Азыр картада демонстрациялык долбоорлор көрсөтүлгөн. Фонддун актуалдуу маалыматы кийинчерээк кошулат.",
+    financedLabel: "Каржылоо",
+    districtTotal: "Чекит боюнча бардыгы",
+    ofPortfolio: "портфелден",
+    grantBadge: "Грант",
   },
   partners: {
     heading: "ӨНӨКТӨШТӨР",
@@ -826,7 +863,7 @@ const en: Messages = {
     applyIntro: "Fill in the form — we will contact you after reviewing your application.",
     form: {
       organizationName: "Organization name",
-      organizationActivity: "What the organization does (briefly)",
+      projectGoal: "Project goal",
       phone: "Phone",
       email: "E-mail",
       submit: "Submit",
@@ -897,19 +934,33 @@ const en: Messages = {
       "Small and medium-sized enterprises play a key role in regional development across Kyrgyzstan. The National Investment Fund supports SME projects, with a special focus on agribusiness and processing of local raw materials, helping build sustainable business models and raise living standards in the country’s regions.",
     pageTitle: "SME projects",
     pageIntro:
-      "The map highlights districts where SME projects supported by the Fund are underway or already completed. Click a point to view the project list.",
+      "The Fund finances SME projects nationwide — from wool and safflower processing to poultry, cheese-making and hospitality infrastructure. The map highlights districts and cities where projects supported by the Fund are underway or already completed.",
+    overviewTitle: "SME support portfolio",
+    overviewBody:
+      "The programme covers all regions of Kyrgyzstan and combines targeted loans with grant support. Most funding goes to equipment purchases, working capital and the development of production sites in the regions.",
+    overviewInstruments:
+      "Alongside loans, the Fund provides grants for socially important initiatives — for example mobile poultry houses and milking equipment for smaller farms. Grants are a modest share of the current portfolio, but they matter for launching local projects with limited access to capital.",
+    statProjects: "Projects",
+    statLocations: "Map points",
+    statTotal: "Total financing",
+    statGrants: "Grants",
+    statSplit:
+      "Portfolio mix: loans and investments — {loans}, grants — {grants} ({grantCount} projects). Click a map point to see the district total and its share of the overall portfolio.",
     mapTitle: "SME projects map",
-    mapHint: "Kyrgyzstan’s outline is highlighted against neighbouring countries. Points mark districts with projects.",
+    mapHint: "Kyrgyzstan’s outline is highlighted against neighbouring countries. Points mark districts and cities with projects; the number on a point shows how many projects are there.",
     mapPanelIdle: "Select a district",
     mapPanelHint:
-      "Click a point on the map to open projects that are being implemented or already completed in that district.",
+      "Click a point on the map to open district projects, financing amounts and implementation status.",
     selectRegion: "Region",
     projectsInRegion: "District projects",
     statusActive: "In progress",
     statusCompleted: "Completed",
     noProjects: "No published projects in this district yet.",
     closePanel: "Close",
-    demoNote: "The map currently shows demo projects. Live Fund data will be connected later.",
+    financedLabel: "Financing",
+    districtTotal: "Total for this point",
+    ofPortfolio: "of portfolio",
+    grantBadge: "Grant",
   },
   partners: {
     heading: "PARTNERS",

@@ -68,7 +68,7 @@ export function DetailPageLayout({ title, children, wide = false }: DetailPageLa
         aria-hidden
       />
 
-      <div className={`mx-auto w-full ${wide ? "max-w-none" : "max-w-3xl"}`}>
+      <div className={`mx-auto w-full ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/20 pb-6 sm:gap-4">
           <Link to="/" hash={returnSection ?? undefined} className="inline-flex max-w-[min(100%,20rem)] items-center sm:max-w-[24rem]">
             <BrandLockup lang={lang} tone="white" size="sm" />

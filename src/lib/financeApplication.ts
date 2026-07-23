@@ -3,7 +3,7 @@ export const FINANCE_APPLICATION_EMAIL = "office@nif.kg";
 
 export type FinanceApplicationPayload = {
   organizationName: string;
-  organizationActivity: string;
+  projectGoal: string;
   phone: string;
   email: string;
 };
@@ -18,11 +18,11 @@ export async function submitFinanceApplication(
   payload: FinanceApplicationPayload
 ): Promise<FinanceApplicationResult> {
   const organizationName = payload.organizationName.trim();
-  const organizationActivity = payload.organizationActivity.trim();
+  const projectGoal = payload.projectGoal.trim();
   const phone = payload.phone.trim();
   const email = payload.email.trim();
 
-  if (!organizationName || !organizationActivity || !phone || !email) {
+  if (!organizationName || !projectGoal || !phone || !email) {
     return { ok: false, message: "missing_fields" };
   }
 
@@ -38,7 +38,7 @@ export async function submitFinanceApplication(
         _template: "table",
         _replyto: email,
         organizationName,
-        organizationActivity,
+        "Цель проекта": projectGoal,
         phone,
         email,
       }),

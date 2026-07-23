@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
-import { CircleMarker, GeoJSON, MapContainer, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { GeoJSON, MapContainer, Marker, TileLayer, Tooltip, useMap } from "react-leaflet";
 import type { MsbDistrict } from "@/data/msbProjects";
 import { pickL10n } from "@/data/msbProjects";
 import { useLang } from "@/lib/lang";
@@ -26,6 +26,49 @@ function FitKyrgyzstan() {
   }, [map]);
 
   return null;
+}
+
+function createDistrictIcon(projectCount: number, selected: boolean): L.DivIcon {
+  const size = selected ? 36 : 30;
+  const showCount = projectCount > 1;
+  const fill = selected ? "#d4af37" : "#3b82f6";
+  const ring = selected ? "#ffffff" : "#d4af37";
+  const ringWidth = selected ? 3 : 2;
+
+  const countBadge = showCount
+    ? `<span style="
+          position:absolute;
+          top:-6px;
+          right:-6px;
+          min-width:18px;
+          height:18px;
+          padding:0 4px;
+          border-radius:999px;
+          background:#ef4444;
+          color:#fff;
+          font:700 11px/18px system-ui,sans-serif;
+          text-align:center;
+          box-shadow:0 1px 4px rgba(0,0,0,.45);
+          pointer-events:none;
+        ">${projectCount}</span>`
+    : "";
+
+  return L.divIcon({
+    className: "msb-district-marker",
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2],
+    html: `<div style="
+      position:relative;
+      width:${size}px;
+      height:${size}px;
+      border-radius:999px;
+      background:${fill};
+      border:${ringWidth}px solid ${ring};
+      box-shadow:0 2px 10px rgba(0,0,0,.35);
+      cursor:pointer;
+    ">${countBadge}</div>`,
+  });
 }
 
 export function MsbMapCanvas({ districts, selectedId, onSelect }: MsbMapCanvasProps) {
@@ -65,6 +108,17 @@ export function MsbMapCanvas({ districts, selectedId, onSelect }: MsbMapCanvasPr
     []
   );
 
+  const icons = useMemo(() => {
+    const map = new Map<string, L.DivIcon>();
+    for (const district of districts) {
+      map.set(
+        district.id,
+        createDistrictIcon(district.projects.length, district.id === selectedId)
+      );
+    }
+    return map;
+  }, [districts, selectedId]);
+
   return (
     <MapContainer
       center={KG_CENTER}
@@ -72,7 +126,7 @@ export function MsbMapCanvas({ districts, selectedId, onSelect }: MsbMapCanvasPr
       minZoom={5}
       maxZoom={10}
       scrollWheelZoom
-      className="h-full w-full rounded-2xl [&_.leaflet-interactive]:cursor-pointer"
+      className="h-full w-full rounded-2xl [&_.leaflet-interactive]:cursor-pointer [&_.msb-district-marker]:border-0 [&_.msb-district-marker]:bg-transparent"
       style={{ background: "#0a1a2c", zIndex: 0 }}
     >
       <TileLayer
@@ -82,19 +136,13 @@ export function MsbMapCanvas({ districts, selectedId, onSelect }: MsbMapCanvasPr
       <FitKyrgyzstan />
       {outline ? <GeoJSON data={outline as never} style={outlineStyle} interactive={false} /> : null}
       {districts.map((district) => {
-        const selected = district.id === selectedId;
+        const icon = icons.get(district.id);
+        if (!icon) return null;
         return (
-          <CircleMarker
+          <Marker
             key={district.id}
-            center={[district.coordinates[0], district.coordinates[1]]}
-            radius={selected ? 14 : 11}
-            pathOptions={{
-              color: selected ? "#fff" : "#d4af37",
-              weight: selected ? 3 : 2,
-              fillColor: selected ? "#d4af37" : "#3b82f6",
-              fillOpacity: 0.95,
-              bubblingMouseEvents: false,
-            }}
+            position={[district.coordinates[0], district.coordinates[1]]}
+            icon={icon}
             eventHandlers={{
               click: (event) => {
                 // Prevent the same click from dismissing Radix Dialog as "outside".
@@ -104,12 +152,13 @@ export function MsbMapCanvas({ districts, selectedId, onSelect }: MsbMapCanvasPr
               },
             }}
           >
-            <Tooltip direction="top" offset={[0, -10]} opacity={0.95}>
+            <Tooltip direction="top" offset={[0, -14]} opacity={0.95}>
               <span className="font-display text-xs font-semibold tracking-wide">
                 {pickL10n(district.name, lang)}
+                {district.projects.length > 1 ? ` · ${district.projects.length}` : ""}
               </span>
             </Tooltip>
-          </CircleMarker>
+          </Marker>
         );
       })}
     </MapContainer>

@@ -4,10 +4,15 @@ export type L10nText = Record<Lang, string>;
 
 export type MsbProjectStatus = "active" | "completed";
 
+export type MsbInstrument = "loan" | "grant";
+
 export type MsbProject = {
   id: string;
   title: L10nText;
   summary: L10nText;
+  /** Financing amount in KGS */
+  amountSom: number;
+  instrument: MsbInstrument;
   status: MsbProjectStatus;
 };
 
@@ -24,304 +29,639 @@ export function pickL10n(value: L10nText, lang: Lang): string {
   return value[lang] ?? value.RU;
 }
 
-/** Demo district points — replace with real fund project data when available. */
+const region = {
+  bishkek: { RU: "г. Бишкек", KG: "Бишкек ш.", EN: "Bishkek" },
+  chuy: { RU: "Чуйская область", KG: "Чүй облусу", EN: "Chuy Region" },
+  talas: { RU: "Таласская область", KG: "Талас облусу", EN: "Talas Region" },
+  naryn: { RU: "Нарынская область", KG: "Нарын облусу", EN: "Naryn Region" },
+  issykKul: { RU: "Иссык-Кульская область", KG: "Ысык-Көл облусу", EN: "Issyk-Kul Region" },
+  jalalAbad: { RU: "Джалал-Абадская область", KG: "Жалал-Абад облусу", EN: "Jalal-Abad Region" },
+  osh: { RU: "Ошская область", KG: "Ош облусу", EN: "Osh Region" },
+  batken: { RU: "Баткенская область", KG: "Баткен облусу", EN: "Batken Region" },
+} as const;
+
+/** Real Fund SME portfolio from the «Общие» sheet (addresses geocoded to district/city points). */
 export const MSB_DISTRICTS: readonly MsbDistrict[] = [
   {
     id: "bishkek",
     name: { RU: "г. Бишкек", KG: "Бишкек ш.", EN: "Bishkek city" },
-    region: { RU: "г. Бишкек", KG: "Бишкек ш.", EN: "Bishkek" },
+    region: region.bishkek,
     coordinates: [42.8746, 74.5698],
     projects: [
       {
-        id: "bishkek-1",
+        id: "abdullaeva-felt",
         title: {
-          RU: "Переработка сельхозпродукции",
-          KG: "Айыл чарба продукциясын кайра иштетүү",
-          EN: "Agri-product processing",
+          RU: "Цех войлока и шерсти",
+          KG: "Кийиз жана жүн цехи",
+          EN: "Felt and wool workshop",
         },
         summary: {
-          RU: "Модернизация линии переработки и расширение сбыта в столице.",
-          KG: "Кайра иштетүү линиясын модернизациялоо жана борбордо сатууну кеңейтүү.",
-          EN: "Processing line upgrade and sales expansion in the capital.",
+          RU: "ИП «Абдуллаева Камилла» — запуск цеха по производству войлока и шерстяных изделий.",
+          KG: "ЖИ «Абдуллаева Камилла» — кийиз жана жүн буюмдарын өндүрүү цехин ишке киргизүү.",
+          EN: "IE Abdullaeva Kamilla — launching a workshop for felt and wool products.",
         },
+        amountSom: 3504800,
+        instrument: "loan",
         status: "active",
       },
       {
-        id: "bishkek-2",
+        id: "baibol-felt",
         title: {
-          RU: "Логистический хаб МСБ",
-          KG: "ЧОЖ логистикалык хабы",
-          EN: "SME logistics hub",
+          RU: "Производство войлочных изделий",
+          KG: "Кийиз буюмдарын өндүрүү",
+          EN: "Felt products manufacturing",
         },
         summary: {
-          RU: "Складская инфраструктура для региональных производителей.",
-          KG: "Аймактык өндүрүүчүлөр үчүн склад инфраструктурасы.",
-          EN: "Warehouse infrastructure for regional producers.",
+          RU: "ОсОО «Группа компаний Байбол» — покупка оборудования для производства войлочных изделий.",
+          KG: "«Байбол» компаниялар тобу» ЖЧК — кийиз буюмдарын өндүрүү үчүн жабдуу сатып алуу.",
+          EN: "Baibol Group LLC — equipment for felt products manufacturing.",
         },
-        status: "completed",
+        amountSom: 2600000,
+        instrument: "loan",
+        status: "active",
+      },
+      {
+        id: "ravenstvo-poultry",
+        title: {
+          RU: "Мобильный птичник",
+          KG: "Мобилдүү тооккана",
+          EN: "Mobile poultry house",
+        },
+        summary: {
+          RU: "ОО «Равенство» — грант на приобретение мобильного птичника.",
+          KG: "«Теңдик» КУ — мобилдүү тооккана сатып алууга грант.",
+          EN: "Equality PA — grant for a mobile poultry house.",
+        },
+        amountSom: 178000,
+        instrument: "grant",
+        status: "active",
       },
     ],
   },
   {
     id: "alamudun",
     name: { RU: "Аламудунский район", KG: "Аламүдүн району", EN: "Alamudun district" },
-    region: { RU: "Чуйская область", KG: "Чүй облусу", EN: "Chuy Region" },
+    region: region.chuy,
     coordinates: [42.89, 74.55],
     projects: [
       {
-        id: "alamudun-1",
+        id: "erkeganova-wool",
         title: {
-          RU: "Тепличный комплекс",
-          KG: "Жылыткыч комплекси",
-          EN: "Greenhouse complex",
+          RU: "Переработка шерсти",
+          KG: "Жүндү кайра иштетүү",
+          EN: "Wool processing",
         },
         summary: {
-          RU: "Выращивание овощей для внутреннего рынка круглый год.",
-          KG: "Ички рынок үчүн жыл бою жашылча өстүрүү.",
-          EN: "Year-round vegetable production for the domestic market.",
+          RU: "ИП «Эркеганова Асель Бексултановна» (с. Нижняя Аларча) — иглопробивной и стегальный станки, оборотные средства.",
+          KG: "ЖИ «Эркеганова Асель Бексултановна» (Төмөнкү Аларча а.) — ийне тешүүчү жана стежка станоктору, жүгүртүү каражаттары.",
+          EN: "IE Erkeganova Asel (Nizhnyaya Alarcha) — needle-punch and quilting machines, working capital.",
         },
+        amountSom: 3500000,
+        instrument: "loan",
+        status: "active",
+      },
+      {
+        id: "kyrgyz-dan-premises",
+        title: {
+          RU: "Производственное помещение",
+          KG: "Өндүрүштүк жай",
+          EN: "Production premises",
+        },
+        summary: {
+          RU: "ОсОО «Кыргыз Дан» (с. Мыкан) — приобретение производственного помещения.",
+          KG: "«Кыргыз Дан» ЖЧК (Мыкан а.) — өндүрүштүк жай сатып алуу.",
+          EN: "Kyrgyz Dan LLC (Mykan) — acquisition of production premises.",
+        },
+        amountSom: 8660000,
+        instrument: "loan",
         status: "active",
       },
     ],
   },
   {
-    id: "issyk-ata",
-    name: { RU: "Ысык-Атинский район", KG: "Ысык-Ата району", EN: "Issyk-Ata district" },
-    region: { RU: "Чуйская область", KG: "Чүй облусу", EN: "Chuy Region" },
-    coordinates: [42.82, 74.95],
+    id: "sokuluk",
+    name: { RU: "Сокулукский район", KG: "Сокулук району", EN: "Sokuluk district" },
+    region: region.chuy,
+    coordinates: [42.86, 74.3],
     projects: [
       {
-        id: "issyk-ata-1",
+        id: "kushubakova-processing",
         title: {
-          RU: "Молочный цех",
-          KG: "Сүт цехи",
-          EN: "Dairy workshop",
+          RU: "Производственное оборудование",
+          KG: "Өндүрүштүк жабдуу",
+          EN: "Production equipment",
         },
         summary: {
-          RU: "Переработка молока местных фермеров.",
-          KG: "Жергиликтүү фермерлердин сүтүн кайра иштетүү.",
-          EN: "Processing milk from local farmers.",
+          RU: "ИП «Кушубакова Самарбу Бекматжановна» (с. Сокулук) — оборудование, оборотный капитал и модульные блоки для цеха.",
+          KG: "ЖИ «Кушубакова Самарбу Бекматжановна» (Сокулук а.) — жабдуу, жүгүртүү капиталы жана цех үчүн модулдук блоктор.",
+          EN: "IE Kushubakova Samarbu (Sokuluk) — equipment, working capital and modular blocks for a workshop.",
         },
-        status: "completed",
+        amountSom: 2506710,
+        instrument: "loan",
+        status: "active",
+      },
+      {
+        id: "mayluu-sutuu-cheese",
+        title: {
+          RU: "Производство сыра",
+          KG: "Сыр өндүрүшү",
+          EN: "Cheese production",
+        },
+        summary: {
+          RU: "ОсОО «Майлуу-Суттуу» (с. Белек) — линия оборудования для сырной продукции.",
+          KG: "«Майлуу-Сүттүү» ЖЧК (Белек а.) — сыр продукциясы үчүн жабдуу линиясы.",
+          EN: "Mayluu-Sutuu LLC (Belek) — equipment line for cheese products.",
+        },
+        amountSom: 2856040,
+        instrument: "loan",
+        status: "active",
+      },
+      {
+        id: "guseynova-poultry",
+        title: {
+          RU: "Мобильный птичник",
+          KG: "Мобилдүү тооккана",
+          EN: "Mobile poultry house",
+        },
+        summary: {
+          RU: "Гусейнова Айнагуль Исатбековна (с. Сокулук) — грант на покупку мобильного птичника.",
+          KG: "Гусейнова Айнагүл Исатбековна (Сокулук а.) — мобилдүү тооккана сатып алууга грант.",
+          EN: "Guseynova Ainagul (Sokuluk) — grant for a mobile poultry house.",
+        },
+        amountSom: 178000,
+        instrument: "grant",
+        status: "active",
+      },
+    ],
+  },
+  {
+    id: "jayil",
+    name: { RU: "Жайылский район", KG: "Жайыл району", EN: "Jayil district" },
+    region: region.chuy,
+    coordinates: [42.8, 73.9],
+    projects: [
+      {
+        id: "dzhusupbekov-freezing",
+        title: {
+          RU: "Шоковая заморозка",
+          KG: "Шок тоңдуруу",
+          EN: "Blast freezing",
+        },
+        summary: {
+          RU: "ИП «Джусупбеков Мирлан Акимжанович» (с. Кыйырма) — шкафы шоковой заморозки и дизельный генератор 25 кВт.",
+          KG: "ЖИ «Жусупбеков Мирлан Акимжанович» (Кыйырма а.) — шок тоңдуруу шкафтары жана 25 кВт дизел генератору.",
+          EN: "IE Dzhusupbekov Mirlan (Kyiyrma) — blast freezers and a 25 kW diesel generator.",
+        },
+        amountSom: 3000000,
+        instrument: "loan",
+        status: "active",
+      },
+      {
+        id: "li-wool",
+        title: {
+          RU: "Переработка шерсти",
+          KG: "Жүндү кайра иштетүү",
+          EN: "Wool processing",
+        },
+        summary: {
+          RU: "ИП «Ли Сергей Сергеевич» (с. Сосновка) — запчасти для оборудования, закупка и мойка сырья.",
+          KG: "ЖИ «Ли Сергей Сергеевич» (Сосновка а.) — жабдуу тетиктери, чийки зат сатып алуу жана жуу.",
+          EN: "IE Li Sergey (Sosnovka) — spare parts, raw material purchase and washing.",
+        },
+        amountSom: 3000000,
+        instrument: "loan",
+        status: "active",
+      },
+    ],
+  },
+  {
+    id: "talas-city",
+    name: { RU: "г. Талас", KG: "Талас ш.", EN: "Talas city" },
+    region: region.talas,
+    coordinates: [42.5228, 72.2427],
+    projects: [
+      {
+        id: "nurseiit-wool",
+        title: {
+          RU: "Заготовка овечьей шерсти",
+          KG: "Кой жүндүн даярдоосу",
+          EN: "Sheep wool procurement",
+        },
+        summary: {
+          RU: "ИП «Нурсейит кызы Нурсайкал» — закупка сырья и овечьей шерсти.",
+          KG: "ЖИ «Нурсейит кызы Нурсайкал» — чийки зат жана кой жүндүн сатып алуу.",
+          EN: "IE Nurseiit kyzy Nursaikal — purchase of raw materials and sheep wool.",
+        },
+        amountSom: 2400000,
+        instrument: "loan",
+        status: "active",
+      },
+    ],
+  },
+  {
+    id: "talas-district",
+    name: { RU: "Таласский район", KG: "Талас району", EN: "Talas district" },
+    region: region.talas,
+    coordinates: [42.55, 72.15],
+    projects: [
+      {
+        id: "nurzhanov-silage",
+        title: {
+          RU: "Производство и упаковка силоса",
+          KG: "Силос өндүрүү жана таңгактоо",
+          EN: "Silage production and packing",
+        },
+        summary: {
+          RU: "СКК «Нуржанов Агрохолдинг» (с. Жон-Арык) — производство и упаковка силоса.",
+          KG: "«Нуржанов Агрохолдинг» АКК (Жон-Арык а.) — силос өндүрүү жана таңгактоо.",
+          EN: "Nurzhanov Agroholding (Jon-Aryk) — silage production and packing.",
+        },
+        amountSom: 600000,
+        instrument: "loan",
+        status: "active",
+      },
+    ],
+  },
+  {
+    id: "bakai-ata",
+    name: { RU: "Бакай-Атинский район", KG: "Бакай-Ата району", EN: "Bakai-Ata district" },
+    region: region.talas,
+    coordinates: [42.48, 71.95],
+    projects: [
+      {
+        id: "gert-safflower",
+        title: {
+          RU: "Переработка сафлора",
+          KG: "Сафлорду кайра иштетүү",
+          EN: "Safflower processing",
+        },
+        summary: {
+          RU: "КХ «Герт» (с. Ак-Добо) — оборудование по переработке сафлора.",
+          KG: "«Герт» ДЧ (Ак-Дөбө а.) — сафлорду кайра иштетүү жабдуусу.",
+          EN: "Farm Gert (Ak-Dobo) — safflower processing equipment.",
+        },
+        amountSom: 1366000,
+        instrument: "loan",
+        status: "active",
+      },
+    ],
+  },
+  {
+    id: "naryn-city",
+    name: { RU: "г. Нарын", KG: "Нарын ш.", EN: "Naryn city" },
+    region: region.naryn,
+    coordinates: [41.4287, 75.9911],
+    projects: [
+      {
+        id: "anarbekov-footwear",
+        title: {
+          RU: "Обувь из шерсти",
+          KG: "Жүндөн бут кийим",
+          EN: "Wool footwear",
+        },
+        summary: {
+          RU: "ИП «Анарбеков Акбар Русланович» — оборудование для производства уличной обуви из шерсти.",
+          KG: "ЖИ «Анарбеков Акбар Русланович» — жүндөн көчө бут кийимин өндүрүү жабдуусу.",
+          EN: "IE Anarbekov Akbar — equipment for outdoor wool footwear production.",
+        },
+        amountSom: 5000000,
+        instrument: "loan",
+        status: "active",
+      },
+      {
+        id: "zhakshylykov-wool",
+        title: {
+          RU: "Заготовка овечьей шерсти",
+          KG: "Кой жүндүн даярдоосу",
+          EN: "Sheep wool procurement",
+        },
+        summary: {
+          RU: "ИП «Жакшылыков Курманбек Асанбекович» — приобретение сырья и овечьей шерсти.",
+          KG: "ЖИ «Жакшылыков Курманбек Асанбекович» — чийки зат жана кой жүндүн сатып алуу.",
+          EN: "IE Zhakshylykov Kurmanbek — purchase of raw materials and sheep wool.",
+        },
+        amountSom: 4000000,
+        instrument: "loan",
+        status: "active",
+      },
+    ],
+  },
+  {
+    id: "naryn-district",
+    name: { RU: "Нарынский район", KG: "Нарын району", EN: "Naryn district" },
+    region: region.naryn,
+    coordinates: [41.45, 75.95],
+    projects: [
+      {
+        id: "usoyun-hospitality",
+        title: {
+          RU: "Гостиничная инфраструктура",
+          KG: "Мейманкана инфраструктурасы",
+          EN: "Hospitality infrastructure",
+        },
+        summary: {
+          RU: "ИП Усойун уулу Улан (с. Таш-Башат) — оборудование, мебель и отделочные работы для расширения инфраструктуры.",
+          KG: "ЖИ Усойун уулу Улан (Таш-Башат а.) — инфраструктураны кеңейтүү үчүн жабдуу, эмерек жана жасалгалоо иштери.",
+          EN: "IE Usoyun uulu Ulan (Tash-Bashat) — equipment, furniture and finishing works to expand facilities.",
+        },
+        amountSom: 2000000,
+        instrument: "loan",
+        status: "active",
+      },
+      {
+        id: "namazbek-workshop",
+        title: {
+          RU: "Дооснащение цеха",
+          KG: "Цехти толуктоо",
+          EN: "Workshop upgrade",
+        },
+        summary: {
+          RU: "ИП «Намазбек уулу Самат» (Эмгек-Талаа) — тепловой пресс и фрезерный станок с ЧПУ.",
+          KG: "ЖИ «Намазбек уулу Самат» (Эмгек-Талаа) — жылуулук пресси жана ЧПУ фрезер станогу.",
+          EN: "IE Namazbek uulu Samat (Emgek-Talaa) — heat press and CNC milling machine.",
+        },
+        amountSom: 2810000,
+        instrument: "loan",
+        status: "active",
+      },
+    ],
+  },
+  {
+    id: "kochkor",
+    name: { RU: "Кочкорский район", KG: "Кочкор району", EN: "Kochkor district" },
+    region: region.naryn,
+    coordinates: [42.21, 75.75],
+    projects: [
+      {
+        id: "akmatov-ahmedjan-wool",
+        title: {
+          RU: "Приём и заготовка шерсти",
+          KG: "Жүндү кабыл алуу жана даярдоо",
+          EN: "Wool intake and procurement",
+        },
+        summary: {
+          RU: "ИП «Акматов Ахмеджан Саитович» (с. Кочкор) — пополнение оборота для приёма и заготовки шерсти.",
+          KG: "ЖИ «Акматов Ахмеджан Саитович» (Кочкор а.) — жүндү кабыл алуу жана даярдоо үчүн жүгүртүү каражаттарын толуктоо.",
+          EN: "IE Akmatov Ahmedjan (Kochkor) — working capital for wool intake and procurement.",
+        },
+        amountSom: 2000000,
+        instrument: "loan",
+        status: "active",
+      },
+    ],
+  },
+  {
+    id: "jumgal",
+    name: { RU: "Жумгальский район", KG: "Жумгал району", EN: "Jumgal district" },
+    region: region.naryn,
+    coordinates: [41.9, 74.3],
+    projects: [
+      {
+        id: "ibiraimov-poultry",
+        title: {
+          RU: "Мобильный птичник",
+          KG: "Мобилдүү тооккана",
+          EN: "Mobile poultry house",
+        },
+        summary: {
+          RU: "ИП Ибираимов Жусуп Оболбекович (с. Кызыл-Эмгек) — покупка мобильного птичника.",
+          KG: "ЖИ Ибираимов Жусуп Оболбекович (Кызыл-Эмгек а.) — мобилдүү тооккана сатып алуу.",
+          EN: "IE Ibiraimov Zhusup (Kyzyl-Emgek) — purchase of a mobile poultry house.",
+        },
+        amountSom: 173000,
+        instrument: "loan",
+        status: "active",
       },
     ],
   },
   {
     id: "karakol",
     name: { RU: "г. Каракол", KG: "Каракол ш.", EN: "Karakol city" },
-    region: { RU: "Иссык-Кульская область", KG: "Ысык-Көл облусу", EN: "Issyk-Kul Region" },
+    region: region.issykKul,
     coordinates: [42.4907, 78.3936],
     projects: [
       {
-        id: "karakol-1",
+        id: "akmatov-adilet-wool",
         title: {
-          RU: "Туристический сервис МСБ",
-          KG: "ЧОЖ туристтик сервиси",
-          EN: "SME tourism services",
+          RU: "Заготовка шерсти",
+          KG: "Жүндү даярдоо",
+          EN: "Wool procurement",
         },
         summary: {
-          RU: "Гостевые дома и сопутствующие услуги у озера.",
-          KG: "Көл жээгиндеги конок үйлөр жана кошумча кызматтар.",
-          EN: "Guesthouses and related services near the lake.",
+          RU: "ИП «Акматов Адилет Кубанычбекович» — пополнение оборотных средств для заготовки шерсти.",
+          KG: "ЖИ «Акматов Адилет Кубанычбекович» — жүндү даярдоо үчүн жүгүртүү каражаттарын толуктоо.",
+          EN: "IE Akmatov Adilet — working capital for wool procurement.",
         },
+        amountSom: 2000000,
+        instrument: "loan",
         status: "active",
       },
     ],
   },
   {
-    id: "tyup",
-    name: { RU: "Тюпский район", KG: "Түп району", EN: "Tyup district" },
-    region: { RU: "Иссык-Кульская область", KG: "Ысык-Көл облусу", EN: "Issyk-Kul Region" },
-    coordinates: [42.72, 78.36],
+    id: "ton",
+    name: { RU: "Тонский район", KG: "Тоң району", EN: "Ton district" },
+    region: region.issykKul,
+    coordinates: [42.15, 77.2],
     projects: [
       {
-        id: "tyup-1",
+        id: "isakov-dairy",
         title: {
-          RU: "Рыбная переработка",
-          KG: "Балык кайра иштетүү",
-          EN: "Fish processing",
+          RU: "Доильное оборудование",
+          KG: "Саан жабдуусу",
+          EN: "Milking equipment",
         },
         summary: {
-          RU: "Цех по переработке рыбы Иссык-Куля.",
-          KG: "Ысык-Көл балыгын кайра иштетүү цехи.",
-          EN: "Issyk-Kul fish processing facility.",
+          RU: "Исаков Тимурлан Карыпович (с. Торт-Куль) — грант на доильный аппарат и сопутствующие нужды.",
+          KG: "Исаков Тимурлан Карыпович (Төрт-Күл а.) — саан аппаратына жана кошумча муктаждыктарга грант.",
+          EN: "Isakov Timurlan (Tort-Kul) — grant for a milking machine and related needs.",
         },
+        amountSom: 455900,
+        instrument: "grant",
         status: "active",
       },
     ],
   },
   {
-    id: "naryn",
-    name: { RU: "г. Нарын", KG: "Нарын ш.", EN: "Naryn city" },
-    region: { RU: "Нарынская область", KG: "Нарын облусу", EN: "Naryn Region" },
-    coordinates: [41.4287, 75.9911],
+    id: "kerben",
+    name: { RU: "г. Кербен", KG: "Кербен ш.", EN: "Kerben city" },
+    region: region.jalalAbad,
+    coordinates: [41.49, 71.75],
     projects: [
       {
-        id: "naryn-1",
+        id: "abdurasul-wool",
         title: {
-          RU: "Шерстяное производство",
-          KG: "Жүн өндүрүшү",
-          EN: "Wool production",
+          RU: "Линия переработки шерсти",
+          KG: "Жүндү кайра иштетүү линиясы",
+          EN: "Wool processing line",
         },
         summary: {
-          RU: "Переработка шерсти и выпуск текстиля.",
-          KG: "Жүндү кайра иштетүү жана текстиль чыгаруу.",
-          EN: "Wool processing and textile production.",
+          RU: "ИП «Абдурасул уулу Бекмурат» — линия мойки, чесания, сушки и стежки шерсти, оборотные средства.",
+          KG: "ЖИ «Абдурасул уулу Бекмурат» — жүндү жуу, тароо, кургатуу жана стежка линиясы, жүгүртүү каражаттары.",
+          EN: "IE Abdurasul uulu Bekmurat — wool washing, carding, drying and quilting line, plus working capital.",
         },
+        amountSom: 3300000,
+        instrument: "loan",
+        status: "active",
+      },
+      {
+        id: "akymbaev-safflower",
+        title: {
+          RU: "Переработка сафлора",
+          KG: "Сафлорду кайра иштетүү",
+          EN: "Safflower processing",
+        },
+        summary: {
+          RU: "ИП Акымбаев У. Д. — оборудование по переработке сафлорового масла (проект завершён досрочно).",
+          KG: "ЖИ Акымбаев У. Д. — сафлор майын кайра иштетүү жабдуусу (долбоор мөөнөтүнөн мурда аяктаган).",
+          EN: "IE Akymbaev U. D. — safflower oil processing equipment (completed ahead of schedule).",
+        },
+        amountSom: 573300,
+        instrument: "loan",
         status: "completed",
       },
     ],
   },
   {
-    id: "at-bashy",
-    name: { RU: "Ат-Башинский район", KG: "Ат-Башы району", EN: "At-Bashy district" },
-    region: { RU: "Нарынская область", KG: "Нарын облусу", EN: "Naryn Region" },
-    coordinates: [41.17, 75.8],
+    id: "chatkal",
+    name: { RU: "Чаткальский район", KG: "Чаткал району", EN: "Chatkal district" },
+    region: region.jalalAbad,
+    coordinates: [41.7, 71.0],
     projects: [
       {
-        id: "at-bashy-1",
+        id: "ak-dan-safflower",
         title: {
-          RU: "Мясная переработка",
-          KG: "Эт кайра иштетүү",
-          EN: "Meat processing",
+          RU: "Производство сафлорового масла",
+          KG: "Сафлор майын өндүрүү",
+          EN: "Safflower oil production",
         },
         summary: {
-          RU: "Мини-цех для местных животноводов.",
-          KG: "Жергиликтүү малчылар үчүн мини-цех.",
-          EN: "Mini workshop for local livestock farmers.",
+          RU: "СХК «Ак-Дан Жаны Базар» (с. Жаны-Базар) — производство сафлорового масла.",
+          KG: "«Ак-Дан Жаңы Базар» АЧК (Жаңы-Базар а.) — сафлор майын өндүрүү.",
+          EN: "Ak-Dan Zhany Bazar (Zhany-Bazar) — safflower oil production.",
         },
+        amountSom: 573300,
+        instrument: "loan",
         status: "active",
       },
     ],
   },
   {
-    id: "talas",
-    name: { RU: "г. Талас", KG: "Талас ш.", EN: "Talas city" },
-    region: { RU: "Таласская область", KG: "Талас облусу", EN: "Talas Region" },
-    coordinates: [42.5228, 72.2427],
+    id: "toguz-toro",
+    name: { RU: "Тогуз-Тороуский район", KG: "Тогуз-Торо району", EN: "Toguz-Toro district" },
+    region: region.jalalAbad,
+    coordinates: [41.4, 73.8],
     projects: [
       {
-        id: "talas-1",
+        id: "sheripov-safflower",
         title: {
-          RU: "Фасолевый кластер",
-          KG: "Лобия кластери",
-          EN: "Bean cluster",
+          RU: "Переработка сафлора",
+          KG: "Сафлорду кайра иштетүү",
+          EN: "Safflower processing",
         },
         summary: {
-          RU: "Сбор, сушка и фасовка фасоли для экспорта.",
-          KG: "Экспорт үчүн лобияны чогултуу, кургатуу жана таңгактоо.",
-          EN: "Bean collection, drying and packing for export.",
+          RU: "ИП «Шерипов У. Б.» (с. Атай) — оборудование по переработке сафлора.",
+          KG: "ЖИ «Шерипов У. Б.» (Атай а.) — сафлорду кайра иштетүү жабдуусу.",
+          EN: "IE Sheripov U. B. (Atay) — safflower processing equipment.",
         },
+        amountSom: 1342859,
+        instrument: "loan",
         status: "active",
-      },
-    ],
-  },
-  {
-    id: "jalal-abad",
-    name: { RU: "г. Джалал-Абад", KG: "Жалал-Абад ш.", EN: "Jalal-Abad city" },
-    region: { RU: "Джалал-Абадская область", KG: "Жалал-Абад облусу", EN: "Jalal-Abad Region" },
-    coordinates: [40.933, 73.0],
-    projects: [
-      {
-        id: "jalal-abad-1",
-        title: {
-          RU: "Сухофрукты и орехи",
-          KG: "Курғақ жемиш жана жаңгак",
-          EN: "Dried fruits and nuts",
-        },
-        summary: {
-          RU: "Переработка и упаковка для внутреннего и внешнего рынка.",
-          KG: "Ички жана тышкы рынок үчүн кайра иштетүү жана таңгактоо.",
-          EN: "Processing and packaging for domestic and export markets.",
-        },
-        status: "completed",
       },
     ],
   },
   {
     id: "suzak",
     name: { RU: "Сузакский район", KG: "Сузак району", EN: "Suzak district" },
-    region: { RU: "Джалал-Абадская область", KG: "Жалал-Абад облусу", EN: "Jalal-Abad Region" },
-    coordinates: [40.9, 72.9],
+    region: region.jalalAbad,
+    coordinates: [40.9, 72.95],
     projects: [
       {
-        id: "suzak-1",
+        id: "kabirov-wool",
         title: {
-          RU: "Овощная консервация",
-          KG: "Жашылча консервациясы",
-          EN: "Vegetable canning",
+          RU: "Переработка шерсти",
+          KG: "Жүндү кайра иштетүү",
+          EN: "Wool processing",
         },
         summary: {
-          RU: "Цех консервации сезонного урожая.",
-          KG: "Сезондук түшүмдү консервациялоо цехи.",
-          EN: "Seasonal harvest canning facility.",
+          RU: "ИП «Кабиров Жыргалбек Каныбекович» (с. Сафаровка) — оборудование для переработки шерсти.",
+          KG: "ЖИ «Кабиров Жыргалбек Каныбекович» (Сафаровка а.) — жүндү кайра иштетүү жабдуусу.",
+          EN: "IE Kabirov Zhyrgalbek (Safarovka) — wool processing equipment.",
         },
+        amountSom: 3600000,
+        instrument: "loan",
         status: "active",
       },
     ],
   },
   {
-    id: "osh",
-    name: { RU: "г. Ош", KG: "Ош ш.", EN: "Osh city" },
-    region: { RU: "г. Ош", KG: "Ош ш.", EN: "Osh city" },
-    coordinates: [40.5283, 72.7985],
+    id: "chong-alay",
+    name: { RU: "Чон-Алайский район", KG: "Чоң-Алай району", EN: "Chong-Alay district" },
+    region: region.osh,
+    coordinates: [39.6, 72.3],
     projects: [
       {
-        id: "osh-1",
+        id: "saparaliev-poultry",
         title: {
-          RU: "Швейное производство",
-          KG: "Тигүү өндүрүшү",
-          EN: "Garment production",
+          RU: "Птицеводство",
+          KG: "Тоокчулук",
+          EN: "Poultry farming",
         },
         summary: {
-          RU: "Рабочие места в лёгкой промышленности для МСБ.",
-          KG: "ЧОЖ үчүн жеңил өнөр жайда жумуш орундары.",
-          EN: "Light-industry jobs for SMEs.",
+          RU: "ИП «Сапаралиев Абдилаким Туратбекович» (с. Жаш-Тилек) — покупка кур и корма.",
+          KG: "ЖИ «Сапаралиев Абдилаким Туратбекович» (Жаш-Тилек а.) — тоок жана тоют сатып алуу.",
+          EN: "IE Saparaliev Abdilakim (Jash-Tilek) — purchase of chickens and feed.",
         },
+        amountSom: 880800,
+        instrument: "loan",
         status: "active",
       },
     ],
   },
   {
-    id: "karasuu",
-    name: { RU: "Кара-Сууский район", KG: "Кара-Суу району", EN: "Kara-Suu district" },
-    region: { RU: "Ошская область", KG: "Ош облусу", EN: "Osh Region" },
-    coordinates: [40.7, 72.88],
+    id: "kara-kulja",
+    name: { RU: "Кара-Кулжинский район", KG: "Кара-Кулжа району", EN: "Kara-Kulja district" },
+    region: region.osh,
+    coordinates: [40.5, 73.5],
     projects: [
       {
-        id: "karasuu-1",
+        id: "mataeva-wool",
         title: {
-          RU: "Торгово-логистический узел",
-          KG: "Соода-логистикалык түйүн",
-          EN: "Trade and logistics hub",
+          RU: "Линия переработки шерсти",
+          KG: "Жүндү кайра иштетүү линиясы",
+          EN: "Wool processing line",
         },
         summary: {
-          RU: "Поддержка МСБ на южном торговом коридоре.",
-          KG: "Түштүк соода коридорундагы ЧОЖду колдоо.",
-          EN: "SME support on the southern trade corridor.",
+          RU: "ИП «Матаева Айгул Асановна» (с. Бий-Мырза) — линия мойки, чесания, валяния и стежки шерсти.",
+          KG: "ЖИ «Матаева Айгүл Асановна» (Бий-Мырза а.) — жүндү жуу, тароо, кийиздөө жана стежка линиясы.",
+          EN: "IE Mataeva Aigul (Biy-Myrza) — wool washing, carding, felting and quilting line.",
         },
-        status: "completed",
+        amountSom: 3800630,
+        instrument: "loan",
+        status: "active",
       },
     ],
   },
   {
-    id: "batken",
-    name: { RU: "г. Баткен", KG: "Баткен ш.", EN: "Batken city" },
-    region: { RU: "Баткенская область", KG: "Баткен облусу", EN: "Batken Region" },
-    coordinates: [40.0626, 70.8194],
+    id: "kadamjay",
+    name: { RU: "Кадамжайский район", KG: "Кадамжай району", EN: "Kadamjay district" },
+    region: region.batken,
+    coordinates: [40.12, 71.75],
     projects: [
       {
-        id: "batken-1",
+        id: "arzybaeva-drying",
         title: {
-          RU: "Абрикосовая переработка",
-          KG: "Өрүк кайра иштетүү",
-          EN: "Apricot processing",
+          RU: "Сушка овощей и фруктов",
+          KG: "Жашылча-жемиш кургатуу",
+          EN: "Fruit and vegetable drying",
         },
         summary: {
-          RU: "Сушка и экспорт абрикоса местных садов.",
-          KG: "Жергиликтүү бакчалардын өрүгүн кургатуу жана экспорттоо.",
-          EN: "Drying and export of local apricot harvests.",
+          RU: "ИП «Арзыбаева Азада Абдижамиловна» (с. Кыргыз-Кыштак) — оборудование для сушки и мойки овощей и фруктов.",
+          KG: "ЖИ «Арзыбаева Азада Абдижамиловна» (Кыргыз-Кыштак а.) — жашылча-жемишти кургатуу жана жуу жабдуусу.",
+          EN: "IE Arzybaeva Azada (Kyrgyz-Kyshtak) — equipment for washing and drying fruit and vegetables.",
         },
+        amountSom: 400000,
+        instrument: "loan",
         status: "active",
       },
     ],
@@ -329,23 +669,74 @@ export const MSB_DISTRICTS: readonly MsbDistrict[] = [
   {
     id: "leylek",
     name: { RU: "Лейлекский район", KG: "Лейлек району", EN: "Leylek district" },
-    region: { RU: "Баткенская область", KG: "Баткен облусу", EN: "Batken Region" },
-    coordinates: [39.85, 69.75],
+    region: region.batken,
+    coordinates: [39.9, 69.7],
     projects: [
       {
-        id: "leylek-1",
+        id: "kara-biy-safflower",
         title: {
-          RU: "Медовое производство",
-          KG: "Бал өндүрүшү",
-          EN: "Honey production",
+          RU: "Переработка сафлора",
+          KG: "Сафлорду кайра иштетүү",
+          EN: "Safflower processing",
         },
         summary: {
-          RU: "Кооператив пчеловодов и фасовка мёда.",
-          KG: "Аарычылар кооперативи жана балды таңгактоо.",
-          EN: "Beekeeper cooperative and honey packing.",
+          RU: "СПК «Кара-Бий» (с. Тогуз-Булак) — оборудование по переработке сафлора.",
+          KG: "«Кара-Бий» ӨПК (Тогуз-Булак а.) — сафлорду кайра иштетүү жабдуусу.",
+          EN: "Kara-Biy cooperative (Toguz-Bulak) — safflower processing equipment.",
         },
-        status: "completed",
+        amountSom: 2272753,
+        instrument: "loan",
+        status: "active",
       },
     ],
   },
-] as const;
+];
+
+export function districtFinancing(district: MsbDistrict): number {
+  return district.projects.reduce((sum, project) => sum + project.amountSom, 0);
+}
+
+export function portfolioStats(districts: readonly MsbDistrict[] = MSB_DISTRICTS) {
+  const projects = districts.flatMap((d) => d.projects);
+  const totalSom = projects.reduce((sum, p) => sum + p.amountSom, 0);
+  const grantSom = projects
+    .filter((p) => p.instrument === "grant")
+    .reduce((sum, p) => sum + p.amountSom, 0);
+  const loanSom = totalSom - grantSom;
+  const grantCount = projects.filter((p) => p.instrument === "grant").length;
+  return {
+    projectCount: projects.length,
+    districtCount: districts.length,
+    totalSom,
+    grantSom,
+    loanSom,
+    grantCount,
+    grantShare: totalSom > 0 ? grantSom / totalSom : 0,
+    loanShare: totalSom > 0 ? loanSom / totalSom : 0,
+  };
+}
+
+export function formatSomAmount(amount: number, lang: Lang): string {
+  const locale = lang === "EN" ? "en-US" : "ru-RU";
+  if (amount >= 1_000_000) {
+    const millions = amount / 1_000_000;
+    const digits = millions >= 10 ? 1 : 2;
+    const value = new Intl.NumberFormat(locale, {
+      maximumFractionDigits: digits,
+      minimumFractionDigits: 0,
+    }).format(Number(millions.toFixed(digits)));
+    if (lang === "EN") return `${value}M KGS`;
+    if (lang === "KG") return `${value} млн сом`;
+    return `${value} млн сом`;
+  }
+  const value = new Intl.NumberFormat(locale).format(amount);
+  return lang === "EN" ? `${value} KGS` : `${value} сом`;
+}
+
+export function formatPercent(share: number, lang: Lang): string {
+  const locale = lang === "EN" ? "en-US" : "ru-RU";
+  return `${new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 1,
+    minimumFractionDigits: 0,
+  }).format(share * 100)}%`;
+}
