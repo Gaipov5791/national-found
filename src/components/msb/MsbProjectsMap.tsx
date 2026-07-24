@@ -20,6 +20,8 @@ import {
 import { useLang, useT } from "@/lib/lang";
 import { cn } from "@/lib/utils";
 
+const DIALOG_CLOSE_MS = 280;
+
 function MsbMapCanvasLazy(props: {
   districts: readonly MsbDistrict[];
   selectedId: string | null;
@@ -93,26 +95,57 @@ export function MsbProjectsMap() {
   const t = useT();
   const { lang } = useLang();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
   const openGuardRef = useRef(false);
+  const closeClearTimerRef = useRef<number | null>(null);
   const stats = useMemo(() => portfolioStats(), []);
 
   const selected = useMemo(
     () => MSB_DISTRICTS.find((d) => d.id === selectedId) ?? null,
     [selectedId]
   );
-  const open = selectedId !== null;
   const selectedTotal = selected ? districtFinancing(selected) : 0;
   const selectedShare = stats.totalSom > 0 ? selectedTotal / stats.totalSom : 0;
+
+  useEffect(() => {
+    return () => {
+      if (closeClearTimerRef.current !== null) {
+        window.clearTimeout(closeClearTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleSelect = useCallback((id: string) => {
     // Defer open so the map click isn't treated as Dialog "pointer down outside".
     openGuardRef.current = true;
+    if (closeClearTimerRef.current !== null) {
+      window.clearTimeout(closeClearTimerRef.current);
+      closeClearTimerRef.current = null;
+    }
     window.setTimeout(() => {
       setSelectedId(id);
+      setOpen(true);
       window.setTimeout(() => {
         openGuardRef.current = false;
       }, 120);
     }, 0);
+  }, []);
+
+  const handleOpenChange = useCallback((next: boolean) => {
+    if (next) {
+      setOpen(true);
+      return;
+    }
+    if (openGuardRef.current) return;
+    // Keep content mounted until fade-out finishes — clearing immediately collapses height.
+    setOpen(false);
+    if (closeClearTimerRef.current !== null) {
+      window.clearTimeout(closeClearTimerRef.current);
+    }
+    closeClearTimerRef.current = window.setTimeout(() => {
+      setSelectedId(null);
+      closeClearTimerRef.current = null;
+    }, DIALOG_CLOSE_MS);
   }, []);
 
   return (
@@ -133,25 +166,18 @@ export function MsbProjectsMap() {
       <div className="relative z-0 h-[420px] sm:h-[520px] lg:h-[640px]">
         <MsbMapCanvasLazy
           districts={MSB_DISTRICTS}
-          selectedId={selectedId}
+          selectedId={open ? selectedId : null}
           onSelect={handleSelect}
         />
       </div>
 
-      <Dialog
-        open={open}
-        onOpenChange={(next) => {
-          if (!next) {
-            if (openGuardRef.current) return;
-            setSelectedId(null);
-          }
-        }}
-      >
+      <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent
           className={cn(
             "z-[1200] flex max-h-[min(85vh,640px)] max-w-lg flex-col gap-0 overflow-hidden border-white/20 bg-[#0b2138] p-0 text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] sm:rounded-2xl",
             "md:max-h-[min(88vh,820px)] md:max-w-2xl lg:max-w-3xl",
-            "duration-300 ease-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:zoom-in-[0.97] data-[state=closed]:zoom-out-[0.97] data-[state=open]:slide-in-from-bottom-2 data-[state=closed]:slide-out-to-bottom-2 md:duration-400",
+            // Fade only — zoom/slide use `transform` and fight dialog centering (layout jerk).
+            "duration-300 ease-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
             "[&>button]:top-4 [&>button]:right-4 [&>button]:text-white/70 [&>button]:hover:text-white [&>button]:ring-offset-[#0b2138] md:[&>button]:top-5 md:[&>button]:right-5"
           )}
           onPointerDownOutside={(event) => {

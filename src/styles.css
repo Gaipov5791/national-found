@@ -87,6 +87,8 @@
     font-family: var(--font-sans);
     /* clip avoids the html+body overflow-x:hidden scroll lock quirk */
     overflow-x: clip;
+    /* Prevent layout shift when Radix locks body scroll / hides scrollbar */
+    scrollbar-gutter: stable;
   }
   body {
     background-color: var(--color-background);
