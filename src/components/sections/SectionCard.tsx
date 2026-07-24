@@ -17,15 +17,15 @@ const CARD_HOVER_TRANSITION =
 
 const variants = {
   dark: {
-    // Landing cards: white semi-transparent border + brand-blue text
-    card: "border-white/30 bg-white/[0.07] hover:bg-white/[0.12] hover:border-white/50 hover:shadow-[0_18px_48px_rgba(0,0,0,0.35)]",
+    // Denser than the CTA glass so brand ink text stays readable.
+    card: "border-white/70 bg-white/55 hover:border-white/85 hover:bg-white/70 hover:shadow-[0_18px_48px_rgba(0,0,0,0.35)]",
     title: "text-[color:var(--ink)]",
-    description: "text-[color:var(--ink)]/75",
+    description: "text-[color:var(--ink)]/90",
   },
   light: {
-    card: "border-[color:var(--ink)]/10 bg-white/70 hover:bg-white/90 hover:border-[color:var(--ink)]/20 hover:shadow-[0_18px_50px_rgba(20,40,90,0.16)]",
+    card: "border-white/70 bg-white/55 hover:border-white/85 hover:bg-white/70 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]",
     title: "text-[color:var(--ink)]",
-    description: "text-[color:var(--ink)]/75",
+    description: "text-[color:var(--ink)]/90",
   },
 } as const;
 
