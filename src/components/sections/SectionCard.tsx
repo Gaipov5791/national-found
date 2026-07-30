@@ -53,18 +53,17 @@ export function SectionCard({
           transition: CARD_HOVER_TRANSITION,
         }}
         className={cn(
-          "relative flex h-full cursor-pointer flex-col rounded-2xl border backdrop-blur-md sm:rounded-3xl",
+          "relative flex h-full cursor-pointer flex-col rounded-2xl border backdrop-blur-md",
           compact
-            ? "text-center px-4 pb-4 pt-14 sm:px-5 sm:pb-5 sm:pt-16"
-            : "text-left px-5 pb-5 pt-12 sm:px-6 sm:pb-6 sm:pt-14",
+            ? "px-3.5 pb-3.5 pt-12 text-center sm:px-4 sm:pb-4 sm:pt-14"
+            : "px-4 pb-4 pt-11 text-left sm:px-5 sm:pb-5 sm:pt-12",
           styles.card
         )}
       >
         <SectionCardIcon src={icon} iconKey={iconKey} compact={compact} variant={variant} />
         <h3
           className={cn(
-            "font-display font-bold tracking-tight",
-            compact ? "text-sm sm:text-base md:text-lg" : "text-sm sm:text-base md:text-lg",
+            "font-display text-sm font-bold leading-snug tracking-tight sm:text-[15px]",
             styles.title
           )}
         >
@@ -72,8 +71,7 @@ export function SectionCard({
         </h3>
         <p
           className={cn(
-            "mt-1.5 leading-relaxed sm:mt-2",
-            compact ? "text-xs sm:text-sm md:text-base" : "text-xs sm:text-sm md:text-base",
+            "mt-1.5 text-xs leading-relaxed sm:mt-2 sm:text-sm",
             styles.description
           )}
         >

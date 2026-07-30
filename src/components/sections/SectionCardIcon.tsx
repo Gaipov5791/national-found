@@ -28,10 +28,9 @@ type SectionCardIconProps = {
 };
 
 export function SectionCardIcon({ src, iconKey, compact = false, variant = "dark" }: SectionCardIconProps) {
-  // PDF требование: иконки по центру и в ~2 раза крупнее.
-  // Offset keeps icons mostly above the card so they don't sit on titles.
-  const sizeClass = compact ? "h-24 w-24 sm:h-32 sm:w-32" : "h-32 w-32 sm:h-40 sm:w-40";
-  const offsetClass = compact ? "-top-14 sm:-top-20" : "-top-24 sm:-top-28";
+  // Compact icons for standard card width; still overhang the top edge.
+  const sizeClass = compact ? "h-20 w-20 sm:h-24 sm:w-24" : "h-24 w-24 sm:h-28 sm:w-28";
+  const offsetClass = compact ? "-top-11 sm:-top-14" : "-top-14 sm:-top-16";
 
   if (src) {
     return (
@@ -63,8 +62,7 @@ export function SectionCardIcon({ src, iconKey, compact = false, variant = "dark
       >
         <Icon
           className={cn(
-            // Визуально центрируем и даем пиктограмме больший масштаб.
-            compact ? "h-10 w-10 sm:h-12 sm:w-12" : "h-12 w-12 sm:h-16 sm:w-16",
+            compact ? "h-8 w-8 sm:h-10 sm:w-10" : "h-10 w-10 sm:h-12 sm:w-12",
             variant === "dark" ? "text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]" : "text-[color:var(--ink)]"
           )}
           strokeWidth={1.5}

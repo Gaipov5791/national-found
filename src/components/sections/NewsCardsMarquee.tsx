@@ -16,7 +16,7 @@ type NewsCardsMarqueeProps = {
   className?: string;
 };
 
-const CARD_WIDTH = "w-[min(78vw,280px)] sm:w-[min(70vw,300px)] md:w-[260px]";
+const CARD_WIDTH = "w-[min(78vw,248px)] sm:w-[248px] md:w-[240px]";
 
 /**
  * Horizontal news strip:

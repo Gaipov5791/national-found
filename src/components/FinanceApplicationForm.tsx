@@ -161,7 +161,7 @@ export function FinanceApplicationForm({ className }: { className?: string }) {
         <Button
           type="submit"
           disabled={status === "submitting"}
-          className="h-11 rounded-full border border-white/80 bg-white/20 px-8 font-display text-sm font-semibold tracking-[0.14em] text-white shadow-[0_4px_24px_rgba(0,0,0,0.28)] backdrop-blur-sm transition hover:border-white hover:bg-white/35"
+          className="h-10 rounded-full border border-white/80 bg-white/20 px-6 font-display text-sm font-semibold tracking-[0.06em] text-white shadow-[0_4px_24px_rgba(0,0,0,0.28)] backdrop-blur-sm transition hover:border-white hover:bg-white/35 sm:h-11 sm:px-6 sm:text-[15px]"
         >
           {status === "submitting" ? f.submitting : f.submit}
         </Button>

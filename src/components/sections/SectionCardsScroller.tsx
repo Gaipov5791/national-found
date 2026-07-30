@@ -15,10 +15,10 @@ type SectionCardsScrollerProps = {
 
 const LAYOUT_MAX_WIDTH: Record<SectionCardsLayout, string> = {
   "two-col": "max-w-5xl",
-  "four-row": "max-w-[min(100%,72rem)] xl:max-w-[min(100%,80rem)] 2xl:max-w-[min(100%,88rem)]",
-  "four-two": "max-w-[min(100%,72rem)] xl:max-w-[min(100%,80rem)] 2xl:max-w-[min(100%,88rem)]",
+  "four-row": "max-w-[min(100%,64rem)]",
+  "four-two": "max-w-[min(100%,64rem)]",
   // Cap width so 6 finance-sized cards always overflow and can auto-swipe.
-  "six-row": "max-w-[min(100%,68rem)] xl:max-w-[min(100%,72rem)] 2xl:max-w-[min(100%,78rem)]",
+  "six-row": "max-w-[min(100%,58rem)]",
 };
 
 const LAYOUT_GRID: Record<SectionCardsLayout, string> = {
@@ -111,28 +111,20 @@ type SectionCardSlideProps = {
   gridSlot?: SectionCardGridSlot;
 };
 
+/** Shared card width token — mobile compact, desktop fixed (no xl/2xl growth). */
 const MOBILE_WIDTH = {
-  default: "w-[min(78vw,280px)] sm:w-[min(70vw,300px)]",
-  wide: "w-[min(72vw,240px)] sm:w-[min(68vw,260px)]",
+  default: "w-[min(78vw,248px)] sm:w-[248px]",
+  wide: "w-[min(72vw,232px)] sm:w-[232px]",
 } as const;
 
+const DESKTOP_CARD = "md:w-[240px]";
+const DESKTOP_CARD_WIDE = "md:w-[232px]";
+
 const DESKTOP_WIDTH: Record<SectionCardsLayout, { default: string; wide: string }> = {
-  "two-col": {
-    default: "md:w-[280px] lg:w-[300px] xl:w-[320px] 2xl:w-[340px]",
-    wide: "md:w-[240px] lg:w-[260px] xl:w-[280px] 2xl:w-[300px]",
-  },
-  "four-row": {
-    default: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
-    wide: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
-  },
-  "four-two": {
-    default: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
-    wide: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
-  },
-  "six-row": {
-    default: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
-    wide: "md:w-[220px] lg:w-[240px] xl:w-[260px] 2xl:w-[280px]",
-  },
+  "two-col": { default: DESKTOP_CARD, wide: DESKTOP_CARD_WIDE },
+  "four-row": { default: DESKTOP_CARD, wide: DESKTOP_CARD },
+  "four-two": { default: DESKTOP_CARD, wide: DESKTOP_CARD },
+  "six-row": { default: DESKTOP_CARD, wide: DESKTOP_CARD },
 };
 
 const GRID_SLOT_CLASS: Record<SectionCardGridSlot, string> = {

@@ -8,13 +8,14 @@ import {
 } from "react";
 import { getMessages, type Messages } from "@/lib/i18n/messages";
 
-export const LANGS = ["RU", "KG", "EN"] as const;
+export const LANGS = ["RU", "KG", "EN", "ZH"] as const;
 export type Lang = (typeof LANGS)[number];
 
 const HTML_LANG: Record<Lang, string> = {
   RU: "ru",
   KG: "ky",
   EN: "en",
+  ZH: "zh-CN",
 };
 
 type LangContextValue = {

@@ -15,11 +15,12 @@ type DetailLinkButtonProps = {
   block?: boolean;
 };
 
+/** Shared CTA size for «Подробнее», «Подать заявку», «Читать ещё». */
 const buttonClassName =
-  "inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-full border border-white/80 bg-white/20 px-6 py-2.5 font-display text-xs font-semibold tracking-[0.14em] text-white shadow-[0_4px_24px_rgba(0,0,0,0.28)] backdrop-blur-sm transition hover:border-white hover:bg-white/35 sm:min-h-12 sm:px-7 sm:py-3 sm:text-[13px] sm:tracking-[0.16em] md:px-8 md:py-3.5 md:text-sm md:tracking-[0.18em]";
+  "inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-full border border-white/80 bg-white/20 px-5 py-2.5 font-display text-sm font-semibold tracking-[0.06em] text-white shadow-[0_4px_24px_rgba(0,0,0,0.28)] backdrop-blur-sm transition hover:border-white hover:bg-white/35 sm:min-h-11 sm:px-6 sm:py-2.5 sm:text-[15px] sm:tracking-[0.05em]";
 
 const blockButtonClassName =
-  "inline-flex h-full min-h-[3.25rem] w-full items-center justify-center whitespace-normal rounded-full border border-white/90 bg-white/35 px-3.5 py-2 text-center font-display text-[11px] font-semibold leading-snug tracking-[0.07em] text-white shadow-[0_4px_24px_rgba(0,0,0,0.32)] transition hover:border-white hover:bg-white/45 sm:min-h-[3.5rem] sm:px-4 sm:py-2.5 sm:text-xs sm:tracking-[0.08em] md:min-h-[4.75rem] md:px-4 md:py-3 md:text-xs md:tracking-[0.08em] lg:min-h-[5.25rem] lg:px-5 lg:py-3.5 lg:text-sm lg:tracking-[0.1em]";
+  "inline-flex h-full min-h-11 w-full items-center justify-center whitespace-normal rounded-full border border-white/90 bg-white/35 px-4 py-2.5 text-center font-display text-sm font-semibold leading-snug tracking-[0.05em] text-white shadow-[0_4px_24px_rgba(0,0,0,0.32)] transition hover:border-white hover:bg-white/45 sm:min-h-12 sm:px-5 sm:text-[15px]";
 
 export function DetailLinkButton({
   to,
