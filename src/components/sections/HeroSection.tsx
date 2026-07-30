@@ -22,7 +22,3 @@ export function animateHeroScene(tl: SceneTimeline, refs: HeroSceneRefs, ctx: Sc
     0
   );
 }
-
-export const HeroSection = function HeroSection() {
-  return null;
-};
