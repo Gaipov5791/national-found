@@ -1,4 +1,5 @@
 import type { Messages } from "@/lib/i18n/messages";
+import type { Lang } from "@/lib/lang";
 import type { AboutPerson } from "@/components/sections/sectionContent";
 import {
   ABOUT_BOARD_META,
@@ -9,8 +10,8 @@ import {
   ABOUT_REGULATORY_DOC_HREFS,
   DIRECTION_CARD_ICONS,
   FINANCE_CARD_ICONS,
-  NEWS_PREVIEW_IDS,
 } from "@/components/sections/sectionContent";
+import { getNewsPreview } from "@/data/news";
 import {
   ACCREDITATION_DOCUMENTS as ACCREDITATION_DOC_META,
   PARTNER_REGISTRY as PARTNER_REGISTRY_META,
@@ -42,12 +43,8 @@ export function getDirectionCards(t: Messages) {
   }));
 }
 
-export function getNewsPreviewItems(t: Messages) {
-  return NEWS_PREVIEW_IDS.map((id) => ({
-    id,
-    description: t.news.previewDescription,
-    imageLabel: t.news.previewImage,
-  }));
+export function getNewsPreviewItems(_t: Messages, lang: Lang) {
+  return getNewsPreview(lang);
 }
 
 export function getAboutBoard(t: Messages) {

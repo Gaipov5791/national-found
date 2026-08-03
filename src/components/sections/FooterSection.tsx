@@ -111,6 +111,27 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
             </div>
           </div>
 
+          <div className="flex shrink-0 flex-col items-start gap-2 lg:items-center">
+            <a
+              href="https://nif.kg"
+              data-cursor-hover
+              aria-label={t.footer.qrLabel}
+              className="block rounded-sm bg-white p-2 transition-opacity hover:opacity-90"
+            >
+              <img
+                src="/images/qr-nif-kg.png"
+                alt=""
+                width={112}
+                height={112}
+                className="h-24 w-24 sm:h-28 sm:w-28"
+                decoding="async"
+              />
+            </a>
+            <p className="text-[10px] font-semibold tracking-[0.12em] text-white/60 sm:text-xs">
+              {t.footer.qrLabel}
+            </p>
+          </div>
+
           <div className="text-xs leading-relaxed text-white/85 sm:text-sm sm:text-[15px] lg:max-w-md lg:text-right">
             <p className="mb-1 text-xs font-semibold tracking-[0.12em] text-white/60">{t.footer.addressLabel}</p>
             <p className="mb-5">

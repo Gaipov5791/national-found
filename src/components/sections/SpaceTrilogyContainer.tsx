@@ -1,7 +1,7 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { getNewsPreviewItems } from "@/lib/i18n/content";
-import { useT } from "@/lib/lang";
+import { useLang, useT } from "@/lib/lang";
 import { DetailLinkButton } from "./DetailLinkButton";
 import { NewsCardsMarquee } from "./NewsCardsMarquee";
 import {
@@ -54,7 +54,8 @@ export type SpaceTrilogyContainerProps = {
 export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyContainerProps>(
   function SpaceTrilogyContainer({ partnersRef, partnersTextRef, newsTitleRef }, _ref) {
     const t = useT();
-    const newsItems = getNewsPreviewItems(t);
+    const { lang } = useLang();
+    const newsItems = getNewsPreviewItems(t, lang);
 
     const partnerActions = [
       { to: "/partners-registry", label: t.partners.actions.registry },

@@ -159,6 +159,7 @@ export type Messages = {
     rightWing: string;
     phoneLabel: string;
     hotlineLabel: string;
+    qrLabel: string;
     copyright: string;
     developer: string;
     backToTop: string;
@@ -418,7 +419,7 @@ const ru: Messages = {
     heading: "НОВОСТИ",
     readMore: "Читать ещё",
     pageTitle: "Новости",
-    pageIntro: "Раздел новостей находится в разработке. Скоро здесь появятся актуальные материалы о деятельности фонда.",
+    pageIntro: "Актуальные материалы о деятельности Национального инвестиционного фонда Кыргызской Республики.",
     updatesTitle: "Следите за обновлениями",
     updatesBody:
       "Публикуем информацию о новых проектах, партнёрствах и ключевых событиях в деятельности Национального инвестиционного фонда Кыргызской Республики.",
@@ -453,6 +454,7 @@ const ru: Messages = {
     rightWing: "правое крыло",
     phoneLabel: "Телефон:",
     hotlineLabel: "Телефон доверия:",
+    qrLabel: "Сайт на телефоне",
     copyright: "© 2026 Общественный фонд «Фонд социального партнёрства по развитию регионов»",
     developer: "Разработчик Гаипов Бакыт",
     backToTop: "Вернуться наверх",
@@ -712,7 +714,7 @@ const kg: Messages = {
     heading: "ЖАҢЫЛЫКТАР",
     readMore: "Дагы окуу",
     pageTitle: "Жаңылыктар",
-    pageIntro: "Жаңылыктар бөлүмү иштелип жатат. Жакында бул жерде фонддун ишмердүүлүгү жөнүндө актуалдуу материалдар пайда болот.",
+    pageIntro: "Кыргыз Республикасынын Улуттук инвестициялык фондунун ишмердүүлүгү жөнүндө актуалдуу материалдар.",
     updatesTitle: "Жаңыртууларды көзөмөлдөңүз",
     updatesBody:
       "Кыргыз Республикасынын Улуттук инвестициялык фондунун ишмердүүлүгүндөгү жаңы долбоорлор, өнөктөштүктөр жана негизги окуялар жөнүндө маалымат жарыялайбыз.",
@@ -747,6 +749,7 @@ const kg: Messages = {
     rightWing: "оң канат",
     phoneLabel: "Телефон:",
     hotlineLabel: "Ишеним телефону:",
+    qrLabel: "Сайт телефондо",
     copyright: "© 2026 «Аймактарды өнүктүрүү боюнча социалдык өнөктөштүк фонду» Коомдук фонду",
     developer: "Иштеп чыгуучу Гаипов Бакыт",
     backToTop: "Жогоруга кайтуу",
@@ -1006,7 +1009,7 @@ const en: Messages = {
     heading: "NEWS",
     readMore: "Read more",
     pageTitle: "News",
-    pageIntro: "The news section is under development. Current materials on the Fund’s activities will appear here soon.",
+    pageIntro: "Current materials on the activities of the National Investment Fund of the Kyrgyz Republic.",
     updatesTitle: "Stay updated",
     updatesBody:
       "We publish information about new projects, partnerships, and key events in the work of the National Investment Fund of the Kyrgyz Republic.",
@@ -1041,6 +1044,7 @@ const en: Messages = {
     rightWing: "right wing",
     phoneLabel: "Phone:",
     hotlineLabel: "Hotline:",
+    qrLabel: "Open on mobile",
     copyright: "© 2026 Public Foundation “Social Partnership Fund for Regional Development”",
     developer: "Developer: Gaipov Bakyt",
     backToTop: "Back to top",
@@ -1301,7 +1305,7 @@ const zh: Messages = {
     heading: "新闻",
     readMore: "查看更多",
     pageTitle: "新闻",
-    pageIntro: "新闻栏目正在建设中。有关基金活动的最新内容即将上线。",
+    pageIntro: "有关吉尔吉斯共和国国家投资基金活动的最新内容。",
     updatesTitle: "关注动态",
     updatesBody:
       "我们发布有关新项目、合作伙伴关系以及吉尔吉斯共和国国家投资基金重要活动的信息。",
@@ -1336,6 +1340,7 @@ const zh: Messages = {
     rightWing: "右翼",
     phoneLabel: "电话",
     hotlineLabel: "举报热线",
+    qrLabel: "手机打开网站",
     copyright: "© 2026 公共基金会“区域发展社会伙伴关系基金”",
     developer: "开发者：Gaipov Bakyt",
     backToTop: "返回顶部",

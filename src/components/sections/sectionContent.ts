@@ -16,9 +16,6 @@ export const DIRECTION_CARD_ICONS = [
   publicAsset("/icons/perspective/Иконки Перпективные направления/Здравоохранение.png"),
 ] as const;
 
-/** Preview card ids on the landing news block. Add items to enable the marquee (3+). */
-export const NEWS_PREVIEW_IDS = ["news-1", "news-2", "news-3", "news-4"] as const;
-
 export type AboutPerson = {
   name: string;
   role: string;
