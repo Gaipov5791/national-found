@@ -47,12 +47,16 @@ export const SECTION_TOP_WITH_CARDS = SECTION_TOP_AFTER_BRAND;
 /** Compact text sections (text + button). */
 export const SECTION_TOP_COMPACT = SECTION_TOP_SIMPLE_CENTER;
 
-/** News section block position. */
+/** News section — above footer so CTA/cards stay clickable while footer is off-screen. */
 export const SECTION_TOP_NEWS = SECTION_TOP_AFTER_BRAND;
 
 /** Shell classes shared by most scrollytelling sections. */
 export const SECTION_SHELL =
   `pointer-events-none absolute inset-x-0 z-30 text-center opacity-0 will-change-[transform,opacity] ${SECTION_PAD_X}`;
+
+/** News shell sits above the footer layer (z-35) while the section is active. */
+export const SECTION_SHELL_NEWS =
+  `pointer-events-none absolute inset-x-0 z-[40] text-center opacity-0 will-change-[transform,opacity] ${SECTION_PAD_X}`;
 
 /** Keeps long hero titles on one line without changing the shared heading scale. */
 export const SECTION_HEADING_SINGLE_LINE =

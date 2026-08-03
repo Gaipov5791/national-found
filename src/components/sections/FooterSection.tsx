@@ -11,7 +11,7 @@ export type FooterSceneRefs = {
 };
 
 export function prepareFooterScene(refs: FooterSceneRefs, _ctx: SceneAnimationContext) {
-  gsap.set(refs.footerContentZoneRef.current, { autoAlpha: 0 });
+  gsap.set(refs.footerContentZoneRef.current, { autoAlpha: 0, pointerEvents: "none" });
 }
 
 /** Hide the large hero brand under the nav; keep the navbar logo visible (esp. on mobile). */
@@ -32,14 +32,21 @@ export function animateFooterScene(tl: SceneTimeline, refs: FooterSceneRefs, ctx
   const footerEl = refs.footerContentZoneRef.current;
   if (!footerEl) return;
 
-  tl.set(footerEl, { autoAlpha: 0 }, 0);
+  // Keep the (invisible) footer from stealing clicks on News / other sections above it.
+  tl.set(footerEl, { autoAlpha: 0, pointerEvents: "none" }, 0);
 
   hideHeroBrandLogo(tl, refs, footerEnterT, enterDur);
 
   tl.fromTo(
     footerEl,
-    { autoAlpha: 0 },
-    { autoAlpha: 1, duration: enterDur, ease: "power2.out", immediateRender: false },
+    { autoAlpha: 0, pointerEvents: "none" },
+    {
+      autoAlpha: 1,
+      pointerEvents: "auto",
+      duration: enterDur,
+      ease: "power2.out",
+      immediateRender: false,
+    },
     footerEnterT
   );
   tl.to(footerEl, { autoAlpha: 1, duration: footerHoldDur, ease: "none" }, footerEnterT + enterDur);
@@ -80,7 +87,7 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
     >
       <div className="pointer-events-none absolute inset-0 bg-black/80" data-cursor-surface="dark" aria-hidden />
 
-      <footer className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 flex max-h-[92svh] flex-col overflow-y-auto px-4 pb-20 pt-8 font-display text-white sm:max-h-none sm:overflow-visible sm:px-8 sm:pb-8 sm:pt-10 md:px-12 lg:px-16">
+      <footer className="absolute inset-x-0 bottom-0 z-10 flex max-h-[92svh] flex-col overflow-y-auto px-4 pb-20 pt-8 font-display text-white sm:max-h-none sm:overflow-visible sm:px-8 sm:pb-8 sm:pt-10 md:px-12 lg:px-16">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 sm:gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
           <div className="flex flex-col gap-4 sm:gap-6 lg:max-w-sm">
             <div className="flex items-start gap-3 sm:gap-4">
@@ -181,7 +188,7 @@ export const FooterSection = forwardRef<HTMLDivElement, FooterSectionProps>(func
         </div>
       </footer>
 
-      <div className="pointer-events-auto absolute bottom-4 right-4 z-20 will-change-transform sm:bottom-12 sm:right-8 md:right-12 lg:right-16">
+      <div className="absolute bottom-4 right-4 z-20 will-change-transform sm:bottom-12 sm:right-8 md:right-12 lg:right-16">
         <button
           type="button"
           onClick={onScrollToTop}

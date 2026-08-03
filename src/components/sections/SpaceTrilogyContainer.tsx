@@ -1,19 +1,17 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
-import { getNewsPreviewItems } from "@/lib/i18n/content";
-import { useLang, useT } from "@/lib/lang";
+import { useT } from "@/lib/lang";
 import { DetailLinkButton } from "./DetailLinkButton";
-import { NewsCardsMarquee } from "./NewsCardsMarquee";
 import {
   SECTION_CTA_MARGIN,
   SECTION_HEADING,
   SECTION_HEADING_HERO,
   SECTION_PAD_X,
-  SECTION_SHELL,
+  SECTION_SHELL_NEWS,
   SECTION_SUBTEXT,
   SECTION_SUBTEXT_MARGIN,
   SECTION_TOP_AFTER_BRAND,
-  SECTION_TOP_NEWS,
+  SECTION_TOP_SIMPLE_CENTER,
 } from "./sectionLayout";
 import type { SceneAnimationContext, SceneTimeline } from "./sceneAnimationShared";
 
@@ -54,8 +52,6 @@ export type SpaceTrilogyContainerProps = {
 export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyContainerProps>(
   function SpaceTrilogyContainer({ partnersRef, partnersTextRef, newsTitleRef }, _ref) {
     const t = useT();
-    const { lang } = useLang();
-    const newsItems = getNewsPreviewItems(t, lang);
 
     const partnerActions = [
       { to: "/partners-registry", label: t.partners.actions.registry },
@@ -97,15 +93,19 @@ export const SpaceTrilogyContainer = forwardRef<HTMLDivElement, SpaceTrilogyCont
           ref={newsTitleRef}
           id="novosti"
           aria-label={t.news.heading}
-          className={`${SECTION_SHELL} ${SECTION_TOP_NEWS}`}
+          className={`${SECTION_SHELL_NEWS} ${SECTION_TOP_SIMPLE_CENTER}`}
         >
           <h2 className={`${SECTION_HEADING} ${SECTION_HEADING_HERO}`}>{t.news.heading}</h2>
-          <NewsCardsMarquee items={newsItems} />
+          <p
+            className={`${SECTION_SUBTEXT} ${SECTION_SUBTEXT_MARGIN} max-w-3xl text-white/85 drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)]`}
+          >
+            {t.news.blurb}
+          </p>
           <DetailLinkButton
             to="/news"
             originSection="sc_news"
             label={t.news.readMore}
-            containerClassName="mt-4 sm:mt-6 md:mt-7"
+            containerClassName={SECTION_CTA_MARGIN}
           />
         </div>
       </>

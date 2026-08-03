@@ -116,16 +116,6 @@ export function getNewsById(id: string): NewsItem | undefined {
   return NEWS_ITEMS.find((item) => item.id === id);
 }
 
-export function getNewsPreview(lang: Lang, limit = 4) {
-  return NEWS_ITEMS.slice(0, limit).map((item) => ({
-    id: item.id,
-    title: pickL10n(item.title, lang),
-    description: pickL10n(item.excerpt, lang),
-    image: item.image,
-    date: formatNewsDate(item.date, lang),
-  }));
-}
-
 export function getLocalizedNewsArticle(id: string, lang: Lang) {
   const item = getNewsById(id);
   if (!item) return undefined;

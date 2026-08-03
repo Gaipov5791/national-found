@@ -143,6 +143,7 @@ export type Messages = {
   };
   news: {
     heading: string;
+    blurb: string;
     readMore: string;
     pageTitle: string;
     pageIntro: string;
@@ -417,6 +418,8 @@ const ru: Messages = {
   },
   news: {
     heading: "НОВОСТИ",
+    blurb:
+      "Здесь мы рассказываем о работе Национального инвестиционного фонда: запусках и ходе инвестиционных проектов, партнёрствах с бизнесом и международными институтами, открытых отборах консультантов и управляющих компаний, вакансиях и аккредитации профессиональных партнёров. Следите за обновлениями, чтобы первыми узнавать о решениях, которые формируют инвестиционный климат и развитие экономики Кыргызстана.",
     readMore: "Читать ещё",
     pageTitle: "Новости",
     pageIntro: "Актуальные материалы о деятельности Национального инвестиционного фонда Кыргызской Республики.",
@@ -712,6 +715,8 @@ const kg: Messages = {
   },
   news: {
     heading: "ЖАҢЫЛЫКТАР",
+    blurb:
+      "Бул жерде биз Улуттук инвестициялык фонддун ишмердүүлүгү жөнүндө айтабыз: инвестициялык долбоорлордун башталышы жана жүрүшү, бизнес жана эл аралык институттар менен өнөктөштүк, консультанттарды жана башкаруучу компанияларды ачык тандоо, бош кызмат орундары жана кесипкөй өнөктөштөрдү аккредитациялоо. Жаңыртууларды көзөмөлдөп, Кыргызстандын инвестициялык климатын жана экономикасын калыптандырган чечимдер жөнүндө биринчилерден болуп билиңиз.",
     readMore: "Дагы окуу",
     pageTitle: "Жаңылыктар",
     pageIntro: "Кыргыз Республикасынын Улуттук инвестициялык фондунун ишмердүүлүгү жөнүндө актуалдуу материалдар.",
@@ -1007,6 +1012,8 @@ const en: Messages = {
   },
   news: {
     heading: "NEWS",
+    blurb:
+      "Here we share updates on the National Investment Fund’s work: the launch and progress of investment projects, partnerships with business and international institutions, open selections of consultants and management companies, vacancies, and the accreditation of professional partners. Stay tuned to be among the first to learn about decisions that shape Kyrgyzstan’s investment climate and economic development.",
     readMore: "Read more",
     pageTitle: "News",
     pageIntro: "Current materials on the activities of the National Investment Fund of the Kyrgyz Republic.",
@@ -1303,6 +1310,8 @@ const zh: Messages = {
   },
   news: {
     heading: "新闻",
+    blurb:
+      "在此我们介绍国家投资基金的工作动态：投资项目的启动与推进、与企业及国际机构的合作、顾问与管理公司的公开遴选、职位空缺，以及专业合作伙伴的认证。请持续关注，第一时间了解塑造吉尔吉斯斯坦投资环境与经济发展的重要决策。",
     readMore: "查看更多",
     pageTitle: "新闻",
     pageIntro: "有关吉尔吉斯共和国国家投资基金活动的最新内容。",
