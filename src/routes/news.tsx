@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { DetailPageLayout } from "@/components/DetailPageLayout";
 import { formatNewsDate, getNewsItems } from "@/data/news";
 import { pickL10n } from "@/data/msbProjects";
@@ -23,41 +23,37 @@ function NewsPage() {
         {items.map((item) => {
           const title = pickL10n(item.title, lang);
           const excerpt = pickL10n(item.excerpt, lang);
-          const href = item.sourceUrl[lang] ?? item.sourceUrl.RU;
           const date = formatNewsDate(item.date, lang);
 
           return (
             <article
               key={item.id}
-              className="overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-sm backdrop-blur-sm"
+              className="overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-sm backdrop-blur-sm transition hover:border-white/30 hover:bg-white/[0.14]"
             >
-              <div className="aspect-[16/10] overflow-hidden bg-white/10">
-                <img
-                  src={item.image}
-                  alt=""
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <div className="p-5 sm:p-6">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">
-                  {date}
-                </p>
-                <h2 className="mt-2 font-display text-base font-bold text-white sm:text-lg">{title}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-white/70">{excerpt}</p>
-                {href ? (
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cursor-hover
-                    className="mt-4 inline-flex text-sm font-semibold text-white/90 underline-offset-4 transition-colors hover:text-white hover:underline"
-                  >
+              <Link to="/news/$slug" params={{ slug: item.id }} className="block">
+                <div className="aspect-[16/10] overflow-hidden bg-white/10">
+                  <img
+                    src={item.image}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div className="p-5 sm:p-6">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">
+                    {date}
+                  </p>
+                  <h2 className="mt-2 font-display text-base font-bold text-white sm:text-lg">{title}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-white/70">{excerpt}</p>
+                  <span className="mt-4 inline-flex text-sm font-semibold text-white/90">
                     {t.news.readMore}
-                  </a>
-                ) : null}
-              </div>
+                    <span aria-hidden className="ml-2 opacity-80">
+                      →
+                    </span>
+                  </span>
+                </div>
+              </Link>
             </article>
           );
         })}

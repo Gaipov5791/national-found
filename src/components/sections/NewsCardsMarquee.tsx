@@ -11,7 +11,6 @@ export type NewsPreviewItem = {
   imageLabel?: string;
   image?: string;
   date?: string;
-  href?: string;
 };
 
 type NewsCardsMarqueeProps = {
@@ -84,7 +83,7 @@ export function NewsCardsMarquee({ items, className }: NewsCardsMarqueeProps) {
                 imageLabel={item.imageLabel}
                 imageSrc={item.image}
                 date={item.date}
-                href={item.href}
+                slug={item.id}
               />
             </div>
           ))}
@@ -115,7 +114,7 @@ export function NewsCardsMarquee({ items, className }: NewsCardsMarqueeProps) {
               imageLabel={item.imageLabel}
               imageSrc={item.image}
               date={item.date}
-              href={item.href}
+              slug={item.id}
             />
           </div>
         ))}

@@ -9,55 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PartnersRegistryRouteImport } from './routes/partners-registry'
-import { Route as PartnersJoinRouteImport } from './routes/partners-join'
-import { Route as PartnersCooperationRouteImport } from './routes/partners-cooperation'
-import { Route as PartnersRouteImport } from './routes/partners'
-import { Route as NewsRouteImport } from './routes/news'
-import { Route as MsbRouteImport } from './routes/msb'
-import { Route as FinanceRouteImport } from './routes/finance'
-import { Route as DirectionsRouteImport } from './routes/directions'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as DirectionsRouteImport } from './routes/directions'
+import { Route as FinanceRouteImport } from './routes/finance'
+import { Route as MsbRouteImport } from './routes/msb'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as PartnersRouteImport } from './routes/partners'
+import { Route as PartnersCooperationRouteImport } from './routes/partners-cooperation'
+import { Route as PartnersJoinRouteImport } from './routes/partners-join'
+import { Route as PartnersRegistryRouteImport } from './routes/partners-registry'
+import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 
-const PartnersRegistryRoute = PartnersRegistryRouteImport.update({
-  id: '/partners-registry',
-  path: '/partners-registry',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PartnersJoinRoute = PartnersJoinRouteImport.update({
-  id: '/partners-join',
-  path: '/partners-join',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PartnersCooperationRoute = PartnersCooperationRouteImport.update({
-  id: '/partners-cooperation',
-  path: '/partners-cooperation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PartnersRoute = PartnersRouteImport.update({
-  id: '/partners',
-  path: '/partners',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsRoute = NewsRouteImport.update({
-  id: '/news',
-  path: '/news',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MsbRoute = MsbRouteImport.update({
-  id: '/msb',
-  path: '/msb',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FinanceRoute = FinanceRouteImport.update({
-  id: '/finance',
-  path: '/finance',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DirectionsRoute = DirectionsRouteImport.update({
-  id: '/directions',
-  path: '/directions',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -65,10 +31,50 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const DirectionsRoute = DirectionsRouteImport.update({
+  id: '/directions',
+  path: '/directions',
   getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceRoute = FinanceRouteImport.update({
+  id: '/finance',
+  path: '/finance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MsbRoute = MsbRouteImport.update({
+  id: '/msb',
+  path: '/msb',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersRoute = PartnersRouteImport.update({
+  id: '/partners',
+  path: '/partners',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersCooperationRoute = PartnersCooperationRouteImport.update({
+  id: '/partners-cooperation',
+  path: '/partners-cooperation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersJoinRoute = PartnersJoinRouteImport.update({
+  id: '/partners-join',
+  path: '/partners-join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersRegistryRoute = PartnersRegistryRouteImport.update({
+  id: '/partners-registry',
+  path: '/partners-registry',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsSlugRoute = NewsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => NewsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -77,11 +83,12 @@ export interface FileRoutesByFullPath {
   '/directions': typeof DirectionsRoute
   '/finance': typeof FinanceRoute
   '/msb': typeof MsbRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/partners': typeof PartnersRoute
   '/partners-cooperation': typeof PartnersCooperationRoute
   '/partners-join': typeof PartnersJoinRoute
   '/partners-registry': typeof PartnersRegistryRoute
+  '/news/$slug': typeof NewsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -89,11 +96,12 @@ export interface FileRoutesByTo {
   '/directions': typeof DirectionsRoute
   '/finance': typeof FinanceRoute
   '/msb': typeof MsbRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/partners': typeof PartnersRoute
   '/partners-cooperation': typeof PartnersCooperationRoute
   '/partners-join': typeof PartnersJoinRoute
   '/partners-registry': typeof PartnersRegistryRoute
+  '/news/$slug': typeof NewsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -102,11 +110,12 @@ export interface FileRoutesById {
   '/directions': typeof DirectionsRoute
   '/finance': typeof FinanceRoute
   '/msb': typeof MsbRoute
-  '/news': typeof NewsRoute
+  '/news': typeof NewsRouteWithChildren
   '/partners': typeof PartnersRoute
   '/partners-cooperation': typeof PartnersCooperationRoute
   '/partners-join': typeof PartnersJoinRoute
   '/partners-registry': typeof PartnersRegistryRoute
+  '/news/$slug': typeof NewsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/partners-cooperation'
     | '/partners-join'
     | '/partners-registry'
+    | '/news/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/partners-cooperation'
     | '/partners-join'
     | '/partners-registry'
+    | '/news/$slug'
   id:
     | '__root__'
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/partners-cooperation'
     | '/partners-join'
     | '/partners-registry'
+    | '/news/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -153,7 +165,7 @@ export interface RootRouteChildren {
   DirectionsRoute: typeof DirectionsRoute
   FinanceRoute: typeof FinanceRoute
   MsbRoute: typeof MsbRoute
-  NewsRoute: typeof NewsRoute
+  NewsRoute: typeof NewsRouteWithChildren
   PartnersRoute: typeof PartnersRoute
   PartnersCooperationRoute: typeof PartnersCooperationRoute
   PartnersJoinRoute: typeof PartnersJoinRoute
@@ -162,60 +174,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/partners-registry': {
-      id: '/partners-registry'
-      path: '/partners-registry'
-      fullPath: '/partners-registry'
-      preLoaderRoute: typeof PartnersRegistryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/partners-join': {
-      id: '/partners-join'
-      path: '/partners-join'
-      fullPath: '/partners-join'
-      preLoaderRoute: typeof PartnersJoinRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/partners-cooperation': {
-      id: '/partners-cooperation'
-      path: '/partners-cooperation'
-      fullPath: '/partners-cooperation'
-      preLoaderRoute: typeof PartnersCooperationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/partners': {
-      id: '/partners'
-      path: '/partners'
-      fullPath: '/partners'
-      preLoaderRoute: typeof PartnersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/news': {
-      id: '/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof NewsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/msb': {
-      id: '/msb'
-      path: '/msb'
-      fullPath: '/msb'
-      preLoaderRoute: typeof MsbRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/finance': {
-      id: '/finance'
-      path: '/finance'
-      fullPath: '/finance'
-      preLoaderRoute: typeof FinanceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/directions': {
-      id: '/directions'
-      path: '/directions'
-      fullPath: '/directions'
-      preLoaderRoute: typeof DirectionsRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -225,15 +188,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/directions': {
+      id: '/directions'
+      path: '/directions'
+      fullPath: '/directions'
+      preLoaderRoute: typeof DirectionsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/finance': {
+      id: '/finance'
+      path: '/finance'
+      fullPath: '/finance'
+      preLoaderRoute: typeof FinanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/msb': {
+      id: '/msb'
+      path: '/msb'
+      fullPath: '/msb'
+      preLoaderRoute: typeof MsbRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners': {
+      id: '/partners'
+      path: '/partners'
+      fullPath: '/partners'
+      preLoaderRoute: typeof PartnersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners-cooperation': {
+      id: '/partners-cooperation'
+      path: '/partners-cooperation'
+      fullPath: '/partners-cooperation'
+      preLoaderRoute: typeof PartnersCooperationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners-join': {
+      id: '/partners-join'
+      path: '/partners-join'
+      fullPath: '/partners-join'
+      preLoaderRoute: typeof PartnersJoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners-registry': {
+      id: '/partners-registry'
+      path: '/partners-registry'
+      fullPath: '/partners-registry'
+      preLoaderRoute: typeof PartnersRegistryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news/$slug': {
+      id: '/news/$slug'
+      path: '/$slug'
+      fullPath: '/news/$slug'
+      preLoaderRoute: typeof NewsSlugRouteImport
+      parentRoute: typeof NewsRoute
     }
   }
 }
+
+interface NewsRouteChildren {
+  NewsSlugRoute: typeof NewsSlugRoute
+}
+
+const NewsRouteChildren: NewsRouteChildren = {
+  NewsSlugRoute: NewsSlugRoute,
+}
+
+const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -241,7 +270,7 @@ const rootRouteChildren: RootRouteChildren = {
   DirectionsRoute: DirectionsRoute,
   FinanceRoute: FinanceRoute,
   MsbRoute: MsbRoute,
-  NewsRoute: NewsRoute,
+  NewsRoute: NewsRouteWithChildren,
   PartnersRoute: PartnersRoute,
   PartnersCooperationRoute: PartnersCooperationRoute,
   PartnersJoinRoute: PartnersJoinRoute,
@@ -250,13 +279,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

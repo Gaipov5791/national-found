@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { useCanHover } from "@/hooks/use-can-hover";
 import { useT } from "@/lib/lang";
 import { cn } from "@/lib/utils";
@@ -12,7 +13,8 @@ type NewsPreviewCardProps = {
   description?: string;
   imageLabel?: string;
   imageSrc?: string;
-  href?: string;
+  /** Article slug for local `/news/$slug` pages */
+  slug?: string;
   date?: string;
 };
 
@@ -22,7 +24,7 @@ export function NewsPreviewCard({
   description,
   imageLabel,
   imageSrc,
-  href,
+  slug,
   date,
 }: NewsPreviewCardProps) {
   const t = useT();
@@ -94,19 +96,18 @@ export function NewsPreviewCard({
     onBlur: () => setHovered(false),
   };
 
-  if (href) {
+  if (slug) {
     return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        to="/news/$slug"
+        params={{ slug }}
         data-cursor-hover
         style={sharedStyle}
         className={cn(sharedClassName, "block")}
         {...hoverHandlers}
       >
         {inner}
-      </a>
+      </Link>
     );
   }
 

@@ -1,6 +1,7 @@
 import type { Lang } from "@/lib/lang";
 import type { L10nText } from "@/data/msbProjects";
 import { pickL10n } from "@/data/msbProjects";
+import { getNewsBody } from "@/data/newsBodies";
 
 export type NewsItem = {
   id: string;
@@ -9,13 +10,11 @@ export type NewsItem = {
   image: string;
   title: L10nText;
   excerpt: L10nText;
-  /** WordPress article URL while local detail pages are not ready */
-  sourceUrl: Partial<Record<Lang, string>>;
 };
 
 /**
- * News synced from nif.kg WordPress (wp-json / admin).
- * Update this list when the customer publishes new posts.
+ * News synced from nif.kg WordPress.
+ * Full article HTML lives in `newsBodies.ts`.
  */
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
@@ -34,9 +33,6 @@ export const NEWS_ITEMS: readonly NewsItem[] = [
       EN: "OJSC “National Investment Fund of the Kyrgyz Republic” is hiring a Risk Manager.",
       ZH: "吉尔吉斯共和国国家投资基金公开招聘风险管理专员。",
     },
-    sourceUrl: {
-      RU: "https://nif.kg/%d0%b1%d0%b5%d0%b7-%d1%80%d1%83%d0%b1%d1%80%d0%b8%d0%ba%d0%b8/obyavlenie-o-vakansii/",
-    },
   },
   {
     id: "consultant-selection",
@@ -53,9 +49,6 @@ export const NEWS_ITEMS: readonly NewsItem[] = [
       KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК долбоордук документтерди иштеп чыгуу жана курулушту коштоо боюнча консультантты тандоого катышууга чакырат.",
       EN: "OJSC “National Investment Fund of the Kyrgyz Republic” invites applications for the selection of a consultant for project documentation and construction support services.",
       ZH: "吉尔吉斯共和国国家投资基金邀请参与项目文件编制及建设陪同服务顾问遴选。",
-    },
-    sourceUrl: {
-      RU: "https://nif.kg/%d0%b1%d0%b5%d0%b7-%d1%80%d1%83%d0%b1%d1%80%d0%b8%d0%ba%d0%b8/obyavlenie-o-provedenii-otbora-konsultanta/",
     },
   },
   {
@@ -74,12 +67,6 @@ export const NEWS_ITEMS: readonly NewsItem[] = [
       EN: "OJSC “National Investment Fund of the Kyrgyz Republic” announces the selection of a Hotel Management Company / Hotel Consultant for a modern international-level resort complex at the “Druzhba” Resort (Issyk-Kul Region).",
       ZH: "吉尔吉斯共和国国家投资基金现公开征集酒店管理公司 / 酒店咨询顾问，参与实施位于伊塞克湖州“友谊”疗养院的国际化现代度假综合体建设项目。",
     },
-    sourceUrl: {
-      RU: "https://nif.kg/novosti/obyavlenie-o-privlechenii-upravlyayushhej-kompanii-gostinichnogo-konsultanta/",
-      KG: "https://nif.kg/ky/novosti-2/bashkaruuchu-kompaniyany-mejmankana-konsultantyn-tartuu-zh%d3%a9n%d2%afnd%d3%a9-zharyya/",
-      EN: "https://nif.kg/en/novosti-3/announcement-on-the-selection-of-a-hotel-management-company-hotel-consultant/",
-      ZH: "https://nif.kg/zh/novosti-4/guan-yu-gong-kai-zheng-ji-jiu-dian-guan-li-gong-si/",
-    },
   },
   {
     id: "accreditation",
@@ -95,10 +82,7 @@ export const NEWS_ITEMS: readonly NewsItem[] = [
       RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» объявляет о запуске очередной процедуры аккредитации аудиторских, страховых, оценочных, юридических и бухгалтерских компаний.",
       KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК аудитордук, камсыздандыруу, баалоо, юридикалык жана бухгалтердик компанияларды аккредитациялоонун кезектеги процедурасын баштоо жөнүндө жарыялайт.",
       EN: "OJSC “National Investment Fund of the Kyrgyz Republic” announces another accreditation round for audit, insurance, valuation, legal, and accounting firms.",
-      ZH: "吉尔吉斯共和国国家投资基金宣布启动新一轮审计、保险、评估、法律及会计公司的认证程序。",
-    },
-    sourceUrl: {
-      RU: "https://nif.kg/novosti/obyavlenie/",
+      ZH: "吉尔吉с共和国国家投资基金宣布启动新一轮审计、保险、评估、法律及会计公司的认证程序。",
     },
   },
 ] as const;
@@ -128,6 +112,10 @@ export function getNewsItems(): readonly NewsItem[] {
   return NEWS_ITEMS;
 }
 
+export function getNewsById(id: string): NewsItem | undefined {
+  return NEWS_ITEMS.find((item) => item.id === id);
+}
+
 export function getNewsPreview(lang: Lang, limit = 4) {
   return NEWS_ITEMS.slice(0, limit).map((item) => ({
     id: item.id,
@@ -135,6 +123,19 @@ export function getNewsPreview(lang: Lang, limit = 4) {
     description: pickL10n(item.excerpt, lang),
     image: item.image,
     date: formatNewsDate(item.date, lang),
-    href: item.sourceUrl[lang] ?? item.sourceUrl.RU,
   }));
+}
+
+export function getLocalizedNewsArticle(id: string, lang: Lang) {
+  const item = getNewsById(id);
+  if (!item) return undefined;
+  const body = getNewsBody(id, lang);
+  if (!body) return undefined;
+  return {
+    ...item,
+    title: pickL10n(item.title, lang),
+    excerpt: pickL10n(item.excerpt, lang),
+    dateLabel: formatNewsDate(item.date, lang),
+    body,
+  };
 }

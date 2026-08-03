@@ -31,7 +31,7 @@ const MOBILE_SCENE_NUDGE: Partial<Record<SectionSceneLabel, number>> = {
   sc_directions: 110,
   sc_msb: 85,
   sc_partners: 130,
-  sc_news: 115,
+  sc_news: 40,
   sc_footer: 0,
 };
 

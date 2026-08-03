@@ -42,7 +42,8 @@ export function computeTimelineMarkers(mobile = false) {
   const directionsHoldDur = 0.058;
   const msbHoldDur = 0.038;
   const partnersHoldDur = mobile ? 0.042 : 0.048;
-  const newsHoldDur = mobile ? 0.072 : 0.032;
+  /** Longer hold so news cards + «Читать ещё» stay readable while scrolling. */
+  const newsHoldDur = mobile ? 0.12 : 0.095;
   const textOverlap = 0.016;
   const atmoWipeDur = 0.032;
 
