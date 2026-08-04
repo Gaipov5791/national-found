@@ -18,6 +18,40 @@ export type NewsItem = {
  */
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
+    id: "office-renovation",
+    date: "2026-08-04",
+    image: "/images/news/office-renovation.png",
+    title: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» запрашивает коммерческие предложения на выполнение работ по ремонту офисного здания.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК кеңсе имаратын оңдоо иштерин аткаруу боюнча коммерциялык сунуштарды сурайт.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” requests commercial proposals for office building renovation works.",
+      ZH: "吉尔吉斯共和国国家投资基金就办公楼装修工程公开征集商业报价。",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее — Фонд) приглашает заинтересованных поставщиков услуг представить коммерческие предложения на выполнение работ по ремонту офисного здания.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК (мындан ары — Фонд) кеңсе имаратын оңдоо иштерин аткаруу боюнча коммерциялык сунуштарды тапшырууга кызыкдар кызмат көрсөтүүчүлөрдү чакырат.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” (the Fund) invites interested service providers to submit commercial proposals for office building renovation works.",
+      ZH: "吉尔吉斯共和国国家投资基金（以下简称“基金”）诚邀相关服务供应商就办公楼装修工程提交商业报价。",
+    },
+  },
+  {
+    id: "office-partitions",
+    date: "2026-08-04",
+    image: "/images/news/office-partitions.png",
+    title: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» запрашивает коммерческие предложения на выполнение работ по изготовлению и установке офисных перегородок.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК кеңсе бөлүкчөлөрүн жасоо жана орнотуу иштерин аткаруу боюнча коммерциялык сунуштарды сурайт.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” requests commercial proposals for the manufacture and installation of office partitions.",
+      ZH: "吉尔吉斯共和国国家投资基金就办公隔断的制作与安装工程公开征集商业报价。",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее — Фонд) приглашает заинтересованных поставщиков услуг представить коммерческие предложения на выполнение работ по изготовлению и установке офисных перегородок.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК (мындан ары — Фонд) кеңсе бөлүкчөлөрүн жасоо жана орнотуу иштерин аткаруу боюнча коммерциялык сунуштарды тапшырууга кызыкдар кызмат көрсөтүүчүлөрдү чакырат.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” (the Fund) invites interested service providers to submit commercial proposals for the manufacture and installation of office partitions.",
+      ZH: "吉尔吉с共和国国家投资基金（以下简称“基金”）诚邀相关服务供应商就办公隔断的制作与安装工程提交商业报价。",
+    },
+  },
+  {
     id: "vacancy-risk-manager",
     date: "2026-06-15",
     image: "/images/news/vacancy.jpg",
