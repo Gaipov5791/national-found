@@ -24,7 +24,7 @@ function NewsArticlePage() {
   }
 
   return (
-    <DetailPageLayout title={article.title}>
+    <DetailPageLayout title={article.title} compactTitle>
       <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white/50">
         {article.dateLabel}
       </p>

@@ -42,9 +42,16 @@ type DetailPageLayoutProps = {
   children: ReactNode;
   /** Full-width content column for grids (people, cards). */
   wide?: boolean;
+  /** Smaller title for long article headlines. */
+  compactTitle?: boolean;
 };
 
-export function DetailPageLayout({ title, children, wide = false }: DetailPageLayoutProps) {
+export function DetailPageLayout({
+  title,
+  children,
+  wide = false,
+  compactTitle = false,
+}: DetailPageLayoutProps) {
   const t = useT();
   const { lang, setLang } = useLang();
   const locationHash = useRouterState({
@@ -100,7 +107,13 @@ export function DetailPageLayout({ title, children, wide = false }: DetailPageLa
             </Link>
           </div>
         </header>
-        <h1 className="mt-8 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+        <h1
+          className={
+            compactTitle
+              ? "mt-8 text-xl font-bold leading-snug tracking-tight sm:text-2xl md:text-3xl"
+              : "mt-8 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl"
+          }
+        >
           {title}
         </h1>
         <div className="mt-6 space-y-5 text-base leading-relaxed sm:mt-8 sm:space-y-6 sm:text-lg md:text-xl">
