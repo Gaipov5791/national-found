@@ -1,22 +1,39 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ComponentType } from "react";
 import { CustomCursor } from "@/components/CustomCursor";
+import { getCachedScrollytelling, preloadScrollytelling } from "@/lib/preloadScrollytelling";
 
-const SCROLLYTELLING_FALLBACK = (
-  <div className="min-h-screen bg-[#0b2138]" aria-busy="true" aria-label="Загрузка" />
+const MOUNTAIN_FALLBACK = (
+  <div
+    className="min-h-screen bg-cover bg-center"
+    style={{ backgroundImage: "url('/images/mountains.jpg')" }}
+    aria-busy="true"
+    aria-label="Загрузка"
+  />
 );
 
 function ScrollytellingGate() {
-  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(null);
+  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(() => getCachedScrollytelling());
 
   useEffect(() => {
-    void import("@/components/Scrollytelling").then((mod) => {
-      setScrollytelling(() => mod.Scrollytelling);
+    const cached = getCachedScrollytelling();
+    if (cached) {
+      setScrollytelling(() => cached);
+      return;
+    }
+
+    let cancelled = false;
+    void preloadScrollytelling().then((component) => {
+      if (!cancelled) setScrollytelling(() => component);
     });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (!Scrollytelling) {
-    return SCROLLYTELLING_FALLBACK;
+    return MOUNTAIN_FALLBACK;
   }
 
   return <Scrollytelling />;
@@ -37,22 +54,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
-    const previousHtml = html.style.backgroundColor;
-    const previousBody = body.style.backgroundColor;
-    html.style.backgroundColor = "#0b2138";
-    body.style.backgroundColor = "#0b2138";
-
-    return () => {
-      html.style.backgroundColor = previousHtml;
-      body.style.backgroundColor = previousBody;
-    };
-  }, []);
-
   return (
-    <main className="relative min-h-screen bg-[#0b2138] text-foreground">
+    <main className="relative isolate min-h-screen text-foreground">
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/mountains.jpg')" }}
+        aria-hidden
+      />
       <ScrollytellingGate />
       <CustomCursor />
     </main>

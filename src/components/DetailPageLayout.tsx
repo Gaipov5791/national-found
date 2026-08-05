@@ -5,6 +5,7 @@ import { BrandLockup } from "@/components/BrandLockup";
 import type { AboutPerson } from "@/components/sections/sectionContent";
 import { ensureGsapPlugins } from "@/lib/gsap-client";
 import { LANGS, useLang, useT } from "@/lib/lang";
+import { preloadScrollytelling } from "@/lib/preloadScrollytelling";
 import { getSectionSceneLabel } from "@/lib/sectionNavigation";
 
 /** Clear leftover Lenis / ScrollTrigger scroll locks after leaving the landing. */
@@ -61,10 +62,11 @@ export function DetailPageLayout({
 
   useEffect(() => {
     restoreDocumentScroll();
+    void preloadScrollytelling();
   }, []);
 
   return (
-    <main className="relative isolate min-h-screen w-full overflow-hidden bg-[#0b2138] px-4 py-10 font-display text-white sm:px-8 sm:py-16 lg:px-12">
+    <main className="relative isolate min-h-screen w-full overflow-hidden bg-black px-4 py-10 font-display text-white sm:px-8 sm:py-16 lg:px-12">
       <div
         className="pointer-events-none fixed inset-[-32px] -z-20 scale-105 bg-cover bg-center blur-[16px]"
         style={{ backgroundImage: "url('/images/mountains.jpg')" }}

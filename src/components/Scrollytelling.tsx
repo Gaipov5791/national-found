@@ -9,6 +9,7 @@ import { useSceneRefs } from "@/components/scrollytelling/useSceneRefs";
 import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
 import { LANGS, useLang } from "@/lib/lang";
 import { NAV_CONFIG, NAV_SCENE_BY_ID, type NavId } from "@/lib/navConfig";
+import { cn } from "@/lib/utils";
 import {
   getSectionSceneLabel,
   type SectionSceneLabel,
@@ -39,6 +40,9 @@ export function Scrollytelling() {
   const { lang, setLang, t } = useLang();
   const [counterProgress, setCounterProgress] = useState(0);
   const returnSectionHandledRef = useRef(false);
+  const [sceneReady, setSceneReady] = useState(() =>
+    typeof window === "undefined" ? true : !getSectionSceneLabel(window.location.hash)
+  );
   const refs = useSceneRefs();
 
   const navItems = useMemo(
@@ -206,14 +210,25 @@ export function Scrollytelling() {
   );
 
   useEffect(() => {
-    if (returnSectionHandledRef.current) return;
+    if (returnSectionHandledRef.current) {
+      setSceneReady(true);
+      return;
+    }
 
     const returnSection = getSectionSceneLabel(window.location.hash);
     const navItem = NAV_CONFIG.find((item) => item.scene === returnSection);
-    if (!navItem) return;
+    if (!navItem) {
+      setSceneReady(true);
+      return;
+    }
 
     let frameId = 0;
     let attempts = 0;
+
+    const revealScene = () => {
+      ScrollTrigger.update();
+      setSceneReady(true);
+    };
 
     const restoreSection = () => {
       const scrollTrigger = ScrollTrigger.getById("master-scrolly");
@@ -221,12 +236,15 @@ export function Scrollytelling() {
       if (scrollTrigger?.labelToScroll) {
         returnSectionHandledRef.current = true;
         scrollToSection(navItem.id, { immediate: true });
+        frameId = window.requestAnimationFrame(revealScene);
         return;
       }
 
       attempts += 1;
       if (attempts < 120) {
         frameId = window.requestAnimationFrame(restoreSection);
+      } else {
+        setSceneReady(true);
       }
     };
 
@@ -236,7 +254,10 @@ export function Scrollytelling() {
   }, [scrollToSection]);
 
   return (
-    <div ref={refs.rootRef} className="relative overflow-x-hidden">
+    <div
+      ref={refs.rootRef}
+      className={cn("relative overflow-x-hidden", !sceneReady && "invisible pointer-events-none")}
+    >
       <Navbar
         ref={refs.navHeaderRef}
         brandRef={refs.brandRef}
