@@ -57,7 +57,11 @@ export const DirectionsSection = forwardRef<HTMLDivElement, DirectionsSectionPro
         {t.directions.blurb}
       </p>
       <div className={`${SECTION_CARDS_GRID_MARGIN} ${CARD_SCROLLER_SCALE}`}>
-        <SectionCardsScroller layout="six-row" autoSwipeOnOverflow className="pointer-events-auto touch-pan-x">
+        <SectionCardsScroller
+          layout="six-row"
+          showDesktopArrows
+          className="pointer-events-auto touch-pan-x"
+        >
           {cards.map((card) => (
             <SectionCardSlide key={card.title} layout="six-row">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />

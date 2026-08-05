@@ -146,13 +146,12 @@ export function SectionCardsScroller({
 
     const shouldAttach = () => {
       if (window.innerWidth >= 768) {
-        // Desktop: no auto-swipe when custom arrows handle navigation.
+        // Desktop: arrows replace auto-swipe; otherwise keep overflow auto-advance.
         if (showDesktopArrows) return false;
-        // Keep existing desktop auto-advance for overflow strips (e.g. directions).
         if (autoSwipeOnOverflow || scrollRow) return true;
         return false;
       }
-      // Mobile: keep existing auto-swipe for all card strips.
+      // Mobile: keep existing auto-swipe.
       return true;
     };
 
@@ -206,10 +205,7 @@ export function SectionCardsScroller({
         ref={scrollerRef}
         className={cn(
           "mx-auto w-full",
-          // With desktop arrows, keep the strip slightly narrower so cards overflow and arrows stay useful.
-          showDesktopArrows && layout === "four-row"
-            ? "max-w-[min(100%,46rem)]"
-            : LAYOUT_MAX_WIDTH[layout],
+          LAYOUT_MAX_WIDTH[layout],
           // Outer viewport only — padding lives on the track so edge cards can scroll fully in.
           "overflow-x-auto overflow-y-visible overscroll-x-contain scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           desktopGrid && "md:overflow-visible",
