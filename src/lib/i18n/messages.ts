@@ -10,6 +10,7 @@ export type Messages = {
     comingSoon: string;
     staffCards: string;
     brandShort: string;
+    scrollDown: string;
   };
   nav: {
     home: string;
@@ -177,6 +178,7 @@ const ru: Messages = {
     comingSoon: "— скоро",
     staffCards: "Карточки сотрудников",
     brandShort: "НИФ КР",
+    scrollDown: "Листать вниз",
   },
   nav: {
     home: "ГЛАВНАЯ",
@@ -474,6 +476,7 @@ const kg: Messages = {
     comingSoon: "— жакында",
     staffCards: "Кызматкерлердин карточкалары",
     brandShort: "КР УИФ",
+    scrollDown: "Төмөн жылдыруу",
   },
   nav: {
     home: "БАШКЫ БЕТ",
@@ -771,6 +774,7 @@ const en: Messages = {
     comingSoon: "— soon",
     staffCards: "Staff cards",
     brandShort: "NIF KR",
+    scrollDown: "Scroll down",
   },
   nav: {
     home: "HOME",
@@ -1068,6 +1072,7 @@ const zh: Messages = {
     comingSoon: "— 即将发布",
     staffCards: "员工卡片",
     brandShort: "国家投资基金",
+    scrollDown: "向下滚动",
   },
   nav: {
     home: "首页",

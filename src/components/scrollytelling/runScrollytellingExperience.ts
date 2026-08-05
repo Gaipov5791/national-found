@@ -32,6 +32,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   const { timings } = ctx;
   const {
     enterDur,
+    statsEnterT,
     aboutEnterT,
     financeEnterT,
     directionsEnterT,
@@ -161,6 +162,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   refs.masterTimelineRef.current = tl;
 
   tl.addLabel("sc_hero", 0);
+  tl.addLabel("sc_counters", statsEnterT);
   tl.addLabel("sc_about", aboutEnterT + enterDur);
   tl.addLabel("sc_finance", financeEnterT + enterDur);
   tl.addLabel("sc_directions", directionsEnterT + enterDur);
@@ -171,6 +173,16 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
 
   animatePanoramaScrollScene(tl, panoramaRefs, ctx);
   animateHeroScene(tl, heroRefs, ctx);
+
+  if (refs.scrollHintRef.current) {
+    gsap.set(refs.scrollHintRef.current, { autoAlpha: 1 });
+    tl.fromTo(
+      refs.scrollHintRef.current,
+      { autoAlpha: 1 },
+      { autoAlpha: 0, duration: 0.018, ease: "none", pointerEvents: "none" },
+      Math.max(0, statsEnterT - 0.02)
+    );
+  }
   animateCountersScene(tl, countersRefs, ctx);
   animateDecreeScene(tl, decreeRefs, ctx);
   animateAboutScene(tl, aboutRefs, ctx);

@@ -4,6 +4,7 @@ import { DecreeSection } from "@/components/sections/DecreeSection";
 import { DirectionsSection } from "@/components/sections/DirectionsSection";
 import { FinanceSection } from "@/components/sections/FinanceSection";
 import { FooterSection } from "@/components/sections/FooterSection";
+import { HeroScrollHint } from "@/components/sections/HeroScrollHint";
 import { MsbSection } from "@/components/sections/MsbSection";
 import { PanoramaScrollSection } from "@/components/sections/PanoramaScrollSection";
 import { SpaceTrilogyContainer } from "@/components/sections/SpaceTrilogyContainer";
@@ -13,9 +14,15 @@ type ScrollytellingSceneProps = {
   refs: SceneRefs;
   counterProgress: number;
   onScrollToTop: () => void;
+  onScrollDown: () => void;
 };
 
-export function ScrollytellingScene({ refs, counterProgress, onScrollToTop }: ScrollytellingSceneProps) {
+export function ScrollytellingScene({
+  refs,
+  counterProgress,
+  onScrollToTop,
+  onScrollDown,
+}: ScrollytellingSceneProps) {
   return (
     <div
       ref={refs.sceneRef}
@@ -26,6 +33,7 @@ export function ScrollytellingScene({ refs, counterProgress, onScrollToTop }: Sc
         panoramaImgRef={refs.panoramaImgRef}
         permanentCloudRef={refs.permanentCloudRef}
       />
+      <HeroScrollHint hintRef={refs.scrollHintRef} onClick={onScrollDown} />
       <CountersSection
         statsRef={refs.statsRef}
         countProjectsRef={refs.countProjectsRef}

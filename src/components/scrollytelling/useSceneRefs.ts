@@ -22,6 +22,7 @@ export function useSceneRefs() {
   const counterProgressRef = useRef(0);
   const newsTitleRef = useRef<HTMLDivElement>(null);
   const footerContentZoneRef = useRef<HTMLDivElement>(null);
+  const scrollHintRef = useRef<HTMLButtonElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const masterTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const navHeaderRef = useRef<HTMLDivElement>(null);
@@ -47,6 +48,7 @@ export function useSceneRefs() {
     counterProgressRef,
     newsTitleRef,
     footerContentZoneRef,
+    scrollHintRef,
     lenisRef,
     masterTimelineRef,
     navHeaderRef,

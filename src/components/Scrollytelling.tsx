@@ -100,6 +100,38 @@ export function Scrollytelling() {
   const handleNavClick = useCallback((id: NavId) => scrollToSection(id), [scrollToSection]);
   const scrollToTop = useCallback(() => scrollToSection("home"), [scrollToSection]);
 
+  const scrollDownFromHero = useCallback(() => {
+    ensureGsapPlugins();
+    const mobile = window.innerWidth < 768;
+    ScrollTrigger.update();
+
+    const masterTimeline = refs.masterTimelineRef.current;
+    const scrollTrigger =
+      ScrollTrigger.getById("master-scrolly") ?? masterTimeline?.scrollTrigger ?? undefined;
+
+    let target = window.scrollY + Math.round(window.innerHeight * 0.35);
+    if (scrollTrigger?.labelToScroll) {
+      target = Math.max(
+        scrollTrigger.start,
+        Math.min(scrollTrigger.end, Math.round(scrollTrigger.labelToScroll("sc_counters")))
+      );
+    }
+
+    if (refs.lenisRef.current) {
+      refs.lenisRef.current.scrollTo(target, {
+        duration: 1.1,
+        easing: getNavScrollDesktopEase(),
+      });
+      return;
+    }
+
+    gsap.to(window, {
+      scrollTo: target,
+      duration: mobile ? 0.9 : 1.1,
+      ease: "expo.out",
+    });
+  }, [refs]);
+
   useGSAP(
     () => {
       ensureGsapPlugins();
@@ -206,7 +238,12 @@ export function Scrollytelling() {
         onNavClick={handleNavClick}
       />
       <div ref={refs.scrollTrackRef}>
-        <ScrollytellingScene refs={refs} counterProgress={counterProgress} onScrollToTop={scrollToTop} />
+        <ScrollytellingScene
+          refs={refs}
+          counterProgress={counterProgress}
+          onScrollToTop={scrollToTop}
+          onScrollDown={scrollDownFromHero}
+        />
       </div>
     </div>
   );
