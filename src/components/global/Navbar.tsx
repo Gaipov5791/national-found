@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getBrandName, getBrandNameLines, getBrandShort } from "@/lib/brand";
 import type { Lang } from "@/lib/lang";
+import { langDisplayLabel } from "@/lib/lang";
 import type { NavId } from "@/lib/navConfig";
 import { cn } from "@/lib/utils";
 
@@ -130,7 +131,7 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
                         : "bg-transparent text-[color:var(--ink)]/55 hover:bg-[color:var(--ink)]/10 hover:text-[color:var(--ink)]"
                     )}
                   >
-                    {l}
+                    {langDisplayLabel(l)}
                   </button>
                 ))}
               </div>
@@ -148,7 +149,7 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
                   aria-label={languageLabel}
                   className="hidden items-center gap-1 rounded-full border border-[color:var(--ink)]/15 bg-white/50 px-2.5 py-1.5 text-xs font-semibold tracking-[0.14em] text-[color:var(--ink)] outline-none transition hover:bg-white/80 focus-visible:ring-2 focus-visible:ring-[color:var(--ink)]/20 lg:inline-flex"
                 >
-                  {lang}
+                  {langDisplayLabel(lang)}
                   <ChevronDown className="h-3.5 w-3.5 opacity-60" aria-hidden />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -166,7 +167,7 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
                         lang === l && "bg-[color:var(--ink)] text-white focus:bg-[color:var(--ink)] focus:text-white"
                       )}
                     >
-                      {l}
+                      {langDisplayLabel(l)}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -236,7 +237,7 @@ export const Navbar = forwardRef<HTMLDivElement, NavbarProps>(function Navbar(
                         : "bg-transparent text-[color:var(--ink)]/70 hover:bg-[color:var(--ink)]/10"
                     )}
                   >
-                    {l}
+                    {langDisplayLabel(l)}
                   </button>
                 ))}
               </div>

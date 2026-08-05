@@ -4,7 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { BrandLockup } from "@/components/BrandLockup";
 import type { AboutPerson } from "@/components/sections/sectionContent";
 import { clearScrollerProxy, ensureGsapPlugins } from "@/lib/gsap-client";
-import { LANGS, useLang, useT } from "@/lib/lang";
+import { LANGS, langDisplayLabel, useLang, useT } from "@/lib/lang";
 import { preloadScrollytelling } from "@/lib/preloadScrollytelling";
 import { getSectionSceneLabel } from "@/lib/sectionNavigation";
 
@@ -96,7 +96,7 @@ export function DetailPageLayout({
                       : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
                   }`}
                 >
-                  {l}
+                  {langDisplayLabel(l)}
                 </button>
               ))}
             </div>

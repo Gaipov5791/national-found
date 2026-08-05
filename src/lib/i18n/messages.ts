@@ -11,6 +11,8 @@ export type Messages = {
     staffCards: string;
     brandShort: string;
     scrollDown: string;
+    cardsPrev: string;
+    cardsNext: string;
   };
   nav: {
     home: string;
@@ -179,6 +181,8 @@ const ru: Messages = {
     staffCards: "Карточки сотрудников",
     brandShort: "НИФ КР",
     scrollDown: "Листать вниз",
+    cardsPrev: "Предыдущие карточки",
+    cardsNext: "Следующие карточки",
   },
   nav: {
     home: "ГЛАВНАЯ",
@@ -477,6 +481,8 @@ const kg: Messages = {
     staffCards: "Кызматкерлердин карточкалары",
     brandShort: "КР УИФ",
     scrollDown: "Төмөн жылдыруу",
+    cardsPrev: "Мурунку карточкалар",
+    cardsNext: "Кийинки карточкалар",
   },
   nav: {
     home: "БАШКЫ БЕТ",
@@ -775,6 +781,8 @@ const en: Messages = {
     staffCards: "Staff cards",
     brandShort: "NIF KR",
     scrollDown: "Scroll down",
+    cardsPrev: "Previous cards",
+    cardsNext: "Next cards",
   },
   nav: {
     home: "HOME",
@@ -1073,6 +1081,8 @@ const zh: Messages = {
     staffCards: "员工卡片",
     brandShort: "国家投资基金",
     scrollDown: "向下滚动",
+    cardsPrev: "上一组卡片",
+    cardsNext: "下一组卡片",
   },
   nav: {
     home: "首页",

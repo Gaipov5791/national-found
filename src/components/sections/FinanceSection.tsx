@@ -53,7 +53,11 @@ export const FinanceSection = forwardRef<HTMLDivElement, FinanceSectionProps>(fu
         {t.finance.blurb}
       </p>
       <div className={`${SECTION_CARDS_GRID_MARGIN} origin-top max-md:scale-[0.92] md:scale-[0.94] lg:scale-[0.97]`}>
-        <SectionCardsScroller layout="four-row" className="pointer-events-auto touch-pan-x">
+        <SectionCardsScroller
+          layout="four-row"
+          showDesktopArrows
+          className="pointer-events-auto touch-pan-x"
+        >
           {cards.map((card) => (
             <SectionCardSlide key={card.title} layout="four-row">
               <SectionCard compact title={card.title} description={card.description} icon={card.icon} />

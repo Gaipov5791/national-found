@@ -11,6 +11,11 @@ import { getMessages, type Messages } from "@/lib/i18n/messages";
 export const LANGS = ["RU", "KG", "EN", "ZH"] as const;
 export type Lang = (typeof LANGS)[number];
 
+/** UI label for language buttons (ZH is shown as CN). */
+export function langDisplayLabel(lang: Lang): string {
+  return lang === "ZH" ? "CN" : lang;
+}
+
 const HTML_LANG: Record<Lang, string> = {
   RU: "ru",
   KG: "ky",
