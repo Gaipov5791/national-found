@@ -126,6 +126,45 @@ export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs, ctx: S
   gsap.set(refs.permanentCloudRef.current, { opacity: 0, yPercent: -40 });
 }
 
+/** Interpolate panorama Y% for a master-timeline time (used when scrub seeks suppress onUpdate). */
+export function panoramaYAtTime(
+  time: number,
+  timings: SceneAnimationContext["timings"],
+  mobile: boolean
+): number {
+  const stops = getPanoramaStops(mobile);
+  const {
+    financeEnterT,
+    directionsEnterT,
+    msbEnterT,
+    partnersEnterT,
+    newsEnterT,
+  } = timings;
+
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * Math.max(0, Math.min(1, t));
+  const seg = (start: number, end: number) => {
+    const span = Math.max(0.001, end - start);
+    return (time - start) / span;
+  };
+
+  if (time < financeEnterT) return stops.peaks;
+  if (time < directionsEnterT) return lerp(stops.peaks, stops.sonKul, seg(financeEnterT, directionsEnterT));
+  if (time < msbEnterT) return lerp(stops.sonKul, stops.industrial, seg(directionsEnterT, msbEnterT));
+  if (time < partnersEnterT) return lerp(stops.industrial, stops.pastures, seg(msbEnterT, partnersEnterT));
+  if (time < newsEnterT) return lerp(stops.pastures, stops.fields, seg(partnersEnterT, newsEnterT));
+  return stops.fields;
+}
+
+/** Apply camera pan for the current timeline time — safe after suppressed ScrollTrigger seeks. */
+export function syncPanoramaToTimelineTime(
+  refs: PanoramaScrollSceneRefs,
+  time: number,
+  timings: SceneAnimationContext["timings"],
+  mobile: boolean
+) {
+  applyPanoramaPosition(refs.panoramaImgRef.current, panoramaYAtTime(time, timings, mobile), mobile);
+}
+
 export function animatePanoramaScrollScene(
   tl: SceneTimeline,
   refs: PanoramaScrollSceneRefs,

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState, type RefObject } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -6,6 +6,8 @@ import { Navbar } from "@/components/global/Navbar";
 import { runScrollytellingExperience } from "@/components/scrollytelling/runScrollytellingExperience";
 import { ScrollytellingScene } from "@/components/scrollytelling/ScrollytellingScene";
 import { useSceneRefs } from "@/components/scrollytelling/useSceneRefs";
+import { syncPanoramaToTimelineTime } from "@/components/sections/PanoramaScrollSection";
+import { computeTimelineMarkers } from "@/components/sections/sceneAnimationShared";
 import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
 import { LANGS, useLang } from "@/lib/lang";
 import { NAV_CONFIG, NAV_SCENE_BY_ID, type NavId } from "@/lib/navConfig";
@@ -13,6 +15,7 @@ import {
   getSectionSceneLabel,
   type SectionSceneLabel,
 } from "@/lib/sectionNavigation";
+import { cn } from "@/lib/utils";
 
 const SCROLL_DISTANCE_DESKTOP = 15800;
 const SCROLL_DISTANCE_TABLET = 12600;
@@ -35,10 +38,41 @@ const MOBILE_SCENE_NUDGE: Partial<Record<SectionSceneLabel, number>> = {
   sc_footer: 0,
 };
 
+/**
+ * Numeric scrub lags ~1s behind an instant scroll jump. Deep returns (MSB+)
+ * would otherwise flash every earlier scene. Kill the scrub tween, seek the
+ * timeline (with callbacks), and sync panorama pan which uses onUpdate.
+ */
+function snapMasterTimeline(
+  scrollTrigger: ScrollTrigger,
+  timeline: gsap.core.Timeline,
+  panoramaRefs: {
+    panoramaBgRef: RefObject<HTMLDivElement | null>;
+    panoramaImgRef: RefObject<HTMLImageElement | null>;
+    permanentCloudRef: RefObject<HTMLDivElement | null>;
+  }
+) {
+  const mobile = window.innerWidth < 768;
+  scrollTrigger.getTween()?.kill();
+  // suppressEvents=false → fire onUpdate where possible.
+  timeline.progress(scrollTrigger.progress, false);
+  // Panorama pan is applied via onUpdate — ScrollTrigger seeks often suppress it.
+  syncPanoramaToTimelineTime(
+    panoramaRefs,
+    timeline.time(),
+    computeTimelineMarkers(mobile),
+    mobile
+  );
+}
+
 export function Scrollytelling() {
   const { lang, setLang, t } = useLang();
   const [counterProgress, setCounterProgress] = useState(0);
   const returnSectionHandledRef = useRef(false);
+  /** Hide first paint when returning via hash so hero→MSB scrub never flashes. */
+  const [sceneReady, setSceneReady] = useState(
+    () => (typeof window === "undefined" ? true : !getSectionSceneLabel(window.location.hash))
+  );
   const refs = useSceneRefs();
 
   const navItems = useMemo(
@@ -85,6 +119,13 @@ export function Scrollytelling() {
         window.scrollTo(0, target);
         refs.lenisRef.current?.scrollTo(target, { immediate: true });
         ScrollTrigger.update();
+        if (scrollTrigger && masterTimeline) {
+          snapMasterTimeline(scrollTrigger, masterTimeline, {
+            panoramaBgRef: refs.panoramaBgRef,
+            panoramaImgRef: refs.panoramaImgRef,
+            permanentCloudRef: refs.permanentCloudRef,
+          });
+        }
         return;
       }
 
@@ -151,12 +192,31 @@ export function Scrollytelling() {
       const counterHandler = (p: number) => setCounterProgress(p);
 
       const restoreReturnSection = () => {
-        if (returnSectionHandledRef.current) return;
+        if (returnSectionHandledRef.current) {
+          setSceneReady(true);
+          return;
+        }
         const returnSection = getSectionSceneLabel(window.location.hash);
         const navItem = NAV_CONFIG.find((item) => item.scene === returnSection);
-        if (!navItem) return;
+        if (!navItem) {
+          setSceneReady(true);
+          return;
+        }
         returnSectionHandledRef.current = true;
         scrollToSectionRef.current(navItem.id, { immediate: true });
+        // Re-snap next frame: Lenis/ST may spawn a fresh scrub tween after the first jump.
+        requestAnimationFrame(() => {
+          const st = ScrollTrigger.getById("master-scrolly");
+          const tl = refs.masterTimelineRef.current;
+          if (st && tl) {
+            snapMasterTimeline(st, tl, {
+              panoramaBgRef: refs.panoramaBgRef,
+              panoramaImgRef: refs.panoramaImgRef,
+              permanentCloudRef: refs.permanentCloudRef,
+            });
+          }
+          setSceneReady(true);
+        });
       };
 
       mm.add("(max-width: 767px)", () => {
@@ -220,7 +280,10 @@ export function Scrollytelling() {
   );
 
   return (
-    <div ref={refs.rootRef} className="relative overflow-x-hidden">
+    <div
+      ref={refs.rootRef}
+      className={cn("relative overflow-x-hidden", !sceneReady && "invisible pointer-events-none")}
+    >
       <Navbar
         ref={refs.navHeaderRef}
         brandRef={refs.brandRef}
