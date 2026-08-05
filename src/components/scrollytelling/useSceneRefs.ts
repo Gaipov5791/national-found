@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import type gsap from "gsap";
 import type Lenis from "lenis";
 
@@ -28,32 +28,35 @@ export function useSceneRefs() {
   const navHeaderRef = useRef<HTMLDivElement>(null);
   const staticViewportHeightRef = useRef<number | null>(null);
 
-  return {
-    rootRef,
-    scrollTrackRef,
-    sceneRef,
-    panoramaBgRef,
-    panoramaImgRef,
-    permanentCloudRef,
-    statsRef,
-    decreeRef,
-    brandRef,
-    aboutRef,
-    financeRef,
-    directionsRef,
-    msbRef,
-    partnersRef,
-    partnersTextRef,
-    countProjectsRef,
-    counterProgressRef,
-    newsTitleRef,
-    footerContentZoneRef,
-    scrollHintRef,
-    lenisRef,
-    masterTimelineRef,
-    navHeaderRef,
-    staticViewportHeightRef,
-  };
+  return useMemo(
+    () => ({
+      rootRef,
+      scrollTrackRef,
+      sceneRef,
+      panoramaBgRef,
+      panoramaImgRef,
+      permanentCloudRef,
+      statsRef,
+      decreeRef,
+      brandRef,
+      aboutRef,
+      financeRef,
+      directionsRef,
+      msbRef,
+      partnersRef,
+      partnersTextRef,
+      countProjectsRef,
+      counterProgressRef,
+      newsTitleRef,
+      footerContentZoneRef,
+      scrollHintRef,
+      lenisRef,
+      masterTimelineRef,
+      navHeaderRef,
+      staticViewportHeightRef,
+    }),
+    []
+  );
 }
 
 export type SceneRefs = ReturnType<typeof useSceneRefs>;

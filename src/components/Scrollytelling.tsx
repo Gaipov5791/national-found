@@ -39,9 +39,6 @@ export function Scrollytelling() {
   const { lang, setLang, t } = useLang();
   const [counterProgress, setCounterProgress] = useState(0);
   const returnSectionHandledRef = useRef(false);
-  const [returnCoverVisible, setReturnCoverVisible] = useState(() =>
-    typeof window === "undefined" ? false : Boolean(getSectionSceneLabel(window.location.hash))
-  );
   const refs = useSceneRefs();
 
   const navItems = useMemo(
@@ -213,21 +210,10 @@ export function Scrollytelling() {
 
     const returnSection = getSectionSceneLabel(window.location.hash);
     const navItem = NAV_CONFIG.find((item) => item.scene === returnSection);
-    if (!navItem) {
-      setReturnCoverVisible(false);
-      return;
-    }
+    if (!navItem) return;
 
     let frameId = 0;
     let attempts = 0;
-    let revealFrameId = 0;
-
-    const revealScene = () => {
-      ScrollTrigger.update();
-      revealFrameId = window.requestAnimationFrame(() => {
-        setReturnCoverVisible(false);
-      });
-    };
 
     const restoreSection = () => {
       const scrollTrigger = ScrollTrigger.getById("master-scrolly");
@@ -235,24 +221,18 @@ export function Scrollytelling() {
       if (scrollTrigger?.labelToScroll) {
         returnSectionHandledRef.current = true;
         scrollToSection(navItem.id, { immediate: true });
-        revealFrameId = window.requestAnimationFrame(revealScene);
         return;
       }
 
       attempts += 1;
       if (attempts < 120) {
         frameId = window.requestAnimationFrame(restoreSection);
-      } else {
-        setReturnCoverVisible(false);
       }
     };
 
     frameId = window.requestAnimationFrame(restoreSection);
 
-    return () => {
-      window.cancelAnimationFrame(frameId);
-      window.cancelAnimationFrame(revealFrameId);
-    };
+    return () => window.cancelAnimationFrame(frameId);
   }, [scrollToSection]);
 
   return (
@@ -276,9 +256,6 @@ export function Scrollytelling() {
           onScrollDown={scrollDownFromHero}
         />
       </div>
-      {returnCoverVisible ? (
-        <div className="pointer-events-none fixed inset-0 z-[90] bg-[#0b2138]" aria-hidden />
-      ) : null}
     </div>
   );
 }
