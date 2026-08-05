@@ -57,7 +57,7 @@ function SectionCardsNavArrow({
       onClick={onClick}
       className={cn(
         "pointer-events-auto absolute top-1/2 z-[5] hidden -translate-y-1/2 text-white transition md:flex",
-        direction === "prev" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2",
+        direction === "prev" ? "left-0" : "right-0",
         "disabled:pointer-events-none disabled:opacity-35"
       )}
     >
@@ -183,7 +183,13 @@ export function SectionCardsScroller({
   }, [showDesktopArrows, childCount, syncArrowState]);
 
   return (
-    <div className={cn("relative", showDesktopArrows && "md:px-8 lg:px-10")}>
+    <div
+      className={cn(
+        "relative w-full",
+        // Constrain the arrow host to the same width as the card strip so arrows sit beside it.
+        showDesktopArrows && cn("mx-auto", LAYOUT_MAX_WIDTH[layout], "md:px-6 lg:px-7")
+      )}
+    >
       {showDesktopArrows && (canPrev || canNext) ? (
         <>
           <SectionCardsNavArrow
@@ -205,7 +211,7 @@ export function SectionCardsScroller({
         ref={scrollerRef}
         className={cn(
           "mx-auto w-full",
-          LAYOUT_MAX_WIDTH[layout],
+          !showDesktopArrows && LAYOUT_MAX_WIDTH[layout],
           // Outer viewport only — padding lives on the track so edge cards can scroll fully in.
           "overflow-x-auto overflow-y-visible overscroll-x-contain scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           desktopGrid && "md:overflow-visible",
