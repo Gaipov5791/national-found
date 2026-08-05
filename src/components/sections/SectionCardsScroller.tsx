@@ -24,8 +24,8 @@ const LAYOUT_MAX_WIDTH: Record<SectionCardsLayout, string> = {
   "two-col": "max-w-5xl",
   "four-row": "max-w-[min(100%,64rem)]",
   "four-two": "max-w-[min(100%,64rem)]",
-  // Cap width so 6 finance-sized cards always overflow and can auto-swipe.
-  "six-row": "max-w-[min(100%,58rem)]",
+  // Wide enough for ~4–5 cards; still overflows so desktop arrows stay useful.
+  "six-row": "max-w-[min(100%,72rem)]",
 };
 
 const LAYOUT_GRID: Record<SectionCardsLayout, string> = {
