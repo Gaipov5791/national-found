@@ -18,6 +18,40 @@ export type NewsItem = {
  */
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
+    id: "audit-2025",
+    date: "2026-08-05",
+    image: "/images/news/audit-2025.png",
+    title: {
+      RU: "Приглашение на участие в конкурсе по отбору аудиторской компании",
+      KG: "Аудитордук компанияны тандоо боюнча сынакка катышууга чакыруу",
+      EN: "Invitation to participate in the selection of an audit company",
+      ZH: "邀请参与审计公司遴选竞标",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» приглашает принять участие в открытом конкурсе по выбору аудиторской организации для проведения аудита консолидированной финансовой отчетности (КФО) за год, заканчивающийся 31 декабря 2025 года.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК 2025-жылдын 31-декабрында аяктаган жыл үчүн консолидацияланган финансылык отчеттуулуктун (КФО) аудитин жүргүзүү үчүн аудитордук уюмду тандоо боюнча ачык сынакка катышууга чакырат.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” invites you to take part in an open tender to select an audit organization for the audit of the consolidated financial statements (CFS) for the year ending 31 December 2025.",
+      ZH: "吉尔吉斯共和国国家投资基金邀请参与公开竞标，以遴选审计机构对截至2025年12月31日年度的合并财务报表（KFO）进行审计。",
+    },
+  },
+  {
+    id: "audit-2026",
+    date: "2026-08-05",
+    image: "/images/news/audit-2026.png",
+    title: {
+      RU: "Приглашение на участие в конкурсе по отбору аудиторской компании",
+      KG: "Аудитордук компанияны тандоо боюнча сынакка катышууга чакыруу",
+      EN: "Invitation to participate in the selection of an audit company",
+      ZH: "邀请参与审计公司遴选竞标",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» приглашает принять участие в открытом конкурсе по выбору аудиторской организации для проведения аудита консолидированной финансовой отчетности (КФО) за год, заканчивающийся 31 декабря 2026 года.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК 2026-жылдын 31-декабрында аяктаган жыл үчүн консолидацияланган финансылык отчеттуулуктун (КФО) аудитин жүргүзүү үчүн аудитордук уюмду тандоо боюнча ачык сынакка катышууга чакырат.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” invites you to take part in an open tender to select an audit organization for the audit of the consolidated financial statements (CFS) for the year ending 31 December 2026.",
+      ZH: "吉尔吉斯共和国国家投资基金邀请参与公开竞标，以遴选审计机构对截至2026年12月31日年度的合并财务报表（KFO）进行审计。",
+    },
+  },
+  {
     id: "office-renovation",
     date: "2026-08-04",
     image: "/images/news/office-renovation.png",
