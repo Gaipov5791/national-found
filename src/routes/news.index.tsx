@@ -3,6 +3,7 @@ import { DetailPageLayout } from "@/components/DetailPageLayout";
 import { formatNewsDate, getNewsItems } from "@/data/news";
 import { pickL10n } from "@/data/msbProjects";
 import { useLang, useT } from "@/lib/lang";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/news/")({
   head: () => ({
@@ -35,11 +36,19 @@ function NewsIndexPage() {
                 params={{ slug: item.id }}
                 className="block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
-                <div className="aspect-[16/10] overflow-hidden bg-white/10">
+                <div
+                  className={cn(
+                    "overflow-hidden bg-[#071426]",
+                    item.imageFit === "contain" ? "aspect-square" : "aspect-[16/10]"
+                  )}
+                >
                   <img
                     src={item.image}
                     alt=""
-                    className="h-full w-full object-cover"
+                    className={cn(
+                      "h-full w-full",
+                      item.imageFit === "contain" ? "object-contain" : "object-cover"
+                    )}
                     loading="lazy"
                     decoding="async"
                   />

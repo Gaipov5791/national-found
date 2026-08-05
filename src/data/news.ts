@@ -10,6 +10,8 @@ export type NewsItem = {
   image: string;
   title: L10nText;
   excerpt: L10nText;
+  /** Use `contain` for square banners with edge text that must stay visible. */
+  imageFit?: "cover" | "contain";
 };
 
 /**
@@ -21,6 +23,7 @@ export const NEWS_ITEMS: readonly NewsItem[] = [
     id: "audit-2025",
     date: "2026-08-05",
     image: "/images/news/audit-2025.png",
+    imageFit: "contain",
     title: {
       RU: "Приглашение на участие в конкурсе по отбору аудиторской компании",
       KG: "Аудитордук компанияны тандоо боюнча сынакка катышууга чакыруу",
@@ -38,6 +41,7 @@ export const NEWS_ITEMS: readonly NewsItem[] = [
     id: "audit-2026",
     date: "2026-08-05",
     image: "/images/news/audit-2026.png",
+    imageFit: "contain",
     title: {
       RU: "Приглашение на участие в конкурсе по отбору аудиторской компании",
       KG: "Аудитордук компанияны тандоо боюнча сынакка катышууга чакыруу",

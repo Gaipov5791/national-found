@@ -29,11 +29,15 @@ function NewsArticlePage() {
         {article.dateLabel}
       </p>
 
-      <div className="mt-5 overflow-hidden rounded-2xl border border-white/15 bg-white/10">
+      <div className="mt-5 overflow-hidden rounded-2xl border border-white/15 bg-[#071426]">
         <img
           src={article.image}
           alt=""
-          className="aspect-[16/9] w-full object-cover"
+          className={
+            article.imageFit === "contain"
+              ? "mx-auto block h-auto w-full object-contain"
+              : "aspect-[16/9] w-full object-cover"
+          }
           loading="eager"
           decoding="async"
         />
