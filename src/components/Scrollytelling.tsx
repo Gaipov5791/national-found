@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,7 +9,6 @@ import { useSceneRefs } from "@/components/scrollytelling/useSceneRefs";
 import { ensureGsapPlugins, getNavScrollDesktopEase } from "@/lib/gsap-client";
 import { LANGS, useLang } from "@/lib/lang";
 import { NAV_CONFIG, NAV_SCENE_BY_ID, type NavId } from "@/lib/navConfig";
-import { cn } from "@/lib/utils";
 import {
   getSectionSceneLabel,
   type SectionSceneLabel,
@@ -40,9 +39,6 @@ export function Scrollytelling() {
   const { lang, setLang, t } = useLang();
   const [counterProgress, setCounterProgress] = useState(0);
   const returnSectionHandledRef = useRef(false);
-  const [sceneReady, setSceneReady] = useState(() =>
-    typeof window === "undefined" ? true : !getSectionSceneLabel(window.location.hash)
-  );
   const refs = useSceneRefs();
 
   const navItems = useMemo(
@@ -86,11 +82,8 @@ export function Scrollytelling() {
       }
 
       if (immediate) {
-        if (refs.lenisRef.current) {
-          refs.lenisRef.current.scrollTo(target, { immediate: true });
-        } else {
-          window.scrollTo(0, target);
-        }
+        window.scrollTo(0, target);
+        refs.lenisRef.current?.scrollTo(target, { immediate: true });
         ScrollTrigger.update();
         return;
       }
@@ -111,6 +104,9 @@ export function Scrollytelling() {
     },
     [refs]
   );
+
+  const scrollToSectionRef = useRef(scrollToSection);
+  scrollToSectionRef.current = scrollToSection;
 
   const handleNavClick = useCallback((id: NavId) => scrollToSection(id), [scrollToSection]);
   const scrollToTop = useCallback(() => scrollToSection("home"), [scrollToSection]);
@@ -154,6 +150,15 @@ export function Scrollytelling() {
       const mm = gsap.matchMedia();
       const counterHandler = (p: number) => setCounterProgress(p);
 
+      const restoreReturnSection = () => {
+        if (returnSectionHandledRef.current) return;
+        const returnSection = getSectionSceneLabel(window.location.hash);
+        const navItem = NAV_CONFIG.find((item) => item.scene === returnSection);
+        if (!navItem) return;
+        returnSectionHandledRef.current = true;
+        scrollToSectionRef.current(navItem.id, { immediate: true });
+      };
+
       mm.add("(max-width: 767px)", () => {
         try {
           ScrollTrigger.normalizeScroll(true);
@@ -171,6 +176,7 @@ export function Scrollytelling() {
           staticViewportHeight,
           onCounterProgress: counterHandler,
         });
+        restoreReturnSection();
         return () => {
           try {
             ScrollTrigger.normalizeScroll(false);
@@ -184,24 +190,28 @@ export function Scrollytelling() {
 
       mm.add("(min-width: 768px) and (max-width: 1023px)", () => {
         ScrollTrigger.config({ ignoreMobileResize: true });
-        return runScrollytellingExperience(refs, {
+        const cleanup = runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_TABLET,
           scrub: 1.1,
           mobile: false,
           cinematic: true,
           onCounterProgress: counterHandler,
         });
+        restoreReturnSection();
+        return cleanup;
       });
 
       mm.add("(min-width: 1024px)", () => {
         ScrollTrigger.config({ ignoreMobileResize: false });
-        return runScrollytellingExperience(refs, {
+        const cleanup = runScrollytellingExperience(refs, {
           scrollDistance: SCROLL_DISTANCE_DESKTOP,
           scrub: 0.95,
           mobile: false,
           cinematic: true,
           onCounterProgress: counterHandler,
         });
+        restoreReturnSection();
+        return cleanup;
       });
 
       return () => mm.revert();
@@ -209,55 +219,8 @@ export function Scrollytelling() {
     { scope: refs.rootRef }
   );
 
-  useEffect(() => {
-    if (returnSectionHandledRef.current) {
-      setSceneReady(true);
-      return;
-    }
-
-    const returnSection = getSectionSceneLabel(window.location.hash);
-    const navItem = NAV_CONFIG.find((item) => item.scene === returnSection);
-    if (!navItem) {
-      setSceneReady(true);
-      return;
-    }
-
-    let frameId = 0;
-    let attempts = 0;
-
-    const revealScene = () => {
-      ScrollTrigger.update();
-      setSceneReady(true);
-    };
-
-    const restoreSection = () => {
-      const scrollTrigger = ScrollTrigger.getById("master-scrolly");
-
-      if (scrollTrigger?.labelToScroll) {
-        returnSectionHandledRef.current = true;
-        scrollToSection(navItem.id, { immediate: true });
-        frameId = window.requestAnimationFrame(revealScene);
-        return;
-      }
-
-      attempts += 1;
-      if (attempts < 120) {
-        frameId = window.requestAnimationFrame(restoreSection);
-      } else {
-        setSceneReady(true);
-      }
-    };
-
-    frameId = window.requestAnimationFrame(restoreSection);
-
-    return () => window.cancelAnimationFrame(frameId);
-  }, [scrollToSection]);
-
   return (
-    <div
-      ref={refs.rootRef}
-      className={cn("relative overflow-x-hidden", !sceneReady && "invisible pointer-events-none")}
-    >
+    <div ref={refs.rootRef} className="relative overflow-x-hidden">
       <Navbar
         ref={refs.navHeaderRef}
         brandRef={refs.brandRef}

@@ -20,6 +20,7 @@ import {
   type ExperienceConfig,
 } from "@/components/sections/sceneAnimationShared";
 import { refreshCursorTheme } from "@/lib/cursorTheme";
+import { clearScrollerProxy } from "@/lib/gsap-client";
 import type { SceneRefs } from "./useSceneRefs";
 
 export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConfig) {
@@ -51,6 +52,8 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   let lenis: Lenis | null = null;
   let rafId = 0;
   let cancelled = false;
+
+  clearScrollerProxy();
 
   if (!useNativeScroll) {
     lenis = new Lenis({
@@ -216,7 +219,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     } catch {
       /* ignore */
     }
-    ScrollTrigger.scrollerProxy(document.documentElement, {});
+    clearScrollerProxy();
 
     if (lenis) {
       cancelAnimationFrame(rafId);

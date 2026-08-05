@@ -3,7 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { BrandLockup } from "@/components/BrandLockup";
 import type { AboutPerson } from "@/components/sections/sectionContent";
-import { ensureGsapPlugins } from "@/lib/gsap-client";
+import { clearScrollerProxy, ensureGsapPlugins } from "@/lib/gsap-client";
 import { LANGS, useLang, useT } from "@/lib/lang";
 import { preloadScrollytelling } from "@/lib/preloadScrollytelling";
 import { getSectionSceneLabel } from "@/lib/sectionNavigation";
@@ -34,8 +34,8 @@ function restoreDocumentScroll() {
     } catch {
       /* ignore */
     }
-    ScrollTrigger.scrollerProxy(document.documentElement, {});
   }
+  clearScrollerProxy();
 }
 
 type DetailPageLayoutProps = {

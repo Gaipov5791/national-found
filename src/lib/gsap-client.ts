@@ -13,6 +13,12 @@ export function ensureGsapPlugins() {
   pluginsReady = true;
 }
 
+/** Remove a broken/stale scroller proxy. Passing `{}` installs an empty proxy and freezes scroll. */
+export function clearScrollerProxy(scroller: Element = document.documentElement) {
+  ensureGsapPlugins();
+  ScrollTrigger.scrollerProxy(scroller);
+}
+
 export function getNavScrollDesktopEase(): EaseFn {
   ensureGsapPlugins();
   if (!navScrollDesktopEase) {
