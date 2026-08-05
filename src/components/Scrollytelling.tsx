@@ -39,6 +39,9 @@ export function Scrollytelling() {
   const { lang, setLang, t } = useLang();
   const [counterProgress, setCounterProgress] = useState(0);
   const returnSectionHandledRef = useRef(false);
+  const [returnCoverVisible, setReturnCoverVisible] = useState(() =>
+    typeof window === "undefined" ? false : Boolean(getSectionSceneLabel(window.location.hash))
+  );
   const refs = useSceneRefs();
 
   const navItems = useMemo(
@@ -51,9 +54,10 @@ export function Scrollytelling() {
   );
 
   const scrollToSection = useCallback(
-    (id: NavId) => {
+    (id: NavId, options?: { immediate?: boolean }) => {
       ensureGsapPlugins();
       const mobile = window.innerWidth < 768;
+      const immediate = options?.immediate === true;
       ScrollTrigger.update();
 
       const masterTimeline = refs.masterTimelineRef.current;
@@ -78,6 +82,16 @@ export function Scrollytelling() {
           scrollTrigger.start,
           Math.min(scrollTrigger.end, Math.round(targetScrollPos - navOffset))
         );
+      }
+
+      if (immediate) {
+        if (refs.lenisRef.current) {
+          refs.lenisRef.current.scrollTo(target, { immediate: true });
+        } else {
+          window.scrollTo(0, target);
+        }
+        ScrollTrigger.update();
+        return;
       }
 
       if (refs.lenisRef.current) {
@@ -199,29 +213,46 @@ export function Scrollytelling() {
 
     const returnSection = getSectionSceneLabel(window.location.hash);
     const navItem = NAV_CONFIG.find((item) => item.scene === returnSection);
-    if (!navItem) return;
+    if (!navItem) {
+      setReturnCoverVisible(false);
+      return;
+    }
 
     let frameId = 0;
     let attempts = 0;
+    let revealFrameId = 0;
+
+    const revealScene = () => {
+      ScrollTrigger.update();
+      revealFrameId = window.requestAnimationFrame(() => {
+        setReturnCoverVisible(false);
+      });
+    };
 
     const restoreSection = () => {
       const scrollTrigger = ScrollTrigger.getById("master-scrolly");
 
       if (scrollTrigger?.labelToScroll) {
         returnSectionHandledRef.current = true;
-        scrollToSection(navItem.id);
+        scrollToSection(navItem.id, { immediate: true });
+        revealFrameId = window.requestAnimationFrame(revealScene);
         return;
       }
 
       attempts += 1;
       if (attempts < 120) {
         frameId = window.requestAnimationFrame(restoreSection);
+      } else {
+        setReturnCoverVisible(false);
       }
     };
 
     frameId = window.requestAnimationFrame(restoreSection);
 
-    return () => window.cancelAnimationFrame(frameId);
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.cancelAnimationFrame(revealFrameId);
+    };
   }, [scrollToSection]);
 
   return (
@@ -245,6 +276,9 @@ export function Scrollytelling() {
           onScrollDown={scrollDownFromHero}
         />
       </div>
+      {returnCoverVisible ? (
+        <div className="pointer-events-none fixed inset-0 z-[90] bg-[#0b2138]" aria-hidden />
+      ) : null}
     </div>
   );
 }

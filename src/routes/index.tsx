@@ -3,11 +3,7 @@ import { useEffect, useState, type ComponentType } from "react";
 import { CustomCursor } from "@/components/CustomCursor";
 
 const SCROLLYTELLING_FALLBACK = (
-  <div
-    className="min-h-screen bg-gradient-to-b from-[#dbe6f1] via-[#e9eef5] to-[#f3f1e8]"
-    aria-busy="true"
-    aria-label="Загрузка"
-  />
+  <div className="min-h-screen bg-[#0b2138]" aria-busy="true" aria-label="Загрузка" />
 );
 
 function ScrollytellingGate() {
@@ -41,8 +37,22 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const previousHtml = html.style.backgroundColor;
+    const previousBody = body.style.backgroundColor;
+    html.style.backgroundColor = "#0b2138";
+    body.style.backgroundColor = "#0b2138";
+
+    return () => {
+      html.style.backgroundColor = previousHtml;
+      body.style.backgroundColor = previousBody;
+    };
+  }, []);
+
   return (
-    <main className="relative min-h-screen bg-background text-foreground">
+    <main className="relative min-h-screen bg-[#0b2138] text-foreground">
       <ScrollytellingGate />
       <CustomCursor />
     </main>
