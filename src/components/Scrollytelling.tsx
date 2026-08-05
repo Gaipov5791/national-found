@@ -40,8 +40,9 @@ const MOBILE_SCENE_NUDGE: Partial<Record<SectionSceneLabel, number>> = {
 
 /**
  * Numeric scrub lags ~1s behind an instant scroll jump. Deep returns (MSB+)
- * would otherwise flash every earlier scene. Kill the scrub tween, seek the
- * timeline (with callbacks), and sync panorama pan which uses onUpdate.
+ * would otherwise flash every earlier scene. Catch the scrub up instantly
+ * (do NOT kill it — killing breaks later panorama/timeline scrub updates),
+ * then sync panorama pan which uses onUpdate.
  */
 function snapMasterTimeline(
   scrollTrigger: ScrollTrigger,
@@ -53,9 +54,13 @@ function snapMasterTimeline(
   }
 ) {
   const mobile = window.innerWidth < 768;
-  scrollTrigger.getTween()?.kill();
-  // suppressEvents=false → fire onUpdate where possible.
-  timeline.progress(scrollTrigger.progress, false);
+  const scrubTween = scrollTrigger.getTween();
+  if (scrubTween) {
+    // Jump scrub to its current target without destroying the scrub link.
+    scrubTween.progress(1);
+  } else {
+    timeline.progress(scrollTrigger.progress, false);
+  }
   // Panorama pan is applied via onUpdate — ScrollTrigger seeks often suppress it.
   syncPanoramaToTimelineTime(
     panoramaRefs,
@@ -204,11 +209,12 @@ export function Scrollytelling() {
         }
         returnSectionHandledRef.current = true;
         scrollToSectionRef.current(navItem.id, { immediate: true });
-        // Re-snap next frame: Lenis/ST may spawn a fresh scrub tween after the first jump.
+        // Re-snap next frame: Lenis/ST may retarget scrub after the first jump.
         requestAnimationFrame(() => {
           const st = ScrollTrigger.getById("master-scrolly");
           const tl = refs.masterTimelineRef.current;
           if (st && tl) {
+            ScrollTrigger.update();
             snapMasterTimeline(st, tl, {
               panoramaBgRef: refs.panoramaBgRef,
               panoramaImgRef: refs.panoramaImgRef,
