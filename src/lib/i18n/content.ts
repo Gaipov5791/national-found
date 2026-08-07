@@ -16,12 +16,14 @@ import {
 } from "@/data/partners";
 
 function mapPeople(
-  meta: readonly { name: string; photo?: string }[],
+  meta: readonly { photo?: string }[],
+  names: readonly string[],
   roles: readonly string[],
   titles?: readonly (string | null)[]
 ): AboutPerson[] {
   return meta.map((person, i) => ({
     ...person,
+    name: names[i] ?? "",
     role: roles[i] ?? "",
     ...(titles?.[i] ? { title: titles[i]! } : {}),
   }));
@@ -42,20 +44,21 @@ export function getDirectionCards(t: Messages) {
 }
 
 export function getAboutBoard(t: Messages) {
-  return mapPeople(ABOUT_BOARD_META, t.about.boardRoles, t.about.boardTitles);
+  return mapPeople(ABOUT_BOARD_META, t.about.boardNames, t.about.boardRoles, t.about.boardTitles);
 }
 
 export function getAboutLeadership(t: Messages) {
-  return mapPeople(ABOUT_LEADERSHIP_META, t.about.leadershipRoles);
+  return mapPeople(ABOUT_LEADERSHIP_META, t.about.leadershipNames, t.about.leadershipRoles);
 }
 
 export function getAboutDepartmentHeads(t: Messages) {
-  return mapPeople(ABOUT_DEPARTMENT_HEADS_META, t.about.departmentRoles);
+  return mapPeople(ABOUT_DEPARTMENT_HEADS_META, t.about.departmentNames, t.about.departmentRoles);
 }
 
 export function getAboutCorporateSecretary(t: Messages): AboutPerson {
   return {
     ...ABOUT_CORPORATE_SECRETARY_META,
+    name: t.about.secretaryName,
     role: t.about.secretaryRole,
   };
 }
