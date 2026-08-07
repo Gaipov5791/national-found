@@ -53,10 +53,14 @@ export type Messages = {
     goal: string;
     tasks: readonly string[];
     legal: readonly string[];
+    boardNames: readonly string[];
     boardRoles: readonly string[];
     boardTitles: readonly (string | null)[];
+    leadershipNames: readonly string[];
     leadershipRoles: readonly string[];
+    departmentNames: readonly string[];
     departmentRoles: readonly string[];
+    secretaryName: string;
     secretaryRole: string;
     regulatoryDocs: readonly string[];
     financialReports: readonly string[];
@@ -238,6 +242,15 @@ const ru: Messages = {
       "Акции Фонда являются государственной собственностью и могут быть отчуждены только путём публичного предложения на фондовой бирже (не более 20 % акций).",
       "Кыргызская Республика не несёт ответственности по обязательствам Фонда, и Фонд не несёт ответственности по обязательствам Республики.",
     ],
+    boardNames: [
+      "Касымалиев Адылбек Алешович",
+      "Торобаев Бакыт Эргешевич",
+      "Суйналиев Руслан Мырзабекович",
+      "Исаматова Гульзат Тыныбековна",
+      "Сариев Темир Аргембаевич",
+      "Акматалиев Адилет Искендербекович",
+      "Темиркулов Азамат Азатбекович",
+    ],
     boardRoles: [
       "Председатель Совета директоров",
       "Член Совета директоров",
@@ -256,13 +269,21 @@ const ru: Messages = {
       null,
       null,
     ],
+    leadershipNames: ["Темирбеков Уран Темирбекович", "Мадумаров Аскат Эркинович"],
     leadershipRoles: ["Генеральный директор", "Заместитель генерального директора"],
+    departmentNames: [
+      "Бекташов Талант Изатиллаевич",
+      "Абдымамбетов Нурбек Абыдкапарович",
+      "Марлисов Анвар Болотбекович",
+      "Эрса Расул Тахирович",
+    ],
     departmentRoles: [
       "Руководитель Юридического департамента",
       "Руководитель Инвестиционного департамента",
       "Руководитель Департамента IT-безопасности и комплаенс-контроля",
       "Руководитель департамента стратегического партнерства и организационных работ",
     ],
+    secretaryName: "Турдугулов Абай Тагайбекович",
     secretaryRole: "Корпоративный секретарь",
     regulatoryDocs: [
       "Закон Кыргызской Республики «О Национальном инвестиционном фонде Кыргызской Республики» (№ 143 от 24 июля 2024 года)",
@@ -464,7 +485,7 @@ const ru: Messages = {
     phoneLabel: "Телефон:",
     hotlineLabel: "Телефон доверия:",
     qrLabel: "Сайт на телефоне",
-    copyright: "© 2026 Общественный фонд «Фонд социального партнёрства по развитию регионов»",
+    copyright: "© 2026 Общественный фонд «Фонд реализации проектов и инициатив»",
     developer: "Разработчик Гаипов Бакыт",
     backToTop: "Вернуться наверх",
   },
@@ -538,6 +559,15 @@ const kg: Messages = {
       "Фонддун акциялары мамлекеттик менчик болуп саналат жана фонд биржасында ачык сунуштоо жолу менен гана ээликтен ажыратылышы мүмкүн (акциялардын 20% ашык эмес).",
       "Кыргыз Республикасы Фонддун милдеттенмелери боюнча жоопкерчилик тартпайт, Фонд да Республиканын милдеттенмелери боюнча жоопкерчилик тартпайт.",
     ],
+    boardNames: [
+      "Касымалиев Адылбек Алешович",
+      "Торобаев Бакыт Эргешевич",
+      "Суйналиев Руслан Мырзабекович",
+      "Исаматова Гульзат Тыныбековна",
+      "Сариев Темир Аргембаевич",
+      "Акматалиев Адилет Искендербекович",
+      "Темиркулов Азамат Азатбекович",
+    ],
     boardRoles: [
       "Директорлор кеңешинин төрагасы",
       "Директорлор кеңешинин мүчөсү",
@@ -556,13 +586,21 @@ const kg: Messages = {
       null,
       null,
     ],
+    leadershipNames: ["Темирбеков Уран Темирбекович", "Мадумаров Аскат Эркинович"],
     leadershipRoles: ["Башкы директор", "Башкы директордун орун басары"],
+    departmentNames: [
+      "Бекташов Талант Изатиллаевич",
+      "Абдымамбетов Нурбек Абыдкапарович",
+      "Марлисов Анвар Болотбекович",
+      "Эрса Расул Тахирович",
+    ],
     departmentRoles: [
       "Юридикалык департаменттин жетекчиси",
       "Инвестициялык департаменттин жетекчиси",
       "IT-коопсуздук жана комплаенс-контроль департаментинин жетекчиси",
       "Стратегиялык өнөктөштүк жана уюштуруу иштери департаментинин жетекчиси",
     ],
+    secretaryName: "Турдугулов Абай Тагайбекович",
     secretaryRole: "Корпоративдик катчы",
     regulatoryDocs: [
       "Кыргыз Республикасынын «Кыргыз Республикасынын Улуттук инвестициялык фонду жөнүндө» Мыйзамы (2024-жылдын 24-июлундагы № 143)",
@@ -764,7 +802,7 @@ const kg: Messages = {
     phoneLabel: "Телефон:",
     hotlineLabel: "Ишеним телефону:",
     qrLabel: "Сайт телефондо",
-    copyright: "© 2026 «Аймактарды өнүктүрүү боюнча социалдык өнөктөштүк фонду» Коомдук фонду",
+    copyright: "© 2026 «Долбоорлорду жана демилгелерди ишке ашыруу фонду» Коомдук фонду",
     developer: "Иштеп чыгуучу Гаипов Бакыт",
     backToTop: "Жогоруга кайтуу",
   },
@@ -838,6 +876,15 @@ const en: Messages = {
       "Shares of the Fund are state property and may be disposed of only through a public offering on a stock exchange (no more than 20% of shares).",
       "The Kyrgyz Republic is not liable for the Fund’s obligations, and the Fund is not liable for the Republic’s obligations.",
     ],
+    boardNames: [
+      "Kasymaliev Adylbek Aleshovich",
+      "Torobaev Bakyt Ergeshevich",
+      "Suinaliev Ruslan Myrzabekovich",
+      "Isamatova Gulzat Tynybekovna",
+      "Sariev Temir Argembaevich",
+      "Akmataliev Adilet Iskenderbekovich",
+      "Temirkulov Azamat Azatbekovich",
+    ],
     boardRoles: [
       "Chair of the Board of Directors",
       "Member of the Board of Directors",
@@ -856,13 +903,21 @@ const en: Messages = {
       null,
       null,
     ],
+    leadershipNames: ["Temirbekov Uran Temirbekovich", "Madumarov Askat Erkinovich"],
     leadershipRoles: ["Chief Executive Officer", "Deputy Chief Executive Officer"],
+    departmentNames: [
+      "Bektashov Talant Izatillaevich",
+      "Abdymambetov Nurbek Abydkaparovich",
+      "Marlisov Anvar Bolotbekovich",
+      "Ersa Rasul Takhirovich",
+    ],
     departmentRoles: [
       "Head of the Legal Department",
       "Head of the Investment Department",
       "Head of the IT Security and Compliance Control Department",
       "Head of the Strategic Partnership and Organizational Affairs Department",
     ],
+    secretaryName: "Turdugulov Abai Tagaibekovich",
     secretaryRole: "Corporate Secretary",
     regulatoryDocs: [
       "Law of the Kyrgyz Republic “On the National Investment Fund of the Kyrgyz Republic” (No. 143 of 24 July 2024)",
@@ -1064,7 +1119,7 @@ const en: Messages = {
     phoneLabel: "Phone:",
     hotlineLabel: "Hotline:",
     qrLabel: "Open on mobile",
-    copyright: "© 2026 Public Foundation “Social Partnership Fund for Regional Development”",
+    copyright: "© 2026 Public Foundation “Fund for Implementation of Projects and Initiatives”",
     developer: "Developer: Gaipov Bakyt",
     backToTop: "Back to top",
   },
@@ -1138,6 +1193,15 @@ const zh: Messages = {
       "基金股份属于国家所有，仅可通过证券交易所公开发行的方式转让，且转让比例不得超过股份总数的20%；",
       "吉尔吉斯共和国不对基金的债务承担责任，基金亦不对吉尔吉斯共和国的债务承担责任。",
     ],
+    boardNames: [
+      "Kasymaliev Adylbek Aleshovich",
+      "Torobaev Bakyt Ergeshevich",
+      "Suinaliev Ruslan Myrzabekovich",
+      "Isamatova Gulzat Tynybekovna",
+      "Sariev Temir Argembaevich",
+      "Akmataliev Adilet Iskenderbekovich",
+      "Temirkulov Azamat Azatbekovich",
+    ],
     boardRoles: [
       "董事会主席",
       "董事会成员",
@@ -1156,13 +1220,21 @@ const zh: Messages = {
       null,
       null,
     ],
+    leadershipNames: ["Temirbekov Uran Temirbekovich", "Madumarov Askat Erkinovich"],
     leadershipRoles: ["总经理", "副总经理"],
+    departmentNames: [
+      "Bektashov Talant Izatillaevich",
+      "Abdymambetov Nurbek Abydkaparovich",
+      "Marlisov Anvar Bolotbekovich",
+      "Ersa Rasul Takhirovich",
+    ],
     departmentRoles: [
       "法律部负责人",
       "投资部负责人",
       "信息安全与合规控制部负责人",
       "战略合作与组织工作部负责人",
     ],
+    secretaryName: "Turdugulov Abai Tagaibekovich",
     secretaryRole: "公司秘书",
     regulatoryDocs: [
       "《吉尔吉斯共和国国家投资基金法》（2024年7月24日第143号）",
@@ -1365,7 +1437,7 @@ const zh: Messages = {
     phoneLabel: "电话",
     hotlineLabel: "举报热线",
     qrLabel: "手机打开网站",
-    copyright: "© 2026 公共基金会“区域发展社会伙伴关系基金”",
+    copyright: "© 2026 公共基金会“项目与倡议实施基金”",
     developer: "开发者：Gaipov Bakyt",
     backToTop: "返回顶部",
   },
