@@ -8,10 +8,6 @@ export function setLastPointer(x: number, y: number) {
   lastPointer = { x, y };
 }
 
-export function getLastPointer() {
-  return lastPointer;
-}
-
 type CursorBg = "dark" | "light";
 
 function parseRgba(css: string): { r: number; g: number; b: number; a: number } | null {

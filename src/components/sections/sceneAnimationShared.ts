@@ -1,12 +1,8 @@
 import type gsap from "gsap";
 
-export const CURSOR_BORDER_DARK = "#262626";
-export const CURSOR_BORDER_LIGHT = "#ffffff";
-
 /** Shared easing profile — typography and virtual camera stay in lockstep. */
 export const CINEMATIC_ENTER_EASE = "power2.out";
 export const CINEMATIC_EXIT_EASE = "power2.in";
-export const CINEMATIC_MOTION_EASE = "power2.inOut";
 
 export const COUNTER_PROJECTS = 12;
 export const COUNTER_TOTAL_SUM = 122_968_875_174;
@@ -20,13 +16,6 @@ export function mapCounterProgress(
   const span = counterCompleteT - statsEnterT;
   if (span <= 0) return timelineTime >= counterCompleteT ? 1 : 0;
   return Math.max(0, Math.min(1, (timelineTime - statsEnterT) / span));
-}
-
-export function formatCount(value: number, progress: number, suffix = "") {
-  const p = Math.max(0, Math.min(1, progress));
-  const eased = 1 - Math.pow(1 - p, 2);
-  const val = Math.round(eased * value);
-  return `${val.toLocaleString("ru-RU").replace(",", " ")}${suffix}`;
 }
 
 export function computeTimelineMarkers(mobile = false) {
