@@ -266,20 +266,20 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
         <div
           ref={panoramaBgRef}
           data-cursor-surface="dark"
-          className="pointer-events-none fixed inset-0 z-0 h-[100svh] w-full overflow-hidden md:h-screen"
+          className="pointer-events-none fixed inset-0 z-0 h-[100svh] w-full overflow-hidden bg-[#051426] bg-cover bg-no-repeat md:h-screen"
+          style={{
+            // Cached LCP hero holds the peaks framing until the tall strip decodes.
+            backgroundImage: `url('${SCENE_IMAGES.heroWebp}')`,
+            backgroundPosition: `center ${PANORAMA_STOPS.peaks}%`,
+          }}
           aria-hidden
         >
           <picture className="absolute inset-0 block h-full w-full overflow-hidden">
-            <source
-              media="(max-width: 767px)"
-              srcSet={SCENE_IMAGES.panoramaMobile}
-              type="image/webp"
-            />
+            <source srcSet={SCENE_IMAGES.panoramaWebp} type="image/webp" />
             <img
               ref={panoramaImgRef}
               src={SCENE_IMAGES.panorama}
               alt=""
-              fetchPriority="high"
               decoding="async"
               className={cn(
                 "h-full w-full object-cover will-change-[transform,object-position]",
