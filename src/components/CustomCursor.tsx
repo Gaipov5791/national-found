@@ -2,11 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import {
   CURSOR_ON_DARK_BG,
   CURSOR_ON_LIGHT_BG,
-  refreshCursorTheme,
-  updateCursorThemeFromEvent,
+  setLastPointer,
+  updateCursorThemeAtPoint,
 } from "@/lib/cursorTheme";
-
-const THEME_MOVE_MS = 80;
 
 export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -20,45 +18,32 @@ export function CustomCursor() {
     const ring = { x: pos.x, y: pos.y };
     let raf = 0;
     let themeRaf = 0;
-    let lastThemeAt = 0;
-    let pendingThemeEvent: MouseEvent | null = null;
+    let themeDirty = false;
 
     const flushTheme = () => {
       themeRaf = 0;
-      const event = pendingThemeEvent;
-      pendingThemeEvent = null;
-      if (event) {
-        updateCursorThemeFromEvent(event);
-        lastThemeAt = performance.now();
-      } else {
-        refreshCursorTheme();
-      }
+      if (!themeDirty) return;
+      themeDirty = false;
+      updateCursorThemeAtPoint(pos.x, pos.y);
     };
 
-    const scheduleTheme = (event?: MouseEvent) => {
-      if (event) pendingThemeEvent = event;
-      const now = performance.now();
-      if (now - lastThemeAt >= THEME_MOVE_MS) {
-        if (themeRaf) cancelAnimationFrame(themeRaf);
-        flushTheme();
-        return;
-      }
+    /** Coalesce hit-tests to once per frame — keeps sensitivity, cuts main-thread spam. */
+    const scheduleTheme = () => {
+      themeDirty = true;
       if (!themeRaf) themeRaf = requestAnimationFrame(flushTheme);
     };
 
-    updateCursorThemeFromEvent({
-      clientX: pos.x,
-      clientY: pos.y,
-      target: document.elementFromPoint(pos.x, pos.y),
-    });
+    setLastPointer(pos.x, pos.y);
+    updateCursorThemeAtPoint(pos.x, pos.y);
 
     const onMove = (e: MouseEvent) => {
       pos.x = e.clientX;
       pos.y = e.clientY;
+      setLastPointer(pos.x, pos.y);
       if (dotRef.current) {
         dotRef.current.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`;
       }
-      scheduleTheme(e);
+      scheduleTheme();
     };
 
     const loop = () => {
