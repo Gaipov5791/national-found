@@ -7,6 +7,7 @@ import { clearScrollerProxy, ensureGsapPlugins } from "@/lib/gsap-client";
 import { LANGS, langDisplayLabel, useLang, useT } from "@/lib/lang";
 import { preloadScrollytelling } from "@/lib/preloadScrollytelling";
 import { getSectionSceneLabel } from "@/lib/sectionNavigation";
+import { SCENE_IMAGES } from "@/components/sections/sceneImages";
 
 /** Clear leftover Lenis / ScrollTrigger scroll locks after leaving the landing. */
 function restoreDocumentScroll() {
@@ -69,7 +70,7 @@ export function DetailPageLayout({
     <main className="relative isolate min-h-screen w-full overflow-hidden bg-black px-4 py-10 font-display text-white sm:px-8 sm:py-16 lg:px-12">
       <div
         className="pointer-events-none fixed inset-[-32px] -z-20 scale-105 bg-cover bg-center blur-[16px]"
-        style={{ backgroundImage: "url('/images/mountains.jpg')" }}
+        style={{ backgroundImage: `url('${SCENE_IMAGES.peaksHeroJpg}')` }}
         aria-hidden
       />
       <div

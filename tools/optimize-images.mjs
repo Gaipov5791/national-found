@@ -61,4 +61,38 @@ for (const file of await fs.readdir(aboutDir)) {
   await writeWebpAvif(input, base, { width: 800, quality: 75, avifQuality: 48 });
 }
 
+// First-frame peaks hero — object-cover + peaks 14% on a 1920×1080 reference viewport
+{
+  const IMG_W = 2718;
+  const IMG_H = 8192;
+  const peaksPct = 0.14;
+  const vw = 1920;
+  const vh = 1080;
+  const scale = Math.max(vw / IMG_W, vh / IMG_H);
+  const renderedH = IMG_H * scale;
+  const offsetY = (vh - renderedH) * peaksPct;
+  const srcY = Math.max(0, -offsetY / scale);
+  const srcH = Math.min(IMG_H - srcY, vh / scale);
+  const padY = Math.round(srcH * 0.08);
+  const top = Math.max(0, Math.round(srcY) - padY);
+  const height = Math.min(IMG_H - top, Math.round(srcH) + padY * 2);
+  const extracted = sharp(panoSrc).extract({ left: 0, top, width: IMG_W, height });
+  await extracted
+    .clone()
+    .resize(1920, 1080, { fit: "cover", position: "centre" })
+    .webp({ quality: 74, effort: 4 })
+    .toFile("public/images/горы-панорама-peaks-hero.webp");
+  await extracted
+    .clone()
+    .resize(1920, 1080, { fit: "cover", position: "centre" })
+    .avif({ quality: 48, effort: 4 })
+    .toFile("public/images/горы-панорама-peaks-hero.avif");
+  await extracted
+    .clone()
+    .resize(1920, 1080, { fit: "cover", position: "centre" })
+    .jpeg({ quality: 78, mozjpeg: true })
+    .toFile("public/images/горы-панорама-peaks-hero.jpg");
+  console.log("peaks-hero generated from object-cover + 14% framing");
+}
+
 console.log("DONE");

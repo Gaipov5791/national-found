@@ -5,7 +5,11 @@ import {
   type SceneAnimationContext,
   type SceneTimeline,
 } from "./sceneAnimationShared";
-import { SCENE_IMAGES } from "./sceneImages";
+import {
+  PANORAMA_PEAKS_OBJECT_POSITION,
+  PANORAMA_STOPS,
+  SCENE_IMAGES,
+} from "./sceneImages";
 
 export type PanoramaScrollSceneRefs = {
   panoramaBgRef: RefObject<HTMLDivElement | null>;
@@ -28,45 +32,32 @@ function getPanoramaOrigin(mobile: boolean) {
   return mobile ? PANORAMA_ORIGIN_MOBILE : PANORAMA_ORIGIN_DESKTOP;
 }
 
-/**
- * Vertical panorama strip — Y% waypoints into the tall pan track.
- * Physical top→bottom order:
- *   peaks → Son-Kul lake → industrial complex → pastures → fields/greenhouses.
- */
-const PANORAMA_STOPS_DESKTOP = {
-  peaks: 14,
-  sonKul: 35,
-  industrial: 50,
-  pastures: 62,
-  fields: 76,
-} as const;
-
-const PANORAMA_STOPS_MOBILE = {
-  peaks: 14,
-  sonKul: 35,
-  industrial: 50,
-  pastures: 62,
-  fields: 76,
-} as const;
-
 /** Tall pan track — one 100svh zone visible at a time (5 frames × 100vh). */
 export const MOBILE_PAN_TRACK_VH = 500;
 
-export const PANORAMA_STOPS = PANORAMA_STOPS_DESKTOP;
+export { PANORAMA_STOPS };
 
-function getPanoramaStops(mobile: boolean) {
-  return mobile ? PANORAMA_STOPS_MOBILE : PANORAMA_STOPS_DESKTOP;
-}
-
-/** Map storytelling % into a GPU translateY on the tall pan track. */
-function panTranslateY(percentY: number): string {
+function mobilePanTranslateY(percentY: number): string {
   const maxPanVh = MOBILE_PAN_TRACK_VH - 100;
   return `${-(percentY / 100) * maxPanVh}vh`;
 }
 
-function applyPanoramaPosition(img: HTMLImageElement | null, percentY: number) {
+/**
+ * Desktop: object-position (calibrated first frame / cover crop).
+ * Mobile: GPU translateY on the tall pan track.
+ */
+function applyPanoramaPosition(
+  img: HTMLImageElement | null,
+  percentY: number,
+  mobile: boolean
+) {
   if (!img) return;
-  gsap.set(img, { y: panTranslateY(percentY) });
+  if (mobile) {
+    gsap.set(img, { y: mobilePanTranslateY(percentY), force3D: true });
+    return;
+  }
+  gsap.set(img, { y: 0 });
+  img.style.objectPosition = `center ${percentY}%`;
 }
 
 function tweenPanoramaPan(
@@ -75,7 +66,8 @@ function tweenPanoramaPan(
   pan: { y: number },
   targetY: number,
   duration: number,
-  position: number
+  position: number,
+  mobile: boolean
 ) {
   tl.to(
     pan,
@@ -83,7 +75,7 @@ function tweenPanoramaPan(
       y: targetY,
       duration,
       ease: "none",
-      onUpdate: () => applyPanoramaPosition(img, pan.y),
+      onUpdate: () => applyPanoramaPosition(img, pan.y, mobile),
     },
     position
   );
@@ -92,7 +84,6 @@ function tweenPanoramaPan(
 export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs, ctx: SceneAnimationContext) {
   const { mobile } = ctx;
   const origin = getPanoramaOrigin(mobile);
-  const stops = getPanoramaStops(mobile);
 
   gsap.set(refs.panoramaBgRef.current, { opacity: 1, visibility: "visible" });
   gsap.set(refs.panoramaImgRef.current, {
@@ -100,7 +91,10 @@ export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs, ctx: S
     transformOrigin: origin,
     force3D: true,
   });
-  applyPanoramaPosition(refs.panoramaImgRef.current, stops.peaks);
+  if (mobile && refs.panoramaImgRef.current) {
+    refs.panoramaImgRef.current.style.objectPosition = "center top";
+  }
+  applyPanoramaPosition(refs.panoramaImgRef.current, PANORAMA_STOPS.peaks, mobile);
   gsap.set(refs.permanentCloudRef.current, { opacity: 0, yPercent: -40 });
 }
 
@@ -108,9 +102,9 @@ export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs, ctx: S
 export function panoramaYAtTime(
   time: number,
   timings: SceneAnimationContext["timings"],
-  mobile: boolean
+  _mobile: boolean
 ): number {
-  const stops = getPanoramaStops(mobile);
+  const stops = PANORAMA_STOPS;
   const {
     financeEnterT,
     directionsEnterT,
@@ -140,7 +134,7 @@ export function syncPanoramaToTimelineTime(
   timings: SceneAnimationContext["timings"],
   mobile: boolean
 ) {
-  applyPanoramaPosition(refs.panoramaImgRef.current, panoramaYAtTime(time, timings, mobile));
+  applyPanoramaPosition(refs.panoramaImgRef.current, panoramaYAtTime(time, timings, mobile), mobile);
 }
 
 export function animatePanoramaScrollScene(
@@ -163,7 +157,7 @@ export function animatePanoramaScrollScene(
   } = timings;
 
   const img = refs.panoramaImgRef.current;
-  const stops = getPanoramaStops(mobile);
+  const stops = PANORAMA_STOPS;
   const pan = { y: stops.peaks };
   const cloudRollDur = enterDur + 0.032;
   const peakZoom = getPeakZoom(mobile);
@@ -181,14 +175,14 @@ export function animatePanoramaScrollScene(
   tl.to(img, { scale: 1, duration: peakZoomDur, ease: "none", force3D: true }, decreeExitT);
 
   // Act 3 — smooth vertical descent through the strip (Sections 3–7); cloud stays visible.
-  // Physical top→bottom order: sonKul → industrial → pastures → fields.
   tweenPanoramaPan(
     tl,
     img,
     pan,
     stops.sonKul,
     Math.max(0.001, directionsEnterT - financeEnterT),
-    financeEnterT
+    financeEnterT,
+    mobile
   );
   tweenPanoramaPan(
     tl,
@@ -196,7 +190,8 @@ export function animatePanoramaScrollScene(
     pan,
     stops.industrial,
     Math.max(0.001, msbEnterT - directionsEnterT),
-    directionsEnterT
+    directionsEnterT,
+    mobile
   );
   tweenPanoramaPan(
     tl,
@@ -204,7 +199,8 @@ export function animatePanoramaScrollScene(
     pan,
     stops.pastures,
     Math.max(0.001, partnersEnterT - msbEnterT),
-    msbEnterT
+    msbEnterT,
+    mobile
   );
   tweenPanoramaPan(
     tl,
@@ -212,7 +208,8 @@ export function animatePanoramaScrollScene(
     pan,
     stops.fields,
     Math.max(0.001, newsEnterT - partnersEnterT),
-    partnersEnterT
+    partnersEnterT,
+    mobile
   );
 
   // Footer — fade mountains to darkness as premium footer arrives
@@ -264,15 +261,15 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
               src={SCENE_IMAGES.panorama}
               alt=""
               width={1920}
-              height={4800}
+              height={5787}
               fetchPriority="high"
               decoding="async"
               className={cn(
-                "absolute left-0 top-0 w-full max-w-none object-cover will-change-transform",
-                "h-[500vh]",
+                "h-full w-full object-cover will-change-[transform,object-position]",
+                "max-md:absolute max-md:left-0 max-md:top-0 max-md:h-[500vh] max-md:w-full max-md:max-w-none",
                 "max-md:[transform-origin:center_10%] md:[transform-origin:center_28%]"
               )}
-              style={{ transform: `translate3d(0, ${panTranslateY(PANORAMA_STOPS.peaks)}, 0)` }}
+              style={{ objectPosition: PANORAMA_PEAKS_OBJECT_POSITION }}
             />
           </picture>
           <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
