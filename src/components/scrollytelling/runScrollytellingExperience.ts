@@ -19,7 +19,7 @@ import {
   mapCounterProgress,
   type ExperienceConfig,
 } from "@/components/sections/sceneAnimationShared";
-import { refreshCursorTheme } from "@/lib/cursorTheme";
+import { refreshCursorTheme, setCloudCursorState } from "@/lib/cursorTheme";
 import { clearScrollerProxy } from "@/lib/gsap-client";
 import type { SceneRefs } from "./useSceneRefs";
 
@@ -52,6 +52,28 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   let lenis: Lenis | null = null;
   let rafId = 0;
   let cancelled = false;
+  let cursorThemeRaf = 0;
+  let cloudHeightPx = 0;
+
+  const measureCloudHeight = () => {
+    const cloud = refs.permanentCloudRef.current;
+    if (cloud) cloudHeightPx = cloud.offsetHeight || 0;
+  };
+  measureCloudHeight();
+
+  const scheduleCursorTheme = () => {
+    if (mobile || cursorThemeRaf) return;
+    cursorThemeRaf = requestAnimationFrame(() => {
+      cursorThemeRaf = 0;
+      const cloud = refs.permanentCloudRef.current;
+      if (cloud) {
+        // gsap.getProperty reads the tween cache — no layout thrashing.
+        const opacity = Number(gsap.getProperty(cloud, "opacity")) || 0;
+        setCloudCursorState(opacity, cloudHeightPx || undefined);
+      }
+      refreshCursorTheme();
+    });
+  };
 
   clearScrollerProxy();
 
@@ -137,6 +159,8 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
   if (mobile) {
     window.addEventListener("resize", onResize);
     window.addEventListener("orientationchange", onResize);
+  } else {
+    window.addEventListener("resize", measureCloudHeight);
   }
 
   const tl = gsap.timeline({
@@ -157,7 +181,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
         const counterP = mapCounterProgress(timelineTime, timings);
         refs.counterProgressRef.current = counterP;
         cfg.onCounterProgress?.(counterP);
-        if (!mobile) refreshCursorTheme();
+        scheduleCursorTheme();
       },
     },
   });
@@ -202,9 +226,12 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
 
   return () => {
     cancelled = true;
+    if (cursorThemeRaf) cancelAnimationFrame(cursorThemeRaf);
     if (mobile) {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("orientationchange", onResize);
+    } else {
+      window.removeEventListener("resize", measureCloudHeight);
     }
 
     // Kill pin / scrub first so body overflow and wheel handlers are restored

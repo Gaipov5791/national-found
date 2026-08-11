@@ -1,6 +1,8 @@
 import type { Lang } from "@/lib/lang";
+import type { L10nText } from "@/lib/l10n";
 
-export type L10nText = Record<Lang, string>;
+export type { L10nText } from "@/lib/l10n";
+export { pickL10n } from "@/lib/l10n";
 
 export type MsbProjectStatus = "active" | "completed";
 
@@ -24,10 +26,6 @@ export type MsbDistrict = {
   coordinates: readonly [number, number];
   projects: readonly MsbProject[];
 };
-
-export function pickL10n(value: L10nText, lang: Lang): string {
-  return value[lang] ?? value.RU;
-}
 
 const region = {
   bishkek: { RU: "г. Бишкек", KG: "Бишкек ш.", EN: "Bishkek", ZH: "比什凯克市" },

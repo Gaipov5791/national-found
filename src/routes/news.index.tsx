@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DetailPageLayout } from "@/components/DetailPageLayout";
 import { formatNewsDate, getNewsItems } from "@/data/news";
-import { pickL10n } from "@/data/msbProjects";
+import { pickL10n } from "@/lib/l10n";
 import { useLang, useT } from "@/lib/lang";
 import { cn } from "@/lib/utils";
 

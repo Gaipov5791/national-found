@@ -12,11 +12,11 @@ import {
   districtFinancing,
   formatPercent,
   formatSomAmount,
-  pickL10n,
   portfolioStats,
   type MsbDistrict,
   type MsbProject,
 } from "@/data/msbProjects";
+import { pickL10n } from "@/lib/l10n";
 import { useLang, useT } from "@/lib/lang";
 import { cn } from "@/lib/utils";
 

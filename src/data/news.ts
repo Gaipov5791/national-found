@@ -1,7 +1,6 @@
 import type { Lang } from "@/lib/lang";
-import type { L10nText } from "@/data/msbProjects";
-import { pickL10n } from "@/data/msbProjects";
-import { getNewsBody } from "@/data/newsBodies";
+import type { L10nText } from "@/lib/l10n";
+import { pickL10n } from "@/lib/l10n";
 
 export type NewsItem = {
   id: string;
@@ -188,9 +187,11 @@ export function getNewsById(id: string): NewsItem | undefined {
   return NEWS_ITEMS.find((item) => item.id === id);
 }
 
-export function getLocalizedNewsArticle(id: string, lang: Lang) {
+/** Loads article HTML via dynamic import so newsBodies stays out of the home bundle. */
+export async function getLocalizedNewsArticle(id: string, lang: Lang) {
   const item = getNewsById(id);
   if (!item) return undefined;
+  const { getNewsBody } = await import("@/data/newsBodies");
   const body = getNewsBody(id, lang);
   if (!body) return undefined;
   return {

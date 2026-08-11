@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { DetailPageLayout } from "@/components/DetailPageLayout";
 import { getLocalizedNewsArticle, getNewsById } from "@/data/news";
-import { useLang, useT } from "@/lib/lang";
+import { useLang, useT, type Lang } from "@/lib/lang";
+
+type NewsArticle = NonNullable<Awaited<ReturnType<typeof getLocalizedNewsArticle>>>;
 
 export const Route = createFileRoute("/news/$slug")({
   head: ({ params }) => {
@@ -10,14 +13,21 @@ export const Route = createFileRoute("/news/$slug")({
       meta: [{ title: item ? `${item.title.RU} — НИФ КР` : "Новости — НИФ КР" }],
     };
   },
+  loader: async ({ params }) => {
+    // Dynamic import inside getLocalizedNewsArticle keeps newsBodies off the home graph.
+    const article = await getLocalizedNewsArticle(params.slug, "RU");
+    if (!article) throw notFound();
+    return article;
+  },
   component: NewsArticlePage,
 });
 
 function NewsArticlePage() {
   const { slug } = Route.useParams();
+  const initialArticle = Route.useLoaderData() as NewsArticle;
   const t = useT();
   const { lang } = useLang();
-  const article = getLocalizedNewsArticle(slug, lang);
+  const article = useLocalizedArticle(slug, lang, initialArticle);
 
   if (!article) {
     throw notFound();
@@ -58,4 +68,24 @@ function NewsArticlePage() {
       </div>
     </DetailPageLayout>
   );
+}
+
+function useLocalizedArticle(slug: string, lang: Lang, initial: NewsArticle) {
+  const [article, setArticle] = useState<NewsArticle>(initial);
+
+  useEffect(() => {
+    setArticle(initial);
+  }, [initial]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void getLocalizedNewsArticle(slug, lang).then((next) => {
+      if (!cancelled && next) setArticle(next);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, lang]);
+
+  return article;
 }

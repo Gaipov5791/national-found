@@ -1,19 +1,17 @@
 export const FINANCE_CARD_ICONS = [
-  "/icons/finance/coinvest.png",
-  "/icons/finance/joint-venture.png",
-  "/icons/finance/equity.png",
-  "/icons/finance/support.png",
+  "/icons/finance/coinvest.webp",
+  "/icons/finance/joint-venture.webp",
+  "/icons/finance/equity.webp",
+  "/icons/finance/support.webp",
 ] as const;
 
-const publicAsset = (path: string) => encodeURI(path);
-
 export const DIRECTION_CARD_ICONS = [
-  publicAsset("/icons/perspective/Иконки Перпективные направления/Промышленность и переработка.png"),
-  publicAsset("/icons/perspective/Иконки Перпективные направления/Транспорт и логистика.png"),
-  publicAsset("/icons/perspective/Иконки Перпективные направления/Энергетика и инфраструктура.png"),
-  publicAsset("/icons/perspective/Иконки Перпективные направления/Туризм.png"),
-  publicAsset("/icons/perspective/Иконки Перпективные направления/Образование.png"),
-  publicAsset("/icons/perspective/Иконки Перпективные направления/Здравоохранение.png"),
+  "/icons/perspective/optimized/industry.webp",
+  "/icons/perspective/optimized/transport.webp",
+  "/icons/perspective/optimized/energy.webp",
+  "/icons/perspective/optimized/tourism.webp",
+  "/icons/perspective/optimized/education.webp",
+  "/icons/perspective/optimized/health.webp",
 ] as const;
 
 export type AboutPerson = {
@@ -29,29 +27,29 @@ export type AboutPersonMeta = {
 };
 
 export const ABOUT_BOARD_META: readonly AboutPersonMeta[] = [
-  { photo: "/images/about/photo_3.png" },
-  { photo: "/images/about/photo_16.png" },
-  { photo: "/images/about/photo_15.png" },
-  { photo: "/images/about/photo_14.png" },
-  { photo: "/images/about/photo_7.png" },
+  { photo: "/images/about/photo_3.webp" },
+  { photo: "/images/about/photo_16.webp" },
+  { photo: "/images/about/photo_15.webp" },
+  { photo: "/images/about/photo_14.webp" },
+  { photo: "/images/about/photo_7.webp" },
   {},
-  { photo: "/images/about/photo_11.png" },
+  { photo: "/images/about/photo_11.webp" },
 ];
 
 export const ABOUT_LEADERSHIP_META: readonly AboutPersonMeta[] = [
-  { photo: "/images/about/photo_12.png" },
-  { photo: "/images/about/photo_4.png" },
+  { photo: "/images/about/photo_12.webp" },
+  { photo: "/images/about/photo_4.webp" },
 ];
 
 export const ABOUT_DEPARTMENT_HEADS_META: readonly AboutPersonMeta[] = [
-  { photo: "/images/about/photo_10.png" },
-  { photo: "/images/about/photo_2.png" },
-  { photo: "/images/about/photo_5.png" },
-  { photo: "/images/about/photo_13.png" },
+  { photo: "/images/about/photo_10.webp" },
+  { photo: "/images/about/photo_2.webp" },
+  { photo: "/images/about/photo_5.webp" },
+  { photo: "/images/about/photo_13.webp" },
 ];
 
 export const ABOUT_CORPORATE_SECRETARY_META: AboutPersonMeta = {
-  photo: "/images/about/photo_6.png",
+  photo: "/images/about/photo_6.webp",
 };
 
 export const ABOUT_REGULATORY_DOC_HREFS = [

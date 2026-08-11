@@ -6,7 +6,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { getMessages, type Messages } from "@/lib/i18n/messages";
+import {
+  getMessages,
+  hasMessages,
+  loadMessages,
+  type Messages,
+} from "@/lib/i18n/messages";
 
 export const LANGS = ["RU", "KG", "EN", "ZH"] as const;
 export type Lang = (typeof LANGS)[number];
@@ -39,14 +44,32 @@ export function LangProvider({
   initialLang?: Lang;
 }) {
   const [lang, setLang] = useState<Lang>(initialLang);
+  const [messages, setMessages] = useState<Messages>(() => getMessages(initialLang));
 
   useEffect(() => {
     document.documentElement.lang = HTML_LANG[lang];
   }, [lang]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    if (hasMessages(lang)) {
+      setMessages(getMessages(lang));
+      return;
+    }
+
+    void loadMessages(lang).then((next) => {
+      if (!cancelled) setMessages(next);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [lang]);
+
   const value = useMemo<LangContextValue>(
-    () => ({ lang, setLang, t: getMessages(lang) }),
-    [lang]
+    () => ({ lang, setLang, t: messages }),
+    [lang, messages]
   );
 
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;
