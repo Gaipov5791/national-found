@@ -282,6 +282,8 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
               ref={panoramaImgRef}
               src={SCENE_IMAGES.panorama}
               alt=""
+              fetchPriority="high"
+              decoding="async"
               className={cn(
                 "h-full w-full object-cover will-change-[transform,object-position]",
                 "max-md:absolute max-md:left-0 max-md:top-0 max-md:h-[500vh] max-md:w-full max-md:max-w-none",
