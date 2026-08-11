@@ -21,6 +21,7 @@ import {
 } from "@/components/sections/sceneAnimationShared";
 import { refreshCursorTheme, setCloudCursorState } from "@/lib/cursorTheme";
 import { clearScrollerProxy } from "@/lib/gsap-client";
+import { registerActiveLenis } from "@/lib/leaveLanding";
 import type { SceneRefs } from "./useSceneRefs";
 
 export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConfig) {
@@ -88,6 +89,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
       lerp: 0.12,
     });
     refs.lenisRef.current = lenis;
+    registerActiveLenis(lenis);
     const raf = (time: number) => {
       if (cancelled) return;
       lenis!.raf(time);
@@ -97,6 +99,7 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
     lenis.on("scroll", ScrollTrigger.update);
   } else {
     refs.lenisRef.current = null;
+    registerActiveLenis(null);
     ScrollTrigger.scrollerProxy(document.documentElement, {
       getBoundingClientRect() {
         return { top: 0, left: 0, width: window.innerWidth, height: staticViewportHeight };
@@ -234,10 +237,9 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
       window.removeEventListener("resize", measureCloudHeight);
     }
 
-    // Kill pin / scrub first so body overflow and wheel handlers are restored
-    // before Lenis is destroyed (otherwise wheel can stay swallowed).
+    // Fast path may already have killed pin / Lenis on CTA click.
     const master = ScrollTrigger.getById("master-scrolly");
-    master?.kill();
+    master?.kill(true);
     tl.kill();
     refs.masterTimelineRef.current = null;
 
@@ -250,10 +252,15 @@ export function runScrollytellingExperience(refs: SceneRefs, cfg: ExperienceConf
 
     if (lenis) {
       cancelAnimationFrame(rafId);
-      lenis.off("scroll", ScrollTrigger.update);
-      lenis.destroy();
+      try {
+        lenis.off("scroll", ScrollTrigger.update);
+        lenis.destroy();
+      } catch {
+        /* ignore double-destroy after prepareLeaveLanding */
+      }
     }
     refs.lenisRef.current = null;
+    registerActiveLenis(null);
 
     const html = document.documentElement;
     const body = document.body;

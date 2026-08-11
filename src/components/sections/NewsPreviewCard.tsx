@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useCanHover } from "@/hooks/use-can-hover";
+import { prepareLeaveLanding } from "@/lib/leaveLanding";
 import { useT } from "@/lib/lang";
 import { cn } from "@/lib/utils";
 
@@ -101,7 +102,9 @@ export function NewsPreviewCard({
       <Link
         to="/news/$slug"
         params={{ slug }}
+        preload="intent"
         data-cursor-hover
+        onClick={() => prepareLeaveLanding()}
         style={sharedStyle}
         className={cn(sharedClassName, "block")}
         {...hoverHandlers}

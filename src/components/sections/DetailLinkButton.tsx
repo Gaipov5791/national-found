@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { useCanHover } from "@/hooks/use-can-hover";
+import { prepareLeaveLanding } from "@/lib/leaveLanding";
 import { useT } from "@/lib/lang";
 import type { SectionSceneLabel } from "@/lib/sectionNavigation";
 import { cn } from "@/lib/utils";
@@ -31,9 +32,16 @@ export function DetailLinkButton({
   block = false,
 }: DetailLinkButtonProps) {
   const t = useT();
+  const router = useRouter();
   const [hovered, setHovered] = useState(false);
   const canHover = useCanHover();
   const resolvedLabel = label ?? t.common.more;
+
+  const preloadTarget = () => {
+    void router.preloadRoute({ to, hash: originSection }).catch(() => {
+      /* ignore preload failures */
+    });
+  };
 
   return (
     <span
@@ -46,12 +54,23 @@ export function DetailLinkButton({
       <Link
         to={to}
         hash={originSection}
+        preload="intent"
         data-cursor-hover
         data-detail-link
-        onMouseEnter={() => canHover && setHovered(true)}
+        onMouseEnter={() => {
+          if (canHover) setHovered(true);
+          preloadTarget();
+        }}
         onMouseLeave={() => setHovered(false)}
-        onFocus={() => setHovered(true)}
+        onFocus={() => {
+          setHovered(true);
+          preloadTarget();
+        }}
         onBlur={() => setHovered(false)}
+        onClick={() => {
+          // Unlock Lenis / ScrollTrigger pin before React unmounts the landing.
+          prepareLeaveLanding();
+        }}
         style={{
           transform: canHover && hovered ? "scale(1.1)" : "scale(1)",
           transition: "transform 0.3s ease-out, border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease",

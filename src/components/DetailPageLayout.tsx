@@ -1,43 +1,12 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { BrandLockup } from "@/components/BrandLockup";
 import type { AboutPerson } from "@/components/sections/sectionContent";
-import { clearScrollerProxy, ensureGsapPlugins } from "@/lib/gsap-client";
+import { SCENE_IMAGES } from "@/components/sections/sceneImages";
 import { LANGS, langDisplayLabel, useLang, useT } from "@/lib/lang";
+import { restoreDocumentScroll } from "@/lib/leaveLanding";
 import { preloadScrollytelling } from "@/lib/preloadScrollytelling";
 import { getSectionSceneLabel } from "@/lib/sectionNavigation";
-import { SCENE_IMAGES } from "@/components/sections/sceneImages";
-
-/** Clear leftover Lenis / ScrollTrigger scroll locks after leaving the landing. */
-function restoreDocumentScroll() {
-  const html = document.documentElement;
-  const body = document.body;
-
-  for (const className of Array.from(html.classList)) {
-    if (className === "lenis" || className.startsWith("lenis-")) {
-      html.classList.remove(className);
-    }
-  }
-
-  html.style.removeProperty("overflow");
-  html.style.removeProperty("height");
-  html.style.removeProperty("touch-action");
-  body.style.removeProperty("overflow");
-  body.style.removeProperty("height");
-  body.style.removeProperty("touch-action");
-
-  ensureGsapPlugins();
-  if (ScrollTrigger.getAll().length > 0) {
-    ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    try {
-      ScrollTrigger.normalizeScroll(false);
-    } catch {
-      /* ignore */
-    }
-  }
-  clearScrollerProxy();
-}
 
 type DetailPageLayoutProps = {
   title: string;
@@ -56,6 +25,7 @@ export function DetailPageLayout({
 }: DetailPageLayoutProps) {
   const t = useT();
   const { lang, setLang } = useLang();
+  const router = useRouter();
   const locationHash = useRouterState({
     select: (state) => state.location.hash,
   });
@@ -63,8 +33,27 @@ export function DetailPageLayout({
 
   useEffect(() => {
     restoreDocumentScroll();
-    void preloadScrollytelling();
+    // Don't contend with detail-page paint — warm the home chunk only when idle.
+    const supportsIdle = typeof window.requestIdleCallback === "function";
+    const idleId = supportsIdle
+      ? window.requestIdleCallback(() => {
+          void preloadScrollytelling();
+        }, { timeout: 4000 })
+      : window.setTimeout(() => {
+          void preloadScrollytelling();
+        }, 1500);
+    return () => {
+      if (supportsIdle) window.cancelIdleCallback(idleId as number);
+      else window.clearTimeout(idleId as number);
+    };
   }, []);
+
+  const preloadHome = () => {
+    void router.preloadRoute({ to: "/", hash: returnSection ?? undefined }).catch(() => {
+      /* ignore */
+    });
+    void preloadScrollytelling();
+  };
 
   return (
     <main className="relative isolate min-h-screen w-full overflow-hidden bg-black px-4 py-10 font-display text-white sm:px-8 sm:py-16 lg:px-12">
@@ -80,7 +69,14 @@ export function DetailPageLayout({
 
       <div className={`mx-auto w-full ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/20 pb-6 sm:gap-4">
-          <Link to="/" hash={returnSection ?? undefined} className="inline-flex max-w-[min(100%,20rem)] items-center sm:max-w-[24rem]">
+          <Link
+            to="/"
+            hash={returnSection ?? undefined}
+            preload="intent"
+            onMouseEnter={preloadHome}
+            onFocus={preloadHome}
+            className="inline-flex max-w-[min(100%,20rem)] items-center sm:max-w-[24rem]"
+          >
             <BrandLockup lang={lang} tone="white" size="sm" />
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
@@ -104,6 +100,9 @@ export function DetailPageLayout({
             <Link
               to="/"
               hash={returnSection ?? undefined}
+              preload="intent"
+              onMouseEnter={preloadHome}
+              onFocus={preloadHome}
               className="text-xs font-semibold tracking-[0.12em] text-white/70 transition hover:text-[color:var(--gold)] sm:text-sm"
             >
               {t.common.backHome}
