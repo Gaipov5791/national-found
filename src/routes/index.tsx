@@ -12,11 +12,7 @@ const PANORAMA_FALLBACK = (
     aria-label="Загрузка"
   >
     <picture className="absolute inset-0 block h-full w-full">
-      <source
-        media="(max-width: 767px)"
-        srcSet={SCENE_IMAGES.panoramaMobile}
-        type="image/webp"
-      />
+      <source media="(max-width: 767px)" srcSet={SCENE_IMAGES.panoramaMobile} type="image/webp" />
       <img
         src={SCENE_IMAGES.panorama}
         alt=""
@@ -30,7 +26,9 @@ const PANORAMA_FALLBACK = (
 );
 
 function ScrollytellingGate() {
-  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(() => getCachedScrollytelling());
+  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(() =>
+    getCachedScrollytelling(),
+  );
 
   useEffect(() => {
     const cached = getCachedScrollytelling();
