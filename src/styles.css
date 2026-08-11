@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "./styles/gotham.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -31,8 +32,8 @@
   --color-ink: var(--ink);
   --color-platinum: var(--platinum);
   --color-gold: var(--gold);
-  --font-sans: "Gotham", "Montserrat", "Geometria", system-ui, sans-serif;
-  --font-display: "Gotham", "Montserrat", "Geometria", system-ui, sans-serif;
+  --font-sans: "Gotham", system-ui, sans-serif;
+  --font-display: "Gotham", system-ui, sans-serif;
   --animate-news-marquee: news-marquee 36s linear infinite;
 
   @keyframes news-marquee {
@@ -53,7 +54,7 @@
   --card-foreground: oklch(0.18 0.06 255);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.06 255);
-  --primary: oklch(0.30 0.12 258);
+  --primary: oklch(0.3 0.12 258);
   --primary-foreground: oklch(0.98 0.005 240);
   --secondary: oklch(0.94 0.012 248);
   --secondary-foreground: oklch(0.22 0.08 258);
@@ -67,7 +68,7 @@
   --input: oklch(0.9 0.015 248);
   --ring: oklch(0.7 0.05 256);
 
-  --ink: oklch(0.22 0.10 258);
+  --ink: oklch(0.22 0.1 258);
   --platinum: oklch(0.93 0.008 250);
   --gold: oklch(0.78 0.14 86);
 }

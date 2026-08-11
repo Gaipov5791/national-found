@@ -1,0 +1,4 @@
+Font binaries in this folder are served under the CSS family name "Gotham".
+Glyph source: Montserrat (SIL Open Font License), via @fontsource/montserrat.
+Replace these .woff2 files with licensed Hoefler&Co Gotham webfonts when available;
+keep the same filenames (or update src/styles/gotham.css) to swap the brand face.
