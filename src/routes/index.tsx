@@ -1,19 +1,40 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ComponentType } from "react";
 import { CustomCursor } from "@/components/CustomCursor";
+import { SCENE_IMAGES } from "@/components/sections/sceneImages";
 import { getCachedScrollytelling, preloadScrollytelling } from "@/lib/preloadScrollytelling";
 
-const MOUNTAIN_FALLBACK = (
+/** Kick off the heavy chunk as soon as this module evaluates on the client. */
+if (typeof window !== "undefined") {
+  void preloadScrollytelling();
+}
+
+/** Lightweight peaks crop — same framing as the scrollytelling hero stop. */
+const HERO_FALLBACK = (
   <div
-    className="min-h-screen bg-cover bg-center"
-    style={{ backgroundImage: "url('/images/mountains.jpg')" }}
+    className="relative min-h-screen overflow-hidden bg-[#051426]"
     aria-busy="true"
     aria-label="Загрузка"
-  />
+  >
+    <picture className="absolute inset-0 block h-full w-full">
+      <source srcSet={SCENE_IMAGES.heroWebp} type="image/webp" />
+      <img
+        src={SCENE_IMAGES.hero}
+        alt=""
+        fetchPriority="high"
+        decoding="async"
+        className="h-full w-full object-cover"
+        style={{ objectPosition: "center 14%" }}
+      />
+    </picture>
+    <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
+  </div>
 );
 
 function ScrollytellingGate() {
-  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(() => getCachedScrollytelling());
+  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(() =>
+    getCachedScrollytelling(),
+  );
 
   useEffect(() => {
     const cached = getCachedScrollytelling();
@@ -32,8 +53,15 @@ function ScrollytellingGate() {
     };
   }, []);
 
+  // Warm the full panorama in parallel with the JS chunk (does not block LCP).
+  useEffect(() => {
+    const img = new Image();
+    img.decoding = "async";
+    img.src = SCENE_IMAGES.panoramaWebp;
+  }, []);
+
   if (!Scrollytelling) {
-    return MOUNTAIN_FALLBACK;
+    return HERO_FALLBACK;
   }
 
   return <Scrollytelling />;
@@ -49,18 +77,21 @@ export const Route = createFileRoute("/")({
           "Национальный инвестиционный фонд Кыргызской Республики — инвестиции в проекты будущего. 12 проектов в реализации.",
       },
     ],
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: SCENE_IMAGES.heroWebp,
+        type: "image/webp",
+      },
+    ],
   }),
   component: Index,
 });
 
 function Index() {
   return (
-    <main className="relative isolate min-h-screen text-foreground">
-      <div
-        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/mountains.jpg')" }}
-        aria-hidden
-      />
+    <main className="relative isolate min-h-screen bg-[#051426] text-foreground">
       <ScrollytellingGate />
       <CustomCursor />
     </main>

@@ -1,10 +1,7 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
 import { cn } from "@/lib/utils";
-import {
-  type SceneAnimationContext,
-  type SceneTimeline,
-} from "./sceneAnimationShared";
+import { type SceneAnimationContext, type SceneTimeline } from "./sceneAnimationShared";
 import { SCENE_IMAGES } from "./sceneImages";
 
 export type PanoramaScrollSceneRefs = {
@@ -74,11 +71,7 @@ function mobilePanTranslateY(percentY: number): string {
   return `${-(percentY / 100) * maxPanVh}vh`;
 }
 
-function applyPanoramaPosition(
-  img: HTMLImageElement | null,
-  percentY: number,
-  mobile: boolean
-) {
+function applyPanoramaPosition(img: HTMLImageElement | null, percentY: number, mobile: boolean) {
   if (!img) return;
   if (mobile) {
     gsap.set(img, { y: mobilePanTranslateY(percentY) });
@@ -95,7 +88,7 @@ function tweenPanoramaPan(
   targetY: number,
   duration: number,
   position: number,
-  mobile: boolean
+  mobile: boolean,
 ) {
   tl.to(
     pan,
@@ -105,11 +98,14 @@ function tweenPanoramaPan(
       ease: "none",
       onUpdate: () => applyPanoramaPosition(img, pan.y, mobile),
     },
-    position
+    position,
   );
 }
 
-export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs, ctx: SceneAnimationContext) {
+export function preparePanoramaScrollScene(
+  refs: PanoramaScrollSceneRefs,
+  ctx: SceneAnimationContext,
+) {
   const { mobile } = ctx;
   const origin = getPanoramaOrigin(mobile);
   const stops = getPanoramaStops(mobile);
@@ -130,16 +126,10 @@ export function preparePanoramaScrollScene(refs: PanoramaScrollSceneRefs, ctx: S
 export function panoramaYAtTime(
   time: number,
   timings: SceneAnimationContext["timings"],
-  mobile: boolean
+  mobile: boolean,
 ): number {
   const stops = getPanoramaStops(mobile);
-  const {
-    financeEnterT,
-    directionsEnterT,
-    msbEnterT,
-    partnersEnterT,
-    newsEnterT,
-  } = timings;
+  const { financeEnterT, directionsEnterT, msbEnterT, partnersEnterT, newsEnterT } = timings;
 
   const lerp = (a: number, b: number, t: number) => a + (b - a) * Math.max(0, Math.min(1, t));
   const seg = (start: number, end: number) => {
@@ -148,9 +138,12 @@ export function panoramaYAtTime(
   };
 
   if (time < financeEnterT) return stops.peaks;
-  if (time < directionsEnterT) return lerp(stops.peaks, stops.sonKul, seg(financeEnterT, directionsEnterT));
-  if (time < msbEnterT) return lerp(stops.sonKul, stops.industrial, seg(directionsEnterT, msbEnterT));
-  if (time < partnersEnterT) return lerp(stops.industrial, stops.pastures, seg(msbEnterT, partnersEnterT));
+  if (time < directionsEnterT)
+    return lerp(stops.peaks, stops.sonKul, seg(financeEnterT, directionsEnterT));
+  if (time < msbEnterT)
+    return lerp(stops.sonKul, stops.industrial, seg(directionsEnterT, msbEnterT));
+  if (time < partnersEnterT)
+    return lerp(stops.industrial, stops.pastures, seg(msbEnterT, partnersEnterT));
   if (time < newsEnterT) return lerp(stops.pastures, stops.fields, seg(partnersEnterT, newsEnterT));
   return stops.fields;
 }
@@ -160,15 +153,19 @@ export function syncPanoramaToTimelineTime(
   refs: PanoramaScrollSceneRefs,
   time: number,
   timings: SceneAnimationContext["timings"],
-  mobile: boolean
+  mobile: boolean,
 ) {
-  applyPanoramaPosition(refs.panoramaImgRef.current, panoramaYAtTime(time, timings, mobile), mobile);
+  applyPanoramaPosition(
+    refs.panoramaImgRef.current,
+    panoramaYAtTime(time, timings, mobile),
+    mobile,
+  );
 }
 
 export function animatePanoramaScrollScene(
   tl: SceneTimeline,
   refs: PanoramaScrollSceneRefs,
-  ctx: SceneAnimationContext
+  ctx: SceneAnimationContext,
 ) {
   const { timings, mobile } = ctx;
   const {
@@ -198,7 +195,7 @@ export function animatePanoramaScrollScene(
     refs.permanentCloudRef.current,
     { opacity: 0, yPercent: -40 },
     { opacity: 1, yPercent: 0, duration: cloudRollDur, ease: "power2.inOut" },
-    decreeExitT
+    decreeExitT,
   );
   tl.to(img, { scale: 1, duration: peakZoomDur, ease: "none" }, decreeExitT);
 
@@ -211,7 +208,7 @@ export function animatePanoramaScrollScene(
     stops.sonKul,
     Math.max(0.001, directionsEnterT - financeEnterT),
     financeEnterT,
-    mobile
+    mobile,
   );
   tweenPanoramaPan(
     tl,
@@ -220,7 +217,7 @@ export function animatePanoramaScrollScene(
     stops.industrial,
     Math.max(0.001, msbEnterT - directionsEnterT),
     directionsEnterT,
-    mobile
+    mobile,
   );
   tweenPanoramaPan(
     tl,
@@ -229,7 +226,7 @@ export function animatePanoramaScrollScene(
     stops.pastures,
     Math.max(0.001, partnersEnterT - msbEnterT),
     msbEnterT,
-    mobile
+    mobile,
   );
   tweenPanoramaPan(
     tl,
@@ -238,7 +235,7 @@ export function animatePanoramaScrollScene(
     stops.fields,
     Math.max(0.001, newsEnterT - partnersEnterT),
     partnersEnterT,
-    mobile
+    mobile,
   );
 
   // Footer — fade mountains to darkness as premium footer arrives
@@ -246,12 +243,12 @@ export function animatePanoramaScrollScene(
   tl.to(
     refs.panoramaBgRef.current,
     { opacity: 0, duration: footerFadeDur, ease: "power2.inOut" },
-    footerEnterT
+    footerEnterT,
   );
   tl.to(
     refs.permanentCloudRef.current,
     { opacity: 0, duration: footerFadeDur, ease: "power2.inOut" },
-    footerEnterT
+    footerEnterT,
   );
   tl.set(refs.panoramaBgRef.current, { visibility: "hidden" }, footerEnterT + footerFadeDur);
 }
@@ -269,23 +266,25 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
         <div
           ref={panoramaBgRef}
           data-cursor-surface="dark"
-          className="pointer-events-none fixed inset-0 z-0 h-[100svh] w-full overflow-hidden md:h-screen"
+          className="pointer-events-none fixed inset-0 z-0 h-[100svh] w-full overflow-hidden bg-[#051426] bg-cover bg-no-repeat md:h-screen"
+          style={{
+            // Cached LCP hero holds the peaks framing until the tall strip decodes.
+            backgroundImage: `url('${SCENE_IMAGES.heroWebp}')`,
+            backgroundPosition: `center ${PANORAMA_STOPS.peaks}%`,
+          }}
           aria-hidden
         >
           <picture className="absolute inset-0 block h-full w-full overflow-hidden">
-            <source
-              media="(max-width: 767px)"
-              srcSet={SCENE_IMAGES.panoramaMobile}
-              type="image/webp"
-            />
+            <source srcSet={SCENE_IMAGES.panoramaWebp} type="image/webp" />
             <img
               ref={panoramaImgRef}
               src={SCENE_IMAGES.panorama}
               alt=""
+              decoding="async"
               className={cn(
                 "h-full w-full object-cover will-change-[transform,object-position]",
                 "max-md:absolute max-md:left-0 max-md:top-0 max-md:h-[500vh] max-md:w-full max-md:max-w-none",
-                "max-md:[transform-origin:center_10%] md:[transform-origin:center_28%]"
+                "max-md:[transform-origin:center_10%] md:[transform-origin:center_28%]",
               )}
               style={{ objectPosition: `center ${PANORAMA_STOPS.peaks}%` }}
             />
@@ -333,5 +332,5 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
         </div>
       </>
     );
-  }
+  },
 );
