@@ -20,6 +20,23 @@ export type NewsItem = {
  */
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
+    id: "office-renovation-repeat",
+    date: "2026-08-11",
+    image: "/images/news/office-renovation.png",
+    title: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» ПОВТОРНО запрашивает коммерческие предложения на выполнение работ по ремонту офисного здания.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК кеңсе имаратын оңдоо иштерин аткаруу боюнча коммерциялык сунуштарды КАЙРАДАН сурайт.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” REPEATEDLY requests commercial proposals for office building renovation works.",
+      ZH: "吉尔吉斯共和国国家投资基金再次征集办公楼装修工程商业报价。",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» приглашает заинтересованных поставщиков услуг представить коммерческие предложения на выполнение работ по ремонту офисного здания. Техническое задание прилагается.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК кеңсе имаратын оңдоо иштерин аткаруу боюнча коммерциялык сунуштарды тапшырууга кызыкдар кызмат көрсөтүүчүлөрдү чакырат. Техникалык тапшырма тиркелет.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” invites interested service providers to submit commercial proposals for office building renovation works. The terms of reference are attached.",
+      ZH: "吉尔吉斯共和国国家投资基金诚邀相关服务供应商就办公楼装修工程提交商业报价。技术任务书附后。",
+    },
+  },
+  {
     id: "audit-2025",
     date: "2026-08-05",
     image: "/images/news/audit-2025.png",
