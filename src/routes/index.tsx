@@ -2,29 +2,40 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ComponentType } from "react";
 import { CustomCursor } from "@/components/CustomCursor";
 import { getCachedScrollytelling, preloadScrollytelling } from "@/lib/preloadScrollytelling";
-
-const MOUNTAIN_FALLBACK = (
-  <div
-    className="min-h-screen bg-cover bg-center"
-    style={{ backgroundImage: "url('/images/mountains.jpg')" }}
-    aria-busy="true"
-    aria-label="Загрузка"
-  />
-);
+import { getPanoramaSrc, isImageDecoded, logBg, preloadDecodedImage } from "@/lib/sceneBackground";
 
 function ScrollytellingGate() {
-  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(() => getCachedScrollytelling());
+  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(() =>
+    typeof window === "undefined" ? null : getCachedScrollytelling(),
+  );
 
   useEffect(() => {
+    const panoramaSrc = getPanoramaSrc();
+    const jsCached = Boolean(getCachedScrollytelling());
+    logBg("gate:start", {
+      panoramaSrc,
+      jsCached,
+      imgCached: isImageDecoded(panoramaSrc),
+    });
+
+    // Decode in parallel with the JS chunk; do not block the UI on the 4.4MB panorama.
+    void preloadDecodedImage(panoramaSrc);
+
     const cached = getCachedScrollytelling();
     if (cached) {
+      logBg("gate:already-ready", { panoramaSrc });
       setScrollytelling(() => cached);
       return;
     }
 
     let cancelled = false;
     void preloadScrollytelling().then((component) => {
-      if (!cancelled) setScrollytelling(() => component);
+      if (cancelled) return;
+      logBg("gate:ready", {
+        panoramaSrc,
+        imgCached: isImageDecoded(panoramaSrc),
+      });
+      setScrollytelling(() => component);
     });
 
     return () => {
@@ -33,7 +44,7 @@ function ScrollytellingGate() {
   }, []);
 
   if (!Scrollytelling) {
-    return MOUNTAIN_FALLBACK;
+    return <div className="min-h-screen" aria-busy="true" aria-label="Загрузка" />;
   }
 
   return <Scrollytelling />;
@@ -56,11 +67,6 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <main className="relative isolate min-h-screen text-foreground">
-      <div
-        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/mountains.jpg')" }}
-        aria-hidden
-      />
       <ScrollytellingGate />
       <CustomCursor />
     </main>

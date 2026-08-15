@@ -1,11 +1,11 @@
-import { forwardRef, type RefObject } from "react";
+import { forwardRef, useEffect, useState, type RefObject } from "react";
 import gsap from "gsap";
+import { getPanoramaSrc, isImageDecoded, logBg, SCENE_IMAGES } from "@/lib/sceneBackground";
 import { cn } from "@/lib/utils";
 import {
   type SceneAnimationContext,
   type SceneTimeline,
 } from "./sceneAnimationShared";
-import { SCENE_IMAGES } from "./sceneImages";
 
 export type PanoramaScrollSceneRefs = {
   panoramaBgRef: RefObject<HTMLDivElement | null>;
@@ -264,6 +264,22 @@ export type PanoramaScrollSectionProps = {
 
 export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSectionProps>(
   function PanoramaScrollSection({ panoramaBgRef, panoramaImgRef, permanentCloudRef }, _ref) {
+    const [paintReady, setPaintReady] = useState(
+      () => typeof window !== "undefined" && isImageDecoded(getPanoramaSrc()),
+    );
+
+    useEffect(() => {
+      const img = panoramaImgRef.current;
+      if (!img?.complete || img.naturalWidth === 0) return;
+      logBg("panorama:img-ready", {
+        src: img.currentSrc || img.src,
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+        fromCache: isImageDecoded(getPanoramaSrc()),
+      });
+      setPaintReady(true);
+    }, [panoramaImgRef]);
+
     return (
       <>
         <div
@@ -282,10 +298,28 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
               ref={panoramaImgRef}
               src={SCENE_IMAGES.panorama}
               alt=""
+              fetchPriority="high"
+              decoding="async"
+              onLoad={(event) => {
+                const img = event.currentTarget;
+                logBg("panorama:img-load", {
+                  src: img.currentSrc || img.src,
+                  width: img.naturalWidth,
+                  height: img.naturalHeight,
+                });
+                setPaintReady(true);
+              }}
+              onError={() =>
+                logBg("panorama:img-error", {
+                  src: getPanoramaSrc(),
+                })
+              }
               className={cn(
-                "h-full w-full object-cover will-change-[transform,object-position]",
+                "h-full w-full object-cover will-change-[transform,object-position,opacity]",
                 "max-md:absolute max-md:left-0 max-md:top-0 max-md:h-[500vh] max-md:w-full max-md:max-w-none",
-                "max-md:[transform-origin:center_10%] md:[transform-origin:center_28%]"
+                "max-md:[transform-origin:center_10%] md:[transform-origin:center_28%]",
+                paintReady ? "opacity-100" : "opacity-0",
+                "transition-opacity duration-500 motion-reduce:transition-none",
               )}
               style={{ objectPosition: `center ${PANORAMA_STOPS.peaks}%` }}
             />

@@ -82,7 +82,7 @@
     border-color: var(--color-border);
   }
   html {
-    background-color: var(--color-background);
+    background-color: #071018;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     /* clip avoids the html+body overflow-x:hidden scroll lock quirk */
@@ -91,7 +91,7 @@
     scrollbar-gutter: stable;
   }
   body {
-    background-color: var(--color-background);
+    background-color: #071018;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     overflow-x: clip;

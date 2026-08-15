@@ -8,8 +8,10 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { SiteBackdrop } from "@/components/global/SiteBackdrop";
 import { Toaster } from "@/components/ui/sonner";
 import { LangProvider } from "@/lib/lang";
+import { MOUNTAINS_SRC, SCENE_IMAGES } from "@/lib/sceneBackground";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -92,6 +94,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "preload", href: MOUNTAINS_SRC, as: "image", type: "image/jpeg" },
+      {
+        rel: "preload",
+        href: encodeURI(SCENE_IMAGES.panorama),
+        as: "image",
+        type: "image/jpeg",
+        media: "(min-width: 768px)",
+      },
+      {
+        rel: "preload",
+        href: encodeURI(SCENE_IMAGES.panoramaMobile),
+        as: "image",
+        type: "image/webp",
+        media: "(max-width: 767px)",
+      },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -108,11 +125,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-[#071018]">
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="bg-[#071018]">
         {children}
         <Scripts />
       </body>
@@ -126,6 +143,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LangProvider initialLang="RU">
+        <SiteBackdrop />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
         <Toaster />
