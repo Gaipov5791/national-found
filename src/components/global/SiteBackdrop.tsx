@@ -4,9 +4,9 @@ import { getPanoramaSrc, logBg, preloadSceneBackgrounds } from "@/lib/sceneBackg
 import { cn } from "@/lib/utils";
 
 /**
- * Persistent горы-панорама layer. Stays mounted across home ↔ detail routes
- * so the photo is never torn down (that swap was the flicker).
+ * Persistent overlay above html's горы-панорама background.
  * mountains.jpg is intentionally unused for now.
+ * No extra panorama paint and no backdrop-blur — both made internal pages stall.
  */
 export function SiteBackdrop() {
   const pathname = useRouterState({
@@ -23,20 +23,13 @@ export function SiteBackdrop() {
   }, [pathname, isHome]);
 
   return (
-    <>
-      <div
-        data-bg="panorama"
-        className="pointer-events-none fixed inset-0 z-0 bg-cover"
-        aria-hidden
-      />
-      <div
-        data-bg="detail-veil"
-        className={cn(
-          "pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,20,38,0.68),rgba(8,28,49,0.78))] backdrop-blur-[16px] transition-opacity duration-300",
-          isHome ? "opacity-0" : "opacity-100",
-        )}
-        aria-hidden
-      />
-    </>
+    <div
+      data-bg="detail-veil"
+      className={cn(
+        "pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,20,38,0.68),rgba(8,28,49,0.78))] transition-opacity duration-300",
+        isHome ? "opacity-0" : "opacity-100",
+      )}
+      aria-hidden
+    />
   );
 }

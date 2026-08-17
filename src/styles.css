@@ -106,17 +106,6 @@
       background-image: url("/images/горы-панорама.webp");
     }
   }
-
-  [data-bg="panorama"] {
-    background-image: url("/images/горы-панорама.jpeg");
-    background-position: center 14%;
-    background-repeat: no-repeat;
-  }
-  @media (max-width: 767px) {
-    [data-bg="panorama"] {
-      background-image: url("/images/горы-панорама.webp");
-    }
-  }
 }
 
 @media (max-width: 767px) {
@@ -126,12 +115,14 @@
   }
 }
 
-/* hide default cursor only on the landing (CustomCursor mounts and sets this class) */
+/* hide default cursor while the custom cursor is mounted */
 @media (pointer: fine) {
   html.custom-cursor-active,
   html.custom-cursor-active body,
   html.custom-cursor-active a,
-  html.custom-cursor-active button {
+  html.custom-cursor-active button,
+  html.custom-cursor-active [role="menuitem"],
+  html.custom-cursor-active [data-radix-collection-item] {
     cursor: none;
   }
 }

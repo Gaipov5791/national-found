@@ -5,7 +5,7 @@ import { BrandLockup } from "@/components/BrandLockup";
 import type { AboutPerson } from "@/components/sections/sectionContent";
 import { clearScrollerProxy, ensureGsapPlugins } from "@/lib/gsap-client";
 import { LANGS, langDisplayLabel, useLang, useT } from "@/lib/lang";
-import { preloadScrollytelling } from "@/lib/preloadScrollytelling";
+import { preloadScrollytellingWhenIdle } from "@/lib/preloadScrollytelling";
 import { logBg } from "@/lib/sceneBackground";
 import { getSectionSceneLabel } from "@/lib/sectionNavigation";
 
@@ -64,7 +64,7 @@ export function DetailPageLayout({
   useEffect(() => {
     logBg("detail:mount", { title });
     restoreDocumentScroll();
-    void preloadScrollytelling();
+    preloadScrollytellingWhenIdle();
     return () => {
       logBg("detail:unmount", { title });
     };

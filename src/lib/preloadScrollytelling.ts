@@ -23,3 +23,20 @@ export function preloadScrollytelling() {
   });
   return scrollytellingImport;
 }
+
+/** Warm the landing chunk after the current page is interactive. */
+export function preloadScrollytellingWhenIdle() {
+  if (typeof window === "undefined") return;
+  if (cachedScrollytelling || scrollytellingImport) return;
+
+  const run = () => {
+    void preloadScrollytelling();
+  };
+
+  if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(run, { timeout: 2500 });
+    return;
+  }
+
+  window.setTimeout(run, 600);
+}

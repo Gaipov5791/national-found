@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ComponentType } from "react";
-import { CustomCursor } from "@/components/CustomCursor";
 import { getCachedScrollytelling, preloadScrollytelling } from "@/lib/preloadScrollytelling";
 import { getPanoramaSrc, isImageDecoded, logBg, preloadDecodedImage } from "@/lib/sceneBackground";
 
@@ -68,7 +67,6 @@ function Index() {
   return (
     <main className="relative z-10 isolate min-h-screen text-foreground">
       <ScrollytellingGate />
-      <CustomCursor />
     </main>
   );
 }

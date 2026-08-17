@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { SiteBackdrop } from "@/components/global/SiteBackdrop";
 import { Toaster } from "@/components/ui/sonner";
+import { CustomCursor } from "@/components/CustomCursor";
 import { LangProvider } from "@/lib/lang";
 import { SCENE_IMAGES } from "@/lib/sceneBackground";
 
@@ -162,6 +163,7 @@ function RootComponent() {
         <SiteBackdrop />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
+        <CustomCursor />
         <Toaster />
       </LangProvider>
     </QueryClientProvider>
