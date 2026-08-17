@@ -106,6 +106,16 @@
       background-image: url("/images/горы-панорама.webp");
     }
   }
+
+  [data-bg="detail-blur"] {
+    background-image: url("/images/горы-панорама.jpeg");
+    background-position: center 14%;
+  }
+  @media (max-width: 767px) {
+    [data-bg="detail-blur"] {
+      background-image: url("/images/горы-панорама.webp");
+    }
+  }
 }
 
 @media (max-width: 767px) {
