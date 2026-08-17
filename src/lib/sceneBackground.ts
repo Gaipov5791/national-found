@@ -1,6 +1,8 @@
 export const SCENE_IMAGES = {
   panorama: "/images/горы-панорама.jpeg",
   panoramaMobile: "/images/горы-панорама.webp",
+  hero: "/images/panorama-hero.jpg",
+  heroMobile: "/images/panorama-hero.webp",
 } as const;
 
 const decodedImages = new Set<string>();

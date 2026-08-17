@@ -114,14 +114,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       {
         rel: "preload",
-        href: encodeURI(SCENE_IMAGES.panorama),
+        href: SCENE_IMAGES.hero,
         as: "image",
         type: "image/jpeg",
         media: "(min-width: 768px)",
       },
       {
         rel: "preload",
-        href: encodeURI(SCENE_IMAGES.panoramaMobile),
+        href: SCENE_IMAGES.heroMobile,
         as: "image",
         type: "image/webp",
         media: "(max-width: 767px)",

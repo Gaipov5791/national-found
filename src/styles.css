@@ -83,7 +83,7 @@
   }
   html {
     background-color: #071018;
-    background-image: url("/images/горы-панорама.jpeg");
+    background-image: url("/images/panorama-hero.jpg");
     background-size: cover;
     background-position: center 14%;
     background-repeat: no-repeat;
@@ -103,17 +103,17 @@
   }
   @media (max-width: 767px) {
     html {
-      background-image: url("/images/горы-панорама.webp");
+      background-image: url("/images/panorama-hero.webp");
     }
   }
 
-  [data-bg="detail-blur"] {
-    background-image: url("/images/горы-панорама.jpeg");
+  [data-bg="detail-blur"].is-active {
+    background-image: url("/images/panorama-hero.jpg");
     background-position: center 14%;
   }
   @media (max-width: 767px) {
-    [data-bg="detail-blur"] {
-      background-image: url("/images/горы-панорама.webp");
+    [data-bg="detail-blur"].is-active {
+      background-image: url("/images/panorama-hero.webp");
     }
   }
 }

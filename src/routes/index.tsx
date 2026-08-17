@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ComponentType } from "react";
 import { getCachedScrollytelling, preloadScrollytelling } from "@/lib/preloadScrollytelling";
-import { getPanoramaSrc, isImageDecoded, logBg, preloadDecodedImage } from "@/lib/sceneBackground";
+import { logBg } from "@/lib/sceneBackground";
+
+if (typeof window !== "undefined") {
+  void preloadScrollytelling();
+}
 
 function ScrollytellingGate() {
   const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(() =>
@@ -9,20 +13,10 @@ function ScrollytellingGate() {
   );
 
   useEffect(() => {
-    const panoramaSrc = getPanoramaSrc();
-    const jsCached = Boolean(getCachedScrollytelling());
-    logBg("gate:start", {
-      panoramaSrc,
-      jsCached,
-      imgCached: isImageDecoded(panoramaSrc),
-    });
-
-    // Decode in parallel with the JS chunk; do not block the UI on the 4.4MB panorama.
-    void preloadDecodedImage(panoramaSrc);
-
     const cached = getCachedScrollytelling();
+    logBg("gate:start", { jsCached: Boolean(cached) });
     if (cached) {
-      logBg("gate:already-ready", { panoramaSrc });
+      logBg("gate:already-ready");
       setScrollytelling(() => cached);
       return;
     }
@@ -30,10 +24,7 @@ function ScrollytellingGate() {
     let cancelled = false;
     void preloadScrollytelling().then((component) => {
       if (cancelled) return;
-      logBg("gate:ready", {
-        panoramaSrc,
-        imgCached: isImageDecoded(panoramaSrc),
-      });
+      logBg("gate:ready");
       setScrollytelling(() => component);
     });
 

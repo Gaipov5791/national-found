@@ -1,11 +1,10 @@
 import { useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { getPanoramaSrc, logBg, preloadSceneBackgrounds } from "@/lib/sceneBackground";
+import { logBg } from "@/lib/sceneBackground";
 import { cn } from "@/lib/utils";
 
 /**
- * Persistent overlay above html's горы-панорама background.
- * Blur uses filter on a viewport-sized cover crop (not backdrop-filter on the 8k strip).
+ * Overlay above the lightweight hero still. Full 8k strip is only used by the landing <img>.
  */
 export function SiteBackdrop() {
   const pathname = useRouterState({
@@ -14,11 +13,7 @@ export function SiteBackdrop() {
   const isHome = pathname === "/";
 
   useEffect(() => {
-    void preloadSceneBackgrounds();
-  }, []);
-
-  useEffect(() => {
-    logBg("backdrop:route", { pathname, isHome, panorama: getPanoramaSrc() });
+    logBg("backdrop:route", { pathname, isHome });
   }, [pathname, isHome]);
 
   return (
@@ -27,7 +22,7 @@ export function SiteBackdrop() {
         data-bg="detail-blur"
         className={cn(
           "pointer-events-none fixed inset-[-40px] z-0 scale-105 bg-cover bg-no-repeat blur-[20px] transition-opacity duration-300",
-          isHome ? "opacity-0" : "opacity-100",
+          isHome ? "opacity-0" : "is-active opacity-100",
         )}
         aria-hidden
       />
