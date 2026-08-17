@@ -1,5 +1,3 @@
-export const MOUNTAINS_SRC = "/images/mountains.jpg";
-
 export const SCENE_IMAGES = {
   panorama: "/images/горы-панорама.jpeg",
   panoramaMobile: "/images/горы-панорама.webp",
@@ -8,7 +6,7 @@ export const SCENE_IMAGES = {
 const decodedImages = new Set<string>();
 const inflight = new Map<string, Promise<void>>();
 
-/** DevTools filter: `[nif-bg]`. Kept on so we can confirm flicker sources in preview. */
+/** DevTools filter: `[nif-bg]`. */
 export function logBg(event: string, detail?: Record<string, unknown>) {
   if (typeof window === "undefined") return;
 
@@ -71,6 +69,6 @@ export function preloadDecodedImage(src: string): Promise<void> {
 
 export function preloadSceneBackgrounds() {
   const panoramaSrc = getPanoramaSrc();
-  logBg("preload:scene-backgrounds", { mountains: MOUNTAINS_SRC, panoramaSrc });
-  return Promise.allSettled([preloadDecodedImage(MOUNTAINS_SRC), preloadDecodedImage(panoramaSrc)]);
+  logBg("preload:scene-backgrounds", { panoramaSrc });
+  return preloadDecodedImage(panoramaSrc);
 }

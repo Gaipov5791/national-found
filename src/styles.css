@@ -53,7 +53,7 @@
   --card-foreground: oklch(0.18 0.06 255);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.06 255);
-  --primary: oklch(0.30 0.12 258);
+  --primary: oklch(0.3 0.12 258);
   --primary-foreground: oklch(0.98 0.005 240);
   --secondary: oklch(0.94 0.012 248);
   --secondary-foreground: oklch(0.22 0.08 258);
@@ -67,7 +67,7 @@
   --input: oklch(0.9 0.015 248);
   --ring: oklch(0.7 0.05 256);
 
-  --ink: oklch(0.22 0.10 258);
+  --ink: oklch(0.22 0.1 258);
   --platinum: oklch(0.93 0.008 250);
   --gold: oklch(0.78 0.14 86);
 }
@@ -83,6 +83,10 @@
   }
   html {
     background-color: #071018;
+    background-image: url("/images/горы-панорама.jpeg");
+    background-size: cover;
+    background-position: center 14%;
+    background-repeat: no-repeat;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     /* clip avoids the html+body overflow-x:hidden scroll lock quirk */
@@ -91,11 +95,27 @@
     scrollbar-gutter: stable;
   }
   body {
-    background-color: #071018;
+    background-color: transparent;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     overflow-x: clip;
     overscroll-behavior-y: none;
+  }
+  @media (max-width: 767px) {
+    html {
+      background-image: url("/images/горы-панорама.webp");
+    }
+  }
+
+  [data-bg="panorama"] {
+    background-image: url("/images/горы-панорама.jpeg");
+    background-position: center 14%;
+    background-repeat: no-repeat;
+  }
+  @media (max-width: 767px) {
+    [data-bg="panorama"] {
+      background-image: url("/images/горы-панорама.webp");
+    }
   }
 }
 

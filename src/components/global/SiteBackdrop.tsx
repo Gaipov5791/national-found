@@ -1,11 +1,12 @@
 import { useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { logBg, MOUNTAINS_SRC, preloadSceneBackgrounds } from "@/lib/sceneBackground";
+import { getPanoramaSrc, logBg, preloadSceneBackgrounds } from "@/lib/sceneBackground";
 import { cn } from "@/lib/utils";
 
 /**
- * Persistent mountains.jpg layer. Stays mounted across home ↔ detail routes
- * so CSS background-image is not torn down and re-decoded (the flicker source).
+ * Persistent горы-панорама layer. Stays mounted across home ↔ detail routes
+ * so the photo is never torn down (that swap was the flicker).
+ * mountains.jpg is intentionally unused for now.
  */
 export function SiteBackdrop() {
   const pathname = useRouterState({
@@ -18,21 +19,20 @@ export function SiteBackdrop() {
   }, []);
 
   useEffect(() => {
-    logBg("backdrop:route", { pathname, isHome, mountains: MOUNTAINS_SRC });
+    logBg("backdrop:route", { pathname, isHome, panorama: getPanoramaSrc() });
   }, [pathname, isHome]);
 
   return (
     <>
       <div
-        data-bg="mountains"
-        className="pointer-events-none fixed inset-0 -z-20 bg-cover bg-center"
-        style={{ backgroundImage: `url("${MOUNTAINS_SRC}")` }}
+        data-bg="panorama"
+        className="pointer-events-none fixed inset-0 z-0 bg-cover"
         aria-hidden
       />
       <div
         data-bg="detail-veil"
         className={cn(
-          "pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,20,38,0.68),rgba(8,28,49,0.78))] backdrop-blur-[16px] transition-opacity duration-300",
+          "pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,20,38,0.68),rgba(8,28,49,0.78))] backdrop-blur-[16px] transition-opacity duration-300",
           isHome ? "opacity-0" : "opacity-100",
         )}
         aria-hidden

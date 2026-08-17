@@ -11,7 +11,7 @@ import { useEffect, type ReactNode } from "react";
 import { SiteBackdrop } from "@/components/global/SiteBackdrop";
 import { Toaster } from "@/components/ui/sonner";
 import { LangProvider } from "@/lib/lang";
-import { MOUNTAINS_SRC, SCENE_IMAGES } from "@/lib/sceneBackground";
+import { SCENE_IMAGES } from "@/lib/sceneBackground";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -82,19 +82,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Национальный инвестиционный фонд Кыргызской Республики" },
-      { name: "description", content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР" },
+      {
+        name: "description",
+        content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР",
+      },
       { property: "og:title", content: "Национальный инвестиционный фонд Кыргызской Республики" },
-      { property: "og:description", content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР" },
+      {
+        property: "og:description",
+        content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:title", content: "Национальный инвестиционный фонд Кыргызской Республики" },
-      { name: "twitter:description", content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР" },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png" },
+      {
+        name: "twitter:description",
+        content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png",
+      },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "preload", href: MOUNTAINS_SRC, as: "image", type: "image/jpeg" },
       {
         rel: "preload",
         href: encodeURI(SCENE_IMAGES.panorama),
@@ -125,11 +141,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="bg-[#071018]">
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
-      <body className="bg-[#071018]">
+      <body>
         {children}
         <Scripts />
       </body>
