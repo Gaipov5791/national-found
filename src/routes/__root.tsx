@@ -8,8 +8,11 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { SiteBackdrop } from "@/components/global/SiteBackdrop";
 import { Toaster } from "@/components/ui/sonner";
+import { CustomCursor } from "@/components/CustomCursor";
 import { LangProvider } from "@/lib/lang";
+import { SCENE_IMAGES } from "@/lib/sceneBackground";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -80,18 +83,49 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Национальный инвестиционный фонд Кыргызской Республики" },
-      { name: "description", content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР" },
+      {
+        name: "description",
+        content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР",
+      },
       { property: "og:title", content: "Национальный инвестиционный фонд Кыргызской Республики" },
-      { property: "og:description", content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР" },
+      {
+        property: "og:description",
+        content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:title", content: "Национальный инвестиционный фонд Кыргызской Республики" },
-      { name: "twitter:description", content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР" },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png" },
+      {
+        name: "twitter:description",
+        content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png",
+      },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      {
+        rel: "preload",
+        href: SCENE_IMAGES.hero,
+        as: "image",
+        type: "image/jpeg",
+        media: "(min-width: 768px)",
+      },
+      {
+        rel: "preload",
+        href: SCENE_IMAGES.heroMobile,
+        as: "image",
+        type: "image/webp",
+        media: "(max-width: 767px)",
+      },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -126,8 +160,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LangProvider initialLang="RU">
+        <SiteBackdrop />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
+        <CustomCursor />
         <Toaster />
       </LangProvider>
     </QueryClientProvider>
