@@ -38,7 +38,6 @@ export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
 <p>Объявление размещено 28 августа 2026 года.</p>
 <p><strong>Срок подачи заявок — до 12:00, 11 сентября 2026 года.</strong></p>
 <p><em>НИФ оставляет за собой право отклонить любое или все предложения без объяснения причин, уточнять требования, запрашивать дополнительные материалы, а также приостановить или прекратить отбор.</em></p>
-<p><a href="/docs/news/epc-hilton-announcement.docx" download>Объявление о проведении отбора EPC-подрядчика</a></p>
 <p><a href="/docs/news/epc-hilton-tor.docx" download>Техническое задание</a></p>`,
     KG: `<p>«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК (мындан ары – НИФ / Фонд) «Иштеп жаткан пансионаттын базасында эл аралык деңгээлдеги заманбап курорттук комплекс түзүү» долбоорун ишке ашыруу үчүн EPC-подрядчикти тандоого катышууга чакырат.</p>
 <p>Долбоорду ишке ашыруу орду: Түп району, Ысык-Көл облусу, Кыргыз Республикасы.</p>
@@ -73,7 +72,6 @@ export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
 <p>Жарыя 2026-жылдын 28-августунда жайгаштырылган.</p>
 <p><strong>Өтүнмөлөрдү тапшыруу мөөнөтү — 2026-жылдын 11-сентябры, саат 12:00гө чейин.</strong></p>
 <p><em>НИФ каалаган же бардык сунуштарды себебин түшүндүрбөстөн четке кагууга, талаптарды тактоого, кошумча материалдарды суроого, ошондой эле тандоону токтото турууга же токтотууга укуктуу.</em></p>
-<p><a href="/docs/news/epc-hilton-announcement.docx" download>EPC-подрядчикти тандоо боюнча жарыя</a></p>
 <p><a href="/docs/news/epc-hilton-tor.docx" download>Техникалык тапшырма</a></p>`,
     EN: `<p>OJSC “National Investment Fund of the Kyrgyz Republic” (NIF / the Fund) invites participation in the selection of an EPC contractor for the project “Creation of a modern international-level resort complex based on an existing boarding house.”</p>
 <p>Project location: Tyup District, Issyk-Kul Region, Kyrgyz Republic.</p>
@@ -108,7 +106,6 @@ export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
 <p>The announcement was published on 28 August 2026.</p>
 <p><strong>Application deadline — 12:00 on 11 September 2026.</strong></p>
 <p><em>NIF reserves the right to reject any or all proposals without explanation, to clarify the requirements, to request additional materials, and to suspend or terminate the selection.</em></p>
-<p><a href="/docs/news/epc-hilton-announcement.docx" download>Announcement on the selection of an EPC contractor</a></p>
 <p><a href="/docs/news/epc-hilton-tor.docx" download>Terms of Reference</a></p>`,
     ZH: `<p>吉尔吉斯共和国国家投资基金（以下简称“NIF / 基金”）现邀请相关方参与“基于现有疗养院建设国际化现代度假综合体”项目的EPC承包商遴选。</p>
 <p>项目地点：吉尔吉斯共和国伊塞克湖州秋普区。</p>
@@ -143,7 +140,6 @@ export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
 <p>本公告发布于2026年8月28日。</p>
 <p><strong>申请截止日期：2026年9月11日 12:00。</strong></p>
 <p><em>NIF有权在不说明理由的情况下拒绝任何或全部申请，澄清要求、索取补充材料，以及中止或终止遴选。</em></p>
-<p><a href="/docs/news/epc-hilton-announcement.docx" download>EPC承包商遴选公告</a></p>
 <p><a href="/docs/news/epc-hilton-tor.docx" download>技术任务书</a></p>`,
   },
   "office-renovation-repeat": {
