@@ -20,6 +20,23 @@ export type NewsItem = {
  */
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
+    id: "epc-hilton-contractor",
+    date: "2026-08-28",
+    image: "/images/news/anouncement.jpeg",
+    title: {
+      RU: "Объявление о проведении отбора EPC-подрядчика",
+      KG: "EPC-подрядчикти тандоо боюнча жарыя",
+      EN: "Announcement on the selection of an EPC contractor",
+      ZH: "关于遴选EPC承包商的公告",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» приглашает принять участие в отборе EPC-подрядчика для реализации проекта «Создание современного курортного комплекса международного уровня на базе действующего пансионата».",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК «Иштеп жаткан пансионаттын базасында эл аралык деңгээлдеги заманбап курорттук комплекс түзүү» долбоорун ишке ашыруу үчүн EPC-подрядчикти тандоого катышууга чакырат.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” invites participation in the selection of an EPC contractor for the project “Creation of a modern international-level resort complex based on an existing boarding house.”",
+      ZH: "吉尔吉斯共和国国家投资基金邀请参与“基于现有疗养院建设国际化现代度假综合体”项目的EPC承包商遴选。",
+    },
+  },
+  {
     id: "office-renovation-repeat",
     date: "2026-08-11",
     image: "/images/news/office-renovation.png",

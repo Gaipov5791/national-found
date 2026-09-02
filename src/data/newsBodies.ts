@@ -4,6 +4,148 @@ import type { Lang } from "@/lib/lang";
 export type NewsBodyByLang = Partial<Record<Lang, string>>;
 
 export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
+  "epc-hilton-contractor": {
+    RU: `<p>ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее – НИФ / Фонд) приглашает принять участие в отборе EPC-подрядчика для реализации проекта «Создание современного курортного комплекса международного уровня на базе действующего пансионата».</p>
+<p>Место реализации проекта: Тюпский район, Иссык-Кульская область, Кыргызская Республика.</p>
+<p>В рамках проекта предусматривается выполнение полного комплекса работ по принципу EPC (проектирование, поставка оборудования и материалов, строительство и ввод объекта в эксплуатацию) многофункционального курортного гостиничного комплекса категории 4+ звезды международного уровня.</p>
+<p>Преимуществом при выборе подрядчика будет возможность привлечения финансирования для реализации проекта на конкурентных и приемлемых для Заказчика условиях.</p>
+<p>К участию приглашаются юридические лица, в том числе иностранные, а также консорциумы юридических лиц, обладающие опытом и квалификацией в области проектирования и строительства гостиничных и курортных объектов по модели EPC.</p>
+<p><strong>Минимальные требования к участникам:</strong></p>
+<ol>
+<li>В конкурсе могут участвовать юридические лица и консорциумы, обладающие соответствующей квалификацией и опытом выполнения работ по проектированию и строительству объектов капитального строительства.</li>
+<li>Участник должен иметь опыт выполнения работ в области гражданского строительства не менее 5 лет либо подтвердить участие в реализации не менее двух проектов сопоставимой сложности (гостиничные, курортные или многофункциональные комплексы).</li>
+<li>Участник должен иметь подтверждённый опыт подготовки и реализации инвестиционно-строительных проектов, включая разработку проектной документации, организацию поставок и выполнение строительно-монтажных работ.</li>
+<li>Опыт реализации контрактов по модели EPC (Engineering, Procurement and Construction), Design-Build либо аналогичных форм «под ключ» является обязательным квалификационным требованием.</li>
+<li>Участник должен обеспечить наличие специалистов, обладающих необходимыми знаниями и опытом в области архитектурного и инженерного проектирования, закупок, строительства и ввода объектов в эксплуатацию.</li>
+<li>Участник представляет информацию о выполненных проектах, включая описание работ, период выполнения, стоимость (при возможности раскрытия) и контактные данные заказчиков для подтверждения опыта.</li>
+<li>Дополнительным преимуществом является наличие предварительных условий финансирования проекта (term sheet / letter of interest) от банков, фондов, экспортно-кредитных агентств или иных финансовых институтов на конкурентных и приемлемых для Заказчика условиях.</li>
+</ol>
+<p><strong>Необходимые документы для участия:</strong></p>
+<ul>
+<li>письмо-заявка с выражением интереса;</li>
+<li>технико-коммерческое предложение (подход к реализации, ориентировочные сроки, стоимость EPC-контракта);</li>
+<li>копия удостоверения личности представителя;</li>
+<li>копии документов о государственной регистрации юридического лица (для нерезидентов — эквивалентные документы с переводом на русский или английский язык);</li>
+<li>документы, подтверждающие квалификацию и опыт (описание проектов, период выполнения, контакты заказчиков);</li>
+<li>сведения о ключевых специалистах проектной и строительной команды;</li>
+<li>гарантийное письмо об отсутствии банкротства, ареста имущества и приостановки деятельности;</li>
+<li>документ об отсутствии задолженности по налогам и страховым платежам (для юридических лиц — резидентов Кыргызской Республики);</li>
+<li>при наличии — предложение по привлечению финансирования (объём, валюта, срок, ориентировочные условия).</li>
+</ul>
+<p>Предложения и материалы для участия в отборе EPC-подрядчика в рамках реализации проекта по строительству многофункционального гостиничного комплекса (курортный гостиничный комплекс категории 4+ звезды международного уровня) принимаются на официальный электронный адрес ОАО «НИФ»: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
+<p>Основные технические требования и характеристики EPC-контракта указаны в Приложении.</p>
+<p>В случае возникновения вопросов обращаться по следующим телефонам: +996 555 770 303, 0880 000 430, 0312 886 668.</p>
+<p>Объявление размещено 28 августа 2026 года.</p>
+<p><strong>Срок подачи заявок — до 12:00, 11 сентября 2026 года.</strong></p>
+<p><em>НИФ оставляет за собой право отклонить любое или все предложения без объяснения причин, уточнять требования, запрашивать дополнительные материалы, а также приостановить или прекратить отбор.</em></p>
+<p><a href="/docs/news/epc-hilton-announcement.docx" download>Объявление о проведении отбора EPC-подрядчика</a></p>
+<p><a href="/docs/news/epc-hilton-tor.docx" download>Техническое задание</a></p>`,
+    KG: `<p>«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК (мындан ары – НИФ / Фонд) «Иштеп жаткан пансионаттын базасында эл аралык деңгээлдеги заманбап курорттук комплекс түзүү» долбоорун ишке ашыруу үчүн EPC-подрядчикти тандоого катышууга чакырат.</p>
+<p>Долбоорду ишке ашыруу орду: Түп району, Ысык-Көл облусу, Кыргыз Республикасы.</p>
+<p>Долбоордун алкагында EPC принциби боюнча (долбоорлоо, жабдууларды жана материалдарды жеткирүү, курулуш жана объектти ишке киргизүү) эл аралык деңгээлдеги 4+ жылдыз категориясындагы көп функциялуу курорттук мейманкана комплексин куруу каралган.</p>
+<p>Подрядчикти тандоодо долбоорду ишке ашыруу үчүн каржылоону атаандаштыкка жөндөмдүү жана Кардар үчүн ылайыктуу шарттарда тартуу мүмкүнчүлүгү артыкчылык болот.</p>
+<p>Катышууга мейманкана жана курорттук объекттерди EPC модели боюнча долбоорлоо жана куруу тажрыйбасы жана квалификациясы бар юридикалык жактар, анын ичинде чет өлкөлүк жактар, ошондой эле консорциумдар чакырылат.</p>
+<p><strong>Катышуучуларга коюлуучу минималдуу талаптар:</strong></p>
+<ol>
+<li>Сынакка капиталдык курулуш объекттерин долбоорлоо жана куруу боюнча тиешелүү квалификациясы жана тажрыйбасы бар юридикалык жактар жана консорциумдар катыша алышат.</li>
+<li>Катышуучу жарандык курулуш тармагында кеминде 5 жыл тажрыйбага ээ болушу же салыштырмалуу татаалдыктагы кеминде эки долбоорго (мейманкана, курорттук же көп функциялуу комплекстер) катышкандыгын ырастоого тийиш.</li>
+<li>Катышуучу долбоордук документтерди иштеп чыгууну, жеткирүүлөрдү уюштурууну жана курулуш-монтаждоо иштерин камтыган инвестициялык-курулуш долбоорлорун даярдоо жана ишке ашыруу боюнча ырасталган тажрыйбага ээ болушу керек.</li>
+<li>EPC (Engineering, Procurement and Construction), Design-Build же ушуга окшош «ачкыч тапшыруу» формалары боюнча контракттарды ишке ашыруу тажрыйбасы милдеттүү квалификациялык талап болуп саналат.</li>
+<li>Катышуучу архитектуралык жана инженердик долбоорлоо, сатып алуулар, курулуш жана объекттерди ишке киргизүү боюнча керектүү билими жана тажрыйбасы бар адистердин болушун камсыз кылууга тийиш.</li>
+<li>Катышуучу аткарылган долбоорлор жөнүндө маалыматты, анын ичинде иштердин сүрөттөмөсүн, аткаруу мөөнөтүн, наркын (ачыкка чыгаруу мүмкүн болсо) жана тажрыйбаны ырастоо үчүн кардарлардын байланыш маалыматтарын көрсөтөт.</li>
+<li>Кошумча артыкчылык — банктардан, фонддордон, экспорттук-кредиттик агенттиктерден же башка финансылык институттардан долбоорду каржылоонун алдын ала шарттарынын (term sheet / letter of interest) болушу, Кардар үчүн атаандаштыкка жөндөмдүү жана ылайыктуу шарттарда.</li>
+</ol>
+<p><strong>Катышуу үчүн керектүү документтер:</strong></p>
+<ul>
+<li>кызыкдарлыгын билдирген кат-арыз;</li>
+<li>техникалык-коммерциялык сунуш (ишке ашыруу ыкмасы, болжолдуу мөөнөттөр, EPC-контракттын наркы);</li>
+<li>өкүлдүн инсандыгын ырастоочу документтин көчүрмөсү;</li>
+<li>юридикалык жактын мамлекеттик каттоо документтеринин көчүрмөлөрү (резидент эместер үчүн — орус же англис тилине котормосу менен барабар документтер);</li>
+<li>квалификацияны жана тажрыйбаны ырастоочу документтер (долбоорлордун сүрөттөмөсү, аткаруу мөөнөтү, кардарлардын байланыштары);</li>
+<li>долбоордук жана курулуш командасынын негизги адистери жөнүндө маалымат;</li>
+<li>банкроттук, мүлктү камакка алуу жана ишти токтотуу жок экендиги жөнүндө кепилдик кат;</li>
+<li>салык жана камсыздандыруу төлөмдөрү боюнча карыз жок экендиги жөнүндө документ (Кыргыз Республикасынын резидент юридикалык жактары үчүн);</li>
+<li>бар болсо — каржылоону тартуу боюнча сунуш (көлөмү, валютасы, мөөнөтү, болжолдуу шарттары).</li>
+</ul>
+<p>Көп функциялуу мейманкана комплексин (эл аралык деңгээлдеги 4+ жылдыз категориясындагы курорттук мейманкана комплекси) куруу долбоорунун алкагында EPC-подрядчикти тандоого катышуу боюнча сунуштар жана материалдар «НИФ» ААКнын расмий электрондук дарегине кабыл алынат: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
+<p>EPC-контракттын негизги техникалык талаптары жана мүнөздөмөлөрү Тиркемеде көрсөтүлгөн.</p>
+<p>Суроолор жаралса, төмөнкү телефондорго кайрылыңыз: +996 555 770 303, 0880 000 430, 0312 886 668.</p>
+<p>Жарыя 2026-жылдын 28-августунда жайгаштырылган.</p>
+<p><strong>Өтүнмөлөрдү тапшыруу мөөнөтү — 2026-жылдын 11-сентябры, саат 12:00гө чейин.</strong></p>
+<p><em>НИФ каалаган же бардык сунуштарды себебин түшүндүрбөстөн четке кагууга, талаптарды тактоого, кошумча материалдарды суроого, ошондой эле тандоону токтото турууга же токтотууга укуктуу.</em></p>
+<p><a href="/docs/news/epc-hilton-announcement.docx" download>EPC-подрядчикти тандоо боюнча жарыя</a></p>
+<p><a href="/docs/news/epc-hilton-tor.docx" download>Техникалык тапшырма</a></p>`,
+    EN: `<p>OJSC “National Investment Fund of the Kyrgyz Republic” (NIF / the Fund) invites participation in the selection of an EPC contractor for the project “Creation of a modern international-level resort complex based on an existing boarding house.”</p>
+<p>Project location: Tyup District, Issyk-Kul Region, Kyrgyz Republic.</p>
+<p>The project provides for a full scope of works on an EPC basis (engineering, procurement of equipment and materials, construction, and commissioning) for a multifunctional 4+ star international-level resort hotel complex.</p>
+<p>Preference will be given to contractors able to attract financing for the project on competitive terms acceptable to the Client.</p>
+<p>Legal entities, including foreign ones, as well as consortia of legal entities with experience and qualifications in the design and construction of hotel and resort facilities under the EPC model, are invited to participate.</p>
+<p><strong>Minimum requirements for participants:</strong></p>
+<ol>
+<li>Legal entities and consortia with relevant qualifications and experience in the design and construction of capital construction facilities may take part in the selection.</li>
+<li>The participant must have at least 5 years of experience in civil construction, or confirm participation in at least two projects of comparable complexity (hotel, resort, or multifunctional complexes).</li>
+<li>The participant must have proven experience in preparing and implementing investment and construction projects, including project documentation, procurement, and construction and installation works.</li>
+<li>Experience in delivering contracts under the EPC (Engineering, Procurement and Construction), Design-Build, or similar turnkey models is a mandatory qualification requirement.</li>
+<li>The participant must ensure the availability of specialists with the necessary knowledge and experience in architectural and engineering design, procurement, construction, and commissioning.</li>
+<li>The participant shall provide information on completed projects, including a description of the works, the period of performance, the cost (where disclosure is possible), and client contact details to confirm experience.</li>
+<li>An additional advantage is the availability of preliminary project financing terms (term sheet / letter of interest) from banks, funds, export credit agencies, or other financial institutions on competitive terms acceptable to the Client.</li>
+</ol>
+<p><strong>Documents required for participation:</strong></p>
+<ul>
+<li>a letter of application expressing interest;</li>
+<li>a technical and commercial proposal (approach to implementation, indicative timelines, EPC contract cost);</li>
+<li>a copy of the representative’s identity document;</li>
+<li>copies of the legal entity’s state registration documents (for non-residents — equivalent documents with a translation into Russian or English);</li>
+<li>documents confirming qualifications and experience (project descriptions, periods of performance, client contacts);</li>
+<li>information on key specialists of the design and construction team;</li>
+<li>a guarantee letter confirming the absence of bankruptcy, property seizure, and suspension of activity;</li>
+<li>a document confirming the absence of tax and social contribution arrears (for legal entities that are residents of the Kyrgyz Republic);</li>
+<li>if available — a proposal on attracting financing (amount, currency, term, indicative conditions).</li>
+</ul>
+<p>Proposals and materials for participation in the selection of an EPC contractor for the construction of a multifunctional hotel complex (a 4+ star international-level resort hotel complex) are accepted at the official email of OJSC “NIF”: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
+<p>The main technical requirements and characteristics of the EPC contract are set out in the Annex.</p>
+<p>For inquiries, please call: +996 555 770 303, 0880 000 430, 0312 886 668.</p>
+<p>The announcement was published on 28 August 2026.</p>
+<p><strong>Application deadline — 12:00 on 11 September 2026.</strong></p>
+<p><em>NIF reserves the right to reject any or all proposals without explanation, to clarify the requirements, to request additional materials, and to suspend or terminate the selection.</em></p>
+<p><a href="/docs/news/epc-hilton-announcement.docx" download>Announcement on the selection of an EPC contractor</a></p>
+<p><a href="/docs/news/epc-hilton-tor.docx" download>Terms of Reference</a></p>`,
+    ZH: `<p>吉尔吉斯共和国国家投资基金（以下简称“NIF / 基金”）现邀请相关方参与“基于现有疗养院建设国际化现代度假综合体”项目的EPC承包商遴选。</p>
+<p>项目地点：吉尔吉斯共和国伊塞克湖州秋普区。</p>
+<p>项目拟按EPC原则（设计、设备与材料供应、施工及投入运营）实施一座国际化4+星级多功能度假酒店综合体的全部工程。</p>
+<p>能够以具有竞争力且令业主可接受的条件为项目引入融资的承包商将获得优先考虑。</p>
+<p>诚邀具备按EPC模式设计并建设酒店及度假设施经验和资质的法人（包括外国法人）及法人联合体参与。</p>
+<p><strong>参与方最低要求：</strong></p>
+<ol>
+<li>具备相应资质及资本建设项目设计与施工经验的法人及联合体可参加遴选。</li>
+<li>参与方须具备不少于5年民用建筑施工经验，或确认参与过至少两个同等复杂程度的项目（酒店、度假或综合体项目）。</li>
+<li>参与方须具备编制并实施投建项目的可验证经验，包括项目文件编制、采购组织及建筑安装工程施工。</li>
+<li>具备按EPC（Engineering, Procurement and Construction）、Design-Build或类似“交钥匙”模式履行合同的经验，为强制性资质要求。</li>
+<li>参与方须确保配备具备建筑与工程设计、采购、施工及投运所需知识与经验的专业人员。</li>
+<li>参与方须提供已完成项目信息，包括工作内容说明、实施期限、造价（如可披露）及客户联系方式，以确认经验。</li>
+<li>额外优势为已获得银行、基金、出口信贷机构或其他金融机构出具的、对业主具有竞争力且可接受的项目融资初步条件（term sheet / letter of interest）。</li>
+</ol>
+<p><strong>参与所需文件：</strong></p>
+<ul>
+<li>意向申请函；</li>
+<li>技术商务方案（实施路径、预估工期、EPC合同造价）；</li>
+<li>代表身份证复印件；</li>
+<li>法人国家注册文件复印件（非居民须提供俄文或英文译本的同等文件）；</li>
+<li>证明资质与经验的文件（项目说明、实施期限、客户联系方式）；</li>
+<li>设计及施工团队主要专业人员信息；</li>
+<li>无破产、无财产查封及无业务中止的保证函；</li>
+<li>无税费及社保欠款证明（适用于吉尔吉斯共和国居民法人）；</li>
+<li>如有——融资引入方案（金额、币种、期限、预估条件）。</li>
+</ul>
+<p>关于建设多功能酒店综合体（国际化4+星级度假酒店综合体）项目EPC承包商遴选的申请材料，请发送至NIF官方邮箱：<a href="mailto:office@nif.kg">office@nif.kg</a>。</p>
+<p>EPC合同的主要技术要求及特征见附件。</p>
+<p>如有疑问，请致电：+996 555 770 303，0880 000 430，0312 886 668。</p>
+<p>本公告发布于2026年8月28日。</p>
+<p><strong>申请截止日期：2026年9月11日 12:00。</strong></p>
+<p><em>NIF有权在不说明理由的情况下拒绝任何或全部申请，澄清要求、索取补充材料，以及中止或终止遴选。</em></p>
+<p><a href="/docs/news/epc-hilton-announcement.docx" download>EPC承包商遴选公告</a></p>
+<p><a href="/docs/news/epc-hilton-tor.docx" download>技术任务书</a></p>`,
+  },
   "office-renovation-repeat": {
     RU: "<p>ОАО «Национальный инвестиционный фонд Кыргызской Республики» приглашает заинтересованных поставщиков услуг представить коммерческие предложения на выполнение работ по ремонту офисного здания. Техническое задание прилагается.</p>\n<p>К подаче коммерческих предложений приглашаются полномочные заинтересованные юридические и физические лица, осуществляющие предпринимательскую деятельность согласно законодательству Кыргызской Республики.</p>\n<p>Заинтересованным участникам конкурса необходимо ознакомиться с требованиями, изложенными в техническом задании, и заполнить ведомость объема работ.</p>\n<p><a href=\"https://docs.google.com/document/d/18eQ3G7v1ffj_GtM9C_6GfK58zBh70rbS/edit?usp=sharing\" target=\"_blank\" rel=\"noopener noreferrer\">Техническое задание</a></p>",
     KG: "<p>«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК кеңсе имаратын оңдоо иштерин аткаруу боюнча коммерциялык сунуштарды тапшырууга кызыкдар кызмат көрсөтүүчүлөрдү чакырат. Техникалык тапшырма тиркелет.</p>\n<p>Коммерциялык сунуштарды тапшырууга Кыргыз Республикасынын мыйзамдарына ылайык ишкердик ишмердүүлүктү жүргүзгөн ыйгарым укуктуу кызыкдар юридикалык жана жеке жактар чакырылат.</p>\n<p>Сынакка кызыкдар катышуучулар техникалык тапшырмада баяндалган талаптар менен таанышып, иштердин көлөмү ведомостун толтуруусу керек.</p>\n<p><a href=\"https://docs.google.com/document/d/18eQ3G7v1ffj_GtM9C_6GfK58zBh70rbS/edit?usp=sharing\" target=\"_blank\" rel=\"noopener noreferrer\">Техникалык тапшырма</a></p>",

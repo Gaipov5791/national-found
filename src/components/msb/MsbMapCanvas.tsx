@@ -126,13 +126,11 @@ export function MsbMapCanvas({ districts, selectedId, onSelect }: MsbMapCanvasPr
       minZoom={5}
       maxZoom={10}
       scrollWheelZoom
-      className="h-full w-full rounded-2xl [&_.leaflet-interactive]:cursor-pointer [&_.msb-district-marker]:border-0 [&_.msb-district-marker]:bg-transparent"
+      attributionControl={false}
+      className="h-full w-full rounded-2xl [&_.leaflet-control-attribution]:hidden [&_.leaflet-interactive]:cursor-pointer [&_.msb-district-marker]:border-0 [&_.msb-district-marker]:bg-transparent"
       style={{ background: "#0a1a2c", zIndex: 0 }}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-      />
+      <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}" />
       <FitKyrgyzstan />
       {outline ? <GeoJSON data={outline as never} style={outlineStyle} interactive={false} /> : null}
       {districts.map((district) => {
