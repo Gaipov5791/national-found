@@ -20,6 +20,23 @@ export type NewsItem = {
  */
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
+    id: "mges-mailuu-suu-consultant",
+    date: "2026-09-14",
+    image: "/images/news/mges-mailuu-suu-consultant.jpg",
+    title: {
+      RU: "Объявление о проведении отбора консультанта",
+      KG: "Консультантты тандоо боюнча жарыя",
+      EN: "Announcement on the selection of a consultant",
+      ZH: "关于遴选顾问的公告",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» приглашает принять участие в отборе консультанта для разработки технического задания на отбор EPC-подрядчика для реализации проекта «Строительство малой гидроэлектростанции на реке Майлуу-Суу» и технического надзора за реализацией проекта на всех стадиях EPC-контракта.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК «Майлуу-Суу дарыясында чакан гидроэлектростанция куруу» долбоорун ишке ашыруу үчүн EPC-подрядчикти тандоого техникалык тапшырма иштеп чыгуу жана EPC-контракттын бардык баскычтарында долбоорду ишке ашырууга техникалык көзөмөл жүргүзүү боюнча консультантты тандоого катышууга чакырат.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” invites participation in the selection of a consultant to prepare the terms of reference for selecting an EPC contractor for the project “Construction of a small hydropower plant on the Mailuu-Suu River” and to provide technical supervision at all stages of the EPC contract.",
+      ZH: "吉尔吉斯共和国国家投资基金邀请参与顾问遴选，以编制“马伊卢苏河小型水电站建设”项目EPC承包商遴选技术任务书，并在EPC合同各阶段对项目实施进行技术监督。",
+    },
+  },
+  {
     id: "epc-hilton-contractor",
     date: "2026-08-28",
     image: "/images/news/anouncement.jpeg",

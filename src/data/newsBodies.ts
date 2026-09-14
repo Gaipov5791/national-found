@@ -4,6 +4,180 @@ import type { Lang } from "@/lib/lang";
 export type NewsBodyByLang = Partial<Record<Lang, string>>;
 
 export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
+  "mges-mailuu-suu-consultant": {
+    RU: `<p>ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее – Фонд) приглашает принять участие в отборе консультанта для разработки технического задания на отбор EPC-подрядчика для реализации проекта «Строительство малой гидроэлектростанции на реке Майлуу-Суу» и технического надзора за реализацией проекта на всех стадиях EPC-контракта.</p>
+<p>Место реализации проекта: Ноокенский район, Жалал-Абадская область, Кыргызская Республика.</p>
+<p>В рамках отбора предусматривается выбор независимого технического консультанта, оказывающего Заказчику услуги по:</p>
+<ul>
+<li>разработке технического задания на отбор EPC-подрядчика для реализации проекта;</li>
+<li>техническому надзору за реализацией проекта на всех стадиях EPC-контракта – от инженерных изысканий и проектирования до ввода объекта в эксплуатацию.</li>
+</ul>
+<p>Консультант будет осуществлять деятельность от имени и в интересах Заказчика и должен быть независимым от EPC-подрядчика, поставщиков оборудования и инвестора проекта. Оказание услуг технического надзора не включает выполнение проектных, строительно-монтажных работ и поставку оборудования по данному проекту.</p>
+<p><strong>Минимальные квалификационные требования</strong></p>
+<p>К участию в отборе приглашаются юридические лица, соответствующие квалификационным требованиям, установленным Техническим заданием (Приложение 1).</p>
+<p>Участник должен соответствовать требованиям, предусмотренным Техническим заданием, и представить документы и сведения, подтверждающие соответствие указанным требованиям.</p>
+<p>Участник должен:</p>
+<ol>
+<li>Иметь документально подтвержденный опыт оказания услуг технического надзора или строительного контроля не менее чем на одном завершенном либо находящемся в стадии реализации проекте строительства гидроэлектростанции или сопоставимого гидротехнического сооружения за последние 5 лет.</li>
+<li>Иметь опыт технического надзора за высоконапорными деривационными ГЭС и/или объектами мощностью не менее 15 МВт является преимуществом.</li>
+<li>Обеспечить наличие квалифицированной команды ключевых экспертов, включая руководителя проекта, эксперта по гидротехническим сооружениям, эксперта по гидросиловому и электротехническому оборудованию, эксперта по строительному контролю и качеству.</li>
+<li>Обеспечить независимость консультанта, его аффилированных лиц, ключевых экспертов и субподрядчиков от EPC-подрядчика, поставщиков основного оборудования и иных лиц, участвующих в реализации проекта на стороне EPC-подрядчика.</li>
+<li>Представить информацию о выполненных проектах, включая описание работ, период выполнения, стоимость (при возможности раскрытия) и контактные данные заказчиков для подтверждения опыта.</li>
+</ol>
+<p><strong>Необходимые документы для участия</strong></p>
+<p>Участник представляет документы и сведения в соответствии с требованиями Технического задания (Приложение 1):</p>
+<ul>
+<li>письмо-заявку с выражением интереса к участию в отборе;</li>
+<li>коммерческое предложение с раскладкой стоимости услуг по стадиям;</li>
+<li>заверенные подписью руководителя и печатью копии учредительных документов и свидетельства о регистрации (для нерезидентов – эквивалентные документы с переводом на русский или английский язык);</li>
+<li>документ, подтверждающий полномочия должностного лица или представителя;</li>
+<li>копии документов, подтверждающих личность уполномоченного лица;</li>
+<li>заверенные подписью руководителя и печатью копии лицензии и (или) разрешения (при осуществлении лицензируемых и (или) разрешительных видов деятельности);</li>
+<li>документы, подтверждающие квалификацию и опыт участника;</li>
+<li>сведения о ключевых специалистах и проектной команде;</li>
+<li>заверенные подписью руководителя и печатью копии рекомендательных писем и отзывы клиентов;</li>
+<li>справку с налоговой службы об отсутствии задолженности по налогам и страховым взносам (для юридических лиц – резидентов Кыргызской Республики);</li>
+<li>финансовую отчетность (за последний отчетный год);</li>
+<li>гарантийное письмо об отсутствии судебных, административных споров и уголовных разбирательств, связанных с профессиональной деятельностью компании, ее учредителей и руководителей.</li>
+</ul>
+<p>Коммерческое предложение должно содержать стоимость услуг с разбивкой по соответствующим стадиям оказания услуг.</p>
+<p>Предложения и материалы для участия в отборе консультанта по техническому надзору принимаются на официальный электронный адрес Фонда: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
+<p>Техническое задание на отбор консультанта является неотъемлемой частью настоящего объявления.</p>
+<p>В случае возникновения вопросов обращаться по следующим телефонам: +996 555 770 303, 0880 000 430, 0312 886 668.</p>
+<p>Объявление размещено 14 сентября 2026 года.</p>
+<p><strong>Срок подачи заявок — до 12:00, 28 сентября 2026 года.</strong></p>
+<p><em>Фонд оставляет за собой право отклонить любое или все предложения без объяснения причин, уточнять требования, запрашивать дополнительные материалы, а также приостановить или прекратить отбор.</em></p>
+<p><a href="/docs/news/mges-mailuu-suu-consultant-tor.docx" download>Техническое задание</a></p>`,
+    KG: `<p>«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК (мындан ары – Фонд) «Майлуу-Суу дарыясында чакан гидроэлектростанция куруу» долбоорун ишке ашыруу үчүн EPC-подрядчикти тандоого техникалык тапшырма иштеп чыгуу жана EPC-контракттын бардык баскычтарында долбоорду ишке ашырууга техникалык көзөмөл жүргүзүү боюнча консультантты тандоого катышууга чакырат.</p>
+<p>Долбоорду ишке ашыруу орду: Ноокен району, Жалал-Абад облусу, Кыргыз Республикасы.</p>
+<p>Тандоонун алкагында Кардарга төмөнкү кызматтарды көрсөтүүчү көз карандысыз техникалык консультантты тандоо каралган:</p>
+<ul>
+<li>долбоорду ишке ашыруу үчүн EPC-подрядчикти тандоого техникалык тапшырманы иштеп чыгуу;</li>
+<li>EPC-контракттын бардык баскычтарында – инженердик изилдөөлөрдөн жана долбоорлоодон тартып объектти ишке киргизүүгө чейин – долбоорду ишке ашырууга техникалык көзөмөл.</li>
+</ul>
+<p>Консультант Кардардын атынан жана кызыкчылыгында иш жүргүзөт жана EPC-подрядчиктен, жабдуу жеткирүүчүлөрдөн жана долбоордун инвесторунан көз карандысыз болууга тийиш. Техникалык көзөмөл кызматтары бул долбоор боюнча долбоордук, курулуш-монтаждоо иштерин аткарууну жана жабдууларды жеткирүүнү камтыбайт.</p>
+<p><strong>Минималдуу квалификациялык талаптар</strong></p>
+<p>Тандоого Техникалык тапшырмада (1-тиркеме) белгиленген квалификациялык талаптарга жооп берген юридикалык жактар чакырылат.</p>
+<p>Катышуучу Техникалык тапшырмада каралган талаптарга жооп бериши жана көрсөтүлгөн талаптарга шайкештигин ырастаган документтерди жана маалыматтарды тапшырууга тийиш.</p>
+<p>Катышуучу төмөнкүлөрдү аткарууга тийиш:</p>
+<ol>
+<li>Акыркы 5 жылда гидроэлектростанцияны же салыштырмалуу гидротехникалык курулушту куруунун аяктаган же ишке ашырылып жаткан кеминде бир долбоорунда техникалык көзөмөл же курулуш контролу кызматтарын көрсөтүү боюнча документтештирилген тажрыйбага ээ болуу.</li>
+<li>Бийик басымдуу деривациялык ГЭСтерге жана/же кубаттуулугу 15 МВт кем эмес объекттерге техникалык көзөмөл жүргүзүү тажрыйбасы артыкчылык болуп саналат.</li>
+<li>Долбоордун жетекчисин, гидротехникалык курулуштар боюнча экспертти, гидрокүч жана электротехникалык жабдуулар боюнча экспертти, курулуш контролу жана сапат боюнча экспертти камтыган квалификациялуу негизги эксперттер командасынын болушун камсыз кылуу.</li>
+<li>Консультанттын, анын аффилирленген жактарынын, негизги эксперттеринин жана субподрядчиктеринин EPC-подрядчиктен, негизги жабдуу жеткирүүчүлөрдөн жана EPC-подрядчиктин тарабында долбоорду ишке ашырууга катышкан башка жактардан көз карандысыздыгын камсыз кылуу.</li>
+<li>Аткарылган долбоорлор жөнүндө маалыматты, анын ичинде иштердин сүрөттөмөсүн, аткаруу мөөнөтүн, наркын (ачыкка чыгаруу мүмкүн болсо) жана тажрыйбаны ырастоо үчүн кардарлардын байланыш маалыматтарын көрсөтүү.</li>
+</ol>
+<p><strong>Катышуу үчүн керектүү документтер</strong></p>
+<p>Катышуучу Техникалык тапшырманын (1-тиркеме) талаптарына ылайык документтерди жана маалыматтарды тапшырат:</p>
+<ul>
+<li>тандоого катышууга кызыкдарлыгын билдирген кат-арыз;</li>
+<li>кызматтардын наркын баскычтар боюнча бөлүштүрүү менен коммерциялык сунуш;</li>
+<li>жетекчинин колу жана мөөрү менен күбөлөндүрүлгөн уюштуруу документтеринин жана каттоо күбөлүгүнүн көчүрмөлөрү (резидент эместер үчүн – орус же англис тилине котормосу менен барабар документтер);</li>
+<li>кызмат адамынын же өкүлдүн ыйгарым укугун ырастоочу документ;</li>
+<li>ыйгарым укуктуу адамдын инсандыгын ырастоочу документтердин көчүрмөлөрү;</li>
+<li>жетекчинин колу жана мөөрү менен күбөлөндүрүлгөн лицензиянын жана (же) уруксаттын көчүрмөлөрү (лицензиялануучу жана (же) уруксат берилүүчү ишмердүүлүк жүргүзүлгөндө);</li>
+<li>катышуучунун квалификациясын жана тажрыйбасын ырастоочу документтер;</li>
+<li>негизги адистер жана долбоордук команда жөнүндө маалымат;</li>
+<li>жетекчинин колу жана мөөрү менен күбөлөндүрүлгөн сунуш каттарынын көчүрмөлөрү жана кардарлардын пикирлери;</li>
+<li>салык жана камсыздандыруу төгүмдөрү боюнча карыз жок экендиги жөнүндө салык кызматынын справкасы (Кыргыз Республикасынын резидент юридикалык жактары үчүн);</li>
+<li>финансылык отчеттуулук (акыркы отчеттук жыл үчүн);</li>
+<li>компаниянын, анын уюштуруучуларынын жана жетекчилеринин кесиптик ишмердүүлүгүнө байланыштуу соттук, административдик талаштар жана кылмыш иштери жок экендиги жөнүндө кепилдик кат.</li>
+</ul>
+<p>Коммерциялык сунушта кызматтардын наркы тиешелүү баскычтар боюнча бөлүштүрүлүп көрсөтүлүүгө тийиш.</p>
+<p>Техникалык көзөмөл боюнча консультантты тандоого катышуу үчүн сунуштар жана материалдар Фонддун расмий электрондук дарегине кабыл алынат: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
+<p>Консультантты тандоо боюнча техникалык тапшырма ушул жарыянын ажырагыс бөлүгү болуп саналат.</p>
+<p>Суроолор жаралса, төмөнкү телефондорго кайрылыңыз: +996 555 770 303, 0880 000 430, 0312 886 668.</p>
+<p>Жарыя 2026-жылдын 14-сентябрында жайгаштырылган.</p>
+<p><strong>Өтүнмөлөрдү тапшыруу мөөнөтү — 2026-жылдын 28-сентябры, саат 12:00гө чейин.</strong></p>
+<p><em>Фонд каалаган же бардык сунуштарды себебин түшүндүрбөстөн четке кагууга, талаптарды тактоого, кошумча материалдарды суроого, ошондой эле тандоону токтото турууга же токтотууга укуктуу.</em></p>
+<p><a href="/docs/news/mges-mailuu-suu-consultant-tor.docx" download>Техникалык тапшырма</a></p>`,
+    EN: `<p>OJSC “National Investment Fund of the Kyrgyz Republic” (the Fund) invites participation in the selection of a consultant to prepare the terms of reference for selecting an EPC contractor for the project “Construction of a small hydropower plant on the Mailuu-Suu River” and to provide technical supervision of the project at all stages of the EPC contract.</p>
+<p>Project location: Nooken District, Jalal-Abad Region, Kyrgyz Republic.</p>
+<p>The selection provides for an independent technical consultant to provide the Client with the following services:</p>
+<ul>
+<li>preparation of the terms of reference for selecting an EPC contractor for the project;</li>
+<li>technical supervision of project implementation at all stages of the EPC contract — from engineering surveys and design through commissioning of the facility.</li>
+</ul>
+<p>The consultant will act on behalf of and in the interests of the Client and must be independent of the EPC contractor, equipment suppliers, and the project investor. Technical supervision services do not include design, construction and installation works, or equipment supply for this project.</p>
+<p><strong>Minimum qualification requirements</strong></p>
+<p>Legal entities that meet the qualification requirements set out in the Terms of Reference (Annex 1) are invited to participate in the selection.</p>
+<p>The participant must meet the requirements of the Terms of Reference and submit documents and information confirming compliance with those requirements.</p>
+<p>The participant must:</p>
+<ol>
+<li>Have documented experience in providing technical supervision or construction control services on at least one completed or ongoing hydropower plant or comparable hydraulic structure construction project within the last 5 years.</li>
+<li>Experience in technical supervision of high-head diversion hydropower plants and/or facilities with a capacity of at least 15 MW is an advantage.</li>
+<li>Ensure a qualified team of key experts, including a project manager, a hydraulic structures expert, a hydropower and electrical equipment expert, and a construction control and quality expert.</li>
+<li>Ensure the independence of the consultant, its affiliates, key experts, and subcontractors from the EPC contractor, the suppliers of main equipment, and other parties involved in project implementation on the EPC contractor’s side.</li>
+<li>Provide information on completed projects, including a description of the works, the period of performance, the cost (where disclosure is possible), and client contact details to confirm experience.</li>
+</ol>
+<p><strong>Documents required for participation</strong></p>
+<p>The participant shall submit documents and information in accordance with the Terms of Reference (Annex 1):</p>
+<ul>
+<li>a letter of application expressing interest in participating in the selection;</li>
+<li>a commercial proposal with a breakdown of the cost of services by stages;</li>
+<li>copies of constitutive documents and the registration certificate certified by the signature of the head and the seal (for non-residents — equivalent documents with a translation into Russian or English);</li>
+<li>a document confirming the authority of the official or representative;</li>
+<li>copies of identity documents of the authorized person;</li>
+<li>copies of the license and/or permit certified by the signature of the head and the seal (where licensed and/or permitted activities are carried out);</li>
+<li>documents confirming the participant’s qualifications and experience;</li>
+<li>information on key specialists and the project team;</li>
+<li>copies of letters of recommendation and client testimonials certified by the signature of the head and the seal;</li>
+<li>a certificate from the tax service confirming the absence of tax and social contribution arrears (for legal entities that are residents of the Kyrgyz Republic);</li>
+<li>financial statements (for the last reporting year);</li>
+<li>a guarantee letter confirming the absence of judicial, administrative disputes, and criminal proceedings related to the professional activities of the company, its founders, and executives.</li>
+</ul>
+<p>The commercial proposal must include the cost of services broken down by the relevant stages of service delivery.</p>
+<p>Proposals and materials for participation in the selection of a technical supervision consultant are accepted at the Fund’s official email: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
+<p>The Terms of Reference for the selection of a consultant form an integral part of this announcement.</p>
+<p>For inquiries, please call: +996 555 770 303, 0880 000 430, 0312 886 668.</p>
+<p>The announcement was published on 14 September 2026.</p>
+<p><strong>Application deadline — 12:00 on 28 September 2026.</strong></p>
+<p><em>The Fund reserves the right to reject any or all proposals without explanation, to clarify the requirements, to request additional materials, and to suspend or terminate the selection.</em></p>
+<p><a href="/docs/news/mges-mailuu-suu-consultant-tor.docx" download>Terms of Reference</a></p>`,
+    ZH: `<p>吉尔吉斯共和国国家投资基金（以下简称“基金”）现邀请相关方参与顾问遴选，以编制“马伊卢苏河小型水电站建设”项目EPC承包商遴选技术任务书，并在EPC合同各阶段对项目实施进行技术监督。</p>
+<p>项目地点：吉尔吉斯共和国贾拉拉巴德州诺肯区。</p>
+<p>本次遴选拟选定一名独立技术顾问，向业主提供以下服务：</p>
+<ul>
+<li>编制项目EPC承包商遴选技术任务书；</li>
+<li>在EPC合同各阶段对项目实施进行技术监督——自工程勘察与设计直至设施投入运营。</li>
+</ul>
+<p>顾问将代表业主并为其利益开展工作，且须独立于EPC承包商、设备供应商及项目投资方。技术监督服务不包括本项目的设计、建筑安装工程及设备供应。</p>
+<p><strong>最低资质要求</strong></p>
+<p>诚邀符合技术任务书（附件1）所定资质要求的法人参与遴选。</p>
+<p>参与方须符合技术任务书规定的要求，并提交证明其符合上述要求的文件和资料。</p>
+<p>参与方须：</p>
+<ol>
+<li>具备近5年内至少在一个已完成或正在实施的水电站或同等水工建筑物建设项目中提供技术监督或施工控制服务的书面可验证经验。</li>
+<li>具备对高水头引水式水电站和/或装机容量不少于15兆瓦设施进行技术监督的经验者优先。</li>
+<li>确保配备合格的核心专家团队，包括项目负责人、水工建筑物专家、水力发电及电气设备专家、施工控制与质量专家。</li>
+<li>确保顾问及其关联方、核心专家和分包商独立于EPC承包商、主要设备供应商以及在EPC承包商一侧参与项目实施的其他主体。</li>
+<li>提供已完成项目信息，包括工作内容说明、实施期限、造价（如可披露）及客户联系方式，以确认经验。</li>
+</ol>
+<p><strong>参与所需文件</strong></p>
+<p>参与方须按照技术任务书（附件1）的要求提交文件和资料：</p>
+<ul>
+<li>表明参与遴选意向的申请函；</li>
+<li>按阶段列明服务费用的商务报价；</li>
+<li>经负责人签字并加盖公章的设立文件及注册证明复印件（非居民须提供俄文或英文译本的同等文件）；</li>
+<li>证明公职人员或代表权限的文件；</li>
+<li>授权人身份证明文件复印件；</li>
+<li>经负责人签字并加盖公章的许可证和（或）批准文件复印件（如从事须许可和（或）批准的活动）；</li>
+<li>证明参与方资质与经验的文件；</li>
+<li>核心专业人员及项目团队信息；</li>
+<li>经负责人签字并加盖公章的推荐信复印件及客户评价；</li>
+<li>税务机关出具的无税费及社保欠款证明（适用于吉尔吉斯共和国居民法人）；</li>
+<li>财务报表（最近一个报告年度）；</li>
+<li>保证公司、其发起人及管理人员不存在与职业活动相关的司法、行政争议及刑事诉讼的保证函。</li>
+</ul>
+<p>商务报价须包含按相应服务阶段列明的服务费用。</p>
+<p>参与技术监督顾问遴选的申请材料请发送至基金官方邮箱：<a href="mailto:office@nif.kg">office@nif.kg</a>。</p>
+<p>顾问遴选技术任务书为本公告不可分割的组成部分。</p>
+<p>如有疑问，请致电：+996 555 770 303，0880 000 430，0312 886 668。</p>
+<p>本公告发布于2026年9月14日。</p>
+<p><strong>申请截止日期：2026年9月28日 12:00。</strong></p>
+<p><em>基金有权在不说明理由的情况下拒绝任何或全部申请，澄清要求、索取补充材料，以及中止或终止遴选。</em></p>
+<p><a href="/docs/news/mges-mailuu-suu-consultant-tor.docx" download>技术任务书</a></p>`,
+  },
   "epc-hilton-contractor": {
     RU: `<p>ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее – НИФ / Фонд) приглашает принять участие в отборе EPC-подрядчика для реализации проекта «Создание современного курортного комплекса международного уровня на базе действующего пансионата».</p>
 <p>Место реализации проекта: Тюпский район, Иссык-Кульская область, Кыргызская Республика.</p>
