@@ -43,7 +43,7 @@ export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
 <p>Коммерческое предложение должно содержать стоимость услуг с разбивкой по соответствующим стадиям оказания услуг.</p>
 <p>Предложения и материалы для участия в отборе консультанта по техническому надзору принимаются на официальный электронный адрес Фонда: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
 <p>Техническое задание на отбор консультанта является неотъемлемой частью настоящего объявления.</p>
-<p>В случае возникновения вопросов обращаться по следующим телефонам: +996 555 770 303, 0880 000 430, 0312 886 668.</p>
+<p>В случае возникновения вопросов обращаться по следующим телефонам: +996 504 880 089, 0880 000 430, 0312 886 668.</p>
 <p>Объявление размещено 14 сентября 2026 года.</p>
 <p><strong>Срок подачи заявок — до 12:00, 28 сентября 2026 года.</strong></p>
 <p><em>Фонд оставляет за собой право отклонить любое или все предложения без объяснения причин, уточнять требования, запрашивать дополнительные материалы, а также приостановить или прекратить отбор.</em></p>
@@ -86,7 +86,7 @@ export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
 <p>Коммерциялык сунушта кызматтардын наркы тиешелүү баскычтар боюнча бөлүштүрүлүп көрсөтүлүүгө тийиш.</p>
 <p>Техникалык көзөмөл боюнча консультантты тандоого катышуу үчүн сунуштар жана материалдар Фонддун расмий электрондук дарегине кабыл алынат: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
 <p>Консультантты тандоо боюнча техникалык тапшырма ушул жарыянын ажырагыс бөлүгү болуп саналат.</p>
-<p>Суроолор жаралса, төмөнкү телефондорго кайрылыңыз: +996 555 770 303, 0880 000 430, 0312 886 668.</p>
+<p>Суроолор жаралса, төмөнкү телефондорго кайрылыңыз: +996 504 880 089, 0880 000 430, 0312 886 668.</p>
 <p>Жарыя 2026-жылдын 14-сентябрында жайгаштырылган.</p>
 <p><strong>Өтүнмөлөрдү тапшыруу мөөнөтү — 2026-жылдын 28-сентябры, саат 12:00гө чейин.</strong></p>
 <p><em>Фонд каалаган же бардык сунуштарды себебин түшүндүрбөстөн четке кагууга, талаптарды тактоого, кошумча материалдарды суроого, ошондой эле тандоону токтото турууга же токтотууга укуктуу.</em></p>
@@ -129,7 +129,7 @@ export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
 <p>The commercial proposal must include the cost of services broken down by the relevant stages of service delivery.</p>
 <p>Proposals and materials for participation in the selection of a technical supervision consultant are accepted at the Fund’s official email: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
 <p>The Terms of Reference for the selection of a consultant form an integral part of this announcement.</p>
-<p>For inquiries, please call: +996 555 770 303, 0880 000 430, 0312 886 668.</p>
+<p>For inquiries, please call: +996 504 880 089, 0880 000 430, 0312 886 668.</p>
 <p>The announcement was published on 14 September 2026.</p>
 <p><strong>Application deadline — 12:00 on 28 September 2026.</strong></p>
 <p><em>The Fund reserves the right to reject any or all proposals without explanation, to clarify the requirements, to request additional materials, and to suspend or terminate the selection.</em></p>
@@ -172,7 +172,7 @@ export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
 <p>商务报价须包含按相应服务阶段列明的服务费用。</p>
 <p>参与技术监督顾问遴选的申请材料请发送至基金官方邮箱：<a href="mailto:office@nif.kg">office@nif.kg</a>。</p>
 <p>顾问遴选技术任务书为本公告不可分割的组成部分。</p>
-<p>如有疑问，请致电：+996 555 770 303，0880 000 430，0312 886 668。</p>
+<p>如有疑问，请致电：+996 504 880 089，0880 000 430，0312 886 668。</p>
 <p>本公告发布于2026年9月14日。</p>
 <p><strong>申请截止日期：2026年9月28日 12:00。</strong></p>
 <p><em>基金有权在不说明理由的情况下拒绝任何或全部申请，澄清要求、索取补充材料，以及中止或终止遴选。</em></p>
