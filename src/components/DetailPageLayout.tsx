@@ -5,7 +5,8 @@ import { BrandLockup } from "@/components/BrandLockup";
 import type { AboutPerson } from "@/components/sections/sectionContent";
 import { clearScrollerProxy, ensureGsapPlugins } from "@/lib/gsap-client";
 import { LANGS, langDisplayLabel, useLang, useT } from "@/lib/lang";
-import { preloadScrollytelling } from "@/lib/preloadScrollytelling";
+import { preloadScrollytellingWhenIdle } from "@/lib/preloadScrollytelling";
+import { logBg } from "@/lib/sceneBackground";
 import { getSectionSceneLabel } from "@/lib/sectionNavigation";
 
 /** Clear leftover Lenis / ScrollTrigger scroll locks after leaving the landing. */
@@ -61,25 +62,23 @@ export function DetailPageLayout({
   const returnSection = getSectionSceneLabel(locationHash);
 
   useEffect(() => {
+    logBg("detail:mount", { title });
     restoreDocumentScroll();
-    void preloadScrollytelling();
-  }, []);
+    preloadScrollytellingWhenIdle();
+    return () => {
+      logBg("detail:unmount", { title });
+    };
+  }, [title]);
 
   return (
-    <main className="relative isolate min-h-screen w-full overflow-hidden bg-black px-4 py-10 font-display text-white sm:px-8 sm:py-16 lg:px-12">
-      <div
-        className="pointer-events-none fixed inset-[-32px] -z-20 scale-105 bg-cover bg-center blur-[16px]"
-        style={{ backgroundImage: "url('/images/mountains.jpg')" }}
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,20,38,0.68),rgba(8,28,49,0.78))]"
-        aria-hidden
-      />
-
+    <main className="relative z-10 isolate min-h-screen w-full overflow-hidden bg-transparent px-4 py-10 font-display text-white sm:px-8 sm:py-16 lg:px-12">
       <div className={`mx-auto w-full ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/20 pb-6 sm:gap-4">
-          <Link to="/" hash={returnSection ?? undefined} className="inline-flex max-w-[min(100%,20rem)] items-center sm:max-w-[24rem]">
+          <Link
+            to="/"
+            hash={returnSection ?? undefined}
+            className="inline-flex max-w-[min(100%,20rem)] items-center sm:max-w-[24rem]"
+          >
             <BrandLockup lang={lang} tone="white" size="sm" />
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
