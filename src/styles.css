@@ -1,4 +1,4 @@
-@import "tailwindcss" source(none);
+@import "tailwindcss";
 @source "../src";
 @import "tw-animate-css";
 
@@ -82,16 +82,14 @@
     border-color: var(--color-border);
   }
   html {
-    background-color: var(--color-background);
+    background-color: #0b2138;
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    /* clip avoids the html+body overflow-x:hidden scroll lock quirk */
     overflow-x: clip;
-    /* Prevent layout shift when Radix locks body scroll / hides scrollbar */
     scrollbar-gutter: stable;
   }
   body {
-    background-color: var(--color-background);
+    background-color: #0b2138;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     overflow-x: clip;

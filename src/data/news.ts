@@ -20,6 +20,40 @@ export type NewsItem = {
  */
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
+    id: "kasiet-security-services",
+    date: "2026-11-03",
+    image: "/images/news/kasiet.jpeg",
+    title: {
+      RU: "Объявление на оказание охранных услуг камвольно-прядильной фабрики «Касиет».",
+      KG: "«Касиет» камвольно-ийрүү фабрикасын күзөтүү кызматтарын көрсөтүү боюнча жарыя.",
+      EN: "Announcement on the provision of security services for the “Kasiet” worsted spinning mill.",
+      ZH: "关于“卡西耶特”精纺纺纱厂安保服务的公告。",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» приглашает заинтересованных поставщиков услуг представить коммерческие предложения на выполнение работ по охране имущественного комплекса камвольно-прядильной фабрики «Касиет». Техническое задание прилагается.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК «Касиет» камвольно-ийрүү фабрикасынын мүлктүк комплексин күзөтүү иштерин аткаруу боюнча коммерциялык сунуштарды тапшырууга кызыкдар кызмат көрсөтүүчүлөрдү чакырат. Техникалык тапшырма тиркелет.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” invites interested service providers to submit commercial proposals for the security of the property complex of the “Kasiet” worsted spinning mill. The terms of reference are attached.",
+      ZH: "吉尔吉斯共和国国家投资基金诚邀相关服务供应商就“卡西耶特”精纺纺纱厂资产综合体安保工作提交商业报价。技术任务书附后。",
+    },
+  },
+  {
+    id: "office-partitions-installation",
+    date: "2026-11-03",
+    image: "/images/news/ofice.jpeg",
+    title: {
+      RU: "Объявление на выполнение работ по установке перегородок для офисного здания.",
+      KG: "Кеңсе имараты үчүн бөлүкчөлөрдү орнотуу иштерин аткаруу боюнча жарыя.",
+      EN: "Announcement on the installation of partitions for an office building.",
+      ZH: "关于办公楼隔断安装工程的公告。",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» приглашает заинтересованных поставщиков услуг представить коммерческие предложения на выполнение работ по установке перегородок для офисного здания. Техническое задание прилагается.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК кеңсе имараты үчүн бөлүкчөлөрдү орнотуу иштерин аткаруу боюнча коммерциялык сунуштарды тапшырууга кызыкдар кызмат көрсөтүүчүлөрдү чакырат. Техникалык тапшырма тиркелет.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” invites interested service providers to submit commercial proposals for the installation of partitions for an office building. The terms of reference are attached.",
+      ZH: "吉尔吉斯共和国国家投资基金诚邀相关服务供应商就办公楼隔断安装工程提交商业报价。技术任务书附后。",
+    },
+  },
+  {
     id: "mges-mailuu-suu-consultant",
     date: "2026-09-14",
     image: "/images/news/mges-mailuu-suu-consultant.jpg",

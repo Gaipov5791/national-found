@@ -4,6 +4,178 @@ import type { Lang } from "@/lib/lang";
 export type NewsBodyByLang = Partial<Record<Lang, string>>;
 
 export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
+  "kasiet-security-services": {
+    RU: `<p>ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее – Фонд) приглашает заинтересованных поставщиков услуг представить коммерческие предложения на выполнение работ по охране имущественного комплекса камвольно-прядильной фабрики «Касиет». Техническое задание прилагается.</p>
+<p>К подаче коммерческих предложений приглашаются полномочные заинтересованные юридические и физические лица, осуществляющие предпринимательскую деятельность согласно законодательству Кыргызской Республики.</p>
+<p>Заинтересованным участникам конкурса необходимо ознакомиться с требованиями, изложенными в техническом задании, и заполнить ведомость объема работ.</p>
+<p><strong>Для участия в конкурсе участник должен представить следующие документы:</strong></p>
+<ol>
+<li>заверенные подписью руководителя и печатью копии учредительных документов и свидетельства о регистрации;</li>
+<li>документ, подтверждающий полномочия должностного лица или представителя;</li>
+<li>копии документов, подтверждающих личность уполномоченного лица;</li>
+<li>заверенные подписью руководителя и печатью копии лицензии и (или) разрешения (при осуществлении лицензируемых и (или) разрешительных видов деятельности);</li>
+<li>документы, подтверждающие квалификацию (лицензия на охранные услуги);</li>
+<li>справку налоговой службы об отсутствии задолженности по налогам и страховым взносам;</li>
+<li>заверенные подписью руководителя и печатью копии рекомендательных писем или отзывов клиентов (при наличии);</li>
+<li>гарантийное письмо об отсутствии судебных, административных споров, уголовных разбирательств, связанных с профессиональной деятельностью компании, учредителей и её руководителей;</li>
+<li>справку о несудимости охранников.</li>
+</ol>
+<p>Предложение участника конкурса должно быть должным образом подписано, запечатано в конверт, адресовано и доставлено по следующему адресу: г. Бишкек, ул. Самойленко, 38 (ж/м Киргизия-1), с указанием наименования организации и контактных данных участника конкурса.</p>
+<p>Конкурсное предложение с соответствующими сопроводительными документами также может быть предоставлено в PDF-формате по электронной почте: <a href="mailto:office@nif.kg">office@nif.kg</a>. При этом в теме сообщения необходимо указать предмет закупки (отбор поставщика охранных услуг).</p>
+<p><strong>Коммерческие предложения (с указанием стоимости в сомах) принимаются до 18:00, 10 ноября 2026 года.</strong></p>
+<p>Основные технические требования указаны в Приложении к настоящему объявлению.</p>
+<p>Заявки, поступившие после истечения указанного срока, рассмотрению не подлежат.</p>
+<p>Конкурсная комиссия рассмотрит предложения от физических и/или юридических лиц, обладающих необходимой квалификацией и опытом выполнения аналогичных работ. Отбор заявок будет осуществляться в соответствии с внутренними локальными актами ОАО «Национальный инвестиционный фонд Кыргызской Республики».</p>
+<p>Дополнительную информацию об условиях запроса коммерческого предложения можно получить по адресу: г. Бишкек, ул. Самойленко, 38. Тел.: 0880 000 430.</p>
+<p><em>Фонд оставляет за собой право отклонить любое или все предложения без объяснения причин, уточнять требования, запрашивать дополнительные материалы, а также приостановить или прекратить отбор.</em></p>
+<p><a href="/docs/news/kasiet-security-tor.docx" download>Техническое задание</a></p>
+<p><a href="/docs/news/kasiet-security-announcement.docx" download>Объявление</a></p>`,
+    KG: `<p>«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК (мындан ары – Фонд) «Касиет» камвольно-ийрүү фабрикасынын мүлктүк комплексин күзөтүү иштерин аткаруу боюнча коммерциялык сунуштарды тапшырууга кызыкдар кызмат көрсөтүүчүлөрдү чакырат. Техникалык тапшырма тиркелет.</p>
+<p>Коммерциялык сунуштарды тапшырууга Кыргыз Республикасынын мыйзамдарына ылайык ишкердик ишмердүүлүктү жүргүзгөн ыйгарым укуктуу кызыкдар юридикалык жана жеке жактар чакырылат.</p>
+<p>Сынакка кызыкдар катышуучулар техникалык тапшырмада баяндалган талаптар менен таанышып, иштердин көлөмү ведомостун толтуруусу керек.</p>
+<p><strong>Сынакка катышуу үчүн катышуучу төмөнкү документтерди тапшырууга тийиш:</strong></p>
+<ol>
+<li>жетекчинин колу жана мөөрү менен күбөлөндүрүлгөн уюштуруу документтеринин жана каттоо күбөлүгүнүн көчүрмөлөрү;</li>
+<li>кызмат адамынын же өкүлдүн ыйгарым укугун ырастоочу документ;</li>
+<li>ыйгарым укуктуу адамдын инсандыгын ырастоочу документтердин көчүрмөлөрү;</li>
+<li>жетекчинин колу жана мөөрү менен күбөлөндүрүлгөн лицензиянын жана (же) уруксаттын көчүрмөлөрү (лицензиялануучу жана (же) уруксат берилүүчү ишмердүүлүк жүргүзүлгөндө);</li>
+<li>квалификацияны ырастоочу документтер (күзөт кызматтарына лицензия);</li>
+<li>салык жана камсыздандыруу төгүмдөрү боюнча карыз жок экендиги жөнүндө салык кызматынын справкасы;</li>
+<li>жетекчинин колу жана мөөрү менен күбөлөндүрүлгөн сунуш каттарынын же кардарлардын пикирлеринин көчүрмөлөрү (бар болсо);</li>
+<li>компаниянын, анын уюштуруучуларынын жана жетекчилеринин кесиптик ишмердүүлүгүнө байланыштуу соттук, административдик талаштар жана кылмыш иштери жок экендиги жөнүндө кепилдик кат;</li>
+<li>күзөтчүлөрдүн соттуулугу жок экендиги жөнүндө справка.</li>
+</ol>
+<p>Сынактын катышуучусунун сунушу тийиштүү түрдө кол коюлуп, конвертке салынып мөөр басылган, уюмдун аталышы жана катышуучунун байланыш маалыматтары көрсөтүлүп, төмөнкү дарекке жеткирилүүгө тийиш: Бишкек ш., Самойленко көч., 38 (Киргизия-1 т/к).</p>
+<p>Тиешелүү коштоочу документтери менен сынактык сунуш ошондой эле PDF форматында электрондук почта аркылуу берилиши мүмкүн: <a href="mailto:office@nif.kg">office@nif.kg</a>. Мында каттын темасында сатып алуунун предметин (күзөт кызматтарын көрсөтүүчүнү тандоо) көрсөтүү зарыл.</p>
+<p><strong>Коммерциялык сунуштар (наркы сом менен көрсөтүлүп) 2026-жылдын 10-ноябрына саат 18:00гө чейин кабыл алынат.</strong></p>
+<p>Негизги техникалык талаптар ушул жарыянын Тиркемесинде көрсөтүлгөн.</p>
+<p>Белгиленген мөөнөт өткөндөн кийин келип түшкөн өтүнмөлөр каралбайт.</p>
+<p>Сынак комиссиясы керектүү квалификацияга жана окшош иштерди аткаруу тажрыйбасына ээ болгон жеке жана/же юридикалык жактардын сунуштарын карайт. Өтүнмөлөрдү тандоо «Кыргыз Республикасынын Улуттук инвестициялык фонду» ААКнын ички локалдык актыларына ылайык жүргүзүлөт.</p>
+<p>Коммерциялык сунушту суроо шарттары боюнча кошумча маалыматты төмөнкү дарек боюнча алууга болот: Бишкек ш., Самойленко көч., 38. Тел.: 0880 000 430.</p>
+<p><em>Фонд каалаган же бардык сунуштарды себебин түшүндүрбөстөн четке кагууга, талаптарды тактоого, кошумча материалдарды суроого, ошондой эле тандоону токтото турууга же токтотууга укуктуу.</em></p>
+<p><a href="/docs/news/kasiet-security-tor.docx" download>Техникалык тапшырма</a></p>
+<p><a href="/docs/news/kasiet-security-announcement.docx" download>Жарыя</a></p>`,
+    EN: `<p>OJSC “National Investment Fund of the Kyrgyz Republic” (the Fund) invites interested service providers to submit commercial proposals for the security of the property complex of the “Kasiet” worsted spinning mill. The terms of reference are attached.</p>
+<p>Authorized interested legal entities and individuals engaged in entrepreneurial activity in accordance with the laws of the Kyrgyz Republic are invited to submit commercial proposals.</p>
+<p>Interested participants must review the requirements set out in the terms of reference and complete the bill of quantities.</p>
+<p><strong>To participate in the tender, the participant must submit the following documents:</strong></p>
+<ol>
+<li>copies of constitutive documents and the registration certificate certified by the signature of the head and the seal;</li>
+<li>a document confirming the authority of the official or representative;</li>
+<li>copies of identity documents of the authorized person;</li>
+<li>copies of the license and/or permit certified by the signature of the head and the seal (where licensed and/or permitted activities are carried out);</li>
+<li>documents confirming qualifications (a license for security services);</li>
+<li>a certificate from the tax service confirming the absence of tax and social contribution arrears;</li>
+<li>copies of letters of recommendation or client testimonials certified by the signature of the head and the seal (if available);</li>
+<li>a guarantee letter confirming the absence of judicial, administrative disputes, and criminal proceedings related to the professional activities of the company, its founders, and executives;</li>
+<li>certificates confirming that the security guards have no criminal record.</li>
+</ol>
+<p>The participant’s proposal must be duly signed, sealed in an envelope, addressed, and delivered to the following address: Bishkek, 38 Samoilenko Street (Kirgiziya-1 residential area), indicating the name of the organization and the participant’s contact details.</p>
+<p>The tender proposal with the relevant supporting documents may also be submitted in PDF format by email: <a href="mailto:office@nif.kg">office@nif.kg</a>. The subject line must indicate the subject of procurement (selection of a security services provider).</p>
+<p><strong>Commercial proposals (with the cost indicated in soms) are accepted until 18:00 on 10 November 2026.</strong></p>
+<p>The main technical requirements are set out in the Annex to this announcement.</p>
+<p>Applications received after the deadline will not be considered.</p>
+<p>The tender commission will consider proposals from individuals and/or legal entities with the necessary qualifications and experience in performing similar work. Applications will be selected in accordance with the internal regulations of OJSC “National Investment Fund of the Kyrgyz Republic”.</p>
+<p>Additional information on the terms of the request for commercial proposals can be obtained at: Bishkek, 38 Samoilenko Street. Tel.: 0880 000 430.</p>
+<p><em>The Fund reserves the right to reject any or all proposals without explanation, to clarify the requirements, to request additional materials, and to suspend or terminate the selection.</em></p>
+<p><a href="/docs/news/kasiet-security-tor.docx" download>Terms of Reference</a></p>
+<p><a href="/docs/news/kasiet-security-announcement.docx" download>Announcement</a></p>`,
+    ZH: `<p>吉尔吉斯共和国国家投资基金（以下简称“基金”）诚邀相关服务供应商就“卡西耶特”精纺纺纱厂资产综合体安保工作提交商业报价。技术任务书附后。</p>
+<p>依据吉尔吉斯共和国法律从事经营活动的授权法人及自然人可提交商业报价。</p>
+<p>有意参与的竞标者须仔细阅读技术任务书中的要求，并填写工程量清单。</p>
+<p><strong>参与竞标须提交以下文件：</strong></p>
+<ol>
+<li>经负责人签字并加盖公章的设立文件及注册证明复印件；</li>
+<li>证明公职人员或代表权限的文件；</li>
+<li>授权人身份证明文件复印件；</li>
+<li>经负责人签字并加盖公章的许可证和（或）批准文件复印件（如从事须许可和（或）批准的活动）；</li>
+<li>资质证明文件（安保服务许可证）；</li>
+<li>税务机关出具的无税费及社保欠款证明；</li>
+<li>经负责人签字并加盖公章的推荐信或客户评价复印件（如有）；</li>
+<li>保证公司、其发起人及管理人员不存在与职业活动相关的司法、行政争议及刑事诉讼的保证函；</li>
+<li>安保人员无犯罪记录证明。</li>
+</ol>
+<p>竞标方的报价须经正式签署、密封于信封内，注明组织名称及竞标方联系方式，并送达以下地址：比什凯克市萨莫伊连科街38号（Kirgiziya-1住宅区）。</p>
+<p>附带相关证明文件的竞标报价也可通过电子邮件以PDF格式提交：<a href="mailto:office@nif.kg">office@nif.kg</a>。邮件主题须注明采购事项（安保服务供应商遴选）。</p>
+<p><strong>商业报价（以索姆计价）受理截止时间为2026年11月10日18:00。</strong></p>
+<p>主要技术要求详见本公告附件。</p>
+<p>逾期提交的申请将不予受理。</p>
+<p>竞标委员会将审议具备必要资质及类似工作经验的自然人和/或法人提交的报价。申请遴选将依照吉尔吉斯共和国国家投资基金内部规章进行。</p>
+<p>有关商业报价征集条件的更多信息，请前往以下地址咨询：比什凯克市萨莫伊连科街38号。电话：0880 000 430。</p>
+<p><em>基金有权在不说明理由的情况下拒绝任何或全部报价，澄清要求、索取补充材料，以及中止或终止遴选。</em></p>
+<p><a href="/docs/news/kasiet-security-tor.docx" download>技术任务书</a></p>
+<p><a href="/docs/news/kasiet-security-announcement.docx" download>公告</a></p>`,
+  },
+  "office-partitions-installation": {
+    RU: `<p>ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее — Фонд) приглашает заинтересованных поставщиков услуг представить коммерческие предложения на выполнение работ по установке перегородок для офисного здания. Техническое задание прилагается.</p>
+<p>К подаче коммерческих предложений приглашаются полномочные заинтересованные юридические и физические лица, осуществляющие предпринимательскую деятельность согласно законодательству Кыргызской Республики.</p>
+<p>Заинтересованным участникам конкурса необходимо ознакомиться с требованиями, изложенными в техническом задании, и заполнить ведомость объема работ.</p>
+<p><strong>Для участия в конкурсе участник должен представить следующие документы:</strong></p>
+<ol>
+<li>коммерческое предложение (с указанием цен, описания товара и услуг, соответствующих техническим спецификациям);</li>
+<li>копию свидетельства о государственной регистрации юридического лица либо индивидуального предпринимателя;</li>
+<li>справку органа налоговой службы об отсутствии задолженности по налогам и страховым взносам, действительную на дату подачи конкурсной заявки;</li>
+<li>гарантийное письмо о том, что участник не проходит ликвидацию или процедуру банкротства (на его имущество не наложен арест), не имеет приостановленной финансово-хозяйственной деятельности, а также об отсутствии в отношении участника судебных, административных и уголовных разбирательств, которые могут повлиять на исполнение обязательств по договору.</li>
+</ol>
+<p>Предложение участника конкурса должно быть должным образом подписано, запечатано в конверт, адресовано и доставлено по следующему адресу: г. Бишкек, ул. Самойленко, 38 (ж/м Киргизия-1), с указанием наименования организации и контактных данных участника конкурса.</p>
+<p>Конкурсное предложение с соответствующими сопроводительными документами также может быть предоставлено в PDF-формате по электронной почте: <a href="mailto:office@nif.kg">office@nif.kg</a>. При этом в теме сообщения необходимо указать предмет закупки (ремонт офисного здания).</p>
+<p><strong>Коммерческие предложения (с указанием стоимости в сомах) принимаются до 09:30, 10 ноября 2026 года.</strong></p>
+<p>Заявки, поступившие после истечения указанного срока, рассмотрению не подлежат.</p>
+<p>Конкурсная комиссия рассмотрит предложения от физических и/или юридических лиц, обладающих необходимой квалификацией и опытом выполнения аналогичных работ. Отбор заявок будет осуществляться в соответствии с внутренними локальными актами ОАО «Национальный инвестиционный фонд Кыргызской Республики».</p>
+<p>Дополнительную информацию об условиях запроса коммерческого предложения можно получить по адресу: г. Бишкек, ул. Самойленко, 38. Тел.: 0880 000 430.</p>
+<p><a href="/docs/news/office-partitions-installation-tor.docx" download>Техническое задание</a></p>`,
+    KG: `<p>«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК (мындан ары — Фонд) кеңсе имараты үчүн бөлүкчөлөрдү орнотуу иштерин аткаруу боюнча коммерциялык сунуштарды тапшырууга кызыкдар кызмат көрсөтүүчүлөрдү чакырат. Техникалык тапшырма тиркелет.</p>
+<p>Коммерциялык сунуштарды тапшырууга Кыргыз Республикасынын мыйзамдарына ылайык ишкердик ишмердүүлүктү жүргүзгөн ыйгарым укуктуу кызыкдар юридикалык жана жеке жактар чакырылат.</p>
+<p>Сынакка кызыкдар катышуучулар техникалык тапшырмада баяндалган талаптар менен таанышып, иштердин көлөмү ведомостун толтуруусу керек.</p>
+<p><strong>Сынакка катышуу үчүн катышуучу төмөнкү документтерди тапшырууга тийиш:</strong></p>
+<ol>
+<li>коммерциялык сунуш (баалары, техникалык спецификацияларга шайкеш келген товарлардын жана кызматтардын сүрөттөмөсү көрсөтүлүп);</li>
+<li>юридикалык жактын же жеке ишкердин мамлекеттик каттоо күбөлүгүнүн көчүрмөсү;</li>
+<li>сынактык өтүнмө берилген күнгө жарактуу, салык жана камсыздандыруу төгүмдөрү боюнча карыз жок экендиги жөнүндө салык кызматы органынын справкасы;</li>
+<li>катышуучу жоюлуу же банкроттук жол-жобосунан өтпөй жаткандыгы (анын мүлкүнө камак салынбагандыгы), финансылык-чарбалык ишмердүүлүгү токтотулбагандыгы, ошондой эле катышуучуга карата келишим боюнча милдеттенмелерди аткарууга таасир этиши мүмкүн болгон соттук, административдик жана кылмыш иштери жок экендиги жөнүндө кепилдик кат.</li>
+</ol>
+<p>Сынактын катышуучусунун сунушу тийиштүү түрдө кол коюлуп, конвертке салынып мөөр басылган, уюмдун аталышы жана катышуучунун байланыш маалыматтары көрсөтүлүп, төмөнкү дарекке жеткирилүүгө тийиш: Бишкек ш., Самойленко көч., 38 (Киргизия-1 т/к).</p>
+<p>Тиешелүү коштоочу документтери менен сынактык сунуш ошондой эле PDF форматында электрондук почта аркылуу берилиши мүмкүн: <a href="mailto:office@nif.kg">office@nif.kg</a>. Мында каттын темасында сатып алуунун предметин (кеңсе имаратын оңдоо) көрсөтүү зарыл.</p>
+<p><strong>Коммерциялык сунуштар (наркы сом менен көрсөтүлүп) 2026-жылдын 10-ноябрына саат 09:30га чейин кабыл алынат.</strong></p>
+<p>Белгиленген мөөнөт өткөндөн кийин келип түшкөн өтүнмөлөр каралбайт.</p>
+<p>Сынак комиссиясы керектүү квалификацияга жана окшош иштерди аткаруу тажрыйбасына ээ болгон жеке жана/же юридикалык жактардын сунуштарын карайт. Өтүнмөлөрдү тандоо «Кыргыз Республикасынын Улуттук инвестициялык фонду» ААКнын ички локалдык актыларына ылайык жүргүзүлөт.</p>
+<p>Коммерциялык сунушту суроо шарттары боюнча кошумча маалыматты төмөнкү дарек боюнча алууга болот: Бишкек ш., Самойленко көч., 38. Тел.: 0880 000 430.</p>
+<p><a href="/docs/news/office-partitions-installation-tor.docx" download>Техникалык тапшырма</a></p>`,
+    EN: `<p>OJSC “National Investment Fund of the Kyrgyz Republic” (the Fund) invites interested service providers to submit commercial proposals for the installation of partitions for an office building. The terms of reference are attached.</p>
+<p>Authorized interested legal entities and individuals engaged in entrepreneurial activity in accordance with the laws of the Kyrgyz Republic are invited to submit commercial proposals.</p>
+<p>Interested participants must review the requirements set out in the terms of reference and complete the bill of quantities.</p>
+<p><strong>To participate in the tender, the participant must submit the following documents:</strong></p>
+<ol>
+<li>a commercial proposal (indicating prices and a description of goods and services that comply with the technical specifications);</li>
+<li>a copy of the state registration certificate of the legal entity or individual entrepreneur;</li>
+<li>a certificate from the tax authority confirming the absence of tax and social contribution arrears, valid on the date of submission of the tender application;</li>
+<li>a guarantee letter confirming that the participant is not undergoing liquidation or bankruptcy proceedings (its property is not under arrest), its financial and business activities have not been suspended, and there are no judicial, administrative, or criminal proceedings against the participant that may affect the performance of obligations under the contract.</li>
+</ol>
+<p>The participant’s proposal must be duly signed, sealed in an envelope, addressed, and delivered to the following address: Bishkek, 38 Samoilenko Street (Kirgiziya-1 residential area), indicating the name of the organization and the participant’s contact details.</p>
+<p>The tender proposal with the relevant supporting documents may also be submitted in PDF format by email: <a href="mailto:office@nif.kg">office@nif.kg</a>. The subject line must indicate the subject of procurement (office building renovation).</p>
+<p><strong>Commercial proposals (with the cost indicated in soms) are accepted until 09:30 on 10 November 2026.</strong></p>
+<p>Applications received after the deadline will not be considered.</p>
+<p>The tender commission will consider proposals from individuals and/or legal entities with the necessary qualifications and experience in performing similar work. Applications will be selected in accordance with the internal regulations of OJSC “National Investment Fund of the Kyrgyz Republic”.</p>
+<p>Additional information on the terms of the request for commercial proposals can be obtained at: Bishkek, 38 Samoilenko Street. Tel.: 0880 000 430.</p>
+<p><a href="/docs/news/office-partitions-installation-tor.docx" download>Terms of Reference</a></p>`,
+    ZH: `<p>吉尔吉斯共和国国家投资基金（以下简称“基金”）诚邀相关服务供应商就办公楼隔断安装工程提交商业报价。技术任务书附后。</p>
+<p>依据吉尔吉斯共和国法律从事经营活动的授权法人及自然人可提交商业报价。</p>
+<p>有意参与的竞标者须仔细阅读技术任务书中的要求，并填写工程量清单。</p>
+<p><strong>参与竞标须提交以下文件：</strong></p>
+<ol>
+<li>商业报价（注明价格以及符合技术规格的商品和服务说明）；</li>
+<li>法人或个体经营者国家注册证明复印件；</li>
+<li>税务机关出具的、在提交竞标申请之日有效的无税费及社保欠款证明；</li>
+<li>保证函，确认参与方未处于清算或破产程序（其财产未被查封）、财务及经营活动未被中止，且不存在可能影响合同义务履行的针对参与方的司法、行政及刑事诉讼。</li>
+</ol>
+<p>竞标方的报价须经正式签署、密封于信封内，注明组织名称及竞标方联系方式，并送达以下地址：比什凯克市萨莫伊连科街38号（Kirgiziya-1住宅区）。</p>
+<p>附带相关证明文件的竞标报价也可通过电子邮件以PDF格式提交：<a href="mailto:office@nif.kg">office@nif.kg</a>。邮件主题须注明采购事项（办公楼装修）。</p>
+<p><strong>商业报价（以索姆计价）受理截止时间为2026年11月10日09:30。</strong></p>
+<p>逾期提交的申请将不予受理。</p>
+<p>竞标委员会将审议具备必要资质及类似工作经验的自然人和/或法人提交的报价。申请遴选将依照吉尔吉斯共和国国家投资基金内部规章进行。</p>
+<p>有关商业报价征集条件的更多信息，请前往以下地址咨询：比什凯克市萨莫伊连科街38号。电话：0880 000 430。</p>
+<p><a href="/docs/news/office-partitions-installation-tor.docx" download>技术任务书</a></p>`,
+  },
   "mges-mailuu-suu-consultant": {
     RU: `<p>ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее – Фонд) приглашает принять участие в отборе консультанта для разработки технического задания на отбор EPC-подрядчика для реализации проекта «Строительство малой гидроэлектростанции на реке Майлуу-Суу» и технического надзора за реализацией проекта на всех стадиях EPC-контракта.</p>
 <p>Место реализации проекта: Ноокенский район, Жалал-Абадская область, Кыргызская Республика.</p>
