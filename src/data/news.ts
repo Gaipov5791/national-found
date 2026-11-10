@@ -20,6 +20,23 @@ export type NewsItem = {
  */
 export const NEWS_ITEMS: readonly NewsItem[] = [
   {
+    id: "erp-system-development",
+    date: "2026-11-10",
+    image: "/images/news/soft.jpeg",
+    title: {
+      RU: "Объявление о проведении открытого конкурса по разработке и внедрению программного обеспечения (ERP-системы) для ОАО «Национальный инвестиционный фонд Кыргызской Республики»",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК үчүн программалык камсыздоону (ERP-системасын) иштеп чыгуу жана киргизүү боюнча ачык сынак өткөрүү жөнүндө жарыя",
+      EN: "Announcement of an open tender for the development and implementation of software (ERP system) for OJSC “National Investment Fund of the Kyrgyz Republic”",
+      ZH: "关于为吉尔吉斯共和国国家投资基金开发和实施软件（ERP系统）的公开招标公告",
+    },
+    excerpt: {
+      RU: "ОАО «Национальный инвестиционный фонд Кыргызской Республики» приглашает принять участие в открытом конкурсе по разработке и внедрению программного обеспечения (ERP-системы) в целях автоматизации бизнес-процессов Фонда, а также снижения рисков и оптимизации затрат.",
+      KG: "«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК Фонддун бизнес-процесстерин автоматташтыруу, ошондой эле тобокелдиктерди азайтуу жана чыгымдарды оптималдаштыруу максатында программалык камсыздоону (ERP-системасын) иштеп чыгуу жана киргизүү боюнча ачык сынакка катышууга чакырат.",
+      EN: "OJSC “National Investment Fund of the Kyrgyz Republic” invites participation in an open tender for the development and implementation of software (ERP system) to automate the Fund’s business processes, reduce risks, and optimize costs.",
+      ZH: "吉尔吉斯共和国国家投资基金邀请参与软件（ERP系统）开发与实施的公开招标，以实现基金业务流程自动化、降低风险并优化成本。",
+    },
+  },
+  {
     id: "kasiet-security-services",
     date: "2026-11-03",
     image: "/images/news/kasiet.jpeg",

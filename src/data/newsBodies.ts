@@ -4,6 +4,56 @@ import type { Lang } from "@/lib/lang";
 export type NewsBodyByLang = Partial<Record<Lang, string>>;
 
 export const NEWS_BODIES: Record<string, NewsBodyByLang> = {
+  "erp-system-development": {
+    RU: `<p>ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее – Фонд) приглашает принять участие в открытом конкурсе по разработке и внедрению программного обеспечения (ERP-системы) в целях автоматизации бизнес-процессов Фонда, а также снижения рисков и оптимизации затрат.</p>
+<p><strong>Необходимые документы для участия</strong></p>
+<p>Участник должен соответствовать требованиям, предусмотренным Техническим заданием, и представить документы и сведения, подтверждающие соответствие указанным требованиям.</p>
+<p>Техническое задание является неотъемлемой частью настоящего объявления.</p>
+<p>Коммерческое предложение должно содержать стоимость услуг в национальной валюте с разбивкой по соответствующим стадиям оказания услуг.</p>
+<p>Предложения и материалы для участия в открытом конкурсе принимаются на официальный электронный адрес Фонда: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
+<p>В случае возникновения вопросов обращаться по следующим телефонам: +996 505 399 799, 0880 000 430, 0312 886 668.</p>
+<p>Объявление размещено 10 ноября 2026 года.</p>
+<p><strong>Срок подачи заявок — до 12:00, 25 ноября 2026 года.</strong></p>
+<p><em>Фонд оставляет за собой право отклонить любое или все предложения без объяснения причин, уточнять требования, запрашивать дополнительные материалы, а также приостановить или прекратить отбор.</em></p>
+<p><a href="/docs/news/erp-system-tor.docx" download>Техническое задание</a></p>
+<p><a href="/docs/news/erp-system-announcement.docx" download>Объявление</a></p>`,
+    KG: `<p>«Кыргыз Республикасынын Улуттук инвестициялык фонду» ААК (мындан ары – Фонд) Фонддун бизнес-процесстерин автоматташтыруу, ошондой эле тобокелдиктерди азайтуу жана чыгымдарды оптималдаштыруу максатында программалык камсыздоону (ERP-системасын) иштеп чыгуу жана киргизүү боюнча ачык сынакка катышууга чакырат.</p>
+<p><strong>Катышуу үчүн керектүү документтер</strong></p>
+<p>Катышуучу Техникалык тапшырмада каралган талаптарга жооп бериши жана көрсөтүлгөн талаптарга шайкештигин ырастаган документтерди жана маалыматтарды тапшырууга тийиш.</p>
+<p>Техникалык тапшырма ушул жарыянын ажырагыс бөлүгү болуп саналат.</p>
+<p>Коммерциялык сунушта кызматтардын наркы улуттук валюта менен, кызмат көрсөтүүнүн тиешелүү баскычтары боюнча бөлүштүрүлүп көрсөтүлүүгө тийиш.</p>
+<p>Ачык сынакка катышуу үчүн сунуштар жана материалдар Фонддун расмий электрондук дарегине кабыл алынат: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
+<p>Суроолор жаралса, төмөнкү телефондорго кайрылыңыз: +996 505 399 799, 0880 000 430, 0312 886 668.</p>
+<p>Жарыя 2026-жылдын 10-ноябрында жайгаштырылган.</p>
+<p><strong>Өтүнмөлөрдү тапшыруу мөөнөтү — 2026-жылдын 25-ноябры, саат 12:00гө чейин.</strong></p>
+<p><em>Фонд каалаган же бардык сунуштарды себебин түшүндүрбөстөн четке кагууга, талаптарды тактоого, кошумча материалдарды суроого, ошондой эле тандоону токтото турууга же токтотууга укуктуу.</em></p>
+<p><a href="/docs/news/erp-system-tor.docx" download>Техникалык тапшырма</a></p>
+<p><a href="/docs/news/erp-system-announcement.docx" download>Жарыя</a></p>`,
+    EN: `<p>OJSC “National Investment Fund of the Kyrgyz Republic” (the Fund) invites participation in an open tender for the development and implementation of software (ERP system) to automate the Fund’s business processes, reduce risks, and optimize costs.</p>
+<p><strong>Documents required for participation</strong></p>
+<p>The participant must meet the requirements of the Terms of Reference and submit documents and information confirming compliance with those requirements.</p>
+<p>The Terms of Reference form an integral part of this announcement.</p>
+<p>The commercial proposal must include the cost of services in the national currency, broken down by the relevant stages of service delivery.</p>
+<p>Proposals and materials for participation in the open tender are accepted at the Fund’s official email: <a href="mailto:office@nif.kg">office@nif.kg</a>.</p>
+<p>For inquiries, please call: +996 505 399 799, 0880 000 430, 0312 886 668.</p>
+<p>The announcement was published on 10 November 2026.</p>
+<p><strong>Application deadline — 12:00 on 25 November 2026.</strong></p>
+<p><em>The Fund reserves the right to reject any or all proposals without explanation, to clarify the requirements, to request additional materials, and to suspend or terminate the selection.</em></p>
+<p><a href="/docs/news/erp-system-tor.docx" download>Terms of Reference</a></p>
+<p><a href="/docs/news/erp-system-announcement.docx" download>Announcement</a></p>`,
+    ZH: `<p>吉尔吉斯共和国国家投资基金（以下简称“基金”）现邀请相关方参与软件（ERP系统）开发与实施的公开招标，以实现基金业务流程自动化、降低风险并优化成本。</p>
+<p><strong>参与所需文件</strong></p>
+<p>参与方须符合技术任务书规定的要求，并提交证明其符合上述要求的文件和资料。</p>
+<p>技术任务书为本公告不可分割的组成部分。</p>
+<p>商务报价须以本国货币列明服务费用，并按相应服务阶段进行分解。</p>
+<p>参与公开招标的申请材料请发送至基金官方邮箱：<a href="mailto:office@nif.kg">office@nif.kg</a>。</p>
+<p>如有疑问，请致电：+996 505 399 799，0880 000 430，0312 886 668。</p>
+<p>本公告发布于2026年11月10日。</p>
+<p><strong>申请截止日期：2026年11月25日 12:00。</strong></p>
+<p><em>基金有权在不说明理由的情况下拒绝任何或全部申请，澄清要求、索取补充材料，以及中止或终止遴选。</em></p>
+<p><a href="/docs/news/erp-system-tor.docx" download>技术任务书</a></p>
+<p><a href="/docs/news/erp-system-announcement.docx" download>公告</a></p>`,
+  },
   "kasiet-security-services": {
     RU: `<p>ОАО «Национальный инвестиционный фонд Кыргызской Республики» (далее – Фонд) приглашает заинтересованных поставщиков услуг представить коммерческие предложения на выполнение работ по охране имущественного комплекса камвольно-прядильной фабрики «Касиет». Техническое задание прилагается.</p>
 <p>К подаче коммерческих предложений приглашаются полномочные заинтересованные юридические и физические лица, осуществляющие предпринимательскую деятельность согласно законодательству Кыргызской Республики.</p>
