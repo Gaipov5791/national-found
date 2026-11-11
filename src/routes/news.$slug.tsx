@@ -1,15 +1,17 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { DetailPageLayout } from "@/components/DetailPageLayout";
-import { getLocalizedNewsArticle, getNewsById } from "@/data/news";
+import { getLocalizedNewsArticle } from "@/data/newsArticle";
+import { getNewsById } from "@/data/news";
 import { useLang, useT } from "@/lib/lang";
 
 export const Route = createFileRoute("/news/$slug")({
-  head: ({ params }) => {
+  loader: ({ params }) => {
     const item = getNewsById(params.slug);
-    return {
-      meta: [{ title: item ? `${item.title.RU} — НИФ КР` : "Новости — НИФ КР" }],
-    };
+    return { title: item?.title.RU ?? null };
   },
+  head: ({ loaderData }) => ({
+    meta: [{ title: loaderData?.title ? `${loaderData.title} — НИФ КР` : "Новости — НИФ КР" }],
+  }),
   component: NewsArticlePage,
 });
 

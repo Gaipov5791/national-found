@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import { GeoJSON, MapContainer, Marker, TileLayer, Tooltip, useMap } from "react-leaflet";
 import type { MsbDistrict } from "@/data/msbProjects";
-import { pickL10n } from "@/data/msbProjects";
+import { pickL10n } from "@/lib/l10n";
 import { useLang } from "@/lib/lang";
 import "leaflet/dist/leaflet.css";
 

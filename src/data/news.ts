@@ -1,7 +1,5 @@
 import type { Lang } from "@/lib/lang";
-import type { L10nText } from "@/data/msbProjects";
-import { pickL10n } from "@/data/msbProjects";
-import { getNewsBody } from "@/data/newsBodies";
+import type { L10nText } from "@/lib/l10n";
 
 export type NewsItem = {
   id: string;
@@ -288,18 +286,4 @@ export function getNewsItems(): readonly NewsItem[] {
 
 export function getNewsById(id: string): NewsItem | undefined {
   return NEWS_ITEMS.find((item) => item.id === id);
-}
-
-export function getLocalizedNewsArticle(id: string, lang: Lang) {
-  const item = getNewsById(id);
-  if (!item) return undefined;
-  const body = getNewsBody(id, lang);
-  if (!body) return undefined;
-  return {
-    ...item,
-    title: pickL10n(item.title, lang),
-    excerpt: pickL10n(item.excerpt, lang),
-    dateLabel: formatNewsDate(item.date, lang),
-    body,
-  };
 }
