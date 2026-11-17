@@ -73,7 +73,7 @@ export const Route = createFileRoute("/")({
       {
         rel: "preload",
         as: "image",
-        href: "/images/горы-панорама.jpeg",
+        href: "/images/горы-панорама.jpg",
         type: "image/jpeg",
       },
     ],

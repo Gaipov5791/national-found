@@ -18,7 +18,7 @@ export function SiteBackdrop() {
       {/* 1. Размытая фоновая картинка */}
       <div
         className="absolute inset-[-40px] bg-cover bg-center blur-[24px] scale-105"
-        style={{ backgroundImage: "url('/images/горы-панорама.jpeg')" }}
+        style={{ backgroundImage: "url('/images/горы-панорама.jpg')" }}
       />
       {/* 2. Темная вуаль для читаемости белого текста */}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,20,38,0.75),rgba(8,28,49,0.85))]" />

@@ -69,7 +69,7 @@ export function DetailPageLayout({
     <main className="relative z-10 isolate min-h-screen w-full overflow-hidden px-4 py-10 font-display text-white sm:px-8 sm:py-16 lg:px-12">
       <div
         className="pointer-events-none fixed inset-[-32px] -z-20 scale-105 bg-cover bg-center blur-[16px]"
-        style={{ backgroundImage: "url('/images/горы-панорама.jpeg')" }}
+        style={{ backgroundImage: "url('/images/горы-панорама.jpg')" }}
         aria-hidden
       />
       <div
