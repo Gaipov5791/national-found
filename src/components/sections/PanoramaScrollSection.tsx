@@ -1,11 +1,10 @@
 import { forwardRef, type RefObject } from "react";
 import gsap from "gsap";
-import { cn } from "@/lib/utils";
 import {
   type SceneAnimationContext,
   type SceneTimeline,
 } from "./sceneAnimationShared";
-import { SCENE_IMAGES } from "./sceneImages";
+import { PanoramaImage } from "./PanoramaImage";
 
 export type PanoramaScrollSceneRefs = {
   panoramaBgRef: RefObject<HTMLDivElement | null>;
@@ -272,25 +271,7 @@ export const PanoramaScrollSection = forwardRef<HTMLDivElement, PanoramaScrollSe
           className="pointer-events-none fixed inset-0 z-0 h-[100svh] w-full overflow-hidden md:h-screen"
           aria-hidden
         >
-          <picture className="absolute inset-0 block h-full w-full overflow-hidden">
-            <source
-              media="(max-width: 767px)"
-              srcSet={SCENE_IMAGES.panoramaMobile}
-              type="image/webp"
-            />
-            <img
-              ref={panoramaImgRef}
-              src={SCENE_IMAGES.panorama}
-              alt=""
-              className={cn(
-                "h-full w-full object-cover will-change-[transform,object-position]",
-                "max-md:absolute max-md:left-0 max-md:top-0 max-md:h-[500vh] max-md:w-full max-md:max-w-none",
-                "max-md:[transform-origin:center_10%] md:[transform-origin:center_28%]"
-              )}
-              style={{ objectPosition: `center ${PANORAMA_STOPS.peaks}%` }}
-            />
-          </picture>
-          <div className="pointer-events-none absolute inset-0 bg-black/20" aria-hidden />
+          <PanoramaImage imageRef={panoramaImgRef} />
         </div>
 
         <div

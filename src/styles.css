@@ -31,6 +31,7 @@
   --color-ink: var(--ink);
   --color-platinum: var(--platinum);
   --color-gold: var(--gold);
+  --color-scene-base: var(--scene-base);
   --font-sans: "Gotham", "Montserrat", "Geometria", system-ui, sans-serif;
   --font-display: "Gotham", "Montserrat", "Geometria", system-ui, sans-serif;
   --animate-news-marquee: news-marquee 36s linear infinite;
@@ -70,6 +71,7 @@
   --ink: oklch(0.22 0.10 258);
   --platinum: oklch(0.93 0.008 250);
   --gold: oklch(0.78 0.14 86);
+  --scene-base: #0b2138;
 }
 
 .dark {
@@ -82,18 +84,39 @@
     border-color: var(--color-border);
   }
   html {
-    background-color: #0b2138;
+    background-color: var(--scene-base);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     overflow-x: clip;
     scrollbar-gutter: stable;
   }
   body {
-    background-color: #0b2138;
+    background-color: var(--scene-base);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     overflow-x: clip;
     overscroll-behavior-y: none;
+  }
+}
+
+.panorama-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center 14%;
+  transform-origin: center 28%;
+}
+
+@media (max-width: 767px) {
+  .panorama-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 500vh;
+    max-width: none;
+    object-position: center top;
+    transform: translateY(-56vh);
+    transform-origin: center 10%;
   }
 }
 

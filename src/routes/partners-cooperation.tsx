@@ -3,10 +3,11 @@ import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout
 import { PartnerLogoGrid } from "@/components/PartnerLogoGrid";
 import { COOPERATION_PARTNERS } from "@/data/partners";
 import { useT } from "@/lib/lang";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/partners-cooperation")({
   head: () => ({
-    meta: [{ title: "Международное и региональное сотрудничество — НИФ КР" }],
+    meta: pageMeta("Международное и региональное сотрудничество — НИФ КР", "Международные и региональные партнёры Национального инвестиционного фонда Кыргызской Республики."),
   }),
   component: PartnersCooperationPage,
 });

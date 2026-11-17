@@ -7,10 +7,11 @@ import {
   portfolioStats,
 } from "@/data/msbProjects";
 import { useLang, useT } from "@/lib/lang";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/msb")({
   head: () => ({
-    meta: [{ title: "Проекты МСБ — НИФ КР" }],
+    meta: pageMeta("Проекты МСБ — НИФ КР", "Проекты малого и среднего бизнеса, география и показатели инвестиционного портфеля Национального инвестиционного фонда Кыргызской Республики."),
   }),
   component: MsbPage,
 });

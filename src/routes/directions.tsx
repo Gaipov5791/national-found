@@ -4,10 +4,11 @@ import { SectionCard } from "@/components/sections/SectionCard";
 import { DETAIL_CARDS_GRID } from "@/components/sections/sectionLayout";
 import { getDirectionCards } from "@/lib/i18n/content";
 import { useT } from "@/lib/lang";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/directions")({
   head: () => ({
-    meta: [{ title: "Перспективные направления — НИФ КР" }],
+    meta: pageMeta("Перспективные направления — НИФ КР", "Приоритетные отрасли и перспективные направления инвестиций Национального инвестиционного фонда Кыргызской Республики."),
   }),
   component: DirectionsPage,
 });

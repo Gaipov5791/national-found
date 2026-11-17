@@ -4,10 +4,11 @@ import { formatNewsDate, getNewsItems } from "@/data/news";
 import { pickL10n } from "@/lib/l10n";
 import { useLang, useT } from "@/lib/lang";
 import { cn } from "@/lib/utils";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/news/")({
   head: () => ({
-    meta: [{ title: "Новости — НИФ КР" }],
+    meta: pageMeta("Новости — НИФ КР", "Новости, события и публикации Национального инвестиционного фонда Кыргызской Республики."),
   }),
   component: NewsIndexPage,
 });

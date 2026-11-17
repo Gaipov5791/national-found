@@ -3,6 +3,7 @@ import { DetailPageLayout } from "@/components/DetailPageLayout";
 import { getLocalizedNewsArticle } from "@/data/newsArticle";
 import { getNewsById } from "@/data/news";
 import { useLang, useT } from "@/lib/lang";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/news/$slug")({
   loader: ({ params }) => {
@@ -10,7 +11,7 @@ export const Route = createFileRoute("/news/$slug")({
     return { title: item?.title.RU ?? null };
   },
   head: ({ loaderData }) => ({
-    meta: [{ title: loaderData?.title ? `${loaderData.title} — НИФ КР` : "Новости — НИФ КР" }],
+    meta: pageMeta(loaderData?.title ? `${loaderData.title} — НИФ КР` : "Публикация — НИФ КР", loaderData?.title ?? "Публикация Национального инвестиционного фонда Кыргызской Республики."),
   }),
   component: NewsArticlePage,
 });

@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout";
 import { useT } from "@/lib/lang";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/partners")({
   head: () => ({
-    meta: [{ title: "Партнёры — НИФ КР" }],
+    meta: pageMeta("Партнёры — НИФ КР", "Стратегические партнёры и сотрудничество с Национальным инвестиционным фондом Кыргызской Республики."),
   }),
   component: PartnersPage,
 });

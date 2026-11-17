@@ -3,10 +3,11 @@ import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout
 import { PartnerLogoGrid } from "@/components/PartnerLogoGrid";
 import { getPartnerRegistry } from "@/lib/i18n/content";
 import { useT } from "@/lib/lang";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/partners-registry")({
   head: () => ({
-    meta: [{ title: "Реестр партнёров — НИФ КР" }],
+    meta: pageMeta("Реестр партнёров — НИФ КР", "Категории и реестр организаций-партнёров Национального инвестиционного фонда Кыргызской Республики."),
   }),
   component: PartnersRegistryPage,
 });

@@ -6,10 +6,11 @@ import { SectionCard } from "@/components/sections/SectionCard";
 import { DETAIL_CARDS_GRID } from "@/components/sections/sectionLayout";
 import { getFinanceCards } from "@/lib/i18n/content";
 import { useT } from "@/lib/lang";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/finance")({
   head: () => ({
-    meta: [{ title: "Финансирование проектов — НИФ КР" }],
+    meta: pageMeta("Финансирование проектов — НИФ КР", "Инструменты финансирования инвестиционных проектов и подача заявки в Национальный инвестиционный фонд Кыргызской Республики."),
   }),
   component: FinancePage,
 });

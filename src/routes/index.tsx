@@ -1,41 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ComponentType } from "react";
 import { CustomCursor } from "@/components/CustomCursor";
-import { getCachedScrollytelling, preloadScrollytelling } from "@/lib/preloadScrollytelling";
-
-if (typeof window !== "undefined") {
-  void preloadScrollytelling();
-}
-
-function LoadingFallback() {
-  return (
-    <div
-      className="flex min-h-screen w-full flex-col items-center justify-center bg-[#0b2138] text-white"
-      aria-busy="true"
-      aria-label="Загрузка сайта"
-    >
-      <div className="relative flex items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/10 border-t-white" />
-      </div>
-      <p className="mt-4 text-xs font-medium tracking-[0.2em] text-white/60 uppercase">
-        Загрузка...
-      </p>
-    </div>
-  );
-}
+import { preloadScrollytelling } from "@/lib/preloadScrollytelling";
+import { InitialScene } from "@/components/scrollytelling/InitialScene";
+import { SCENE_IMAGES } from "@/components/sections/sceneImages";
 
 function ScrollytellingGate() {
-  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(() => getCachedScrollytelling());
-  const [isMounted, setIsMounted] = useState(false);
+  const [Scrollytelling, setScrollytelling] = useState<ComponentType | null>(null);
 
   useEffect(() => {
-    setIsMounted(true);
-    const cached = getCachedScrollytelling();
-    if (cached) {
-      setScrollytelling(() => cached);
-      return;
-    }
-
     let cancelled = false;
     void preloadScrollytelling().then((component) => {
       if (!cancelled) setScrollytelling(() => component);
@@ -51,12 +24,7 @@ function ScrollytellingGate() {
     return <Scrollytelling />;
   }
 
-  // До монтирования на клиенте отдаем простую подложку без расхождения DOM
-  if (!isMounted) {
-    return <div className="min-h-screen bg-[#0b2138]" />;
-  }
-
-  return <LoadingFallback />;
+  return <InitialScene />;
 }
 
 export const Route = createFileRoute("/")({
@@ -68,14 +36,22 @@ export const Route = createFileRoute("/")({
         content:
           "Национальный инвестиционный фонд Кыргызской Республики — инвестиции в проекты будущего. 12 проектов в реализации.",
       },
+      { property: "og:title", content: "Национальный инвестиционный фонд Кыргызской Республики" },
+      { property: "og:description", content: "Инвестиции в проекты будущего Кыргызской Республики." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
         rel: "preload",
         as: "image",
-        href: "/images/горы-панорама.jpg",
+        href: SCENE_IMAGES.panorama,
         type: "image/jpeg",
+        media: "(min-width: 768px)",
+        fetchPriority: "high",
       },
+      { rel: "preload", as: "image", href: SCENE_IMAGES.panoramaMobile, type: "image/webp", media: "(max-width: 767px)", fetchPriority: "high" },
+      { rel: "preload", as: "image", href: SCENE_IMAGES.panoramaPreview },
     ],
   }),
   component: Index,
@@ -84,7 +60,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <>
-      <main className="relative z-10 isolate min-h-screen bg-[#0b2138] text-foreground">
+      <main className="relative z-10 isolate min-h-screen bg-scene-base text-foreground">
         <ScrollytellingGate />
       </main>
       <CustomCursor />

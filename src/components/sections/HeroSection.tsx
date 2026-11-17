@@ -7,17 +7,16 @@ export type HeroSceneRefs = {
 };
 
 export function prepareHeroScene(refs: HeroSceneRefs, ctx: SceneAnimationContext) {
-  const { brandStartY } = ctx;
-  gsap.set(refs.brandRef.current, { autoAlpha: 0, y: brandStartY, scale: 0.97 });
+  gsap.set(refs.brandRef.current, { autoAlpha: 1, y: 0, scale: 1 });
 }
 
 export function animateHeroScene(tl: SceneTimeline, refs: HeroSceneRefs, ctx: SceneAnimationContext) {
-  const { brandStartY, text } = ctx;
+  const { text } = ctx;
   const brandDockDur = 0.08;
 
   tl.fromTo(
     refs.brandRef.current,
-    { autoAlpha: 0, y: brandStartY, scale: 0.97 },
+    { autoAlpha: 1, y: 0, scale: 1 },
     { autoAlpha: 1, y: 0, scale: 1, duration: brandDockDur, ease: text.enterEase },
     0
   );

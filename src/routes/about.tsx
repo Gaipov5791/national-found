@@ -14,10 +14,11 @@ import {
   getAboutRegulatoryDocs,
 } from "@/lib/i18n/content";
 import { useT } from "@/lib/lang";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
-    meta: [{ title: "О фонде — НИФ КР" }],
+    meta: pageMeta("О фонде — НИФ КР", "Цели фонда, руководство, корпоративное управление и документы Национального инвестиционного фонда Кыргызской Республики."),
   }),
   component: AboutPage,
 });

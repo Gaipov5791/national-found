@@ -2,10 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { DetailInfoBlock, DetailPageLayout } from "@/components/DetailPageLayout";
 import { getAccreditationDocuments } from "@/lib/i18n/content";
 import { useT } from "@/lib/lang";
+import { pageMeta } from "@/lib/pageMeta";
 
 export const Route = createFileRoute("/partners-join")({
   head: () => ({
-    meta: [{ title: "Стать партнёром — НИФ КР" }],
+    meta: pageMeta("Стать партнёром — НИФ КР", "Аккредитация и документы для сотрудничества с Национальным инвестиционным фондом Кыргызской Республики."),
   }),
   component: PartnersJoinPage,
 });

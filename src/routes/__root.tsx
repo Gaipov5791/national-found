@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
@@ -36,7 +37,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -86,8 +87,6 @@ export const Route = createRootRoute({
       { property: "og:type", content: "website" },
       { name: "twitter:title", content: "Национальный инвестиционный фонд Кыргызской Республики" },
       { name: "twitter:description", content: "Инвестиции в проекты будущего — Национальный инвестиционный фонд КР" },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e1248e92-46f8-4549-a90a-1a91fd073504/id-preview-5b0b842d--6e2d4888-bc24-47d5-98b7-59593181f23a.lovable.app-1781778878748.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [

@@ -9,57 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PartnersRegistryRouteImport } from './routes/partners-registry'
-import { Route as PartnersJoinRouteImport } from './routes/partners-join'
-import { Route as PartnersCooperationRouteImport } from './routes/partners-cooperation'
-import { Route as PartnersRouteImport } from './routes/partners'
-import { Route as NewsRouteImport } from './routes/news'
-import { Route as MsbRouteImport } from './routes/msb'
-import { Route as FinanceRouteImport } from './routes/finance'
-import { Route as DirectionsRouteImport } from './routes/directions'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as DirectionsRouteImport } from './routes/directions'
+import { Route as FinanceRouteImport } from './routes/finance'
+import { Route as MsbRouteImport } from './routes/msb'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as PartnersRouteImport } from './routes/partners'
+import { Route as PartnersCooperationRouteImport } from './routes/partners-cooperation'
+import { Route as PartnersJoinRouteImport } from './routes/partners-join'
+import { Route as PartnersRegistryRouteImport } from './routes/partners-registry'
 import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 
-const PartnersRegistryRoute = PartnersRegistryRouteImport.update({
-  id: '/partners-registry',
-  path: '/partners-registry',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PartnersJoinRoute = PartnersJoinRouteImport.update({
-  id: '/partners-join',
-  path: '/partners-join',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PartnersCooperationRoute = PartnersCooperationRouteImport.update({
-  id: '/partners-cooperation',
-  path: '/partners-cooperation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PartnersRoute = PartnersRouteImport.update({
-  id: '/partners',
-  path: '/partners',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsRoute = NewsRouteImport.update({
-  id: '/news',
-  path: '/news',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MsbRoute = MsbRouteImport.update({
-  id: '/msb',
-  path: '/msb',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FinanceRoute = FinanceRouteImport.update({
-  id: '/finance',
-  path: '/finance',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DirectionsRoute = DirectionsRouteImport.update({
-  id: '/directions',
-  path: '/directions',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -67,9 +32,44 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const DirectionsRoute = DirectionsRouteImport.update({
+  id: '/directions',
+  path: '/directions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceRoute = FinanceRouteImport.update({
+  id: '/finance',
+  path: '/finance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MsbRoute = MsbRouteImport.update({
+  id: '/msb',
+  path: '/msb',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersRoute = PartnersRouteImport.update({
+  id: '/partners',
+  path: '/partners',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersCooperationRoute = PartnersCooperationRouteImport.update({
+  id: '/partners-cooperation',
+  path: '/partners-cooperation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersJoinRoute = PartnersJoinRouteImport.update({
+  id: '/partners-join',
+  path: '/partners-join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersRegistryRoute = PartnersRegistryRouteImport.update({
+  id: '/partners-registry',
+  path: '/partners-registry',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewsIndexRoute = NewsIndexRouteImport.update({
@@ -184,60 +184,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/partners-registry': {
-      id: '/partners-registry'
-      path: '/partners-registry'
-      fullPath: '/partners-registry'
-      preLoaderRoute: typeof PartnersRegistryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/partners-join': {
-      id: '/partners-join'
-      path: '/partners-join'
-      fullPath: '/partners-join'
-      preLoaderRoute: typeof PartnersJoinRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/partners-cooperation': {
-      id: '/partners-cooperation'
-      path: '/partners-cooperation'
-      fullPath: '/partners-cooperation'
-      preLoaderRoute: typeof PartnersCooperationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/partners': {
-      id: '/partners'
-      path: '/partners'
-      fullPath: '/partners'
-      preLoaderRoute: typeof PartnersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/news': {
-      id: '/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof NewsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/msb': {
-      id: '/msb'
-      path: '/msb'
-      fullPath: '/msb'
-      preLoaderRoute: typeof MsbRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/finance': {
-      id: '/finance'
-      path: '/finance'
-      fullPath: '/finance'
-      preLoaderRoute: typeof FinanceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/directions': {
-      id: '/directions'
-      path: '/directions'
-      fullPath: '/directions'
-      preLoaderRoute: typeof DirectionsRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -247,11 +198,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/directions': {
+      id: '/directions'
+      path: '/directions'
+      fullPath: '/directions'
+      preLoaderRoute: typeof DirectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finance': {
+      id: '/finance'
+      path: '/finance'
+      fullPath: '/finance'
+      preLoaderRoute: typeof FinanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/msb': {
+      id: '/msb'
+      path: '/msb'
+      fullPath: '/msb'
+      preLoaderRoute: typeof MsbRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners': {
+      id: '/partners'
+      path: '/partners'
+      fullPath: '/partners'
+      preLoaderRoute: typeof PartnersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners-cooperation': {
+      id: '/partners-cooperation'
+      path: '/partners-cooperation'
+      fullPath: '/partners-cooperation'
+      preLoaderRoute: typeof PartnersCooperationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners-join': {
+      id: '/partners-join'
+      path: '/partners-join'
+      fullPath: '/partners-join'
+      preLoaderRoute: typeof PartnersJoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners-registry': {
+      id: '/partners-registry'
+      path: '/partners-registry'
+      fullPath: '/partners-registry'
+      preLoaderRoute: typeof PartnersRegistryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/news/': {
